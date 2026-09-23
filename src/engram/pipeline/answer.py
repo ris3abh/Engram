@@ -23,10 +23,18 @@ class Answer:
 
 
 def render_fact(r: RetrievedFact) -> str:
+    """One memory line. It is anchored on the date it was *said*, like a chat timestamp, so relative words kept in
+    the text ("yesterday", "last year") are resolved once, against the right date. A resolved `valid_from` is
+    shown only when the message actually stated a time."""
     f = r.fact
-    until = f"{f.valid_until:%Y-%m-%d}" if f.valid_until else "now"
-    status = "current" if f.is_valid else "no longer true"
-    notes = [f"confidence {f.confidence:.2f}", f"valid {f.valid_from:%Y-%m-%d} → {until} ({status})"]
+    said = f"[said {r.said_at:%Y-%m-%d}] " if r.said_at else ""
+    if not f.is_valid:
+        validity = f"no longer true since {f.valid_until:%Y-%m-%d}"
+    elif f.valid_from_stated:
+        validity = f"true from {f.valid_from:%Y-%m-%d}, still current"
+    else:
+        validity = "current"
+    notes = [f"confidence {f.confidence:.2f}", validity]
     if f.tentative:
         notes.append("tentative")
     if f.temporal_status != "current":
@@ -36,7 +44,7 @@ def render_fact(r: RetrievedFact) -> str:
     else:
         labels = {"history": "earlier value, replaced", "neighbor": "related", "relation": "same kind of fact"}
         notes.append(labels.get(r.source, r.source))
-    return f"- {f.text} ({'; '.join(notes)})"
+    return f"- {said}{f.text} ({'; '.join(notes)})"
 
 
 def render(retrieval: Retrieval) -> str:

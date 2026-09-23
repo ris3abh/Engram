@@ -10,6 +10,7 @@ works without Jev comparing dates. The answer step sees each fact's validity win
 import asyncio
 import time
 from dataclasses import dataclass, field
+from datetime import datetime
 
 from .. import config
 from ..decide.base import DecisionBackend, DecisionError
@@ -27,7 +28,8 @@ HUB_DEGREE = 25  # do not expand through nodes this connected (usually the user 
 class RetrievedFact:
     fact: Fact
     relevance: float | None  # Jev's P(relevant); None for facts added by expansion
-    source: str  # rerank (kept by Jev) | relation (pulled by query_relation) | history | neighbor
+    source: str  # rerank (kept by Jev) | cosine (floor) | relation (pulled by query_relation) | history | neighbor
+    said_at: datetime | None = None  # when the source message was sent
 
 
 @dataclass
@@ -46,10 +48,11 @@ class Retrieval:
 
 
 class Retriever:
-    def __init__(self, store: Store, backend: DecisionBackend, embedder: Embedder):
+    def __init__(self, store: Store, backend: DecisionBackend, embedder: Embedder, cosine_floor: int = 0):
         self.store = store
         self.backend = backend
         self.embedder = embedder
+        self.cosine_floor = cosine_floor  # always keep this many top-cosine facts, even if Jev scores them low
 
     async def retrieve(self, query: str, k: int = config.RETRIEVE_K) -> Retrieval:
         started = time.perf_counter()
@@ -86,11 +89,26 @@ class Retriever:
             kept = [(f, None) for f in shortlist[:10]]
 
         results = [RetrievedFact(f, p, "rerank") for f, p in kept]
+        if self.cosine_floor:
+            kept_ids = {f.id for f, _ in kept}
+            scores = {d.target: d.probs.get("yes") for d in decisions if d.question == "relevant_to_query"}
+            results += [
+                RetrievedFact(f, scores.get(f.id), "cosine")
+                for f in shortlist[: self.cosine_floor]
+                if f.id not in kept_ids
+            ]
         if relation:
             results += self._pull(relation, {r.fact.id for r in results}, rank)
         results += self._history([r.fact for r in results])
         results += self._expand([f for f, _ in kept], {r.fact.id for r in results})
         self.store.mark_retrieved(r.fact.id for r in results if r.source != "neighbor")
+        said: dict[str, datetime | None] = {}
+        for r in results:
+            mid = r.fact.source_message_id
+            if mid not in said:
+                message = self.store.get_message(mid)
+                said[mid] = message.created_at if message else None
+            r.said_at = said[mid]
         return Retrieval(
             query,
             results,

@@ -1,5 +1,36 @@
 # Benchmarks
 
+<!-- locomo:start -->
+> **Status: dev run on one conversation (conv-26) only; the 5-conversation run is pending.** History of this
+> conversation: the first engram run scored 46.1%. Two causes were found in its answers. (1) A rendering bug:
+> memories were shown with their resolved `valid_from` date, but the text kept relative words ("last year"), so
+> the answer model shifted dates twice (temporal 32%). Fixed by anchoring each memory on the date it was said,
+> which brought engram to 54.6%. (2) Recall: Jev's relevance filter left 29 of 152 questions with no memories.
+> `engram_floor10` is an *experiment*, not the default. It always keeps the top 10 cosine hits and reaches 57.9%.
+> Because these fixes were found on conv-26, conv-26 should count as a dev set; conversations 2 to 5 are the
+> held-out set.
+## LoCoMo subset: engram vs mem0
+
+1 conversation(s) (conv-26), text only, one message per write. Extraction model claude-haiku-4-5 for both; answers and grading on claude-sonnet-4-6 with mem0's own evaluation prompts; category 5 (adversarial) skipped. Method and sources: `bench/locomo_subset.py`.
+
+| system | answer accuracy | median write latency (end to end) | median write latency (decision layer) | cost / 1k messages (end to end) | cost / 1k messages (decision layer) | total decisions | escalation rate | median retrieval latency | cost / question |
+|---|---|---|---|---|---|---|---|---|---|
+| engram | 54.6% (152 q) | 1.58 s | 223 ms | $2.454 | $0.289 | 8,887 | 0.2% (1 of 528 facts) | 267 ms | $0.003 |
+| engram_floor10 | 57.9% (152 q) | 1.58 s | 223 ms | $2.454 | $0.289 | 8,887 | — | 285 ms | $0.004 |
+| mem0 | 80.9% (152 q) | 1.38 s | — | $10.163 | — | 419 | — | 57 ms | $0.005 |
+
+Accuracy by LoCoMo category:
+
+| system | 1 multi-hop | 2 temporal | 3 open-domain | 4 single-hop |
+|---|---|---|---|---|
+| engram | 53.1% | 54.1% | 76.9% | 51.4% |
+| engram_floor10 | 46.9% | 59.5% | 84.6% | 57.1% |
+| mem0 | 68.8% | 83.8% | 92.3% | 82.9% |
+
+Column notes: *decision layer* is engram's work after extraction (within-message dedupe, candidate retrieval, Jev, LLM escalations, storage) and its cost (Jev plus escalations). mem0 2.x makes one LLM call per write that both extracts and dedupes, so its decision layer is inside the end-to-end number (—). *Total decisions*: engram counts Jev decisions, LLM escalations and code rules; mem0 counts its LLM calls. *Escalation rate* is LLM escalations per extracted fact. *Cost / question* is retrieval plus answer, not grading. Messages written: engram 419, engram_floor10 419, mem0 419. Judge spend: engram $0.42, engram_floor10 $0.43, mem0 $0.42. Jev fallbacks: engram 0.
+
+<!-- locomo:end -->
+
 ## Contradiction test: findings (2026-09-23, jev-1.13.0)
 
 Each pair is sent the way the write path sends it: `relation_to_candidate` and `temporal_status` in one request.

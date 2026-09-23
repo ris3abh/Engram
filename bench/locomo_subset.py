@@ -204,7 +204,7 @@ def llm_cost(model: str, tokens_in: int, tokens_out: int) -> float:
 class EngramSystem:
     name = "engram"
 
-    def __init__(self, conv_id: str):
+    def __init__(self, conv_id: str, cosine_floor: int = 0):
         from engram.decide.jev import JevBackend
         from engram.decide.log import DecisionLog
         from engram.engine import Engram
@@ -224,6 +224,7 @@ class EngramSystem:
             log,
             usage,
         )
+        self.engine.retriever.cosine_floor = cosine_floor
 
     async def write(self, m: dict) -> dict:
         r = await self.engine.ingest(m["text"], speaker=m["speaker"], created_at=m["at"], message_id=m["id"])
@@ -267,7 +268,11 @@ class Mem0System:
                 "llm": {"provider": "anthropic", "config": {"model": EXTRACT_MODEL}},
                 "embedder": {
                     "provider": "huggingface",
-                    "config": {"model": "sentence-transformers/all-MiniLM-L6-v2", "embedding_dims": 384},
+                    "config": {
+                        "model": "sentence-transformers/all-MiniLM-L6-v2",
+                        "embedding_dims": 384,
+                        "model_kwargs": {"device": "cpu"},  # same as engram; concurrent Metal use crashes
+                    },
                 },
                 "vector_store": {
                     "provider": "qdrant",
@@ -351,19 +356,40 @@ class _Embedder:
 
 EMBEDDER = _Embedder()
 SYSTEMS = {"engram": EngramSystem, "mem0": Mem0System}
+# Read-side variants reuse another system's ingested store and only re-answer (experiments, labeled in the table).
+VARIANTS = {"engram_floor10": ("engram", {"cosine_floor": 10})}
+_OPEN: dict[tuple[str, str], object] = {}
+
+
+def ingest_owner(name: str) -> str:
+    return VARIANTS[name][0] if name in VARIANTS else name
+
+
+def system_for(name: str, conv_id: str):
+    """One instance per system and conversation for the whole run; local Qdrant allows a single client per path."""
+    key = (name, conv_id)
+    if key not in _OPEN:
+        if name in VARIANTS:
+            base, kwargs = VARIANTS[name]
+            _OPEN[key] = SYSTEMS[base](conv_id, **kwargs)
+        else:
+            _OPEN[key] = SYSTEMS[name](conv_id)
+    return _OPEN[key]
 
 
 # ---------------------------------------------------------------- phases
 
 
 async def ingest(system_name: str, conv: dict) -> None:
+    if system_name in VARIANTS:
+        return  # shares the owner's store
     conv_id = conv["sample_id"]
     ck = Checkpoint(STATE / system_name / conv_id / "ingest.jsonl")
     todo = [m for m in messages(conv) if m["id"] not in ck.keys]
     if not todo:
         return
-    system = SYSTEMS[system_name](conv_id)
-    print(f"[{system_name} {conv_id}] ingesting {len(todo)} of {len(messages(conv))} messages")
+    system = system_for(system_name, conv_id)
+    print(f"[{system_name} {conv_id}] ingesting {len(todo)} of {len(messages(conv))} messages", flush=True)
     for n, m in enumerate(todo, 1):
         for attempt in range(3):
             try:
@@ -376,7 +402,7 @@ async def ingest(system_name: str, conv: dict) -> None:
                 await asyncio.sleep(2 * (attempt + 1))
         ck.append({"key": m["id"], **row})
         if n % 50 == 0:
-            print(f"[{system_name} {conv_id}] {n}/{len(todo)}")
+            print(f"[{system_name} {conv_id}] {n}/{len(todo)}", flush=True)
 
 
 async def answer(system_name: str, conv: dict, client: anthropic.AsyncAnthropic, sem: asyncio.Semaphore) -> None:
@@ -385,7 +411,7 @@ async def answer(system_name: str, conv: dict, client: anthropic.AsyncAnthropic,
     todo = [q for q in questions(conv) if str(q["idx"]) not in ck.keys]
     if not todo:
         return
-    system = SYSTEMS[system_name](conv_id)
+    system = system_for(system_name, conv_id)
     c = conv["conversation"]
     speakers = f"{c['speaker_a']} and {c['speaker_b']}"
     print(f"[{system_name} {conv_id}] answering {len(todo)} questions")
@@ -400,7 +426,7 @@ async def answer(system_name: str, conv: dict, client: anthropic.AsyncAnthropic,
             response = await client.messages.create(
                 model=ANSWER_MODEL,
                 max_tokens=1024,
-                temperature=0.0,
+                extra_body={"temperature": 0.0},  # anthropic>=1.0 removed the kwarg; the model still accepts it
                 system=prompt,
                 messages=[{"role": "user", "content": q["question"]}],
             )
@@ -436,7 +462,7 @@ async def grade(system_name: str, conv: dict, client: anthropic.AsyncAnthropic, 
             response = await client.messages.parse(
                 model=JUDGE_MODEL,
                 max_tokens=1024,
-                temperature=0.0,
+                extra_body={"temperature": 0.0},  # anthropic>=1.0 removed the kwarg; the model still accepts it
                 messages=[
                     {
                         "role": "user",
@@ -473,7 +499,7 @@ def report(system_names: list[str], convs: list[dict]) -> str:
         ing, ans, grd = [], [], []
         for conv in convs:
             base = STATE / s / conv["sample_id"]
-            ing += Checkpoint(base / "ingest.jsonl").rows
+            ing += Checkpoint(STATE / ingest_owner(s) / conv["sample_id"] / "ingest.jsonl").rows
             ans += Checkpoint(base / "answers.jsonl").rows
             grd += Checkpoint(base / "grades.jsonl").rows
         if not ing:

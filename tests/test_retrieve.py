@@ -39,7 +39,7 @@ async def test_reranks_keeps_expired_and_marks_retrieved(store):
     assert r.shortlist == 5 and len(r.decisions) == 6  # 5 relevance nouls + query_relation
     assert store.get_fact(berlin.id).last_retrieved_at is not None
     text = render(r)
-    assert "no longer true" in text and "User lives in Berlin" in text and "confidence 0.90" in text
+    assert "no longer true since" in text and "User lives in Berlin" in text and "confidence 0.90" in text
 
 
 async def test_one_hop_expansion(store):
@@ -138,3 +138,39 @@ async def test_relation_below_threshold_ignored(store):
     seed(store)
     r = await Retriever(store, Unsure("lives_in"), HashEmbedder()).retrieve("where did the user live before Berlin")
     assert r.query_relation is None and r.facts == []
+
+
+async def test_memory_lines_anchor_on_the_message_date(store):
+    from engram.models import Message
+
+    emb = HashEmbedder()
+    said = now() - timedelta(days=400)
+    store.add_message(Message("m1", "I painted a sunrise last year", "Mel", said))
+    fact = make_fact(
+        "Mel painted a sunrise last year",
+        subject="Mel",
+        predicate="hobby",
+        obj="sunrise",
+        valid_from=said - timedelta(days=365),
+        valid_from_stated=True,
+    )
+    store.add_fact(fact, emb.embed([fact.text])[0])
+    r = await Retriever(store, MockBackend(), HashEmbedder()).retrieve("when did mel paint a sunrise")
+    line = render(r).splitlines()[1]
+    assert line.startswith(f"- [said {said:%Y-%m-%d}] Mel painted a sunrise last year")
+    assert f"true from {fact.valid_from:%Y-%m-%d}" in line
+
+
+async def test_cosine_floor_keeps_low_scored_top_hits(store):
+    class Strict(MockBackend):
+        def _decide(self, state, ask, request_id):
+            d = super()._decide(state, ask, request_id)
+            if ask.question.id == "relevant_to_query":
+                d.probs, d.chosen = {"yes": 0.1, "no": 0.9}, "no"
+            return d
+
+    seed(store)
+    assert (await Retriever(store, Strict(), HashEmbedder()).retrieve("jazz")).facts == []
+    r = await Retriever(store, Strict(), HashEmbedder(), cosine_floor=3).retrieve("jazz")
+    assert len(r.facts) >= 3 and {x.source for x in r.facts} >= {"cosine"}
+    assert all(x.relevance == 0.1 for x in r.facts if x.source == "cosine")

@@ -31,7 +31,7 @@ class SentenceEmbedder:
                 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
                 from sentence_transformers import SentenceTransformer
 
-                self._model = SentenceTransformer(self.model_name)
+                self._model = SentenceTransformer(self.model_name, device=config.EMBED_DEVICE)
             vectors = self._model.encode(
                 texts, normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False
             )

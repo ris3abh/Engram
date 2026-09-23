@@ -24,6 +24,7 @@ RELEVANCE_THRESHOLD = 0.5  # keep a retrieved fact if relevant_to_query exceeds 
 
 # Retrieval
 EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+EMBED_DEVICE = os.environ.get("ENGRAM_EMBED_DEVICE", "cpu")  # MiniLM is fast on CPU; Metal is not thread-safe here
 CANDIDATE_K = 10  # candidates compared per new fact on the write path
 RETRIEVE_K = 30  # facts reranked per query
 
