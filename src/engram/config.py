@@ -11,8 +11,9 @@ JEV_TIMEOUT_S = 2.0
 JEV_ATTEMPTS = 3
 JEV_MAX_RPS = float(os.environ.get("ENGRAM_JEV_MAX_RPS", "15"))  # API limit is 1,200 req/min
 
-# LLM (extraction, escalation, answers)
-LLM_MODEL = os.environ.get("ENGRAM_LLM_MODEL", "claude-sonnet-4-6")
+# LLMs. Extraction runs on every message, so it uses the small model; mem0 gets the same model in the benchmark.
+EXTRACT_MODEL = os.environ.get("ENGRAM_EXTRACT_MODEL", "claude-haiku-4-5")
+LLM_MODEL = os.environ.get("ENGRAM_LLM_MODEL", "claude-sonnet-4-6")  # escalation and answer synthesis
 LLM_TIMEOUT_S = 60.0
 LLM_ATTEMPTS = 3
 

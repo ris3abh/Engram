@@ -265,3 +265,14 @@ As in the spec. I stop for your review after steps 1 and 4.
 - **Known gap:** facts extracted from the *same* message run in parallel and can't see each other as
   candidates (for example "is vegetarian" and "has been vegetarian since college" both get stored). The
   hygiene pass (step 9) merges these.
+- **Extraction model:** `claude-haiku-4-5` (`EXTRACT_MODEL`). Escalation and answer synthesis stay on
+  `claude-sonnet-4-6` (`LLM_MODEL`). In the benchmark, mem0 gets `claude-haiku-4-5` as its LLM, and both
+  systems use the same answer model and grader.
+- **Benchmark columns (step 8):** decision layer and end to end are reported separately. For engram, decision
+  latency is the wall time after extraction (dedupe, embeddings, Jev, escalations, storage) and decision cost
+  is Jev plus escalations. For mem0, its update/decision LLM calls will be timed and costed apart from its
+  extraction call by wrapping its LLM client.
+- **Rules in code:** `user_requested` overrides `worth_remembering`. Credentials are always redacted before
+  storage. Within-message dedupe runs before writing. See DECISIONS.md.
+- **Experiment, not adopted:** putting Jev's temporal answer into the relation request's state (two stages)
+  didn't improve accuracy and doubled decision latency (BENCHMARK.md).

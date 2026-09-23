@@ -6,6 +6,7 @@
 Two request layouts are compared (PLAN.md section 4, item 2):
   refs:  existing fact inside the question's instructions object (engram's default)
   state: existing fact inside the shared state, plain-string instructions
+  two_stage: temporal_status asked first; its answer is put into the relation request's state (experiment)
 
 Each request asks `relation_to_candidate` and `temporal_status` together, as the write path does. Reported:
   exact:      the chosen relation is in the pair's accepted labels
@@ -93,8 +94,43 @@ def request(pair: dict, layout: str) -> tuple[dict, list[Ask]]:
     return {**state, "existing_fact": old}, [temporal, Ask("relation", RELATION_TO_CANDIDATE)]
 
 
+async def two_stage(backend: DecisionBackend, pairs: list[dict]) -> list[dict | DecisionError]:
+    """Experiment: ask temporal_status first, then put Jev's answer into the relation question's state."""
+    first = await backend.ask_many(
+        [
+            (
+                {"new_fact": {"text": p["new"], "subject": "user"}, "source_message": p["message"]},
+                [Ask("temporal", TEMPORAL_STATUS)],
+            )
+            for p in pairs
+        ]
+    )
+    second_requests = []
+    for pair, t in zip(pairs, first, strict=True):
+        status = t["temporal"].chosen if not isinstance(t, DecisionError) else "current"
+        state = {
+            "new_fact": {"text": pair["new"], "subject": "user", "temporal_status": status},
+            "source_message": pair["message"],
+        }
+        old = {"text": pair["old"], "subject": "user"}
+        second_requests.append((state, [Ask("relation", RELATION_TO_CANDIDATE, {"existing_fact": old})]))
+    second = await backend.ask_many(second_requests)
+    out: list[dict | DecisionError] = []
+    for t, r in zip(first, second, strict=True):
+        if isinstance(t, DecisionError) or isinstance(r, DecisionError):
+            out.append(t if isinstance(t, DecisionError) else r)
+            continue
+        relation = r["relation"]
+        relation.latency_ms += t["temporal"].latency_ms  # two sequential round trips
+        out.append({"temporal": t["temporal"], "relation": relation})
+    return out
+
+
 async def run(backend: DecisionBackend, pairs: list[dict], layout: str) -> list[Result]:
-    answers = await backend.ask_many([request(p, layout) for p in pairs])
+    if layout == "two_stage":
+        answers = await two_stage(backend, pairs)
+    else:
+        answers = await backend.ask_many([request(p, layout) for p in pairs])
     results = []
     for pair, answer in zip(pairs, answers, strict=True):
         if isinstance(answer, DecisionError):
@@ -174,7 +210,7 @@ def write_section(body: str) -> None:
 async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--backend", choices=["jev", "mock"], default="jev")
-    parser.add_argument("--layout", choices=["refs", "state", "both"], default="both")
+    parser.add_argument("--layout", choices=["refs", "state", "two_stage", "both", "all"], default="both")
     parser.add_argument("--no-write", action="store_true")
     args = parser.parse_args()
 
@@ -190,7 +226,7 @@ async def main() -> None:
 
         backend, model = MockBackend(), "mock-rules"
 
-    layouts = ["refs", "state"] if args.layout == "both" else [args.layout]
+    layouts = {"both": ["refs", "state"], "all": ["refs", "state", "two_stage"]}.get(args.layout, [args.layout])
     sections = [
         "## Contradiction test",
         "",

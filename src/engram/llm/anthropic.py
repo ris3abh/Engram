@@ -38,6 +38,10 @@ organization, thing, or short attribute like "vegetarian").
 Use null if the message gives no time.
 - Earlier messages are context for resolving "he", "there", "that job" and so on. Extract facts from the \
 latest message only.
+- `user_requested`: true only if the speaker explicitly asks to remember, note, save or not forget this fact \
+("remember that…", "don't forget…", "note that…"). Otherwise false.
+- `secret_value`: if the fact contains a secret (password, passcode, PIN, API key, token, security answer, \
+account or ID number), the exact secret string as it appears in the message. Otherwise null.
 - Do not invent facts. If there are none, return an empty list."""
 
 ANSWER_SYSTEM = """You answer questions about a user from their long-term memory.
@@ -59,6 +63,8 @@ class _Fact(BaseModel):
     kind_hint: Literal[tuple(FACT_KIND.options)]  # type: ignore[valid-type]
     durability_hint: Literal[tuple(DURABILITY.options)]  # type: ignore[valid-type]
     valid_from: str | None = Field(description="ISO date YYYY-MM-DD or null")
+    user_requested: bool
+    secret_value: str | None
 
 
 class _Extraction(BaseModel):
@@ -68,8 +74,14 @@ class _Extraction(BaseModel):
 class AnthropicLLM(LLMBackend):
     name = "anthropic"
 
-    def __init__(self, model: str = config.LLM_MODEL, usage_log: UsageLog | None = None):
+    def __init__(
+        self,
+        model: str = config.LLM_MODEL,
+        extract_model: str = config.EXTRACT_MODEL,
+        usage_log: UsageLog | None = None,
+    ):
         self.model = model
+        self.extract_model = extract_model
         self.usage_log = usage_log
         self._clients: dict[int, anthropic.AsyncAnthropic] = {}  # one per event loop
 
@@ -81,13 +93,14 @@ class AnthropicLLM(LLMBackend):
             )
         return self._clients[loop_id]
 
-    def _usage(self, purpose: str, response, started: float) -> LLMUsage:
-        price_in, price_out = PRICES.get(self.model, (0.0, 0.0))
+    def _usage(self, purpose: str, response, started: float, model: str | None = None) -> LLMUsage:
+        model = model or self.model
+        price_in, price_out = PRICES.get(model, (0.0, 0.0))
         u = response.usage
         tokens_in = u.input_tokens + (u.cache_read_input_tokens or 0) + (u.cache_creation_input_tokens or 0)
         usage = LLMUsage(
             purpose=purpose,
-            model=self.model,
+            model=model,
             input_tokens=tokens_in,
             output_tokens=u.output_tokens,
             latency_ms=(time.perf_counter() - started) * 1000,
@@ -107,7 +120,7 @@ class AnthropicLLM(LLMBackend):
         started = time.perf_counter()
         try:
             response = await self._client().messages.parse(
-                model=self.model,
+                model=self.extract_model,
                 max_tokens=4096,
                 system=EXTRACT_SYSTEM,
                 messages=[{"role": "user", "content": prompt}],
@@ -115,7 +128,7 @@ class AnthropicLLM(LLMBackend):
             )
         except anthropic.APIError as e:
             raise LLMError(f"extraction failed: {e}") from e
-        usage = self._usage("extract", response, started)
+        usage = self._usage("extract", response, started, self.extract_model)
         parsed = response.parsed_output
         if parsed is None:
             raise LLMError(f"extraction returned no parsable output (stop_reason={response.stop_reason})")
@@ -181,4 +194,6 @@ def _to_extracted(f: _Fact) -> ExtractedFact:
         kind_hint=f.kind_hint,
         durability_hint=f.durability_hint,
         valid_from=valid_from,
+        user_requested=f.user_requested,
+        secret_value=f.secret_value or None,
     )

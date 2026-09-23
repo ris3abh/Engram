@@ -139,6 +139,30 @@ Instructions: "Which category of sensitive personal information, if any, does `n
 | `relationship` | Romantic, sexual, or intimate family matters. |
 | `credentials` | Passwords, API keys, PINs, security answers, ID numbers. |
 
+### Within-message dedupe: `pair__{i}__{j}` (Choice, reuses `relation_to_candidate`)
+
+When a message yields two or more facts, one extra request compares each fact with every earlier fact from the
+same message *before* anything is written. It uses the same schema as `relation_to_candidate`, with both facts
+carried in `instructions` and `{"source_message": "‹…›"}` as the state:
+
+```json
+{"type": "choice",
+ "instructions": {"new_fact": {"text": "‹fact j›", "subject": "…", "object": "…"},
+                  "existing_fact": {"text": "‹fact i›", "subject": "…", "object": "…"},
+                  "question": "How does `new_fact` relate to `existing_fact`?"},
+ "criteria": {‹relation_to_candidate options›}}
+```
+
+If fact j is a `duplicate` of an earlier kept fact at p ≥ `ACT_THRESHOLD`, j is not written. Its decision is
+attached to the kept fact's audit trail. If this request fails, every fact is written as usual.
+
+### Rules applied in code (logged as decisions with `backend="rule"`)
+
+| rule | trigger | effect |
+|---|---|---|
+| `worth_remembering` override | extraction sets `user_requested: true` (the speaker explicitly asked to remember it) | the fact is stored regardless of Jev's `worth_remembering`, and not tentative because of it |
+| `redact_credentials` | extraction flags a `secret_value`, **or** Jev's `sensitivity` is `credentials` | the secret is replaced by `(redacted)` in the fact text, its object and the stored message; sensitivity becomes `credentials`. This applies regardless of intent, including `user_requested`. A secret flagged by extraction is removed *before* the Jev request and before anything is stored. |
+
 ## Read path: one request per query
 
 **State:** `{"query": "‹where does the user live›"}`

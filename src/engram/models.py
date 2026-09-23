@@ -9,7 +9,8 @@ KINDS = ("preference", "bio", "event", "relationship", "task", "opinion")
 DURABILITIES = ("permanent", "long_term", "short_lived")
 SENSITIVITIES = ("none", "health", "financial", "relationship", "credentials")
 TEMPORAL_STATUSES = ("current", "past", "planned", "hypothetical")
-BACKENDS = ("jev", "mock", "llm_escalation", "fallback")
+BACKENDS = ("jev", "mock", "llm_escalation", "fallback", "rule")  # rule = a code override, logged like a decision
+REDACTED = "(redacted)"
 
 
 def now() -> datetime:
@@ -71,6 +72,8 @@ class ExtractedFact:
     kind_hint: str = "bio"
     durability_hint: str = "long_term"
     valid_from: datetime | None = None  # resolved by the LLM from the message date; None = message time
+    user_requested: bool = False  # the speaker explicitly asked to remember this; overrides worth_remembering
+    secret_value: str | None = None  # exact secret string (password, PIN, key) if any; never stored
 
 
 @dataclass

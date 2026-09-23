@@ -143,3 +143,85 @@ async def test_low_confidence_update_escalates(store, tmp_path, verdict, closed)
     assert o.escalated is (verdict != "error")
     if verdict != "error":
         assert log.stats().by_backend.get("llm_escalation") == 1
+
+
+SCRIPT.update(
+    {
+        "Remember: my locker is number 12": [
+            ExtractedFact("User's locker is number 12", "User", "locker 12", "owns", user_requested=True)
+        ],
+        "my wifi password is hunter2, don't forget": [
+            ExtractedFact(
+                "User's wifi password is hunter2",
+                "User",
+                "hunter2",
+                "owns",
+                user_requested=True,
+                secret_value="hunter2",
+            )
+        ],
+        "my bank pin is 4455": [ExtractedFact("User's bank password is 4455", "User", "4455", "owns")],
+        "I'm vegetarian and I'm a vegetarian": [
+            xf("User is vegetarian", "vegetarian", "follows_diet"),
+            xf("User is a vegetarian", "vegetarian", "follows_diet"),
+            xf("User likes jazz", "jazz", "prefers"),
+        ],
+    }
+)
+
+
+class Dismissive(MockBackend):
+    """Mock that thinks nothing is worth remembering."""
+
+    def _decide(self, state, ask, request_id):
+        d = super()._decide(state, ask, request_id)
+        if ask.question.id == "worth_remembering":
+            d.probs, d.chosen = {"yes": 0.1, "no": 0.9}, "no"
+        return d
+
+
+async def test_user_requested_overrides_worth(store, tmp_path):
+    log = DecisionLog(tmp_path / "d.jsonl")
+    pipe = WritePipeline(store, Dismissive(log), ScriptedLLM(SCRIPT), HashEmbedder(), log)
+    [o] = (await pipe.ingest("Remember: my locker is number 12")).outcomes
+    assert o.action == "inserted" and not o.tentative
+    rules = [d for d in store.get_fact(o.fact_id).decisions if d.backend == "rule"]
+    assert [(d.question, d.chosen) for d in rules] == [("worth_remembering", "yes")]
+    assert log.stats().by_backend["rule"] == 1
+
+
+async def test_flagged_secret_never_stored(store, tmp_path):
+    log = DecisionLog(tmp_path / "d.jsonl")
+    pipe = WritePipeline(store, MockBackend(log), ScriptedLLM(SCRIPT), HashEmbedder(), log)
+    result = await pipe.ingest("my wifi password is hunter2, don't forget")
+    [o] = result.outcomes
+    assert o.redacted and "hunter2" not in o.text
+    fact = store.get_fact(o.fact_id)
+    assert fact.sensitivity == "credentials" and "hunter2" not in fact.text and fact.object == "(redacted)"
+    assert "hunter2" not in store.get_message(result.message_id).text
+    assert "redact_credentials" in {d.question for d in fact.decisions}
+    assert "hunter2" not in (tmp_path / "d.jsonl").read_text()
+
+
+async def test_jev_credentials_label_redacts_even_without_extractor_flag(store, tmp_path):
+    pipe = WritePipeline(store, MockBackend(), ScriptedLLM(SCRIPT), HashEmbedder())
+    result = await pipe.ingest("my bank pin is 4455")
+    fact = store.get_fact(result.outcomes[0].fact_id)
+    assert fact.sensitivity == "credentials" and "4455" not in fact.text
+    assert "4455" not in store.get_message(result.message_id).text
+
+
+async def test_within_message_duplicates_merged(store, tmp_path):
+    pipe = WritePipeline(store, MockBackend(), ScriptedLLM(SCRIPT), HashEmbedder())
+    result = await pipe.ingest("I'm vegetarian and I'm a vegetarian")
+    actions = [o.action for o in result.outcomes]
+    assert actions == ["inserted", "duplicate", "inserted"]
+    assert result.outcomes[1].fact_id == result.outcomes[0].fact_id
+    assert len(store.list_facts()) == 2
+    assert len(result.dedupe_decisions) == 3  # pairs (0,1), (0,2), (1,2)
+
+
+async def test_timing_and_cost_split(pipe):
+    result = await pipe.ingest("I'm allergic to peanuts")
+    assert result.latency_ms >= result.extract_ms + result.decide_ms - 1
+    assert result.extract_cost == 0.0 and result.decision_cost == 0.0  # mock and fake LLM are free

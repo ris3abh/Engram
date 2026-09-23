@@ -106,6 +106,17 @@ class Store:
                 (message.id, message.text, message.speaker, _ts(message.created_at)),
             )
 
+    def redact_message(self, message_id: str, secrets: set[str], replacement: str) -> None:
+        """Replace every secret in a stored message's text. Used by the credentials rule."""
+        message = self.get_message(message_id)
+        if not message or not secrets:
+            return
+        text = message.text
+        for secret in sorted(secrets, key=len, reverse=True):
+            text = text.replace(secret, replacement)
+        with self._lock, self._db:
+            self._db.execute("UPDATE messages SET text = ? WHERE id = ?", (text, message_id))
+
     def get_message(self, message_id: str) -> Message | None:
         row = self._db.execute("SELECT * FROM messages WHERE id = ?", (message_id,)).fetchone()
         if not row:

@@ -143,7 +143,7 @@ class MockBackend(DecisionBackend):
 
     def _decide(self, state: State, ask: Ask, request_id: str) -> Decision:
         s = state if isinstance(state, dict) else {}
-        fact = s.get("new_fact", {})
+        fact = ask.refs.get("new_fact") or s.get("new_fact", {})  # within-message dedupe puts both facts in refs
         text = fact.get("text", "")
         options = ask.question.options
         qid = ask.question.id

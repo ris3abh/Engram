@@ -19,6 +19,23 @@ relation is update or contradiction at p ≥ 0.85 **and** Jev says the new fact 
    `current`, and `past` is "only about an earlier time". Temporal accuracy went from 92% to 96%. Current
    numbers are below.
 
+**Correction to run 1:** the temporal status in run 1's state came from the `temporal_status` column of
+`bench/contradiction_pairs.jsonl`, which is my hand-written ground truth. That makes run 1's 87% subtle-tier
+number an oracle upper bound, not something an LLM extractor would reach.
+
+**Experiment: temporal answer in the relation state (two stages).** Jev answers `temporal_status` first, and
+its answer goes into `new_fact.temporal_status` for a second request that asks `relation_to_candidate`. Two
+runs each:
+
+| layout | subtle exact | all exact | close rule | false closes | median latency | Jev cost / pair |
+|---|---|---|---|---|---|---|
+| `refs` (current: one request) | 73%, 73% | 90%, 90% | 80%, 80% | 0 | 190–210 ms | $0.000031 |
+| `two_stage` | 73%, 80% | 90%, 92% | 80%, 80% | 0 | 380–400 ms | $0.000045 |
+
+It doesn't recover. The subtle tier moves by one pair between runs, which is noise, and the close decision is
+identical because the temporal gate already blocks those closures. It would double decision-layer latency and
+add 40% to Jev cost for no change in the graph. **Not adopted.**
+
 **Current (`refs` layout):**
 
 | | exact | supersedes | temporal | close rule | false closes |

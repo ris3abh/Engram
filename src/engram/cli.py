@@ -58,11 +58,15 @@ def ingest(
     async def run() -> None:
         for speaker, text in read_messages(path):
             result = await engine.ingest(text, speaker=speaker)
-            typer.echo(f"\n> {text}  ({result.latency_ms:.0f} ms)")
+            typer.echo(
+                f"\n> {text}  (total {result.latency_ms:.0f} ms = extract {result.extract_ms:.0f}"
+                f" + decide {result.decide_ms:.0f}; ${result.extract_cost:.5f} + ${result.decision_cost:.5f})"
+            )
             for o in result.outcomes:
                 flags = " tentative" if o.tentative else ""
                 flags += " escalated" if o.escalated else ""
                 flags += " closed-old-edge" if o.closed_target else ""
+                flags += " REDACTED" if o.redacted else ""
                 typer.echo(f"  {o.action:12} {o.text}{flags}  [{explain(o.decisions)}]")
 
     asyncio.run(run())

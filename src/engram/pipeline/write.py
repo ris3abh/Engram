@@ -1,18 +1,24 @@
-"""Per-fact decision chain -> graph mutations. One Jev request per extracted fact; facts run in parallel.
+"""Per-fact decision chain -> graph mutations.
 
-Rules (docs/DECISIONS.md, PLAN.md section 2):
-- worth_remembering below ESCALATE_BELOW drops the fact; below ACT_THRESHOLD stores it as tentative.
+Per message: one extraction call, one Jev request comparing the message's own facts with each other (only when
+there are two or more), then one Jev request per surviving fact, run in parallel.
+
+Rules (docs/DECISIONS.md, PLAN.md):
+- worth_remembering below ESCALATE_BELOW drops the fact; below ACT_THRESHOLD stores it as tentative. A fact the
+  user explicitly asked to remember (`user_requested`) is always stored (rule decision, logged).
+- Credentials are never stored: a secret flagged by extraction is redacted before any decision or storage, and
+  a fact Jev labels `credentials` has its value redacted too. Both are logged as rule decisions.
 - relation_to_candidate: take the candidate with the highest non-`new` probability. Update or contradiction
   below ESCALATE_BELOW goes to the LLM.
 - An old edge is closed only if the relation is update or contradiction (p >= ACT_THRESHOLD, or escalated)
-  AND temporal_status is `current` with p >= ACT_THRESHOLD. Otherwise the new fact goes in as tentative and the
-  old edge stays valid.
+  AND temporal_status is `current` with p >= ACT_THRESHOLD. Otherwise the new fact is tentative and the old edge
+  stays valid.
 - Any Jev failure stores the fact as tentative with backend="fallback". A message is never lost.
 """
 
 import asyncio
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime
 
 from .. import config
@@ -30,12 +36,13 @@ from ..decide.questions import (
 )
 from ..embed import Embedder, top_k
 from ..llm.base import LLMBackend, LLMError, LLMUsage
-from ..models import Decision, ExtractedFact, Fact, Message, new_id, normalize_entity, now
+from ..models import REDACTED, Decision, ExtractedFact, Fact, Message, new_id, normalize_entity, now
 from ..store import Store
 from .extract import extract
 
 SUPERSEDE = {"update", "contradiction"}
 CONTEXT_MESSAGES = 6
+FACT_QUESTIONS = (WORTH_REMEMBERING, FACT_KIND, TEMPORAL_STATUS, EDGE_TYPE, DURABILITY, SENSITIVITY)
 
 
 @dataclass
@@ -43,10 +50,11 @@ class WriteOutcome:
     text: str
     action: str  # inserted | duplicate | updated | contradicted | refined | dropped | fallback
     fact_id: str | None = None  # the stored fact (the existing one for duplicates)
-    target_id: str | None = None  # the candidate the relation was about
+    target_id: str | None = None  # the fact the relation was about
     closed_target: bool = False  # True only when the target's valid_until was set
     tentative: bool = False
     escalated: bool = False
+    redacted: bool = False
     decisions: list[Decision] = field(default_factory=list)
 
 
@@ -55,11 +63,27 @@ class IngestResult:
     message_id: str
     outcomes: list[WriteOutcome]
     llm_usage: list[LLMUsage]
-    latency_ms: float
+    latency_ms: float  # end to end
+    extract_ms: float  # the extraction LLM call
+    decide_ms: float  # everything after extraction: dedupe, embeddings, Jev, escalations, storage
+    dedupe_decisions: list[Decision] = field(default_factory=list)
 
     @property
     def decisions(self) -> list[Decision]:
-        return [d for o in self.outcomes for d in o.decisions]
+        return self.dedupe_decisions + [d for o in self.outcomes for d in o.decisions]
+
+    @property
+    def jev_cost(self) -> float:
+        return sum(d.cost_usd for d in self.decisions if d.backend == "jev")
+
+    @property
+    def decision_cost(self) -> float:
+        """Decision layer: Jev plus any LLM escalations."""
+        return self.jev_cost + sum(u.cost_usd for u in self.llm_usage if u.purpose == "escalate")
+
+    @property
+    def extract_cost(self) -> float:
+        return sum(u.cost_usd for u in self.llm_usage if u.purpose == "extract")
 
 
 @dataclass
@@ -83,7 +107,7 @@ class WritePipeline:
         self.backend = backend
         self.llm = llm
         self.embedder = embedder
-        self.log = log  # escalation and fallback decisions; Jev and mock decisions are logged by their backend
+        self.log = log  # rule, escalation and fallback decisions; Jev and mock decisions are logged by the backend
         self._context: list[Message] = []
 
     async def ingest(
@@ -95,29 +119,87 @@ class WritePipeline:
     ) -> IngestResult:
         started = time.perf_counter()
         message = Message(message_id or new_id(), text, speaker, created_at or now())
-        self.store.add_message(message)
         drafts, usage = await extract(self.llm, message, self._context)
+        extracted = time.perf_counter()
+
+        # Secrets the extractor flagged never reach Jev, the store, or the context window.
+        secrets = {d.secret_value for d in drafts if d.secret_value}
+        message = replace(message, text=_redact(message.text, secrets))
+        drafts = [_redact_draft(d) for d in drafts]
+        self.store.add_message(message)
         self._context = [*self._context, message][-CONTEXT_MESSAGES:]
-        results = await asyncio.gather(*(self._write_fact(message, d) for d in drafts))
+
+        keep, merged, dedupe_decisions = await self._dedupe(message, drafts)
+        results = await asyncio.gather(*(self._write_fact(message, drafts[i]) for i in keep))
+        by_index = dict(zip(keep, (o for o, _ in results), strict=True))
+        outcomes = []
+        for j in range(len(drafts)):
+            if j in merged:
+                i, decision = merged[j]
+                outcomes.append(self._link_merged(j, i, decision, drafts, by_index))
+            else:
+                outcomes.append(by_index[j])
         usages = [usage] + [u for _, us in results for u in us]
-        return IngestResult(message.id, [o for o, _ in results], usages, (time.perf_counter() - started) * 1000)
+        done = time.perf_counter()
+        return IngestResult(
+            message.id,
+            outcomes,
+            usages,
+            latency_ms=(done - started) * 1000,
+            extract_ms=(extracted - started) * 1000,
+            decide_ms=(done - extracted) * 1000,
+            dedupe_decisions=dedupe_decisions,
+        )
+
+    # within-message dedupe
+
+    async def _dedupe(
+        self, message: Message, drafts: list[ExtractedFact]
+    ) -> tuple[list[int], dict[int, tuple[int, Decision]], list[Decision]]:
+        """Compare each fact with the earlier facts of the same message; drop confident duplicates.
+
+        Returns (indexes to write, {dropped index: (kept index, decision)}, all pair decisions).
+        """
+        n = len(drafts)
+        if n < 2:
+            return list(range(n)), {}, []
+        asks = [
+            Ask(
+                f"pair__{i}__{j}",
+                RELATION_TO_CANDIDATE,
+                {"new_fact": _draft_ref(drafts[j]), "existing_fact": _draft_ref(drafts[i])},
+            )
+            for j in range(1, n)
+            for i in range(j)
+        ]
+        try:
+            d = await self.backend.ask({"source_message": message.text}, asks)
+        except DecisionError:
+            return list(range(n)), {}, []  # dedupe is an optimization; on failure write everything
+        merged: dict[int, tuple[int, Decision]] = {}
+        for j in range(1, n):
+            for i in range(j):
+                decision = d[f"pair__{i}__{j}"]
+                if i not in merged and decision.chosen == "duplicate" and decision.p >= config.ACT_THRESHOLD:
+                    merged[j] = (i, decision)
+                    break
+        return [i for i in range(n) if i not in merged], merged, list(d.values())
+
+    def _link_merged(
+        self, j: int, i: int, decision: Decision, drafts: list[ExtractedFact], by_index: dict[int, WriteOutcome]
+    ) -> WriteOutcome:
+        kept = by_index[i]
+        if kept.fact_id:
+            self.store.add_decisions(kept.fact_id, [decision])
+        return WriteOutcome(drafts[j].text, "duplicate", kept.fact_id, kept.fact_id, decisions=[decision])
 
     # one fact
 
     async def _write_fact(self, message: Message, draft: ExtractedFact) -> tuple[WriteOutcome, list[LLMUsage]]:
         vector = (await asyncio.to_thread(self.embedder.embed, [draft.text]))[0]
         candidates = self._candidates(vector)
-        state = {
-            "new_fact": {
-                "text": draft.text,
-                "subject": normalize_entity(draft.subject),
-                "object": normalize_entity(draft.object),
-            },
-            "source_message": message.text,
-        }
-        asks = [
-            Ask(q.id, q) for q in (WORTH_REMEMBERING, FACT_KIND, TEMPORAL_STATUS, EDGE_TYPE, DURABILITY, SENSITIVITY)
-        ]
+        state = {"new_fact": _draft_ref(draft), "source_message": message.text}
+        asks = [Ask(q.id, q) for q in FACT_QUESTIONS]
         asks += [
             Ask(f"relation_to_candidate__{i}", RELATION_TO_CANDIDATE, {"existing_fact": _ref(c)}, target=c.id)
             for i, c in enumerate(candidates)
@@ -130,9 +212,12 @@ class WritePipeline:
         decisions = list(d.values())
         worth = d["worth_remembering"]
         p_worth = 1.0 if worth.backend == "fallback" else worth.probs["yes"]
-        if worth.backend != "fallback" and p_worth < config.ESCALATE_BELOW:
+        if draft.user_requested:
+            decisions.append(self._rule("worth_remembering", "yes", "user explicitly asked to remember this"))
+            p_worth = 1.0
+        elif worth.backend != "fallback" and p_worth < config.ESCALATE_BELOW:
             return WriteOutcome(draft.text, "dropped", decisions=decisions), []
-        tentative = worth.backend == "fallback" or p_worth < config.ACT_THRESHOLD
+        tentative = (worth.backend == "fallback" and not draft.user_requested) or p_worth < config.ACT_THRESHOLD
 
         relation = _pick_relation(d, candidates)
         usages: list[LLMUsage] = []
@@ -169,45 +254,91 @@ class WritePipeline:
         )
         confident = escalated or relation.p >= config.ACT_THRESHOLD
         fact = self._build_fact(message, draft, d, decisions, temporal.chosen, min(p_worth, relation.p))
+        redacted = self._apply_credentials_rule(fact, draft, message, decisions)
+        if redacted and fact.text != draft.text:
+            vector = (await asyncio.to_thread(self.embedder.embed, [fact.text]))[0]
+
+        def outcome(action: str, fact_id: str | None, target_id: str | None, closed: bool, tent: bool):
+            return WriteOutcome(
+                draft.text if not redacted else fact.text,
+                action,
+                fact_id,
+                target_id,
+                closed,
+                tent,
+                escalated,
+                redacted,
+                decisions,
+            ), usages
 
         target = relation.target
         if relation.label == "new":
             fact.tentative = tentative or relation.p < config.ACT_THRESHOLD
             self.store.add_fact(fact, vector)
-            return WriteOutcome(
-                draft.text, "inserted", fact.id, None, False, fact.tentative, escalated, decisions
-            ), usages
+            return outcome("inserted", fact.id, None, False, fact.tentative)
 
         if relation.label == "duplicate" and confident and not tentative:
             self.store.add_provenance(target.id, message.id)
             self.store.add_decisions(target.id, decisions)
-            return WriteOutcome(
-                draft.text, "duplicate", target.id, target.id, False, False, escalated, decisions
-            ), usages
+            return outcome("duplicate", target.id, target.id, False, False)
 
         if relation.label == "refinement":
             fact.refines = target.id
             fact.tentative = tentative or not confident
             self.store.add_fact(fact, vector)
-            return WriteOutcome(
-                draft.text, "refined", fact.id, target.id, False, fact.tentative, escalated, decisions
-            ), usages
+            return outcome("refined", fact.id, target.id, False, fact.tentative)
 
         if relation.label in SUPERSEDE:
-            action = "updated" if relation.label == "update" else "contradicted"
             close = confident and is_current and not tentative
             fact.tentative = not close
             self.store.add_fact(fact, vector)
             if close:
                 self.store.expire_fact(target.id, max(fact.valid_from, target.valid_from))
-            return WriteOutcome(
-                draft.text, action, fact.id, target.id, close, fact.tentative, escalated, decisions
-            ), usages
+            action = "updated" if relation.label == "update" else "contradicted"
+            return outcome(action, fact.id, target.id, close, fact.tentative)
 
         # A duplicate we are not sure about: keep it as its own tentative edge rather than merging.
         fact.tentative = True
         self.store.add_fact(fact, vector)
-        return WriteOutcome(draft.text, "inserted", fact.id, target.id, False, True, escalated, decisions), usages
+        return outcome("inserted", fact.id, target.id, False, True)
+
+    # rules
+
+    def _rule(self, question: str, chosen: str, reason: str, target: str | None = None) -> Decision:
+        """A code override, recorded in the audit trail and the log exactly like a model decision."""
+        decision = Decision(
+            question=question,
+            options=[chosen],
+            probs={chosen: 1.0},
+            chosen=chosen,
+            backend="rule",
+            latency_ms=0.0,
+            cost_usd=0.0,
+            target=target,
+            request_id=new_id(),
+            error=reason,  # the reason travels in the free-text field
+        )
+        if self.log:
+            self.log.write([decision])
+        return decision
+
+    def _apply_credentials_rule(
+        self, fact: Fact, draft: ExtractedFact, message: Message, decisions: list[Decision]
+    ) -> bool:
+        """Redact the secret value of any credentials fact before it is stored, whatever the user intended."""
+        flagged = draft.secret_value is not None  # already redacted in text by the extractor's flag
+        if fact.sensitivity != "credentials" and not flagged:
+            return False
+        if not flagged:
+            secret = draft.object.strip()  # Jev says credentials but the extractor did not isolate the value
+            fact.text = fact.text.replace(secret, REDACTED) if secret and secret in fact.text else fact.text
+            fact.object = REDACTED
+            self.store.redact_message(message.id, {secret}, REDACTED)
+        fact.sensitivity = "credentials"
+        decisions.append(self._rule("redact_credentials", "redacted", "secret value removed before storage"))
+        return True
+
+    # helpers
 
     def _candidates(self, vector) -> list[Fact]:
         ids, matrix = self.store.embeddings(valid_only=True)
@@ -252,11 +383,9 @@ class WritePipeline:
             "durability": draft.durability_hint,
             "temporal_status": "current",
             "worth_remembering": "yes",
+            "sensitivity": "credentials" if draft.secret_value else "none",
         }
-        decisions = [
-            fallback_decision(a, hints.get(a.question.id, "none" if a.question.id == "sensitivity" else "new"), error)
-            for a in asks
-        ]
+        decisions = [fallback_decision(a, hints.get(a.question.id, "new"), error) for a in asks]
         if self.log:
             self.log.write(decisions)
         fact = Fact(
@@ -267,7 +396,7 @@ class WritePipeline:
             object=draft.object,
             kind=draft.kind_hint,
             durability=draft.durability_hint,
-            sensitivity="none",
+            sensitivity=hints["sensitivity"],
             confidence=0.0,
             valid_from=draft.valid_from or message.created_at,
             valid_until=None,
@@ -275,8 +404,26 @@ class WritePipeline:
             decisions=decisions,
             tentative=True,
         )
+        redacted = self._apply_credentials_rule(fact, draft, message, fact.decisions)
         self.store.add_fact(fact, vector)
-        return WriteOutcome(draft.text, "fallback", fact.id, tentative=True, decisions=decisions)
+        return WriteOutcome(fact.text, "fallback", fact.id, tentative=True, redacted=redacted, decisions=decisions)
+
+
+def _redact(text: str, secrets: set[str]) -> str:
+    for secret in sorted(secrets, key=len, reverse=True):
+        text = text.replace(secret, REDACTED)
+    return text
+
+
+def _redact_draft(draft: ExtractedFact) -> ExtractedFact:
+    if not draft.secret_value:
+        return draft
+    s = {draft.secret_value}
+    return replace(draft, text=_redact(draft.text, s), object=_redact(draft.object, s))
+
+
+def _draft_ref(draft: ExtractedFact) -> dict[str, str]:
+    return {"text": draft.text, "subject": normalize_entity(draft.subject), "object": normalize_entity(draft.object)}
 
 
 def _ref(fact: Fact) -> dict[str, str]:
