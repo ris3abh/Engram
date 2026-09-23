@@ -187,7 +187,54 @@ def session_time(text: str) -> datetime:
     return datetime.strptime(text.strip(), "%I:%M %p on %d %B, %Y").replace(tzinfo=UTC)
 
 
+CATEGORY_NAMES = {1: "multi-hop", 2: "temporal", 3: "open-domain", 4: "single-hop"}  # common LoCoMo mapping
+
+
+def load_heldout(conv_id: str) -> dict:
+    """A whole LoCoMo conversation: every turn, every non-adversarial question, asked once after ingestion."""
+    data = json.loads((ROOT / "bench" / "data" / "locomo10.json").read_text())
+    conv = next(c for c in data if c["sample_id"] == conv_id)
+    c = conv["conversation"]
+    sessions = sorted(int(k.split("_")[1]) for k in c if re.fullmatch(r"session_\d+", k))
+    messages = [
+        {
+            "id": t["dia_id"],
+            "session": s,
+            "index": i,
+            "speaker": t["speaker"],
+            "text": t["text"],
+            "session_date": c[f"session_{s}_date_time"],
+        }
+        for s in sessions
+        for i, t in enumerate(c[f"session_{s}"])
+    ]
+    questions = [
+        {
+            "idx": i,
+            "question": q["question"],
+            "gold": str(q["answer"]),
+            "category": q["category"],
+            "evidence": q.get("evidence", []),
+            "last_evidence_session": max(sessions),
+        }
+        for i, q in enumerate(conv["qa"])
+        if q.get("category") != 5 and "answer" in q
+    ]
+    for m in messages:
+        m["at"] = session_time(m["session_date"]) + timedelta(seconds=m["index"])
+    return {
+        "name": conv_id,
+        "sessions": [min(sessions), max(sessions)],
+        "speakers": [c["speaker_a"], c["speaker_b"]],
+        "messages": messages,
+        "questions": questions,
+        "checkpoints": [max(sessions)],
+    }
+
+
 def load_slice(name: str) -> dict:
+    if name.startswith("heldout:"):
+        return load_heldout(name.split(":", 1)[1])
     path, checkpoints = SLICES[name]
     s = json.loads(path.read_text())
     if name in ("dev_updates", "dev_updates2"):
@@ -521,11 +568,18 @@ async def count_tokens(client, cache: CallCache, text: str) -> int:
 # ---------------------------------------------------------------- run
 
 
-async def run_arm(name: str, slice_name: str, budget: Budget, top_k: int | None = None, no_dates: bool = False) -> dict:
+async def run_arm(
+    name: str,
+    slice_name: str,
+    budget: Budget,
+    top_k: int | None = None,
+    no_dates: bool = False,
+    extra_top_ks: list[int] | None = None,
+) -> dict:
     spec = ARMS[name]
     sl = load_slice(slice_name)
     suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "")
-    arm_dir = ARMS_DIR / name / (slice_name + suffix)  # each option set gets its own store
+    arm_dir = ARMS_DIR / name / (slice_name.replace(":", "_") + suffix)  # each option set gets its own store
     shutil.rmtree(arm_dir, ignore_errors=True)
     arm_dir.mkdir(parents=True)
     cache = CallCache(CACHE, budget=budget)
@@ -539,8 +593,8 @@ async def run_arm(name: str, slice_name: str, budget: Budget, top_k: int | None 
     speakers = " and ".join(sl["speakers"])
     empty_block = await count_tokens(client, cache, json.dumps([], indent=4))
 
-    async def one(q: dict) -> dict:
-        lines, retrieve_cost = await system.memories(q["question"], top_k=top_k, no_dates=no_dates)
+    async def one(q: dict, k: int | None = top_k) -> dict:
+        lines, retrieve_cost = await system.memories(q["question"], top_k=k, no_dates=no_dates)
         block = json.dumps(lines, indent=4)
         retrieved_tokens = await count_tokens(client, cache, block) - empty_block
         prompt = ANSWER_PROMPT.format(speakers=speakers, memories=block, question=q["question"])
@@ -695,7 +749,30 @@ async def run_arm(name: str, slice_name: str, budget: Budget, top_k: int | None 
         if spec["system"] == "engram":
             result["fulfills_log"] = system.engine.writer.fulfills_log
     RESULTS.mkdir(parents=True, exist_ok=True)
-    (RESULTS / f"{name}__{slice_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))
+    out_name = slice_name.replace(":", "_")
+    (RESULTS / f"{name}__{out_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))
+    # Extra k values reuse this run's ingestion: answer the final questions again with a different cap.
+    for k in extra_top_ks or []:
+        final_qs = [q for q in sl["questions"] if q["last_evidence_session"] <= final]
+        ans_k = list(await asyncio.gather(*(one(q, k) for q in final_qs)))
+        rk = {
+            **{key: v for key, v in result.items() if key not in ("asked", "store_size_buckets")},
+            "options": {"top_k": k, "no_dates": no_dates},
+            "answers": ans_k,
+            "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in ans_k),
+            "accuracy_by_category": {
+                str(c): statistics.fmean(a["label"] == "CORRECT" for a in ans_k if a["category"] == c)
+                for c in sorted({a["category"] for a in ans_k}, key=str)
+            },
+            "no_memory_questions": sum(a["memories"] == 0 for a in ans_k),
+            "retrieved_tokens_mean": statistics.fmean(a["retrieved_tokens"] for a in ans_k),
+            "retrieved_tokens_median": statistics.median(a["retrieved_tokens"] for a in ans_k),
+            "memories_mean": statistics.fmean(a["memories"] for a in ans_k),
+            "store_size_buckets": [],
+        }
+        ksuffix = f"__k{k}" + ("__nodates" if no_dates else "")
+        (RESULTS / f"{name}__{out_name}{ksuffix}.json").write_text(json.dumps(rk, indent=1, default=str))
+        print(f"[{name}/{slice_name}] k={k}: accuracy {rk['accuracy']:.1%} (Q={len(ans_k)})", flush=True)
     return result
 
 
@@ -971,19 +1048,26 @@ def table(results: list[dict]) -> str:
 async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--arm", choices=list(ARMS))
-    parser.add_argument("--slice", choices=list(SLICES), default="dev")
+    parser.add_argument(
+        "--slice", default="dev", help=f"one of {list(SLICES)} or heldout:<conv id>, e.g. heldout:conv-30"
+    )
+    parser.add_argument("--also-top-k", default="", help="extra k values answered from the same ingestion, e.g. 20")
     parser.add_argument("--report", nargs="*", help="print the table for these arms from bench/results")
     parser.add_argument("--top-k", type=int, default=None, help="answer from only the top k memories")
     parser.add_argument("--no-dates", action="store_true", help="answer from memory text only")
     parser.add_argument("--suffix", default="", help="with --report: result-file suffix, e.g. __k3 or __nodates")
     args = parser.parse_args()
     if args.report is not None:
-        print(table([json.loads((RESULTS / f"{a}__{args.slice}{args.suffix}.json").read_text()) for a in args.report]))
+        sl = args.slice.replace(":", "_")
+        print(table([json.loads((RESULTS / f"{a}__{sl}{args.suffix}.json").read_text()) for a in args.report]))
         return
     budget = Budget(run_limit=RUN_LIMIT, total_limit=PHASE_LIMIT, prior_total=prior_spend())
     started = time.time()
     try:
-        result = await run_arm(args.arm, args.slice, budget, top_k=args.top_k, no_dates=args.no_dates)
+        extra = [int(k) for k in args.also_top_k.split(",") if k]
+        result = await run_arm(
+            args.arm, args.slice, budget, top_k=args.top_k, no_dates=args.no_dates, extra_top_ks=extra
+        )
     finally:
         LEDGER.parent.mkdir(parents=True, exist_ok=True)
         with LEDGER.open("a") as f:
