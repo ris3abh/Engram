@@ -15,16 +15,17 @@ nguyen2026byterover, jiang2026jevmem, jiang2026magma, xu2025amem, packer2023memg
 ong2025routellm, chen2024frugalgpt, inan2023llamaguard, guo2017calibration, angelopoulos2021conformal. The web
 sources resolve: typesafe2026jev, convai2026laya, mem0blog2026benchmarks, byteroverblog2026benchmark.
 
-**CHECK-ID (open in a browser and fix before submission):**
-- [ ] `taghia2026atmem`: the AtMem–Jev Hugging Face community article (Taghia, 19 Sept 2026). Neither its URL nor
-  its exact title could be found through Hugging Face's search API. The bib entry has a placeholder title and no
-  URL. The numbers quoted from it (1,986 questions; MRR@5 0.4259 → 0.5868; Recall@1 0.3399 → 0.5423; Recall@10
-  unchanged; median batch latency 3.32 s) come from the brief, not from reading the article.
-- [ ] `jiang2026jevmem`: the id, title and authors are verified. The numbers quoted from it (0.777 LoCoMo judge
-  score, 158 s build, 0.93 s query, gpt-4o-mini, baselines A-MEM / Nemori / MemoryOS / MAGMA) and the statements
-  about what it does not evaluate come from the brief; check them against the paper.
-- [ ] `inan2023llamaguard`: the author list is truncated with "others" after ten names (the API listing was cut
-  there).
+All CHECK-ID items are resolved (fix pass, item 6). Two entries differ from the bib pasted in the fix brief, on
+purpose:
+- `jiang2026magma`: third author is **Guanpeng** Li (arXiv API), not "Guangyu".
+- `mem0blog2026benchmarks`, `byteroverblog2026benchmark`: titles are the pages' own titles.
+
+Resolved: `taghia2026atmem` has its title, author (Javad Taghia) and URL, and its numbers were checked against the
+article; `jiang2026jevmem` numbers (0.777, 158 s, 0.93 s, gpt-4o-mini, baselines, admission filtering off) were
+checked against the paper; `inan2023llamaguard` has all eleven authors; LoCoMo is ACL 2024 with pages and DOI;
+LongMemEval is ICLR 2025; ByteRover has its eleventh author. `typesafe2026jev` points to /introduction and is
+cited for the 255-option limit only.
+
 - [ ] Venues for `liu2024lost` (TACL), `sun2023rankgpt` (EMNLP), `ong2025routellm` (ICLR), `chen2024frugalgpt`
   (TMLR) and `guo2017calibration` (ICML) were written from memory; the arXiv ids are verified.
 
@@ -41,14 +42,22 @@ sources resolve: typesafe2026jev, convai2026laya, mem0blog2026benchmarks, bytero
   messages. Only 30 of 76 messages made an LLM decision call. The caption now says so, with the numbers from
   `bench/results/e2_latency.json` (`bench/e2_latency.py`). No column needed "n/a".
 
+## Fix pass (2026-09-23), status
+
+0 title/abstract/pdftitle · 1 introduction order · 2 cleveref, labels, link colours · 3 numbered align equations ·
+4 floats (FloatBarrier, Table 1 single column, floatpagefraction 0.85) · 5 captions · 6 references.bib ·
+7 LoCoMo categories · 8 typography · 9 rebuild: all done, one commit each. Build: 23 pages, 0 undefined
+references or citations, 0 "??", largest overfull box 2.9pt.
+
 ## Layout decisions to confirm
 
 - Figure 9 (calibration, three panels) is a `figure*` like Figure 1. The brief puts figures with fewer than four
   panels in one column; three square panels at column width would be about 1 in each.
 - Tables 12 (latency by size) and 13 (held-out write side) moved to Appendix D to bring the PDF to 24 pages;
   Figures 12 and 4 carry them in the body.
-- `inconsolata` loads only if installed (`\IfFileExists`); the Docker TeX Live medium image used for the test
-  build lacks it, so that build uses the Latin Modern typewriter. arXiv's full TeX Live has it.
+- TeX build: with no local pdflatex, `make paper` uses the Docker image `engram-paper-tex` (`paper/docker/Dockerfile`:
+  TeX Live medium plus placeins, inconsolata, upquote, cleveref, xurl; `make image` builds it). arXiv's full TeX
+  Live has all of these.
 
 ## Findings from Part 3 the text now states
 
@@ -72,7 +81,7 @@ sources resolve: typesafe2026jev, convai2026laya, mem0blog2026benchmarks, bytero
   Accuracy exists at k=3, 6 and 20, which is what the accuracy-vs-tokens figure plots.
 - [ ] **Laya fine-tuned checkpoint** and fine-tuning on our escalation labels: not tested (stated in §5.6).
 - [ ] **Belief v3 on held-out:** deliberately not run.
-- [ ] **Build-phase spend:** not ledgered ("about $10 [no file]").
+- [ ] **Build-phase spend:** not ledgered; §4.1 says "roughly $10 by the author's estimate".
 
 ## Sources to confirm are acceptable
 
