@@ -52,7 +52,7 @@ CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
-RUN_LIMIT, PHASE_LIMIT = 3.0, 12.0
+RUN_LIMIT, PHASE_LIMIT = 3.0, 20.0  # phase cap raised from $12 to $20 by the user (option A)
 FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy from step 8, for the E0 check
 
 ARMS: dict[str, dict] = {
