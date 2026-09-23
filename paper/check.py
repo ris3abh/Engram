@@ -28,6 +28,7 @@ print(f"sourced numbers in body: {count}; src comments not matching numbers.json
 in_code = [m for m in re.findall(r"`([^`\n]*)`", body) if "<!-- src:" in m]
 print(f"sourced numbers inside code spans (would render literally): {len(in_code)}")
 stripped = re.sub(r"<!--.*?-->", "", stripped, flags=re.S)
+stripped = re.sub(r"\[[a-z][\w-]*\d{4}[\w-]*(?:; [a-z][\w-]*\d{4}[\w-]*)*\]", "[cite]", stripped)
 stripped = re.sub(r"`[^`]*`", "`code`", stripped)
 stripped = re.sub(r"!\[[^\]]*\]\([^)]*\)", "[figure]", stripped)
 ALLOWED = [

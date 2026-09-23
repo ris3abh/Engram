@@ -1,60 +1,63 @@
 # Paper TODO
 
-Build: `uv run python paper/build.py && uv run --with matplotlib python paper/figures.py && uv run python paper/check.py`.
-Edit `paper/main.src.md`, never `paper/main.md` (it is generated).
+Build: `make paper` (in `paper/`). Edit `paper/main.src.md`, never `main.md` or `main.tex` (both are generated).
 
-## [VERIFY] citations and external facts
+## Before submission
 
-All references in `main.md` are unverified. None of their URLs were in the repo before this draft.
+- [ ] **Author names.** The title block reads "[Author(s) TBD]".
+- [ ] **Repo URL.** "[REPO URL PLACEHOLDER]" appears in the title block and in §8 (Release).
 
-- [ ] LoCoMo, arXiv:2402.17753: authors and title.
-- [ ] LongMemEval, arXiv:2410.10813: authors and title.
-- [ ] Zep, arXiv:2501.13956: authors and title; the claim that Graphiti resolves entities and invalidates edges with LLM calls.
-- [ ] Mem0, arXiv:2504.19413: authors and title.
-- [ ] ByteRover, arXiv:2604.01599: authors, title and the "tiered agentic retrieval" description.
-- [ ] mem0.ai/blog/ai-memory-benchmarks-in-2026 and byterover.dev/blog/benchmark-ai-agent-memory: confirm they show the leaderboard discrepancy §2.3 claims. The paper quotes no numbers from them.
-- [ ] Letta, Cognee, Hindsight: need citations (§7).
-- [ ] Reranking / test-time compute: need a citation (§7).
-- [ ] Small models as guardrails and routers: need citations (§7).
-- [ ] Temperature scaling (Guo et al., ICML 2017) and a conformal prediction reference (§7).
-- [ ] TypeSafe docs (docs.typesafe.ai): the 255-option limit per choice question (§2.2). It is stated in `src/engram/decide/jev.py`'s docstring as coming from the docs, not measured.
-- [ ] Laya parameter count "421M" (abstract, §1, §2.2): taken from the laya-mlx 0.2.0 package docstring (`laya_mlx/router.py`), not from any result file.
+## Citations
 
-## Claims that wanted a number we do not have
+All arXiv entries in `paper/references.bib` were checked on 2026-09-23 against the arXiv API (id, title, authors,
+first-submission date): maharana2024locomo, wu2025longmemeval, rasmussen2025zep, chhikara2025mem0,
+nguyen2026byterover, jiang2026jevmem, jiang2026magma, xu2025amem, packer2023memgpt, liu2024lost, sun2023rankgpt,
+ong2025routellm, chen2024frugalgpt, inan2023llamaguard, guo2017calibration, angelopoulos2021conformal. The web
+sources resolve: typesafe2026jev, convai2026laya, mem0blog2026benchmarks, byteroverblog2026benchmark.
 
-- [ ] **ε_L**, the LLM's error on the gold pairs: never measured. Figure 4 plots ε_L ∈ {0, 0.1} as an assumption. Measuring it needs one Sonnet run on 50 pairs (50 × c_L ≈ $0.37 from `bench/results/tradeoff.json`; spending is stopped).
-- [ ] **Held-out rerank ablation:** §5.2 attributes the non-context share of the k=3 gap to reranking, based on a dev-slice ablation only. A held-out no-rerank arm was not run.
-- [ ] **Smaller LLM decider:** the E2 ratio is Jev against claude-sonnet-4-6. No run with a cheaper decider (for example Haiku) exists.
-- [ ] **Judge agreement with humans:** not measured (§6).
-- [ ] **Build-phase spend:** not ledgered. The paper says "about $10 [no file]", the figure you gave me. Remove the number or keep the [no file] marker.
-- [ ] **E2 LLM arm on the stress slice:** not run, so there is no stress-slice number for the LLM decision layer.
-- [ ] **Belief v3 on held-out:** deliberately not run (to avoid tuning on held-out). The paper recommends it without a held-out number.
-- [ ] **Set-2 keep items:** there is only one, so "no over-closes on set 2" rests on n=1.
-- [ ] **"22 of 25"** was not found in any file, so it was dropped. The paper instead reports the mechanical count from the relaxed-rule fulfills logs: 25 firings, 1 matching a labeled (plan, fulfilment) pair, 24 not. Rule: `paper/build.py` (`relaxed.*`).
+**CHECK-ID (open in a browser and fix before submission):**
+- [ ] `taghia2026atmem`: the AtMem–Jev Hugging Face community article (Taghia, 19 Sept 2026). Neither its URL nor
+  its exact title could be found through Hugging Face's search API. The bib entry has a placeholder title and no
+  URL. The numbers quoted from it (1,986 questions; MRR@5 0.4259 → 0.5868; Recall@1 0.3399 → 0.5423; Recall@10
+  unchanged; median batch latency 3.32 s) come from the brief, not from reading the article.
+- [ ] `jiang2026jevmem`: the id, title and authors are verified. The numbers quoted from it (0.777 LoCoMo judge
+  score, 158 s build, 0.93 s query, gpt-4o-mini, baselines A-MEM / Nemori / MemoryOS / MAGMA) and the statements
+  about what it does not evaluate come from the brief; check them against the paper.
+- [ ] `inan2023llamaguard`: the author list is truncated with "others" after ten names (the API listing was cut
+  there).
+- [ ] Venues for `liu2024lost` (TACL), `sun2023rankgpt` (EMNLP), `ong2025routellm` (ICLR), `chen2024frugalgpt`
+  (TMLR) and `guo2017calibration` (ICML) were written from memory; the arXiv ids are verified.
+
+## Things Part 1 could not reconcile
+
+- [ ] **Jev pricing.** $0.042 per million input tokens is the value in `src/engram/config.py`, which every cost
+  in the paper uses. TypeSafe's documentation (docs.typesafe.ai, including llms-full.txt) states the 255-option
+  limit but not a price. The paper cites the docs for the limit only and keeps the price sourced to the config.
+  Confirm it against TypeSafe's pricing page.
+- [ ] **Nemori and MemoryOS** are named in the concurrent-work paragraph as Jev-Mem's baselines but have no
+  bibliography entries (none were supplied). Add them or drop the names.
+- **Table 2 latency (reconciled).** The E2-LLM decision p50 (7,675 ms) and write p50 (918 ms) are medians over
+  different messages: decision p50 is over messages with at least one fact, and write p50 is over all 76
+  messages. Only 30 of 76 messages made an LLM decision call. The caption now says so, with the numbers from
+  `bench/results/e2_latency.json` (`bench/e2_latency.py`). No column needed "n/a".
+
+## Claims that want a number we do not have
+
+- [ ] **ε_L**, the LLM's error on the gold pairs: never measured. Figure 4 plots ε_L ∈ {0, 0.1} as an assumption.
+- [ ] **Held-out rerank ablation:** §5.2's attribution of the non-context share to reranking rests on a dev-slice
+  ablation.
+- [ ] **Smaller LLM decider:** the E2 ratio is Jev against claude-sonnet-4-6 only.
+- [ ] **Judge agreement with humans:** not measured.
+- [ ] **mem0 accuracy at k=4, 5, 7, 8:** only token counts were measured at those k (the token-matching sweep).
+  Accuracy exists at k=3, 6 and 20, which is what the accuracy-vs-tokens figure plots.
+- [ ] **Laya fine-tuned checkpoint** and fine-tuning on our escalation labels: not tested (stated in §5.6).
+- [ ] **Belief v3 on held-out:** deliberately not run.
+- [ ] **Build-phase spend:** not ledgered ("about $10 [no file]").
 
 ## Sources to confirm are acceptable
 
-- Design constants cite code, not result files: thresholds, clamps, candidate k, Jev price, the 12 questions, hygiene batch size. `numbers.json` lists each with its code path.
-- Update-set counts and SHA-256 prefixes cite `bench/updates_conv26.json` and `bench/updates2_conv26.json` (data files, not results).
-- Jev's current regression numbers (90% / 94% / 76%, 0 false closes) are recomputed from the probabilities saved in `bench/results/calibration.json`, written to `bench/results/jev_regression_v2.json` by `bench/jev_regression.py`. The calibration run folded `negates` into `contradiction`. The older table in `docs/BENCHMARK.md` is from earlier question versions and is not used.
-- The Laya regression was re-run locally and saved: `bench/results/laya_regression_{jev_wording,native}.{md,json}`. It reproduced 48% and 38% exact.
-- `bench/results/e4_belief_v2__dev_updates__k3.json` records `"arm": "e4_belief_v2_compact"`, the alias it ran under before the freeze. The flags are identical.
-- **Display rounding:** percentages to one decimal, ratios to one decimal, latencies to whole ms. The raw values are in `numbers.json`. Confirm this is acceptable under "do not round".
-- The E2 ratios are 70.0× (cost) and 27.6× (latency), not the "~60×" and "~30×" in the brief. The paper uses the measured values.
-- The latency ranges changed after the conv-43 and later runs entered the logs (9,446 requests now, not 7,187). The paper and `docs/FINDINGS.md` use the regenerated values: median 222–269 ms up to 50 questions and 371 ms for 51–80.
-
-## Placeholders
-
-- [ ] Author list.
-- [ ] Repo URL (abstract, §8).
-- [ ] mem0 source reference: `mem0/memory/main.py`, `Memory._add_to_vector_store`, installed mem0 2.1.0. Add a permalink.
-
-## Length
-
-- The body is about 4,900 words plus 13 tables and 5 figures, likely over the 8-page target.
-- Candidate moves to appendices:
-  - Table 12 (latency by size; Figure 5 carries it)
-  - Table 13 (write side; one sentence carries it)
-  - Table 11 (hybrid; two sentences carry it)
-  - Table 1 (Appendix A has the full questions)
-- Not done yet: waiting for your call.
+- Design constants cite code; update-set counts and hashes cite the data files.
+- Jev's regression numbers are recomputed from `bench/results/calibration.json` (negates folded into
+  contradiction) by `bench/jev_regression.py`.
+- Numbers quoted from other work are listed in `numbers.json` with the bibliography key as their source (`ext.*`).
+- Display rounding: percentages and ratios to one decimal, latencies to whole ms; raw values in `numbers.json`.

@@ -436,6 +436,35 @@ def numbers() -> None:
     md = load("mem0_dated__dev.json")
     N("mem0_dated__dev.acc", correct(md, "1234"), "bench/results/mem0_dated__dev.json", "frac")
 
+    # --- Table 2 latency reconciliation (bench/e2_latency.py)
+    ef = "bench/results/e2_latency.json"
+    el = load("e2_latency.json")
+    N("e2lat.msgs", el["e2_llm"]["messages"], ef, "int")
+    N("e2lat.llm_msgs", el["e2_llm"]["messages_with_llm_decisions"], ef, "int")
+    N("e2lat.extract_p50", el["e2_llm"]["extract_p50_all_ms"], ef, "ms")
+    N("e2lat.decide_max_p50", el["e2_llm"]["decide_max_p50_ms"], ef, "ms")
+
+    # --- external numbers quoted from cited work (source = bibliography key)
+    for key, value, src, fmt in (
+        ("ext.jevmem.locomo", 0.777, "jiang2026jevmem (reported LoCoMo judge score)", "f3"),
+        ("ext.jevmem.build", 158, "jiang2026jevmem (reported build time, s)", "int"),
+        ("ext.jevmem.query", 0.93, "jiang2026jevmem (reported query time, s)", "f2"),
+        ("ext.atmem.q", 1986, "taghia2026atmem (LoCoMo questions)", "int"),
+        ("ext.atmem.mrr.before", 0.4259, "taghia2026atmem (MRR@5, AtMem)", "raw"),
+        ("ext.atmem.mrr.after", 0.5868, "taghia2026atmem (MRR@5, AtMem + Jev)", "raw"),
+        ("ext.atmem.r1.before", 0.3399, "taghia2026atmem (Recall@1, AtMem)", "raw"),
+        ("ext.atmem.r1.after", 0.5423, "taghia2026atmem (Recall@1, AtMem + Jev)", "raw"),
+        ("ext.atmem.lat", 3.32, "taghia2026atmem (median batch latency, s)", "f2"),
+        ("ext.byterover.ms", 100, "nguyen2026byterover (sub-100 ms tier resolution)", "int"),
+        ("ext.jev.options", 255, "typesafe2026jev (max options per Choice)", "int"),
+        ("ext.laya.params", "421M", "convai2026laya (model card)", "raw"),
+        ("ext.laya.zs", 0.362, "convai2026laya (base checkpoint, typed-decisions, zero-shot)", "f3"),
+        ("ext.laya.random", 0.318, "convai2026laya (random baseline)", "f3"),
+        ("ext.laya.majority", 0.461, "convai2026laya (majority-class baseline)", "f3"),
+        ("ext.laya.ft", 0.766, "convai2026laya (laya-typed-decisions, fine-tuned)", "f3"),
+    ):
+        N(key, value, src, fmt)
+
     # --- Laya server as recorded in the Laya arm's result file
     lf_ = "bench/results/e4_belief_v2_laya__dev_updates__k3.json"
     info = load("e4_belief_v2_laya__dev_updates__k3.json")["backend"]["laya"]["info"]
@@ -1140,10 +1169,18 @@ def render(src: str) -> str:
     return re.sub(r"\{\{([^{}]+)\}\}", sub, src)
 
 
+CITE = re.compile(r"\[(@[\w-]+(?:;\s*@[\w-]+)*)\]")
+
+
+def md_cites(text: str) -> str:
+    """[@a; @b] -> [a; b] for the Markdown version (the LaTeX build turns them into \\citep)."""
+    return CITE.sub(lambda m: "[" + "; ".join(k.strip().lstrip("@") for k in m.group(1).split(";")) + "]", text)
+
+
 def main() -> None:
     numbers()
     src = (ROOT / "paper" / "main.src.md").read_text()
-    out = render(src)
+    out = md_cites(render(src))
     (ROOT / "paper" / "main.md").write_text(out)
     used = {k: NUM[k] for k in sorted(USED)}
     (ROOT / "paper" / "numbers.json").write_text(json.dumps(used, indent=1, default=list, ensure_ascii=False))

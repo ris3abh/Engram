@@ -1,15 +1,15 @@
 <!-- GENERATED from paper/main.src.md by paper/build.py. Edit the source, not this file.
 Every number carries a src comment naming the file it comes from; paper/numbers.json lists them all. -->
 
-# Decide, Don't Generate: Replacing LLM Calls with Typed Decisions in Long-Term Agent Memory
+# What Does a Typed Decision Layer Buy Agent Memory? A Controlled Study of Cost, Safety and Retrieval
 
-<!-- Alternative title: Belief-State Memory: Cheap Typed Decisions for Agent Memory Graphs -->
+<!-- Repo tagline: Decide, Don't Generate. -->
 
 *Author(s): [TBD]. Code: [REPO URL PLACEHOLDER].*
 
 ## Abstract
 
-Long-term memory systems for LLM agents make one or more LLM calls every time they write a memory. That makes
+We measure what a typed decision layer buys an agent memory system, in cost, store safety and retrieval. Long-term memory systems for LLM agents make one or more LLM calls every time they write a memory. That makes
 re-examining the store unaffordable, so systems drift toward adding facts and never revising them. Most of the
 write path, though, is not generation but choice among fixed options: is this new, a duplicate, or an update, and
 of what?
@@ -25,7 +25,7 @@ k=20 the two systems tie (difference +0.8<!-- src: bench/results/heldout_report.
 
 We report two negatives:
 - Closing stale facts does not change answers on current benchmarks.
-- A 421M-parameter [VERIFY] open-weights decision model (Laya) does not make relational decisions reliably.
+- The 421M<!-- src: convai2026laya (model card) --> base checkpoint of the open-weights decision model Laya, used zero-shot as its documentation advises against, does not make the relational decisions reliably.
 
 Code, prompts and per-question results are released.
 
@@ -36,6 +36,18 @@ write has two parts:
 - Extraction: what facts does this message state?
 - Decisions: is each fact new, a duplicate, a refinement, or a change to something already stored? Is it worth
   keeping? Is it sensitive?
+
+**Concurrent work.** The architectural idea of routing memory decisions to a typed decision model was reached
+independently by Jev-Mem [jiang2026jevmem], which uses Jev for typing, relation construction, query routing,
+budget allocation, traversal, candidate scoring and stopping. It reports a LoCoMo judge score of
+0.777<!-- src: jiang2026jevmem (reported LoCoMo judge score) --> with a 158<!-- src: jiang2026jevmem (reported build time, s) --> s build and 0.93<!-- src: jiang2026jevmem (reported query time, s) --> s query against A-MEM
+[xu2025amem], Nemori, MemoryOS and MAGMA [jiang2026magma]. It does not isolate the decision layer, evaluate
+updates or closes, measure calibration, or use a held-out split or confidence intervals. Separately, a community
+article reranked AtMem's top-10 with Jev on 1,986<!-- src: taghia2026atmem (LoCoMo questions) --> LoCoMo questions and measured the effect at the ranking
+level: MRR@5 rose from 0.4259<!-- src: taghia2026atmem (MRR@5, AtMem) --> to 0.5868<!-- src: taghia2026atmem (MRR@5, AtMem + Jev) --> and Recall@1 from
+0.3399<!-- src: taghia2026atmem (Recall@1, AtMem) --> to 0.5423<!-- src: taghia2026atmem (Recall@1, AtMem + Jev) --> [taghia2026atmem]. This paper's contribution is the controlled
+measurement: an identical-extraction ablation of the decision layer, its calibration, the safety of the store it
+drives, the rerank effect on answers with a matched-context control, and the negatives.
 
 In current open-source systems both parts are LLM calls. mem0 2.1.0's default `add()` makes a single LLM call per
 message with its additive extraction prompt, and has no separate update or delete step (`mem0/memory/main.py`,
@@ -58,8 +70,8 @@ they cost far less than generating text.
 3. **Rerank beats a larger k under a small retrieval budget.** At k=3 engram is +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> points ahead of mem0
    given matched context tokens, on 610<!-- src: bench/results/heldout_report.json --> held-out questions (§5.2).
 4. **Two documented negatives.** Closing stale facts does not change answers on LoCoMo-style questions, because
-   the answer model resolves recency from dates in the memory text (§5.5). A 421M-parameter [VERIFY] open-weights decision model
-   cannot make the relational decisions (§5.6).
+   the answer model resolves recency from dates in the memory text (§5.5). The 421M<!-- src: convai2026laya (model card) --> base checkpoint of Laya, used zero-shot as its documentation advises
+   against, does not make the relational decisions (§5.6).
 
 **Scope.** We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development
 conversation and four held-out conversations). We use update sets written by the system's author, and one hosted
@@ -76,13 +88,14 @@ We did not test:
 
 ### 2.1 How memory systems make write decisions
 
-- **mem0** (2.1.0) extracts facts with one LLM call per message. The prompt receives the new message, the last 10<!-- src: src/engram/flags.py (extract_last_k, as mem0 2.1.0) -->
+- **mem0** [chhikara2025mem0] (2.1.0) extracts facts with one LLM call per message. The prompt receives the new message, the last 10<!-- src: src/engram/flags.py (extract_last_k, as mem0 2.1.0) -->
   messages and the 10<!-- src: src/engram/config.py --> most similar existing memories, and emits only additions. Its older update step, which
   asked an LLM to label each new fact as ADD, UPDATE, DELETE or NONE against existing memories, is still shipped as
   `DEFAULT_UPDATE_MEMORY_PROMPT`. We use it as the LLM decision layer in §5.1.
-- **Zep's Graphiti** resolves entities and invalidates edges with LLM calls [VERIFY: arXiv 2501.13956].
-- **ByteRover** sits at the accuracy-at-any-cost end: tiered, agentic retrieval over the store
-  [VERIFY: arXiv 2604.01599].
+- **Zep's Graphiti** resolves entities and invalidates edges with LLM calls [rasmussen2025zep].
+- **ByteRover** curates a hierarchical context with an LLM; its retrieval is a five-tier progressive strategy that
+  answers most queries in under 100<!-- src: nguyen2026byterover (sub-100 ms tier resolution) --> ms without LLM calls and escalates to agentic reasoning only for novel
+  questions [nguyen2026byterover].
 
 ### 2.2 Typed decision models
 
@@ -94,17 +107,19 @@ A typed decision model takes a shared *state* (JSON) and a set of questions. Eac
 It returns a probability distribution per question.
 
 **Jev.** We use Jev through TypeSafe's API: model `jev-1.13.0`, priced at 0.042<!-- src: src/engram/config.py (USD per million input tokens) --> USD per million input tokens
-(`src/engram/config.py`). Its documented limit of 255 options per choice question comes from TypeSafe's
-documentation [VERIFY: docs.typesafe.ai]. Measured latency is flat in request size (§5.7).
+(`src/engram/config.py`). Its documentation gives a limit of 255<!-- src: typesafe2026jev (max options per Choice) --> options per choice question
+[typesafe2026jev]. Measured latency is flat in request size (§5.7).
 
 **Laya.** Laya is an open-weights model with the same request format. We ran checkpoint convaiinnovations/laya<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> locally
 through the laya-mlx port on an Apple M2 Pro<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> with 32<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> GB. It reads at most 512<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> tokens per
-question, of which at most 192<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> go to the instructions and options. Its parameter count, 421M, is taken
-from the laya-mlx package documentation [VERIFY].
+question, of which at most 192<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> go to the instructions and options. This is the 421M<!-- src: convai2026laya (model card) --> base
+checkpoint. Its model card reports zero-shot typed-decision accuracy of 0.362<!-- src: convai2026laya (base checkpoint, typed-decisions, zero-shot) --> against a 0.318<!-- src: convai2026laya (random baseline) -->
+random baseline, calls it "a fast base to specialise, not a zero-shot decision engine," and offers a separate
+checkpoint fine-tuned for typed decisions [convai2026laya]. We used the base checkpoint zero-shot.
 
 ### 2.3 LoCoMo and its limits
 
-LoCoMo [VERIFY: arXiv 2402.17753] contains long multi-session conversations with questions in four scored
+LoCoMo [maharana2024locomo] contains long multi-session conversations with questions in four scored
 categories.
 
 **It barely tests updates.** In the first 215<!-- src: bench/results/e2_jev__stress.json --> messages of conv-26, an LLM labeler (claude-sonnet-4-6,
@@ -112,8 +127,7 @@ prompt in `bench/stale.py`) found 2<!-- src: bench/results/e0_baseline__stress.j
 (`bench/slices/conv26_superseded.json`).
 
 **Public scores are not comparable.** Published LoCoMo scores for the same systems differ between the systems' own
-reports and third-party reports [VERIFY: mem0.ai/blog/ai-memory-benchmarks-in-2026;
-byterover.dev/blog/benchmark-ai-agent-memory]. We do not quote those numbers. All comparisons here run both
+reports and third-party reports [mem0blog2026benchmarks; byteroverblog2026benchmark]. We do not quote those numbers. All comparisons here run both
 systems under one protocol.
 
 ## 3. engram
@@ -303,8 +317,11 @@ The three arms in Table 2 share extraction. The two engram arms differ only in w
 - Jev typed questions (E2 Jev)
 - `claude-sonnet-4-6` with mem0's update prompt, one call per extracted fact (E2 LLM)
 
-*Table 2. Dev slice, conv-26 sessions 1–4, 35<!-- src: bench/results/e2_jev__dev.json --> questions, all retrieved memories. Extraction
-claude-haiku-4-5 for all arms. Answers and judge claude-sonnet-4-6. Costs are per 1,000 messages written.*
+*Table 2. Dev slice, conv-26 sessions 1–4, 76<!-- src: bench/results/e2_jev__dev.json --> messages, 35<!-- src: bench/results/e2_jev__dev.json --> questions, all retrieved memories
+(default k). Extraction claude-haiku-4-5 for all arms; answers and judge claude-sonnet-4-6; E2 LLM decides with
+claude-sonnet-4-6. Costs are per 1,000 messages written. Decision p50: median time after extraction, per message,
+over messages that produced at least one fact. Write p50: median end-to-end write time per message over all
+messages, including those that produced no facts.*
 
 | system | accuracy | decision $/1k | decision p50 | total $/1k | write p50 | facts |
 |---|---|---|---|---|---|---|
@@ -317,6 +334,11 @@ less and has 27.6×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_
 (18<!-- src: bench/results/e2_llm__dev.json --> against 47<!-- src: bench/results/e2_jev__dev.json -->) because mem0's UPDATE event rewrites an existing memory
 instead of adding one.
 
+The two latency columns are medians over different messages. In the E2 LLM arm only 30<!-- src: bench/results/e2_latency.json --> of
+76<!-- src: bench/results/e2_latency.json --> messages made an LLM decision call, so the write median falls on an extraction-only message
+(median extraction 869 ms<!-- src: bench/results/e2_latency.json -->); on the messages with decisions, the logged median of the slowest
+decision call is 7,892 ms<!-- src: bench/results/e2_latency.json --> (`bench/e2_latency.py`).
+
 These ratios compare Jev against `claude-sonnet-4-6` as the decider. We have no measurement with a smaller LLM
 decider. On the stress slice the Jev arm scored 67/80<!-- src: bench/results/e2_jev__stress.json --> and mem0 64/80<!-- src: bench/results/mem0__stress.json -->; the LLM
 arm was not run there.
@@ -327,6 +349,9 @@ points (95% CI -2.3<!-- src: bench/results/heldout_report.json --> to +3.9<!-- s
 +5.4<!-- src: bench/results/heldout_report.json -->; McNemar $p$ = 0.679<!-- src: bench/results/heldout_report.json -->), within noise.
 
 ### 5.2 Retrieval under a small budget
+
+Our answer-level result is consistent with the ranking-level improvement AtMem measured when reranking with Jev
+[taghia2026atmem].
 
 At k=3 engram shows the answer model 290<!-- src: bench/results/heldout_report.json --> tokens per question and mem0 159<!-- src: bench/results/heldout_report.json -->. Most of the
 difference is the source quote on each engram line. To separate context size from ranking, we answered the same
@@ -502,7 +527,11 @@ closes.
 Set 2, which asks about chains of changes and past moments, is at its ceiling for every arm. Current LoCoMo-style
 questions do not reward a correct store.
 
-### 5.6 Negative result: Laya
+### 5.6 Negative result: Laya, base checkpoint, zero-shot
+
+Everything in this section concerns the 421M<!-- src: convai2026laya (model card) --> base checkpoint, used zero-shot as its documentation
+advises against [convai2026laya]. The checkpoint fine-tuned for typed decisions (reported at 0.766<!-- src: convai2026laya (laya-typed-decisions, fine-tuned) --> on its
+own benchmark) and fine-tuning on our escalation labels were not tested; they are the obvious follow-up.
 
 **Regression and calibration.** On the 50<!-- src: bench/results/tradeoff.json --> regression pairs (Table 9), Laya chooses an accepted relation for
 48.0%<!-- src: bench/results/laya_regression_jev_wording.json --> with Jev's question wording and 38.0%<!-- src: bench/results/laya_regression_native.json --> with wording rewritten to fit its
@@ -511,7 +540,7 @@ closes nothing. Its gold-pair relation accuracy is 28.0%<!-- src: bench/results/
 ECE but not its accuracy.
 
 *Table 9. Contradiction regression, 50<!-- src: bench/results/tradeoff.json --> pairs, relation_to_candidate and temporal_status in one request. Laya:
-convaiinnovations/laya<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json -->, fp16, on the local MLX server.*
+convaiinnovations/laya<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> base checkpoint, zero-shot, fp16, on the local MLX server.*
 
 | backend | relation exact | temporal | close rule | closes | false closes |
 |---|---|---|---|---|---|
@@ -634,7 +663,8 @@ is the cheaper route to the same accuracy.
 - *One baseline and one benchmark.* We compare only mem0 OSS 2.1.0, on four held-out LoCoMo conversations.
 - *Author-written update sets.* The update sets and the regression pairs were written and labeled by the
   system's author.
-- *One decision model.* Jev is the only decision model evaluated, at one version.
+- *One decision model.* Jev is the only decision model evaluated as the deciding backend, at one version. Laya
+  was tested only as a zero-shot base checkpoint.
 - *mem0's date handling.* mem0's open-source path gives no observation date, so relative dates resolve against
   the run date. We kept this as shipped. A variant with the session date patched in scored
   31/35<!-- src: bench/results/mem0_dated__dev.json --> on dev, against 30/35<!-- src: bench/results/mem0__dev.json --> unpatched, within noise.
@@ -643,24 +673,35 @@ is the cheaper route to the same accuracy.
 
 ## 7. Related work
 
-**Memory systems.**
-- mem0 [VERIFY: arXiv 2504.19413] extracts and consolidates facts with LLM calls. Its 2.x open-source default is
-  add-only.
-- Zep/Graphiti [VERIFY: arXiv 2501.13956] builds a temporal knowledge graph and invalidates edges with an LLM.
-- ByteRover [VERIFY: arXiv 2604.01599] trades cost for accuracy with tiered agentic retrieval.
-- Letta [VERIFY], Cognee [VERIFY] and Hindsight [VERIFY] are further agent-memory systems we did not evaluate.
+**Memory systems.** mem0 [chhikara2025mem0] extracts and consolidates facts with LLM calls; its 2.x open-source
+default is add-only. Zep/Graphiti [rasmussen2025zep] builds a temporal knowledge graph and invalidates edges with
+an LLM. MemGPT/Letta [packer2023memgpt] manages memory tiers through LLM function calls. A-MEM [xu2025amem] links
+notes with LLM-written attributes, and MAGMA [jiang2026magma] organizes memory as multiple graphs. ByteRover
+[nguyen2026byterover] resolves most queries through a five-tier progressive retrieval, in under 100<!-- src: nguyen2026byterover (sub-100 ms tier resolution) --> ms and without LLM calls, and
+escalates to agentic reasoning only for novel questions.
 
-**Benchmarks.** LoCoMo [VERIFY: arXiv 2402.17753] and LongMemEval [VERIFY: arXiv 2410.10813] evaluate long-term
-conversational memory. We used only LoCoMo.
+**Typed decisions in memory.** Jev-Mem [jiang2026jevmem] is the closest design: Jev controls typing, relation
+construction, query routing, budget allocation, traversal, candidate scoring and stopping. The two designs differ
+in the store and in retrieval. Jev-Mem runs with admission filtering off and preserves every observation, so its
+store is never updated or closed; engram's store is governed by a close/belief policy with reversible closes and
+merges (§3.3–3.4). Jev-Mem routes queries across multiple views; engram uses a single listwise rerank over cosine
+candidates plus a query-relation pull (§3.1). The AtMem–Jev article [taghia2026atmem] measured the rerank at the
+ranking level (Recall@10 unchanged; median batch latency 3.32<!-- src: taghia2026atmem (median batch latency, s) --> s) and reported no answer accuracy or
+intervals.
 
-**Reranking and test-time compute.** Our rerank result fits the broader finding that spending compute on
-selecting context can beat adding more of it [VERIFY: citation needed].
+**Benchmarks.** LoCoMo [maharana2024locomo] and LongMemEval [wu2025longmemeval] evaluate long-term conversational
+memory. We used only LoCoMo.
 
-**Small models as decision layers.** Classifiers and small models are used as guardrails and as routers between
-models [VERIFY: citations needed]. The escalation rule of §3.6 is a router of that kind.
+**Reranking and context.** Long contexts are used poorly by language models [liu2024lost], and LLMs rerank
+candidates well [sun2023rankgpt]; spending compute on selecting context rather than adding more of it follows from
+both, and our rerank result is an instance.
 
-**Calibration and thresholds.** Temperature scaling [VERIFY: Guo et al., 2017] and conformal prediction
-[VERIFY: citation needed] give principled thresholds for acting on a model's probability. §3.4 depends on the
+**Small models as decision layers.** Routers send queries to cheaper models [ong2025routellm; chen2024frugalgpt],
+and small classifiers act as guardrails [inan2023llamaguard]. The escalation rule of §3.6 is a router of that
+kind.
+
+**Calibration and thresholds.** Temperature scaling [guo2017calibration] and conformal prediction
+[angelopoulos2021conformal] give principled thresholds for acting on a model's probability. §3.4 depends on the
 former.
 
 ## 8. Conclusion
@@ -669,7 +710,8 @@ With extraction held identical, typed decisions replaced an LLM decision layer a
 27.6×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json --> lower median decision latency, with no measured accuracy loss. On 610<!-- src: bench/results/heldout_report.json --> held-out questions,
 a cheap listwise rerank gave +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> points over mem0 at matched context under a three-memory budget, and the
 systems tied at k=20. Closing stale facts, the part of the design aimed at correctness, did not change answers on
-current benchmarks. A small open-weights decision model did not make the relational decisions.
+current benchmarks. The base checkpoint of a small open-weights decision model, used zero-shot, did not make the relational
+decisions.
 
 **Release.** [REPO URL PLACEHOLDER] contains:
 - engram's code (MIT license)
@@ -679,18 +721,6 @@ current benchmarks. A small open-weights decision model did not make the relatio
 - the call cache needed to reproduce each table without API spend
 
 ## References
-
-Every entry is unverified until checked; see `paper/TODO.md`.
-
-- [VERIFY] Maharana et al. LoCoMo: Evaluating Very Long-Term Conversational Memory of LLM Agents. arXiv:2402.17753.
-- [VERIFY] Wu et al. LongMemEval. arXiv:2410.10813.
-- [VERIFY] Rasmussen et al. Zep: A Temporal Knowledge Graph Architecture for Agent Memory. arXiv:2501.13956.
-- [VERIFY] Chhikara et al. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory. arXiv:2504.19413.
-- [VERIFY] ByteRover. arXiv:2604.01599.
-- [VERIFY] mem0. AI memory benchmarks in 2026. mem0.ai/blog/ai-memory-benchmarks-in-2026.
-- [VERIFY] ByteRover. Benchmark: AI agent memory. byterover.dev/blog/benchmark-ai-agent-memory.
-- [VERIFY] TypeSafe documentation. docs.typesafe.ai.
-- [VERIFY] Guo et al. On Calibration of Modern Neural Networks. ICML 2017.
 
 ---
 
