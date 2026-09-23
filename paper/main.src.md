@@ -385,7 +385,7 @@ engram at k=3 sits above the line through mem0's points, and the two systems mee
 ![Figure 5: Accuracy against retrieved tokens.](figures/acc_vs_tokens.svg)
 
 *Figure 5. Pooled held-out accuracy ({{ho.q}} questions) against mean retrieved tokens per question. mem0
-accuracy was measured at three settings, k = {{tm.k.3}}, {{tm.k}} and {{tm.k.20}}; the token-matching sweep counted
+accuracy was measured at three settings, k={{tm.k.3}}, {{tm.k}} and {{tm.k.20}}; the token-matching sweep counted
 tokens at the other k without answering. Models as in Table 3.*
 
 engram's point estimate is ahead in every conversation and in every category at matched context (Figure 6,

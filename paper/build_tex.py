@@ -86,11 +86,15 @@ def esc(text: str) -> str:
             raise ValueError(f"no LaTeX mapping for {ch!r} (U+{ord(ch):04X}) in: {text[:80]!r}")
         else:
             out.append(ch)
-    return "".join(out).replace("\x03", "``").replace("\x04", "''").replace("\x06", "~")
+    return "".join(out).replace("\x03", "``").replace("\x04", "''").replace("\x06", "~").replace("\x05", "$k{=}$")
 
 
 def esc_tt(text: str) -> str:
-    return r"\texttt{" + esc(text).replace(r"\_", r"\_\allowbreak{}").replace("--", "-{}-") + "}"
+    return (
+        r"\texttt{"
+        + esc(text).replace(r"\_", r"\_\allowbreak{}").replace("--", "-{}-").replace("/", r"/\allowbreak{}")
+        + "}"
+    )
 
 
 def number(display: str, source: str) -> str:
@@ -119,8 +123,12 @@ def xref(word: str, nums: str) -> str:
     return esc(word) + "~" + "".join(rf"\ref{{{kind}:{p}}}" if p.isdigit() else esc(p) for p in parts)
 
 
+KEQ = re.compile(rf"\bk ?= ?(\d+|{OPEN}[^{SEP}]*{SEP}[^{CLOSE}]*{CLOSE})")
+
+
 def inline(text: str) -> str:
     text = re.sub(r'"([^"`\n]{1,120})"', "\x03\\1\x04", text)
+    text = KEQ.sub(lambda m: "\x05" + (m.group(1) if m.group(1)[0] != OPEN else m.group(1)), text)
     out, pos = [], 0
     for m in TOKEN.finditer(text):
         out.append(esc(text[pos : m.start()]))
@@ -195,10 +203,14 @@ def table_tex(rows: list[list[str]], caption: str | None, label: str | None, one
     cap = (rf"\caption{{{inline(caption)}}}" + (rf"\label{{{label}}}" if label else "")) if caption else ""
     longest = max(len(plain(c)) for r in rows for c in r)
     if onecolumn and (longest > 40 or len(body) > 15):  # long appendix data: a longtable that breaks across pages
-        widths = [min(60, max(14, max(len(plain(r[j])) for r in [header, *body]))) for j in range(ncol)]
+        widths = [min(60, max(16, max(len(plain(r[j])) for r in [header, *body]))) for j in range(ncol)]
         total = sum(widths)
         usable = 1 - 0.0265 * ncol - 0.01
-        spec = "".join(rf">{{\raggedright\arraybackslash}}p{{{usable * w / total:.3f}\linewidth}}" for w in widths)
+        align = ["raggedleft" if numeric_col(body, j) else "raggedright" for j in range(ncol)]
+        spec = "".join(
+            rf">{{\{a}\arraybackslash}}p{{{usable * w / total:.3f}\linewidth}}"
+            for a, w in zip(align, widths, strict=True)
+        )
         head = " & ".join(r"\textbf{" + inline(h) + "}" for h in header) + r" \\"
         lines = [r"\begingroup\scriptsize", rf"\begin{{longtable}}{{{spec}}}"]
         if cap:
@@ -436,6 +448,7 @@ PREAMBLE = r"""\documentclass[10pt,twocolumn]{article}
 \usepackage{listings}
 \usepackage{enumitem}
 \usepackage{url}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram,
   pdftitle={Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}]{hyperref}
