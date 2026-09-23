@@ -43,8 +43,11 @@ os.environ.setdefault("MEM0_TELEMETRY", "False")
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 ROOT = Path(__file__).parents[1]
+UPDATES = ROOT / "bench" / "updates_conv26.json"
+EXCLUDED_AFTER_UPDATES = {84, 86, 87}  # LoCoMo dev questions about facts the update set changes
 SLICES = {
     "dev": (ROOT / "bench" / "slices" / "conv26_slice.json", [4]),
+    "dev_updates": (ROOT / "bench" / "slices" / "conv26_slice.json", None),  # dev + bench/updates_conv26.json
     "stress": (ROOT / "bench" / "slices" / "conv26_stress.json", [4, 7, 10]),
 }
 ARMS_DIR = ROOT / "bench" / ".cache" / "arms"
@@ -78,6 +81,19 @@ ARMS: dict[str, dict] = {
             candidate_source="cosine+graph",
         ),
     },
+    # E5 arms: relation_to_candidate v2 (negates) and the fulfills rule on top of E2 / E3.
+    "e2_jev_v2": {"system": "engram", "flags": Flags(**E2_FLAGS, relation_version=2, fulfills_rule=True)},
+    "e3_structural_v2": {
+        "system": "engram",
+        "flags": Flags(
+            **{**E2_FLAGS, "merge_policy": "same_as"},
+            cardinality_rule=True,
+            close_agreement=True,
+            candidate_source="cosine+graph",
+            relation_version=2,
+            fulfills_rule=True,
+        ),
+    },
     # mem0 with the session date passed as its Observation Date (mem0 2.1.0's OSS add() cannot pass one, so the
     # default arm resolves "yesterday" against the current date). Not mem0's default config; reported alongside.
     "mem0_dated": {"system": "mem0", "dated": True},
@@ -97,10 +113,43 @@ def session_time(text: str) -> datetime:
 def load_slice(name: str) -> dict:
     path, checkpoints = SLICES[name]
     s = json.loads(path.read_text())
+    if name == "dev_updates":
+        # The 30 update messages follow the slice in date order, one pseudo-session each (sessions 5..34).
+        items = sorted(
+            json.loads(UPDATES.read_text())["items"], key=lambda i: session_time(i["update"]["session_date"])
+        )
+        for n, item in enumerate(items, start=max(m["session"] for m in s["messages"]) + 1):
+            u = item["update"]
+            s["messages"].append(
+                {
+                    "id": u["id"],
+                    "session": n,
+                    "index": 0,
+                    "speaker": u["speaker"],
+                    "text": u["text"],
+                    "session_date": u["session_date"],
+                }
+            )
+            s["questions"].append(
+                {
+                    "idx": f"U:{item['id']}",
+                    "question": item["question"],
+                    "gold": item["gold"],
+                    "category": "update",
+                    "tier": item["tier"],
+                    "expected": item["expected"],
+                    "evidence": [u["id"]],
+                    "last_evidence_session": n,
+                }
+            )
+        s["update_items"] = items
+        checkpoints = [n]
     s["checkpoints"] = checkpoints
     for m in s["messages"]:
         m["at"] = session_time(m["session_date"]) + timedelta(seconds=m["index"])
     for q in s["questions"]:
+        if q.get("category") == "update":
+            continue
         q.setdefault(
             "last_evidence_session",
             max(int(x) for e in q["evidence"] for x in re.findall(r"D(\d+):", e)),
@@ -177,6 +226,20 @@ class EngramArm:
 
     def fact_records(self) -> list[tuple[str, str | None, bool]]:
         return [(f.text, f.source_message_id, f.is_valid) for f in self.engine.store.list_facts()]
+
+    def close_records(self) -> list[dict]:
+        facts = self.engine.store.list_facts()
+        source = {f.id: f.source_message_id for f in facts}
+        return [
+            {
+                "text": f.text,
+                "source": f.source_message_id,
+                "active": f.is_valid,
+                "reason": f.closed_reason,
+                "closer_source": source.get(f.closed_by),
+            }
+            for f in facts
+        ]
 
     def stored(self) -> dict:
         facts = self.engine.store.list_facts()
@@ -286,6 +349,12 @@ class Mem0Arm:
         found = self.memory.get_all(filters={"user_id": self.user_id}, top_k=10_000)
         items = found.get("results", []) if isinstance(found, dict) else found
         return [(r["memory"], self.source_of.get(str(r["id"])), True) for r in items]  # ADD-only: all active
+
+    def close_records(self) -> list[dict]:
+        return [
+            {"text": t, "source": src, "active": True, "reason": None, "closer_source": None}
+            for t, src, _ in self.fact_records()
+        ]
 
     def stored(self) -> dict:
         found = self.memory.get_all(filters={"user_id": self.user_id}, top_k=10_000)
@@ -432,7 +501,7 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
         "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in answers),
         "accuracy_by_category": {
             str(c): statistics.fmean(a["label"] == "CORRECT" for a in answers if a["category"] == c)
-            for c in sorted({a["category"] for a in answers})
+            for c in sorted({a["category"] for a in answers}, key=str)
         },
         **system.stored(),
         "facts_extracted": sum(w["extracted"] for w in writes),
@@ -456,9 +525,76 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
         "answers": answers,
         "asked": asked,
     }
+    if sl.get("update_items"):
+        result.update(update_report(sl, answers, system, SentenceEmbedder()))
+        if spec["system"] == "engram":
+            result["fulfills_log"] = system.engine.writer.fulfills_log
     RESULTS.mkdir(parents=True, exist_ok=True)
     (RESULTS / f"{name}__{slice_name}.json").write_text(json.dumps(result, indent=1, default=str))
     return result
+
+
+def update_report(sl: dict, answers: list[dict], system, embedder) -> dict:
+    """E5: LoCoMo accuracy with/without the questions the updates change, update-question accuracy per tier, and
+    per-item storage behavior: did the original fact close (correctly), stay (correctly), or over-close."""
+    from .stale import MATCH_THRESHOLD
+
+    locomo = [a for a in answers if a["category"] != "update"]
+    kept = [a for a in locomo if a["idx"] not in EXCLUDED_AFTER_UPDATES]
+    upd = {a["idx"]: a for a in answers if a["category"] == "update"}
+    records = system.close_records()
+    by_source: dict[str, list[dict]] = {}
+    for r in records:
+        by_source.setdefault(r["source"], []).append(r)
+    items = []
+    for item in sl["update_items"]:
+        facts = by_source.get(item["original"]["message_id"], [])
+        matched = []
+        if facts:
+            v = embedder.embed([item["original"]["fact"]] + [f["text"] for f in facts])
+            matched = [f for f, sim in zip(facts, v[1:] @ v[0], strict=True) if sim >= MATCH_THRESHOLD]
+        uid = item["update"]["id"]
+        closed_by_update = [f for f in matched if not f["active"] and f["closer_source"] == uid]
+        if not matched:
+            behavior = "not_stored"
+        elif item["expected"] == "no_close":
+            behavior = "over_closed" if closed_by_update else "kept"
+        elif any(f["active"] for f in matched):
+            behavior = "stale"
+        elif item["expected"] == "close_fulfilled":
+            behavior = "fulfilled" if any(f["reason"] == "fulfilled" for f in matched) else "closed_other_reason"
+        else:
+            behavior = "closed"
+        items.append(
+            {
+                "id": item["id"],
+                "tier": item["tier"],
+                "expected": item["expected"],
+                "behavior": behavior,
+                "answer": upd[f"U:{item['id']}"]["answer"],
+                "label": upd[f"U:{item['id']}"]["label"],
+            }
+        )
+
+    def acc(rows):
+        return statistics.fmean(r["label"] == "CORRECT" for r in rows) if rows else None
+
+    tiers = {t: [i for i in items if i["tier"] == t] for t in ("easy", "subtle", "fulfilled")}
+    stored_close = [i for i in items if i["expected"] != "no_close" and i["behavior"] != "not_stored"]
+    stored_keep = [i for i in items if i["expected"] == "no_close" and i["behavior"] != "not_stored"]
+    return {
+        "accuracy": acc(locomo),
+        "locomo_accuracy": acc(locomo),
+        "locomo_accuracy_excl": acc(kept),
+        "locomo_q": len(locomo),
+        "locomo_q_excl": len(kept),
+        "update_accuracy": acc(items),
+        "update_accuracy_by_tier": {t: acc(v) for t, v in tiers.items()},
+        "update_items": items,
+        "update_behavior": dict(Counter(i["behavior"] for i in items)),
+        "stale_on_close_items": (sum(i["behavior"] == "stale" for i in stored_close), len(stored_close)),
+        "over_close_on_no_close_items": (sum(i["behavior"] == "over_closed" for i in stored_keep), len(stored_keep)),
+    }
 
 
 def fmt(r: dict | None, key: str) -> str:
@@ -466,7 +602,7 @@ def fmt(r: dict | None, key: str) -> str:
         return "—"
     v = r[key]
     if key == "accuracy":
-        return f"{v:.1%} (Q={r['slice']['questions']})"
+        return f"{v:.1%} (Q={r.get('locomo_q', r['slice']['questions'])})"
     if key.endswith("_ms"):
         return f"{v / 1000:.2f} s" if v >= 1000 else f"{v:.0f} ms"
     if key.endswith("per_1k"):
@@ -542,6 +678,43 @@ def table(results: list[dict]) -> str:
         lines.append(
             f"| same {n_early} session-1-4 questions at each store size | "
             + " | ".join(" → ".join(f"{b['early_accuracy']:.0%}" for b in r["store_size_buckets"]) for r in results)
+            + " |"
+        )
+    if all(r.get("update_items") for r in results):
+
+        def pair(t):
+            return f"{t[0]}/{t[1]}"
+
+        lines.append(
+            "| LoCoMo dev without Q84/Q86/Q87 | "
+            + " | ".join(f"{r['locomo_accuracy_excl']:.1%} (Q={r['locomo_q_excl']})" for r in results)
+            + " |"
+        )
+        lines.append("| update accuracy (Q=30) | " + " | ".join(f"{r['update_accuracy']:.0%}" for r in results) + " |")
+        for t, n in (("easy", 15), ("subtle", 10), ("fulfilled", 5)):
+            lines.append(
+                f"| update accuracy, {t} (Q={n}) | "
+                + " | ".join(f"{r['update_accuracy_by_tier'][t]:.0%}" for r in results)
+                + " |"
+            )
+        lines.append(
+            "| stale on close/fulfilled items (stored) | "
+            + " | ".join(pair(r["stale_on_close_items"]) for r in results)
+            + " |"
+        )
+        lines.append(
+            "| over-closed no_close items (stored) | "
+            + " | ".join(pair(r["over_close_on_no_close_items"]) for r in results)
+            + " |"
+        )
+        lines.append(
+            "| item behavior | "
+            + " | ".join(", ".join(f"{k} {v}" for k, v in sorted(r["update_behavior"].items())) for r in results)
+            + " |"
+        )
+        lines.append(
+            "| fulfills firings | "
+            + " | ".join(str(len(r.get("fulfills_log", []))) if r["system"] == "engram" else "—" for r in results)
             + " |"
         )
     cats = sorted({c for r in results for c in r["accuracy_by_category"]})

@@ -34,7 +34,7 @@ from engram.decide.questions import RELATION_TO_CANDIDATE, TEMPORAL_STATUS, Ask
 ROOT = Path(__file__).parents[1]
 PAIRS = ROOT / "bench" / "contradiction_pairs.jsonl"
 BENCHMARK = ROOT / "docs" / "BENCHMARK.md"
-SUPERSEDE = {"update", "contradiction"}
+SUPERSEDE = {"update", "contradiction", "negates"}  # negates exists from relation_to_candidate v2
 TIERS = ("easy", "medium", "subtle")
 THRESHOLDS = (0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95)
 
@@ -73,7 +73,10 @@ class Result:
 
     @property
     def exact(self) -> bool:
-        return self.chosen in self.pair["accept"]
+        # v2's `negates` is a contradiction of the same fact; the pairs predate it and list contradiction instead.
+        return self.chosen in self.pair["accept"] or (
+            self.chosen == "negates" and "contradiction" in self.pair["accept"]
+        )
 
     @property
     def supersede_ok(self) -> bool:

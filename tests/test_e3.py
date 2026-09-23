@@ -60,7 +60,7 @@ async def test_cardinality_allows_close_on_single_valued(store):
 class Disagree(MockBackend):
     def _decide(self, state, ask, request_id):
         d = super()._decide(state, ask, request_id)
-        if ask.question.id == "relation_to_candidate_v2":
+        if ask.question.id == "relation_to_candidate_recheck":
             d.probs = {o: (0.9 if o == "new" else 0.025) for o in d.options}
             d.chosen = "new"
         return d
@@ -71,7 +71,7 @@ async def test_close_needs_both_phrasings(store):
     await p.ingest("I live in Paris")
     o = (await p.ingest("I moved to Berlin")).outcomes[0]
     assert o.closed_target and p.stats["agreements"] == 1
-    assert "relation_to_candidate_v2" in {d.question for d in o.decisions}
+    assert "relation_to_candidate_recheck" in {d.question for d in o.decisions}
 
 
 async def test_disagreement_goes_to_llm(store):

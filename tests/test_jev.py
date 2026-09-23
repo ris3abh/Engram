@@ -6,7 +6,8 @@ import pytest
 from engram.decide.base import DecisionError
 from engram.decide.jev import JevBackend
 from engram.decide.log import DecisionLog
-from engram.decide.questions import DURABILITY, RELATION_TO_CANDIDATE, WORTH_REMEMBERING, Ask
+from engram.decide.questions import DURABILITY, WORTH_REMEMBERING, Ask
+from engram.decide.questions import RELATION_TO_CANDIDATE_V1 as RELATION_TO_CANDIDATE  # fixtures carry v1 options
 
 ASKS = [
     Ask("worth_remembering", WORTH_REMEMBERING),

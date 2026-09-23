@@ -109,7 +109,12 @@ def _peaked(options: list[str], chosen: str, p: float = 0.9) -> dict[str, float]
     return {o: p if o == chosen else rest for o in options}
 
 
+_NEGATION = r"\b(no longer|anymore|stopped|quit|gave up|lost|sold|don't|doesn't|didn't)\b"
+
+
 def relation(new: dict[str, Any], old: dict[str, Any]) -> str:
+    if re.search(_NEGATION, new["text"], re.I) and tokens(new.get("object", "")) & tokens(old.get("object", "")):
+        return "negates"
     if jaccard(new["text"], old["text"]) >= 0.8:
         return "duplicate"
     if new.get("subject") != old.get("subject"):
@@ -154,8 +159,9 @@ class MockBackend(DecisionBackend):
             probs = _peaked(options, _first(_KIND_RULES, text, "bio"))
         elif qid == "temporal_status":
             probs = _peaked(options, temporal_status(text))
-        elif qid in ("relation_to_candidate", "relation_to_candidate_v2"):
-            probs = _peaked(options, relation(fact, ask.refs["existing_fact"]))
+        elif qid in ("relation_to_candidate", "relation_to_candidate_recheck"):
+            label = relation(fact, ask.refs["existing_fact"])
+            probs = _peaked(options, label if label in options else "contradiction")  # v1 has no `negates`
         elif qid == "edge_type":
             probs = _peaked(options, edge_type(text))
         elif qid == "durability":

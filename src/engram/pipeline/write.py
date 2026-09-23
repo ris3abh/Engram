@@ -31,12 +31,11 @@ from ..decide.questions import (
     EDGE_CARDINALITY,
     EDGE_TYPE,
     FACT_KIND,
-    RELATION_TO_CANDIDATE,
-    RELATION_TO_CANDIDATE_V2,
     SENSITIVITY,
     TEMPORAL_STATUS,
     WORTH_REMEMBERING,
     Ask,
+    relation_questions,
 )
 from ..embed import Embedder, top_k
 from ..flags import Flags
@@ -45,7 +44,8 @@ from ..models import REDACTED, Decision, ExtractedFact, Fact, Message, new_id, n
 from ..store import Store
 from .extract import extract
 
-SUPERSEDE = {"update", "contradiction"}
+SUPERSEDE = {"update", "contradiction", "negates"}  # relations that can close the existing fact (negates: v2)
+PLAN_RELATIONS = {"plans", "goal"}
 CONTEXT_MESSAGES = 6
 FACT_QUESTIONS = (WORTH_REMEMBERING, FACT_KIND, TEMPORAL_STATUS, EDGE_TYPE, DURABILITY, SENSITIVITY)
 
@@ -112,6 +112,8 @@ class WritePipeline:
         flags: Flags | None = None,
     ):
         self.flags = flags or Flags()
+        self.rel_q, self.recheck_q = relation_questions(self.flags.relation_version)
+        self.fulfills_log: list[dict] = []  # every fulfills firing, for the audit and the E5 report
         self.store = store
         self.backend = backend
         self.llm = llm
@@ -195,7 +197,7 @@ class WritePipeline:
         asks = [
             Ask(
                 f"pair__{i}__{j}",
-                RELATION_TO_CANDIDATE,
+                self.rel_q,
                 {"new_fact": _draft_ref(drafts[j]), "existing_fact": _draft_ref(drafts[i])},
             )
             for j in range(1, n)
@@ -231,7 +233,7 @@ class WritePipeline:
         asks = [Ask(q.id, q) for q in FACT_QUESTIONS]
         if self.flags.relation_decider == "jev":
             asks += [
-                Ask(f"relation_to_candidate__{i}", RELATION_TO_CANDIDATE, {"existing_fact": _ref(c)}, target=c.id)
+                Ask(f"relation_to_candidate__{i}", self.rel_q, {"existing_fact": _ref(c)}, target=c.id)
                 for i, c in enumerate(candidates)
             ]
         try:
@@ -250,7 +252,7 @@ class WritePipeline:
                 more = [
                     Ask(
                         f"relation_to_candidate__{offset + i}",
-                        RELATION_TO_CANDIDATE,
+                        self.rel_q,
                         {"existing_fact": _ref(c)},
                         target=c.id,
                     )
@@ -287,13 +289,13 @@ class WritePipeline:
                     label, _, merged_text = map_update_events(events, 1)
                 else:
                     label, usage = await self.llm.judge_relation(
-                        draft.text, relation.target.text, message.text, RELATION_TO_CANDIDATE.criteria
+                        draft.text, relation.target.text, message.text, self.rel_q.criteria
                     )
                     merged_text = None
                 usages.append(usage)
                 escalation = Decision(
-                    question=RELATION_TO_CANDIDATE.id,
-                    options=RELATION_TO_CANDIDATE.options,
+                    question=self.rel_q.id,
+                    options=self.rel_q.options,
                     probs={label: 1.0},
                     chosen=label,
                     backend="llm_escalation",
@@ -326,7 +328,10 @@ class WritePipeline:
 
         def outcome(action: str, fact_id: str | None, target_id: str | None, closed: bool, tent: bool):
             fulfilled = []
-            if action in {"inserted", "refined", "updated", "contradicted", "disputed", "same_as"} and fact_id:
+            if (
+                action in {"inserted", "refined", "updated", "contradicted", "negated", "disputed", "same_as"}
+                and fact_id
+            ):
                 fulfilled = self._apply_fulfills(fact, d, candidates, temporal, decisions)
             return WriteOutcome(
                 draft.text if not redacted else fact.text,
@@ -373,12 +378,14 @@ class WritePipeline:
         if relation.label in SUPERSEDE:
             close = confident and is_current and not tentative
             single = EDGE_CARDINALITY.get(target.predicate, "many") == "one"
-            if self.flags.cardinality_rule and not single:
+            sibling = target.subject == normalize_entity(fact.subject) and target.predicate == fact.predicate
+            # negates may close any cardinality; update needs a single-valued relation; contradiction also a sibling.
+            allowed = relation.label == "negates" or (single and (relation.label == "update" or sibling))
+            if self.flags.cardinality_rule and not allowed:
                 if close:
                     self.stats["blocked_closes"] += 1
-                    decisions.append(
-                        self._rule("close_blocked", "kept", f"{target.predicate} is multi-valued", target.id)
-                    )
+                    why = f"{target.predicate} is multi-valued" if not single else "not a sibling value"
+                    decisions.append(self._rule("close_blocked", "kept", f"{relation.label}: {why}", target.id))
                 if relation.label == "contradiction":
                     fact.disputed = True
                     self.store.update_fact(target.id, disputed=True)
@@ -395,7 +402,7 @@ class WritePipeline:
             self.store.add_fact(fact, vector)
             if close:
                 self.store.expire_fact(target.id, max(fact.valid_from, target.valid_from), by=fact.id)
-            action = "updated" if relation.label == "update" else "contradicted"
+            action = {"update": "updated", "contradiction": "contradicted", "negates": "negated"}[relation.label]
             return outcome(action, fact.id, target.id, close, fact.tentative)
 
         # A duplicate we are not sure about: keep it as its own tentative edge rather than merging.
@@ -420,11 +427,13 @@ class WritePipeline:
         closed = []
         for i, c in enumerate(candidates):
             relation = d.get(f"relation_to_candidate__{i}")
+            is_plan = c.predicate in PLAN_RELATIONS or (
+                c.temporal_status == "planned" and c.predicate == fact.predicate
+            )
             if (
                 c.is_valid
-                and c.temporal_status == "planned"
+                and is_plan
                 and c.subject == normalize_entity(fact.subject)
-                and c.predicate == fact.predicate
                 and relation is not None
                 and relation.backend != "fallback"
                 and relation.chosen != "new"
@@ -435,6 +444,18 @@ class WritePipeline:
                 self.store.add_decisions(fact.id, [rule])
                 closed.append(c.id)
                 self.stats["fulfilled"] += 1
+                self.fulfills_log.append(
+                    {
+                        "plan": c.text,
+                        "plan_relation": c.predicate,
+                        "plan_source": c.source_message_id,
+                        "by": fact.text,
+                        "by_source": fact.source_message_id,
+                        "jev_relation": relation.chosen,
+                        "p": round(relation.p, 3),
+                        "temporal": temporal.chosen,
+                    }
+                )
         return closed
 
     # E3 helpers
@@ -453,9 +474,7 @@ class WritePipeline:
 
         Returns (close, rewrite_text). rewrite_text is set when the LLM says UPDATE.
         """
-        ask = Ask(
-            "relation_to_candidate_v2", RELATION_TO_CANDIDATE_V2, {"existing_fact": _ref(target)}, target=target.id
-        )
+        ask = Ask("relation_to_candidate_recheck", self.recheck_q, {"existing_fact": _ref(target)}, target=target.id)
         self.stats["agreement_checks"] += 1
         try:
             second = (await self.backend.ask(state, [ask]))[ask.key]
@@ -474,8 +493,8 @@ class WritePipeline:
         usages.append(usage)
         label, _, merged = map_update_events(events, 1)
         escalation = Decision(
-            question=RELATION_TO_CANDIDATE.id,
-            options=RELATION_TO_CANDIDATE.options,
+            question=self.rel_q.id,
+            options=self.rel_q.options,
             probs={label: 1.0},
             chosen=label,
             backend="llm_escalation",
@@ -560,8 +579,8 @@ class WritePipeline:
         label, index, merged = map_update_events(events, len(candidates))
         target = candidates[index] if index is not None else None
         decision = Decision(
-            question=RELATION_TO_CANDIDATE.id,
-            options=RELATION_TO_CANDIDATE.options,
+            question=self.rel_q.id,
+            options=self.rel_q.options,
             probs={label: 1.0},
             chosen=label,
             backend="llm_decider",

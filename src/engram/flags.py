@@ -27,9 +27,11 @@ class Flags:
     cardinality_rule: bool = False  # closes only on single-valued relations; contradictions elsewhere -> disputed
     close_agreement: bool = False  # a close needs relation_to_candidate and its v2 phrasing to agree at p >= 0.85
     candidate_source: str = "cosine"  # cosine | cosine+graph (add same subject+predicate and shared-entity facts)
-    # E5: a planned fact is closed (reason "fulfilled", linked to the new fact) when a past/current fact with the same
-    # subject and predicate arrives and Jev does not call the pair unrelated ("new"). No text merge.
+    # E5: a plan is closed (reason "fulfilled", linked to the new fact, no text merge) when a related past/current fact
+    # about the same subject arrives: the old fact's relation is plans or goal (or it is a planned fact with the same
+    # relation as the new one), and Jev did not call the pair unrelated ("new"). Every firing is logged.
     fulfills_rule: bool = False
+    relation_version: int = 1  # relation_to_candidate version: 1 (E0-E3) | 2 (adds `negates`, E5 on)
 
     def describe(self) -> dict:
         return asdict(self)

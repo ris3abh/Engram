@@ -59,7 +59,7 @@ Code rule (added after the contradiction test): `write.py` may close an old edge
 escalated). Otherwise the new fact is inserted with `tentative=True`, and the old edge's `valid_until` stays
 open. Jev decides the temporal status; code does all date arithmetic.
 
-### 4. `relation_to_candidate__{i}` (Choice, i = 0..k-1, k=10)
+### 4. `relation_to_candidate__{i}` (Choice, version 2, i = 0..k-1, k=10)
 
 The existing fact is carried in `instructions`, not in the state:
 
@@ -79,13 +79,21 @@ The existing fact is carried in `instructions`, not in the state:
 | `update` | Same attribute of the same subject, and `new_fact` gives the newer value. `existing_fact` was true before but is no longer current (for example a move, a job change, a new phone). |
 | `contradiction` | Both cannot be true at the same time, and `new_fact` does not describe a change over time. It directly conflicts with `existing_fact` (for example "is vegetarian" vs "favorite food is steak"). |
 | `refinement` | `new_fact` adds detail to `existing_fact` without making it false (for example "lives in Berlin" becoming "lives in Kreuzberg, Berlin"). |
+| `negates` | `new_fact` says that `existing_fact` itself no longer holds: the same subject, relation and object, now stopped, ended, lost or undone (for example "User goes to a support group" vs "User doesn't go to the support group anymore"). |
 
 Code rule: pick the candidate with the highest non-`new` probability. If that candidate's top answer is still
 `new`, the fact is new (tentative if P(new) < `ACT_THRESHOLD`). The act, tentative and escalate thresholds
 are in PLAN.md §2. Escalation is only for `update` or `contradiction` below `ESCALATE_BELOW`. Closing an old
 edge also requires `temporal_status` (above).
 
-### 4b. `relation_to_candidate_v2` (Choice, E3 close check)
+**Versions.** v1 (E0 to E3) had the first five options only. v2 (E5 on) appends `negates`; v1's option order is
+unchanged. `flags.relation_version` picks the version; old arms keep v1 so their cached runs reproduce.
+**Code rules for closing (v2, with `flags.cardinality_rule`).** `negates` may close an edge of any cardinality.
+`contradiction` may close only a sibling (same subject and relation, different value) on a single-valued relation.
+`update` may close only on a single-valued relation. Every close also needs `temporal_status` current and, with
+`flags.close_agreement`, the recheck phrasing to name a closing option (update, contradiction or negates) at p ≥ 0.85.
+
+### 4b. `relation_to_candidate_recheck` (Choice, version 2, E3 close check)
 
 Asked only when a close on a single-valued relation is about to happen (`flags.close_agreement`). The existing fact is
 carried in `instructions` exactly as in question 4; the options, their order and their rubrics are identical to
@@ -100,8 +108,10 @@ Instructions: "Once `new_fact` is known, what happens to `existing_fact`?"
 | `update` | Same attribute of the same subject, and `new_fact` gives the newer value. `existing_fact` was true before but is no longer current (for example a move, a job change, a new phone). |
 | `contradiction` | Both cannot be true at the same time, and `new_fact` does not describe a change over time. It directly conflicts with `existing_fact` (for example "is vegetarian" vs "favorite food is steak"). |
 | `refinement` | `new_fact` adds detail to `existing_fact` without making it false (for example "lives in Berlin" becoming "lives in Kreuzberg, Berlin"). |
+| `negates` | `new_fact` says that `existing_fact` itself no longer holds: the same subject, relation and object, now stopped, ended, lost or undone (for example "User goes to a support group" vs "User doesn't go to the support group anymore"). |
 
-Code rule: close only if both phrasings say `update` or `contradiction` at p ≥ `ACT_THRESHOLD`. If they disagree, the
+Code rule: close only if both phrasings name a closing option (`update`, `contradiction`, or in v2 `negates`) at p ≥
+`ACT_THRESHOLD`. If they disagree, the
 pair goes to the LLM with mem0's `DEFAULT_UPDATE_MEMORY_PROMPT`: DELETE closes, UPDATE rewrites the old fact with the
 merged text, anything else stores the new fact as tentative and keeps the old edge.
 

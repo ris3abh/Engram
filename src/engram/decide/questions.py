@@ -15,6 +15,7 @@ class ChoiceQuestion:
     id: str
     instructions: str
     criteria: dict[str, str]  # option -> rubric
+    version: int = 1  # bumped when options or wording change; old versions stay importable for old arms
 
     type = "choice"
 
@@ -95,25 +96,45 @@ FACT_KIND = ChoiceQuestion(
     },
 )
 
+RELATION_CRITERIA_V1 = {
+    "new": "They are about different things. Both can be true, and neither changes the other.",
+    "duplicate": "Same information, maybe worded differently. Storing `new_fact` adds nothing.",
+    "update": (
+        "Same attribute of the same subject, and `new_fact` gives the newer value. `existing_fact` was true "
+        "before but is no longer current (for example a move, a job change, a new phone)."
+    ),
+    "contradiction": (
+        "Both cannot be true at the same time, and `new_fact` does not describe a change over time. It directly "
+        'conflicts with `existing_fact` (for example "is vegetarian" vs "favorite food is steak").'
+    ),
+    "refinement": (
+        '`new_fact` adds detail to `existing_fact` without making it false (for example "lives in Berlin" '
+        'becoming "lives in Kreuzberg, Berlin").'
+    ),
+}
+
+# v2 (E5): adds `negates`, appended so the v1 options keep their order.
+RELATION_CRITERIA_V2 = {
+    **RELATION_CRITERIA_V1,
+    "negates": (
+        "`new_fact` says that `existing_fact` itself no longer holds: the same subject, relation and object, now "
+        'stopped, ended, lost or undone (for example "User goes to a support group" vs "User doesn\'t go to the '
+        'support group anymore").'
+    ),
+}
+
+RELATION_TO_CANDIDATE_V1 = ChoiceQuestion(
+    id="relation_to_candidate",
+    instructions="How does `new_fact` relate to `existing_fact`?",
+    criteria=RELATION_CRITERIA_V1,
+    version=1,
+)
+
 RELATION_TO_CANDIDATE = ChoiceQuestion(
     id="relation_to_candidate",
     instructions="How does `new_fact` relate to `existing_fact`?",
-    criteria={
-        "new": "They are about different things. Both can be true, and neither changes the other.",
-        "duplicate": "Same information, maybe worded differently. Storing `new_fact` adds nothing.",
-        "update": (
-            "Same attribute of the same subject, and `new_fact` gives the newer value. `existing_fact` was true "
-            "before but is no longer current (for example a move, a job change, a new phone)."
-        ),
-        "contradiction": (
-            "Both cannot be true at the same time, and `new_fact` does not describe a change over time. It directly "
-            'conflicts with `existing_fact` (for example "is vegetarian" vs "favorite food is steak").'
-        ),
-        "refinement": (
-            '`new_fact` adds detail to `existing_fact` without making it false (for example "lives in Berlin" '
-            'becoming "lives in Kreuzberg, Berlin").'
-        ),
-    },
+    criteria=RELATION_CRITERIA_V2,
+    version=2,
 )
 
 TEMPORAL_STATUS = ChoiceQuestion(
@@ -220,13 +241,21 @@ SENSITIVITY = ChoiceQuestion(
     },
 )
 
-# E3: the second phrasing asked before any close on a single-valued relation. Same options, same order, same
-# rubrics; only the instruction wording differs. A close needs both phrasings to agree at p >= ACT_THRESHOLD.
-RELATION_TO_CANDIDATE_V2 = ChoiceQuestion(
-    id="relation_to_candidate_v2",
-    instructions="Once `new_fact` is known, what happens to `existing_fact`?",
-    criteria=RELATION_TO_CANDIDATE.criteria,
+# E3: the second phrasing asked before a close. Same options, same order, same rubrics as the relation question of
+# the same version; only the instruction wording differs. A close needs both phrasings to agree at p >= 0.85.
+_RECHECK = "Once `new_fact` is known, what happens to `existing_fact`?"
+RELATION_RECHECK_V1 = ChoiceQuestion(
+    id="relation_to_candidate_recheck", instructions=_RECHECK, criteria=RELATION_CRITERIA_V1, version=1
 )
+RELATION_RECHECK = ChoiceQuestion(
+    id="relation_to_candidate_recheck", instructions=_RECHECK, criteria=RELATION_CRITERIA_V2, version=2
+)
+
+
+def relation_questions(version: int) -> tuple[ChoiceQuestion, ChoiceQuestion]:
+    """(relation_to_candidate, its recheck phrasing) for a question version."""
+    return {1: (RELATION_TO_CANDIDATE_V1, RELATION_RECHECK_V1), 2: (RELATION_TO_CANDIDATE, RELATION_RECHECK)}[version]
+
 
 # Read path. State: {"query": "..."}
 
@@ -262,7 +291,7 @@ ALL_QUESTIONS: dict[str, Question] = {
         FACT_KIND,
         TEMPORAL_STATUS,
         RELATION_TO_CANDIDATE,
-        RELATION_TO_CANDIDATE_V2,
+        RELATION_RECHECK,
         EDGE_TYPE,
         DURABILITY,
         SENSITIVITY,
