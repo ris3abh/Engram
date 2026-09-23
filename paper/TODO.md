@@ -63,7 +63,7 @@ sources resolve: typesafe2026jev, convai2026laya, mem0blog2026benchmarks, bytero
 
 ## Claims that want a number we do not have
 
-- [ ] **ε_L**, the LLM's error on the gold pairs: never measured. Figure 4 plots ε_L ∈ {0, 0.1} as an assumption.
+- [ ] **ε_L**, the LLM's error on the gold pairs: never measured. Figure 10 plots ε_L ∈ {0, 0.1} as an assumption.
 - [ ] **Held-out rerank ablation:** §5.2's attribution of the non-context share to reranking rests on a dev-slice
   ablation.
 - [ ] **Smaller LLM decider:** the E2 ratio is Jev against claude-sonnet-4-6 only.
