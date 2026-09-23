@@ -164,3 +164,13 @@ async def test_temporal_mass_gate(store, gate, closes):
     old = (await p.ingest("violin")).outcomes[0]
     await p.ingest("guitar now")
     assert (not store.get_fact(old.fact_id).is_valid) is closes
+
+
+def test_v3_evidence_only_argmax_above_half():
+    from engram.pipeline.belief import counts_as_evidence
+
+    assert counts_as_evidence({"duplicate": 0.7, "new": 0.3}, "duplicate")
+    assert not counts_as_evidence({"duplicate": 0.42, "refinement": 0.32, "new": 0.26}, "duplicate")  # weak support
+    assert not counts_as_evidence({"update": 0.5, "new": 0.5}, "update")  # p must exceed 0.5
+    assert not counts_as_evidence({"update": 0.49, "new": 0.51}, "update")  # not the argmax
+    assert counts_as_evidence({"contradiction": 1.0}, "contradiction")  # escalation answer

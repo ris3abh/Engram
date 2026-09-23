@@ -33,6 +33,10 @@ class Flags:
     # E4 belief-state policy (pipeline/belief.py): closes happen when belief < 0.25, reopens when > 0.6
     belief: bool = False
     belief_w: float = 1.0
+    # Which relation answers count as belief evidence. "all" (v2, frozen): every non-fallback answer, as
+    # w * logit(p), so a support answer at p < 0.5 lowers belief and an against answer at p < 0.5 raises it.
+    # "argmax_gt_half" (v3): only when the chosen label is the argmax of its probabilities and p > 0.5.
+    belief_evidence: str = "all"
     # E4 v2 gate fixes. temporal_gate: "current" = only a current new fact may count against an edge (E3/E4 v1);
     # "not_planned" = past and current both count (chosen label at p >= 0.85; E4 v2 as first run);
     # "not_planned_mass" = P(current) + P(past) >= 0.85 (phase 2 step 1: Jev splits completed changes between them).

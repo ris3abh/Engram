@@ -240,3 +240,43 @@ k=3 and k=20 answered from the same store. Answer and judge claude-sonnet-4-6.
 |---|---|---|---|---|---|
 | engram | $10.22 | $0.33 (Jev $0.12 total + escalations) | 1,982 ms | 928 ms | 267 (256) |
 | mem0 | $9.92 | – (ADD-only; its one LLM call is extraction) | – | 1,034 ms | 276 (276) |
+
+
+## Laya and the Laya/Jev hybrid (phase 2, Part 2): negative result
+
+Laya (laya-mlx 0.2.0, `convaiinnovations/laya` 421M fp16, 512-token context, local MLX server on an M2 Pro 32 GB,
+`bench/laya_server.py`) was tested as a local replacement for Jev, in full and as a hybrid. **Neither is adopted;
+the frozen design stays all-Jev.**
+
+Per-decision agreement on identical requests (the frozen Jev arm replayed from cache with Laya answering every
+request on the side; dev + update sets 1 and 2; 6,764 decisions; same answer 45%, same action at the
+0.85 threshold 31%):
+
+| question | n | same answer | same action at 0.85 | Jev acts | Laya acts | Jev mean top p | Laya mean top p |
+|---|---|---|---|---|---|---|---|
+| relation_to_candidate | 2779 | 6% | 19% | 80% | 6% | 0.91 | 0.49 |
+| relevant_to_query | 1440 | 93% | 39% | 90% | 31% | 0.94 | 0.77 |
+| same_fact | 585 | 73% | 35% | 96% | 34% | 0.97 | 0.77 |
+| plan_fulfilled | 522 | 66% | 16% | 90% | 33% | 0.94 | 0.77 |
+| worth_remembering | 226 | 54% | 77% | 18% | 5% | 0.74 | 0.68 |
+| fact_kind | 226 | 42% | 38% | 64% | 15% | 0.86 | 0.60 |
+| temporal_status | 226 | 67% | 42% | 63% | 5% | 0.84 | 0.62 |
+| edge_type | 226 | 42% | 51% | 29% | 55% | 0.70 | 0.79 |
+| durability | 226 | 44% | 47% | 53% | 0% | 0.82 | 0.49 |
+| sensitivity | 226 | 66% | 58% | 45% | 7% | 0.80 | 0.67 |
+| query_relation | 48 | 54% | 48% | 40% | 75% | 0.77 | 0.91 |
+| relation_to_candidate_recheck | 34 | 29% | 41% | 35% | 26% | 0.73 | 0.70 |
+
+- Contradiction regression (50 pairs): Laya 48% exact with the Jev wordings (truncated: Laya caps instructions +
+  options at 192 tokens), 38% with Laya-native wordings that fit (`decide/laya_questions.py`); Jev 90%. Laya never
+  answers `new` or `contradiction` with the native wording and never reaches p >= 0.85, so it closes nothing.
+- Laya deciding everything (`e4_belief_v2_laya`): LoCoMo dev 24/35 (k=3) and 30/35 (k=20) vs Jev 29 and 31; update
+  set 1 26/30 and 28/30 vs 30 and 30; 27 belief closes vs 1, about 17 of the 21 on non-update facts wrong (weak
+  "support" answers at p < 0.5 lowered belief; see belief v3).
+- Hybrid (`e4_belief_v2_hybrid`: Laya for relevant_to_query and same_fact, Jev for the rest): writes identical to
+  all-Jev; hygiene same_as links 11-12 vs 10, 3 of the 6 hybrid-only links wrong and 4 true duplicates missed; the
+  k=3 top-3 differs on most questions (52% of Jev's lines kept on dev + set 1). Accuracy on dev + set 1: LoCoMo
+  29/35 = 29/35 at k=3, 31/35 = 31/35 at k=20; update set 1 **27/30 vs 30/30 at k=3**, 30/30 = 30/30 at k=20.
+  Set 2: pending. Jev cost saved: 43% (dev + set 1) and 18% (set 2) of Jev's cost, i.e. $0.025 and $0.010 per run.
+- Calibration (`decide/calibrate.py`, `bench/results/calibration.svg`): on the gold pairs Laya's relation accuracy
+  is 28% (Jev 82%); temperature scaling fixes its ECE but not its accuracy.

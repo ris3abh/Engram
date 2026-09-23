@@ -12,6 +12,9 @@ Allowed against-evidence keeps E3's structure: negates on any relation; update o
 contradiction only between siblings (same subject and relation) on a single-valued relation. The first piece of
 against-evidence on an edge must be confirmed by the recheck phrasing; when it is, both answers count.
 
+v3 (flag belief_evidence="argmax_gt_half") counts an answer as evidence only when its label is the argmax with
+p > 0.5; v2 counts every answer, so weak support (p < 0.5) lowered belief and weak against-evidence raised it.
+
 An active edge closes when b < CLOSE_BELOW (valid_until = the message that pushed it under). A closed edge
 reopens when b > REOPEN_ABOVE.
 """
@@ -45,6 +48,12 @@ def sigmoid(x: float) -> float:
 def shift(b: float, delta: float) -> float:
     """Move b by `delta` in log-odds, clamped."""
     return clamp(sigmoid(logit(b) + delta))
+
+
+def counts_as_evidence(probs: dict[str, float], label: str) -> bool:
+    """Belief v3: an answer is evidence only if its label is the argmax and p > 0.5 (so logit(p) > 0)."""
+    p = probs.get(label, 1.0)  # an escalation records {label: 1.0}
+    return p > 0.5 and p >= max(probs.values(), default=p)
 
 
 def initial_belief(p_relation: float, tentative: bool) -> float:

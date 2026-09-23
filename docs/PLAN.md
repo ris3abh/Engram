@@ -285,3 +285,7 @@ rules; two-phrasing close agreement; plan_fulfilled question; belief-state polic
 the temporal gate on P(current) + P(past) and update allowed on multi-valued siblings; same_as merges; one hygiene
 pass after ingestion; retrieval with Jev rerank, top-10 cosine floor, query_relation pull and history expansion;
 compact answer rendering. No changes to this arm until the held-out numbers are in.
+
+Decision backend stays all-Jev. Laya (full replacement) and the Laya/Jev hybrid (Laya for relevant_to_query and
+same_fact) were tested and dropped: see "Laya and the Laya/Jev hybrid" in BENCHMARK.md (negative result). The
+Laya backend, native wordings and hybrid remain in the code behind their own arms for reproduction only.

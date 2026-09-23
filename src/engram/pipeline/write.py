@@ -498,6 +498,9 @@ class WritePipeline:
                 continue
             label = dec.chosen
             p = dec.probs.get(label, 1.0)
+            if self.flags.belief_evidence == "argmax_gt_half" and not B.counts_as_evidence(dec.probs, label):
+                self.stats["evidence_ignored_weak"] += 1
+                continue
             if label in B.SUPPORT:
                 delta, pieces = w * B.logit(p), 0
             elif label in B.AGAINST:

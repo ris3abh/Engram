@@ -68,7 +68,7 @@ CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
-RUN_LIMIT, PHASE_LIMIT = 20.0, 90.0  # per-run stop $20; phase cap $12 -> $20 -> $30 -> $45 -> $90 (user)
+RUN_LIMIT, PHASE_LIMIT = 20.0, 95.0  # per-run stop $20; phase cap $12 -> $20 -> $30 -> $45 -> $90 -> $95 (user)
 FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy from step 8, for the E0 check
 PINNED_DATE = "2026-09-23"  # mem0's and engram's "Current Date", pinned so cached runs are reproducible
 
@@ -165,6 +165,12 @@ ARMS: dict[str, dict] = {
         "flags": Flags(**E4_FROZEN),
         "backend": "laya",
         "shadow": "jev",
+    },
+    # Belief v3 (after held-out): only argmax answers with p > 0.5 count as evidence. Everything else as frozen.
+    "e4_belief_v3": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_FROZEN, "belief_evidence": "argmax_gt_half"}),
     },
     "e4_belief_v2_hybrid": {
         "system": "engram",
