@@ -276,3 +276,12 @@ As in the spec. I stop for your review after steps 1 and 4.
   storage. Within-message dedupe runs before writing. See DECISIONS.md.
 - **Experiment, not adopted:** putting Jev's temporal answer into the relation request's state (two stages)
   didn't improve accuracy and doubled decision latency (BENCHMARK.md).
+
+## Frozen held-out arm (phase 2 step 3, tag `e4-frozen`)
+
+`e4_belief_v2` in `bench/run.py` (`E4_FROZEN`): mem0's extraction prompt with mem0 2.1.0's inputs; Jev decisions
+with relation_to_candidate v2 (negates) and temporal_status v2; cosine + graph candidates; cardinality and sibling
+rules; two-phrasing close agreement; plan_fulfilled question; belief-state policy (close < 0.25, reopen > 0.6) with
+the temporal gate on P(current) + P(past) and update allowed on multi-valued siblings; same_as merges; one hygiene
+pass after ingestion; retrieval with Jev rerank, top-10 cosine floor, query_relation pull and history expansion;
+compact answer rendering. No changes to this arm until the held-out numbers are in.
