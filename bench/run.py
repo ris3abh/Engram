@@ -68,7 +68,7 @@ CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
-RUN_LIMIT, PHASE_LIMIT = 3.0, 45.0  # phase cap: $12 -> $20 (option A) -> $30 (before E3) -> $45 (before held-out)
+RUN_LIMIT, PHASE_LIMIT = 20.0, 90.0  # per-run stop $20; phase cap $12 -> $20 -> $30 -> $45 -> $90 (user)
 FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy from step 8, for the E0 check
 PINNED_DATE = "2026-09-23"  # mem0's and engram's "Current Date", pinned so cached runs are reproducible
 
@@ -149,7 +149,11 @@ ARMS: dict[str, dict] = {
     # multi-valued relation (two-phrasing agreement every time); contradiction stays single-valued only.
     # E4 v2 with temporal_status v1, as run before phase-2 step 1 (kept so its results reproduce).
     "e4_belief_v2_t1": {"system": "engram", "hygiene": True, "flags": Flags(**E4_V2)},
-    "e4_belief_v2": {"system": "engram", "hygiene": True, "flags": Flags(**E4_V2, temporal_version=2)},
+    "e4_belief_v2": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_V2, "temporal_gate": "not_planned_mass"}, temporal_version=2),
+    },
     # Attribution of the top-k=3 gain (read path only; ingestion identical and cached).
     "e4_belief_v2_nohist": {
         "system": "engram",

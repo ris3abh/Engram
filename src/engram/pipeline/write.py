@@ -325,10 +325,15 @@ class WritePipeline:
             self.stats["decisions_on_graph_candidates"] += 1
             self.stats[f"graph_candidate_{relation.label}"] += 1
         temporal = d["temporal_status"]
-        counts_now = ("current", "past") if self.flags.temporal_gate == "not_planned" else ("current",)
-        is_current = (
-            temporal.backend != "fallback" and temporal.chosen in counts_now and temporal.p >= config.ACT_THRESHOLD
-        )
+        if temporal.backend == "fallback":
+            is_current = False
+        elif self.flags.temporal_gate == "not_planned_mass":
+            # Blocks only planned/hypothetical: the mass on current + past must clear the threshold, since Jev often
+            # splits a completed change between the two.
+            is_current = temporal.probs.get("current", 0) + temporal.probs.get("past", 0) >= config.ACT_THRESHOLD
+        else:
+            counts_now = ("current", "past") if self.flags.temporal_gate == "not_planned" else ("current",)
+            is_current = temporal.chosen in counts_now and temporal.p >= config.ACT_THRESHOLD
         confident = escalated or relation.p >= config.ACT_THRESHOLD
         fact = self._build_fact(message, draft, d, decisions, temporal.chosen, min(p_worth, relation.p))
         redacted = self._apply_credentials_rule(fact, draft, message, decisions)

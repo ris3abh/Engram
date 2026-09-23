@@ -144,3 +144,23 @@ async def test_multi_valued_update_needs_agreement_every_time(store):
     old = (await p.ingest("violin")).outcomes[0]
     await p.ingest("guitar now")
     assert store.get_fact(old.fact_id).is_valid and p.stats["against_unconfirmed"] == 1
+
+
+class SplitTemporal(SharpAs):
+    """update answer, with the temporal answer split between past and current (neither alone reaches 0.85)."""
+
+    def _decide(self, state, ask, request_id):
+        d = super()._decide(state, ask, request_id)
+        if ask.question.id == "temporal_status" and "guitar" in state["new_fact"]["text"]:
+            d.probs = {"current": 0.5, "past": 0.45, "planned": 0.03, "hypothetical": 0.02}
+            d.chosen = "current"
+        return d
+
+
+@pytest.mark.parametrize(("gate", "closes"), [("not_planned", False), ("not_planned_mass", True)])
+async def test_temporal_mass_gate(store, gate, closes):
+    flags = Flags(**{**V2_FLAGS, "temporal_gate": gate})
+    p = WritePipeline(store, SplitTemporal("update"), ScriptedLLM(SCRIPT), HashEmbedder(), flags=flags)
+    old = (await p.ingest("violin")).outcomes[0]
+    await p.ingest("guitar now")
+    assert (not store.get_fact(old.fact_id).is_valid) is closes

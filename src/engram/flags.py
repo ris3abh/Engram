@@ -34,7 +34,8 @@ class Flags:
     belief: bool = False
     belief_w: float = 1.0
     # E4 v2 gate fixes. temporal_gate: "current" = only a current new fact may count against an edge (E3/E4 v1);
-    # "not_planned" = past and current both count, planned and hypothetical never do.
+    # "not_planned" = past and current both count (chosen label at p >= 0.85; E4 v2 as first run);
+    # "not_planned_mass" = P(current) + P(past) >= 0.85 (phase 2 step 1: Jev splits completed changes between them).
     temporal_gate: str = "current"
     # update may close a sibling (same subject and relation) on a multi-valued relation, with the two-phrasing
     # agreement required every time. contradiction stays single-valued (and sibling) only.
