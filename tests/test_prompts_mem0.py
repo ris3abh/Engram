@@ -25,3 +25,9 @@ def test_user_turn_builder_matches_installed():
     assert saved.generate_additive_extraction_prompt(**kwargs) == mem0_prompts.generate_additive_extraction_prompt(
         **kwargs
     )
+
+
+def test_update_messages_builder_matches_installed():
+    old = [{"id": "0", "text": "Caroline lives in Paris"}]
+    new = ["Caroline moved to Berlin"]
+    assert saved.get_update_memory_messages(old, new) == mem0_prompts.get_update_memory_messages(old, new)

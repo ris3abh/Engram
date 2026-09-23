@@ -78,7 +78,7 @@ class Retriever:
                     for f, a in zip(shortlist, asks, strict=False)
                     if d[a.key].backend != "fallback" and d[a.key].probs["yes"] > config.RELEVANCE_THRESHOLD
                 ),
-                key=lambda x: -x[1],
+                key=lambda x: (-x[1], x[0].text),
             )
             qr = d["query_relation"]
             if qr.backend != "fallback" and qr.chosen != "none" and qr.p >= config.ACT_THRESHOLD:
@@ -122,7 +122,7 @@ class Retriever:
     def _pull(self, relation: str, seen: set[str], rank: dict[str, int]) -> list[RetrievedFact]:
         """Currently valid facts with the queried predicate, closest to the query first."""
         facts = [f for f in self.store.list_facts(valid_only=True) if f.predicate == relation and f.id not in seen]
-        facts.sort(key=lambda f: rank.get(f.id, len(rank)))
+        facts.sort(key=lambda f: (rank.get(f.id, len(rank)), f.text))
         return [RetrievedFact(f, None, "relation") for f in facts[:MAX_RELATION_PULL]]
 
     def _history(self, hits: list[Fact]) -> list[RetrievedFact]:
@@ -146,10 +146,8 @@ class Retriever:
             node = fact.object
             if node not in graph or graph.degree(node) > HUB_DEGREE:
                 continue
-            for _u, _v, key, data in [
-                *graph.in_edges(node, keys=True, data=True),
-                *graph.out_edges(node, keys=True, data=True),
-            ]:
+            edges = [*graph.in_edges(node, keys=True, data=True), *graph.out_edges(node, keys=True, data=True)]
+            for _u, _v, key, data in sorted(edges, key=lambda e: e[3]["fact"].text):
                 if key in seen:
                     continue
                 seen.add(key)

@@ -64,3 +64,11 @@ class LLMBackend(ABC):
     @abstractmethod
     async def answer(self, question: str, memories: str) -> tuple[str, LLMUsage]:
         """Answer `question` from the rendered memory subgraph only."""
+
+    async def extract_mem0(self, user_prompt: str, message_id: str) -> tuple[list[str], LLMUsage]:
+        """mem0's ADDITIVE_EXTRACTION_PROMPT on the extraction model; returns memory texts (E2)."""
+        raise NotImplementedError
+
+    async def update_decision(self, old_memory: list[dict], new_facts: list[str]) -> tuple[list[dict], LLMUsage]:
+        """mem0's DEFAULT_UPDATE_MEMORY_PROMPT: returns the memory list with ADD/UPDATE/DELETE/NONE events."""
+        raise NotImplementedError

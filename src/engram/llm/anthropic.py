@@ -1,6 +1,8 @@
 """Claude via the official Anthropic SDK. The SDK owns retries with backoff (429, 5xx, connection errors)."""
 
 import asyncio
+import json
+import re
 import time
 from datetime import UTC, datetime
 from typing import Literal
@@ -12,6 +14,7 @@ from .. import config
 from ..cache import CallCache, call_key
 from ..decide.questions import DURABILITY, EDGE_TYPES, FACT_KIND
 from ..models import ExtractedFact, Message
+from . import prompts_mem0
 from .base import LLMBackend, LLMError, LLMUsage, UsageLog
 
 # USD per million tokens (input, output). Anthropic first-party rates.
@@ -234,6 +237,50 @@ class AnthropicLLM(LLMBackend):
             "escalate", self.model, request, run, encode=lambda r: r.parsed_output.relation, decode=lambda x: x
         )
 
+    async def _plain(self, purpose: str, model: str, system: str | None, user: str, cache_extra: dict):
+        """A plain-text call with mem0's LLM defaults (max_tokens 2000, temperature 0.1), cached like the rest."""
+        request = {"system": system, "user": user, **cache_extra}
+
+        async def run():
+            started = time.perf_counter()
+            kwargs = {"system": system} if system else {}
+            try:
+                response = await self._client().messages.create(
+                    model=model,
+                    max_tokens=2000,
+                    extra_body={"temperature": 0.1},  # mem0's default; anthropic>=1.0 moved it out of create()
+                    messages=[{"role": "user", "content": user}],
+                    **kwargs,
+                )
+            except anthropic.APIError as e:
+                raise LLMError(f"{purpose} failed: {e}") from e
+            return response, started
+
+        return await self._cached(
+            purpose,
+            model,
+            request,
+            run,
+            encode=lambda r: "".join(b.text for b in r.content if b.type == "text"),
+            decode=lambda x: x,
+        )
+
+    async def extract_mem0(self, user_prompt: str, message_id: str) -> tuple[list[str], LLMUsage]:
+        text, usage = await self._plain(
+            "extract",
+            self.extract_model,
+            prompts_mem0.ADDITIVE_EXTRACTION_PROMPT,
+            user_prompt,
+            {"message_id": message_id, "prompt": "mem0_additive"},
+        )
+        return [m["text"] for m in parse_memory_json(text) if isinstance(m, dict) and m.get("text")], usage
+
+    async def update_decision(self, old_memory: list[dict], new_facts: list[str]) -> tuple[list[dict], LLMUsage]:
+        # mem0's old update step sends this as a single user message with no system prompt.
+        user = prompts_mem0.get_update_memory_messages(old_memory, new_facts)
+        text, usage = await self._plain("decide", self.model, None, user, {"prompt": "mem0_update"})
+        return parse_memory_json(text), usage
+
     async def answer(self, question: str, memories: str) -> tuple[str, LLMUsage]:
         content = f"Memories:\n{memories}\n\nQuestion: {question}"
 
@@ -258,6 +305,21 @@ class AnthropicLLM(LLMBackend):
             encode=lambda r: "".join(b.text for b in r.content if b.type == "text").strip(),
             decode=lambda x: x,
         )
+
+
+def parse_memory_json(text: str) -> list[dict]:
+    """mem0-style parsing: strip code fences, read {"memory": [...]}, fall back to the outermost JSON object."""
+    text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text.strip())
+    try:
+        return json.loads(text, strict=False).get("memory", [])
+    except (json.JSONDecodeError, AttributeError):
+        match = re.search(r"\{.*\}", text, re.S)
+        if not match:
+            return []
+        try:
+            return json.loads(match.group(0), strict=False).get("memory", [])
+        except (json.JSONDecodeError, AttributeError):
+            return []
 
 
 def _to_extracted(f: _Fact | _FactV2) -> ExtractedFact:

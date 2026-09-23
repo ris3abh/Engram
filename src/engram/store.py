@@ -210,7 +210,7 @@ class Store:
         sql = f"SELECT {_FACT_COLUMNS} FROM facts"
         if where:
             sql += " WHERE " + " AND ".join(where)
-        facts = [_fact(r) for r in self._db.execute(sql + " ORDER BY created_at", args)]
+        facts = [_fact(r) for r in self._db.execute(sql + " ORDER BY created_at, text", args)]
         if with_decisions:
             for fact in facts:
                 fact.decisions = self.decisions_for(fact.id)
@@ -349,7 +349,8 @@ class Store:
         if valid_only:
             sql += " AND (valid_until IS NULL OR valid_until > ?)"
             args.append(_ts(now()))
-        rows = self._db.execute(sql, args).fetchall()
+        # Canonical order (by text) so ties rank identically on every run; fact ids are random per run.
+        rows = self._db.execute(sql + " ORDER BY text, valid_from", args).fetchall()
         if not rows:
             return [], np.zeros((0, 0), dtype=np.float32)
         return [r["id"] for r in rows], np.stack([np.frombuffer(r["embedding"], dtype=np.float32) for r in rows])

@@ -81,7 +81,7 @@ class IngestResult:
     @property
     def decision_cost(self) -> float:
         """Decision layer: Jev plus any LLM escalations."""
-        return self.jev_cost + sum(u.cost_usd for u in self.llm_usage if u.purpose == "escalate")
+        return self.jev_cost + sum(u.cost_usd for u in self.llm_usage if u.purpose in ("escalate", "decide"))
 
     @property
     def extract_cost(self) -> float:
@@ -113,6 +113,8 @@ class WritePipeline:
         self.embedder = embedder
         self.log = log  # rule, escalation and fallback decisions; Jev and mock decisions are logged by the backend
         self._context: list[Message] = []
+        self._mem0_history: list[dict] = []  # mem0-format message log for extract_prompt="mem0"
+        self._recent: list[str] = []  # recently extracted memory texts (extract_recent)
 
     async def ingest(
         self,
@@ -123,7 +125,10 @@ class WritePipeline:
     ) -> IngestResult:
         started = time.perf_counter()
         message = Message(message_id or new_id(), text, speaker, created_at or now())
-        drafts, usage = await extract(self.llm, message, self._context)
+        if self.flags.extract_prompt == "mem0":
+            drafts, usage = await self._extract_mem0(message)
+        else:
+            drafts, usage = await extract(self.llm, message, self._context)
         extracted = time.perf_counter()
 
         # Secrets the extractor flagged never reach Jev, the store, or the context window.
@@ -172,8 +177,8 @@ class WritePipeline:
         Returns (indexes to write, {dropped index: (kept index, decision)}, all pair decisions).
         """
         n = len(drafts)
-        if n < 2:
-            return list(range(n)), {}, []
+        if n < 2 or self.flags.relation_decider != "jev":
+            return list(range(n)), {}, []  # with an LLM decider every relation decision is the LLM's
         asks = [
             Ask(
                 f"pair__{i}__{j}",
@@ -211,10 +216,11 @@ class WritePipeline:
         candidates = self._candidates(vector)
         state = {"new_fact": _draft_ref(draft), "source_message": message.text}
         asks = [Ask(q.id, q) for q in FACT_QUESTIONS]
-        asks += [
-            Ask(f"relation_to_candidate__{i}", RELATION_TO_CANDIDATE, {"existing_fact": _ref(c)}, target=c.id)
-            for i, c in enumerate(candidates)
-        ]
+        if self.flags.relation_decider == "jev":
+            asks += [
+                Ask(f"relation_to_candidate__{i}", RELATION_TO_CANDIDATE, {"existing_fact": _ref(c)}, target=c.id)
+                for i, c in enumerate(candidates)
+            ]
         try:
             d = await self.backend.ask(state, asks)
         except DecisionError as e:
@@ -230,14 +236,23 @@ class WritePipeline:
             return WriteOutcome(draft.text, "dropped", decisions=decisions), []
         tentative = (worth.backend == "fallback" and not draft.user_requested) or p_worth < config.ACT_THRESHOLD
 
-        relation = _pick_relation(d, candidates)
         usages: list[LLMUsage] = []
         escalated = False
+        if self.flags.relation_decider == "llm_update":
+            relation = await self._llm_relation(draft, candidates, decisions, usages)
+        else:
+            relation = _pick_relation(d, candidates)
         if relation.label in SUPERSEDE and relation.p < config.ESCALATE_BELOW and relation.target:
             try:
-                label, usage = await self.llm.judge_relation(
-                    draft.text, relation.target.text, message.text, RELATION_TO_CANDIDATE.criteria
-                )
+                if self.flags.escalation_prompt == "mem0_update":
+                    events, usage = await self.llm.update_decision(
+                        [{"id": "0", "text": relation.target.text}], [draft.text]
+                    )
+                    label = map_update_events(events, 1)[0]
+                else:
+                    label, usage = await self.llm.judge_relation(
+                        draft.text, relation.target.text, message.text, RELATION_TO_CANDIDATE.criteria
+                    )
                 usages.append(usage)
                 escalation = Decision(
                     question=RELATION_TO_CANDIDATE.id,
@@ -314,6 +329,65 @@ class WritePipeline:
         fact.tentative = True
         self.store.add_fact(fact, vector)
         return outcome("inserted", fact.id, target.id, False, True)
+
+    # E2: mem0's extraction and mem0's update prompt as the relation decider
+
+    async def _extract_mem0(self, message: Message) -> tuple[list[ExtractedFact], LLMUsage]:
+        """mem0 2.1.0's default add() extraction, with the same inputs mem0 builds (see Flags)."""
+        from ..llm.prompts_mem0 import generate_additive_extraction_prompt
+
+        content = f"[{mem0_date(message.created_at)}] {message.speaker}: {message.text}"
+        parsed = f"user: {content}\n"  # mem0.memory.utils.parse_messages on [{"role": "user", "content": ...}]
+        vector = (await asyncio.to_thread(self.embedder.embed, [parsed]))[0]
+        existing = [{"id": str(i), "text": f.text} for i, f in enumerate(self._candidates(vector))]
+        f = self.flags
+        prompt = generate_additive_extraction_prompt(
+            recently_extracted_memories=self._recent[-f.extract_recent :] if f.extract_recent else None,
+            existing_memories=existing,
+            new_messages=parsed,
+            last_k_messages=self._mem0_history[-f.extract_last_k :] if f.extract_last_k else None,
+            current_date=f.extract_current_date,
+            timestamp=f"{message.created_at:%Y-%m-%d}" if f.extract_observation_date == "session" else None,
+        )
+        texts, usage = await self.llm.extract_mem0(prompt, message.id)
+        self._mem0_history.append({"role": "user", "content": content})
+        self._recent += texts
+        drafts = [
+            ExtractedFact(text=t, subject=message.speaker, object="unspecified", source_text=message.text)
+            for t in texts
+        ]
+        return drafts, usage
+
+    async def _llm_relation(
+        self, draft: ExtractedFact, candidates: list[Fact], decisions: list[Decision], usages: list[LLMUsage]
+    ) -> "_Relation":
+        """e2_llm: DEFAULT_UPDATE_MEMORY_PROMPT on the LLM decides the relation to the candidates, one call per fact."""
+        if not candidates:
+            return _Relation("new", 1.0, None, None)
+        old = [{"id": str(i), "text": c.text} for i, c in enumerate(candidates)]
+        try:
+            events, usage = await self.llm.update_decision(old, [draft.text])
+        except LLMError:
+            return _Relation("new", 0.0, None, None)  # keep the fact; tentative because p = 0
+        usages.append(usage)
+        label, index = map_update_events(events, len(candidates))
+        target = candidates[index] if index is not None else None
+        decision = Decision(
+            question=RELATION_TO_CANDIDATE.id,
+            options=RELATION_TO_CANDIDATE.options,
+            probs={label: 1.0},
+            chosen=label,
+            backend="llm_decider",
+            latency_ms=usage.latency_ms,
+            cost_usd=usage.cost_usd,
+            model=usage.model,
+            target=target.id if target else None,
+            request_id=new_id(),
+        )
+        decisions.append(decision)
+        if self.log:
+            self.log.write([decision])
+        return _Relation(label, 1.0, target, decision)
 
     # rules
 
@@ -433,6 +507,29 @@ class WritePipeline:
         redacted = self._apply_credentials_rule(fact, draft, message, fact.decisions)
         self.store.add_fact(fact, vector)
         return WriteOutcome(fact.text, "fallback", fact.id, tentative=True, redacted=redacted, decisions=decisions)
+
+
+def mem0_date(when: datetime) -> str:
+    """LoCoMo's session-date format, e.g. "1:56 pm on 8 May, 2023", as the mem0 arm receives it."""
+    hour = when.hour % 12 or 12
+    return f"{hour}:{when.minute:02d} {'am' if when.hour < 12 else 'pm'} on {when.day} {when:%B}, {when.year}"
+
+
+def map_update_events(events: list[dict], n_candidates: int) -> tuple[str, int | None]:
+    """DEFAULT_UPDATE_MEMORY_PROMPT events -> (engram relation, candidate index).
+
+    Priority DELETE > UPDATE > ADD > NONE. DELETE on a candidate = contradiction; UPDATE = update (mem0 rewrites
+    the memory; engram inserts the new fact and may close the old one under the usual temporal gate); an ADD with
+    no UPDATE/DELETE = new; all NONE = duplicate of the closest candidate.
+    """
+    ids = {str(i) for i in range(n_candidates)}
+    for event, label in (("DELETE", "contradiction"), ("UPDATE", "update")):
+        hit = next((e for e in events if str(e.get("id")) in ids and e.get("event") == event), None)
+        if hit:
+            return label, int(hit["id"])
+    if any(e.get("event") == "ADD" for e in events) or n_candidates == 0:
+        return "new", None
+    return "duplicate", 0
 
 
 def _words(text: str) -> set[str]:

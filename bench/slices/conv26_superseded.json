@@ -1,0 +1,19 @@
+{
+ "model": "claude-sonnet-4-6",
+ "slice": "conv26_stress (sessions 1-10)",
+ "prompt": "Below is a conversation between two people. Each line has a message id, the date, the speaker and the text.\n\nFind every claim stated in an earlier message that a later message makes no longer true:\n- update: a change over time (moved, changed jobs, finished something that was ongoing, a plan that was cancelled or that happened, a preference that changed), or\n- contradiction: the later message says something incompatible with the earlier claim.\n\nFor each, give the earlier message id, the claim as one self-contained sentence naming the person, the later message id, and the kind. Do not report repetitions, elaborations, or later messages that only add detail. Most conversations contain few of these; return an empty list if there are none.\n\nConversation:\n{transcript}",
+ "items": [
+  {
+   "earlier_id": "D2:7",
+   "claim": "Melanie is thinking about going camping with her family next month.",
+   "later_id": "D4:6",
+   "kind": "update"
+  },
+  {
+   "earlier_id": "D5:13",
+   "claim": "Caroline is going to a transgender conference this month.",
+   "later_id": "D7:1",
+   "kind": "update"
+  }
+ ]
+}

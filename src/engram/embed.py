@@ -58,5 +58,5 @@ def top_k(query: np.ndarray, ids: list[str], matrix: np.ndarray, k: int) -> list
     if not ids or k <= 0:
         return []
     scores = matrix @ query
-    order = np.argsort(-scores)[:k]
+    order = np.argsort(-scores, kind="stable")[:k]  # stable: ties keep the store's canonical order
     return [(ids[i], float(scores[i])) for i in order]

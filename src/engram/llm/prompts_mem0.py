@@ -5,7 +5,8 @@ Copied from mem0/configs/prompts.py in mem0ai 2.1.0 (https://github.com/mem0ai/m
 
 Used by phase-2 experiments: ADDITIVE_EXTRACTION_PROMPT + generate_additive_extraction_prompt as engram's
 extraction in E2 (identical inputs to mem0's default add() path); DEFAULT_UPDATE_MEMORY_PROMPT as the LLM
-escalation prompt and as the decision step of the e2_llm arm; MEMORY_ANSWER_PROMPT for reference.
+escalation prompt and as the decision step of the e2_llm arm, wrapped by get_update_memory_messages
+(mem0's own request builder for it); MEMORY_ANSWER_PROMPT for reference.
 """
 
 import json
@@ -751,3 +752,60 @@ def generate_additive_extraction_prompt(
 
     sections.append("# Output:")
     return "\n\n".join(sections)
+
+
+def get_update_memory_messages(retrieved_old_memory_dict, response_content, custom_update_memory_prompt=None):
+    if custom_update_memory_prompt is None:
+        global DEFAULT_UPDATE_MEMORY_PROMPT
+        custom_update_memory_prompt = DEFAULT_UPDATE_MEMORY_PROMPT
+
+
+    if retrieved_old_memory_dict:
+        current_memory_part = f"""
+    Below is the current content of my memory which I have collected till now. You have to update it in the following format only:
+
+    ```
+    {retrieved_old_memory_dict}
+    ```
+
+    """
+    else:
+        current_memory_part = """
+    Current memory is empty.
+
+    """
+
+    return f"""{custom_update_memory_prompt}
+
+    {current_memory_part}
+
+    The new retrieved facts are mentioned in the triple backticks. You have to analyze the new retrieved facts and determine whether these facts should be added, updated, or deleted in the memory.
+
+    ```
+    {response_content}
+    ```
+
+    You must return your response in the following JSON structure only:
+
+    {{
+        "memory" : [
+            {{
+                "id" : "<ID of the memory>",                # Use existing ID for updates/deletes, or new ID for additions
+                "text" : "<Content of the memory>",         # Content of the memory
+                "event" : "<Operation to be performed>",    # Must be "ADD", "UPDATE", "DELETE", or "NONE"
+                "old_memory" : "<Old memory content>"       # Required only if the event is "UPDATE"
+            }},
+            ...
+        ]
+    }}
+
+    Follow the instruction mentioned below:
+    - Do not return anything from the custom few shot prompts provided above.
+    - If the current memory is empty, then you have to add the new retrieved facts to the memory.
+    - You should return the updated memory in only JSON format as shown below. The memory key should be the same if no changes are made.
+    - If there is an addition, generate a new key and add the new memory corresponding to it.
+    - If there is a deletion, the memory key-value pair should be removed from the memory.
+    - If there is an update, the ID key should remain the same and only the value needs to be updated.
+
+    Do not return anything except the JSON format.
+    """

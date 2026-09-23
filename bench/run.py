@@ -54,14 +54,24 @@ LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
 RUN_LIMIT, PHASE_LIMIT = 3.0, 20.0  # phase cap raised from $12 to $20 by the user (option A)
 FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy from step 8, for the E0 check
+PINNED_DATE = "2026-09-23"  # mem0's and engram's "Current Date", pinned so cached runs are reproducible
+
+E1_FLAGS = dict(
+    extract_prompt="v2", store_source_text=True, worth_filter=False, retrieval_floor=10, merge_policy="union"
+)
+E2_FLAGS = {**E1_FLAGS, "extract_prompt": "mem0", "escalation_prompt": "mem0_update"}
 
 ARMS: dict[str, dict] = {
     "e0_baseline": {"system": "engram", "flags": Flags()},
-    "e1_recall": {
+    "e1_recall": {"system": "engram", "flags": Flags(**E1_FLAGS)},
+    # E2: mem0's extraction with the inputs mem0 2.1.0 actually passes; Jev decides.
+    "e2_jev": {"system": "engram", "flags": Flags(**E2_FLAGS)},
+    # E2: same extraction; DEFAULT_UPDATE_MEMORY_PROMPT on Sonnet decides every relation instead of Jev.
+    "e2_llm": {"system": "engram", "flags": Flags(**E2_FLAGS, relation_decider="llm_update")},
+    # E2 variant with the inputs listed in the phase-2 plan (not what mem0 2.1.0 passes). Defined, not run.
+    "e2_jev_spec": {
         "system": "engram",
-        "flags": Flags(
-            extract_prompt="v2", store_source_text=True, worth_filter=False, retrieval_floor=10, merge_policy="union"
-        ),
+        "flags": Flags(**E2_FLAGS, extract_last_k=20, extract_recent=20, extract_observation_date="session"),
     },
     "mem0": {"system": "mem0"},
 }
@@ -129,6 +139,7 @@ class EngramArm:
             "actions": [o.action for o in r.outcomes],
             "closes": sum(o.closed_target for o in r.outcomes),
             "escalations": sum(d.backend == "llm_escalation" for d in r.decisions),
+            "llm_decisions": sum(d.backend == "llm_decider" for d in r.decisions),
         }
 
     async def memories(self, question: str) -> tuple[list[str], float]:
@@ -137,6 +148,9 @@ class EngramArm:
         r = await self.engine.retriever.retrieve(question)
         show = self.engine.flags.store_source_text
         return [render_fact(x, show_source=show)[2:] for x in r.facts], r.cost_usd
+
+    def fact_records(self) -> list[tuple[str, str | None, bool]]:
+        return [(f.text, f.source_message_id, f.is_valid) for f in self.engine.store.list_facts()]
 
     def stored(self) -> dict:
         facts = self.engine.store.list_facts()
@@ -173,6 +187,14 @@ class Mem0Arm:
             }
         )
         self.calls: list[dict] = []
+        self.source_of: dict[str, str] = {}  # memory id -> the message whose add() created it
+        # Pin mem0's "Current Date" (and so its default Observation Date) like engram's, so cached runs replay.
+        import mem0.configs.prompts as mem0_prompts
+
+        resolve = mem0_prompts._resolve_dates
+        mem0_prompts._resolve_dates = lambda current_date=None, observation_date=None: resolve(
+            current_date or PINNED_DATE, observation_date
+        )
         client = self.memory.llm.client
         original = client.messages.create
 
@@ -210,6 +232,9 @@ class Mem0Arm:
             metadata={"timestamp": m["session_date"]},
         )
         events = result.get("results", []) if isinstance(result, dict) else (result or [])
+        for e in events:
+            if e.get("id"):
+                self.source_of[str(e["id"])] = m["id"]
         return {
             "latency_ms": (time.perf_counter() - started) * 1000,
             "decision_ms": None,
@@ -225,6 +250,11 @@ class Mem0Arm:
         found = await asyncio.to_thread(self.memory.search, question, top_k=20, filters={"user_id": self.user_id})
         items = found.get("results", []) if isinstance(found, dict) else found
         return [f"{(r.get('metadata') or {}).get('timestamp', '')}: {r['memory']}" for r in items], 0.0
+
+    def fact_records(self) -> list[tuple[str, str | None, bool]]:
+        found = self.memory.get_all(filters={"user_id": self.user_id}, top_k=10_000)
+        items = found.get("results", []) if isinstance(found, dict) else found
+        return [(r["memory"], self.source_of.get(str(r["id"])), True) for r in items]  # ADD-only: all active
 
     def stored(self) -> dict:
         found = self.memory.get_all(filters={"user_id": self.user_id}, top_k=10_000)
@@ -324,6 +354,13 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
             asked += [{**a, "checkpoint": cp, "store_size": size} for a in got]
             print(f"[{name}/{slice_name}] checkpoint session {cp}: store {size}, {len(due)} questions", flush=True)
 
+    from engram.embed import SentenceEmbedder
+
+    from .stale import ensure_labels, stale_rate
+
+    stress = json.loads(SLICES["stress"][0].read_text())["messages"]
+    labels = await ensure_labels(stress, cache)
+    stale = stale_rate(system.fact_records(), labels, {m["id"] for m in sl["messages"]}, SentenceEmbedder())
     final = max(sl["checkpoints"])
     answers = [a for a in asked if a["checkpoint"] == final]
     first_ids = {q["idx"] for q in sl["questions"] if q["last_evidence_session"] <= min(sl["checkpoints"])}
@@ -363,13 +400,15 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
         "merges": actions.get("duplicate", 0),
         "closes": sum(w["closes"] for w in writes),
         "escalations": sum(w["escalations"] for w in writes),
+        "llm_decisions": sum(w.get("llm_decisions", 0) for w in writes),
         "actions": dict(actions),
         "decision_cost_per_1k": 1000 * statistics.fmean(decision_cost) if decision_cost else None,
         "cost_per_1k": 1000 * statistics.fmean(w["cost"] for w in writes),
         "write_latency_p50_ms": statistics.median(w["latency_ms"] for w in writes),
         "decision_latency_p50_ms": statistics.median(decision_ms) if decision_ms else None,
         "no_memory_questions": sum(a["memories"] == 0 for a in answers),
-        "stale_fact_rate": None,  # defined in E2/E5
+        "stale_fact_rate": stale["rate"],
+        "stale": stale,
         "spend": dict(budget.spent),
         "cache": {"hits": cache.hits, "misses": cache.misses},
         "answers": answers,
@@ -402,6 +441,7 @@ def table(results: list[dict]) -> str:
         ("merges", "merges"),
         ("closes", "closes"),
         ("escalations", "escalations"),
+        ("LLM relation decisions", "llm_decisions"),
         ("questions with no memories", "no_memory_questions"),
         ("stale-fact rate", "stale_fact_rate"),
         ("decision-layer cost / 1k msgs", "decision_cost_per_1k"),
@@ -417,6 +457,10 @@ def table(results: list[dict]) -> str:
             cell = fmt(r, key)
             if key == "stored" and r.get("active") is not None:
                 cell = f"{r['stored']} ({r['active']})"
+            if key == "stale_fact_rate" and r.get("stale"):
+                st = r["stale"]
+                rate = "—" if st["rate"] is None else f"{st['rate']:.0%}"
+                cell = f"{rate} ({st['claims_stale']}/{st['claims_stored']} of {st['labels_in_slice']} labeled)"
             cells.append(cell)
         lines.append(f"| {label} | " + " | ".join(cells) + " |")
     for i, cp in enumerate(results[0]["store_size_buckets"]):
