@@ -161,6 +161,37 @@ EDGE_TYPES: dict[str, str] = {
     "related_to": "Fallback: none of the above fits.",
 }
 
+# E3: how many current values a subject can hold for a relation. A close (update/contradiction) may only retire an
+# edge on a single-valued relation; on a multi-valued one both edges stay and are marked disputed.
+EDGE_CARDINALITY: dict[str, str] = {
+    "lives_in": "one",
+    "born_in": "one",
+    "works_at": "one",
+    "has_role": "one",
+    "studies_at": "one",
+    "married_to": "one",
+    "partner_of": "one",
+    "follows_diet": "one",
+    "member_of": "many",
+    "family_of": "many",
+    "friend_of": "many",
+    "colleague_of": "many",
+    "owns": "many",
+    "uses": "many",
+    "prefers": "many",
+    "dislikes": "many",
+    "allergic_to": "many",
+    "has_condition": "many",
+    "hobby": "many",
+    "habit": "many",
+    "goal": "many",
+    "plans": "many",
+    "attended": "many",
+    "speaks": "many",
+    "related_to": "many",
+}
+assert set(EDGE_CARDINALITY) == set(EDGE_TYPES)
+
 EDGE_TYPE = ChoiceQuestion(
     id="edge_type",
     instructions="Which relation best describes how `new_fact.subject` relates to `new_fact.object`?",
@@ -187,6 +218,14 @@ SENSITIVITY = ChoiceQuestion(
         "relationship": "Romantic, sexual, or intimate family matters.",
         "credentials": "Passwords, API keys, PINs, security answers, ID numbers.",
     },
+)
+
+# E3: the second phrasing asked before any close on a single-valued relation. Same options, same order, same
+# rubrics; only the instruction wording differs. A close needs both phrasings to agree at p >= ACT_THRESHOLD.
+RELATION_TO_CANDIDATE_V2 = ChoiceQuestion(
+    id="relation_to_candidate_v2",
+    instructions="Once `new_fact` is known, what happens to `existing_fact`?",
+    criteria=RELATION_TO_CANDIDATE.criteria,
 )
 
 # Read path. State: {"query": "..."}
@@ -223,6 +262,7 @@ ALL_QUESTIONS: dict[str, Question] = {
         FACT_KIND,
         TEMPORAL_STATUS,
         RELATION_TO_CANDIDATE,
+        RELATION_TO_CANDIDATE_V2,
         EDGE_TYPE,
         DURABILITY,
         SENSITIVITY,

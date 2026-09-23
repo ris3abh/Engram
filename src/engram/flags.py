@@ -13,7 +13,7 @@ class Flags:
     extract_prompt: str = "v1"  # v1 atomic; v2 adds absolute dates, self-contained, source quote; mem0 = mem0's prompt
     store_source_text: bool = False  # keep the verbatim source sentence(s) and show them to the answer model
     worth_filter: bool = True  # False: worth_remembering is still asked and logged but never drops a fact
-    merge_policy: str = "keep"  # keep = a duplicate adds provenance only; union = stored text gains the new details
+    merge_policy: str = "keep"  # keep = provenance only; union = text gains details; same_as = keep both + link (E3)
     # E2, extract_prompt="mem0": the inputs to mem0's user-turn builder. Defaults mirror what mem0 2.1.0's default
     # add() path actually passes (verified in mem0/memory/main.py): last 10 messages, no recently-extracted list,
     # no summary, observation date not passed (so it equals the current date).
@@ -23,6 +23,10 @@ class Flags:
     extract_current_date: str = "2026-09-23"  # pinned so cached extraction prompts stay reproducible across days
     escalation_prompt: str = "engram"  # engram = own escalation prompt; mem0_update = DEFAULT_UPDATE_MEMORY_PROMPT
     relation_decider: str = "jev"  # jev | llm_update (e2_llm: DEFAULT_UPDATE_MEMORY_PROMPT on Sonnet, every fact)
+    # E3 structural safeguards
+    cardinality_rule: bool = False  # closes only on single-valued relations; contradictions elsewhere -> disputed
+    close_agreement: bool = False  # a close needs relation_to_candidate and its v2 phrasing to agree at p >= 0.85
+    candidate_source: str = "cosine"  # cosine | cosine+graph (add same subject+predicate and shared-entity facts)
 
     def describe(self) -> dict:
         return asdict(self)

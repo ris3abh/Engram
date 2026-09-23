@@ -52,7 +52,7 @@ CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
-RUN_LIMIT, PHASE_LIMIT = 3.0, 20.0  # phase cap raised from $12 to $20 by the user (option A)
+RUN_LIMIT, PHASE_LIMIT = 3.0, 30.0  # phase cap: $12, raised to $20 (option A), then to $30 by the user before E3
 FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy from step 8, for the E0 check
 PINNED_DATE = "2026-09-23"  # mem0's and engram's "Current Date", pinned so cached runs are reproducible
 
@@ -68,6 +68,19 @@ ARMS: dict[str, dict] = {
     "e2_jev": {"system": "engram", "flags": Flags(**E2_FLAGS)},
     # E2: same extraction; DEFAULT_UPDATE_MEMORY_PROMPT on Sonnet decides every relation instead of Jev.
     "e2_llm": {"system": "engram", "flags": Flags(**E2_FLAGS, relation_decider="llm_update")},
+    # E3: structural safeguards on top of e2_jev (graph candidates, cardinality, reversible merges, close agreement).
+    "e3_structural": {
+        "system": "engram",
+        "flags": Flags(
+            **{**E2_FLAGS, "merge_policy": "same_as"},
+            cardinality_rule=True,
+            close_agreement=True,
+            candidate_source="cosine+graph",
+        ),
+    },
+    # mem0 with the session date passed as its Observation Date (mem0 2.1.0's OSS add() cannot pass one, so the
+    # default arm resolves "yesterday" against the current date). Not mem0's default config; reported alongside.
+    "mem0_dated": {"system": "mem0", "dated": True},
     # E2 variant with the inputs listed in the phase-2 plan (not what mem0 2.1.0 passes). Defined, not run.
     "e2_jev_spec": {
         "system": "engram",
@@ -130,7 +143,20 @@ class EngramArm:
 
     async def write(self, m: dict) -> dict:
         r = await self.engine.ingest(m["text"], speaker=m["speaker"], created_at=m["at"], message_id=m["id"])
+        closed = []
+        for o in r.outcomes:
+            if o.closed_target and o.target_id:
+                target = self.engine.store.get_fact(o.target_id, with_decisions=False)
+                closed.append(
+                    {
+                        "closed": target.text,
+                        "closed_source": target.source_message_id,
+                        "by": o.text,
+                        "by_source": m["id"],
+                    }
+                )
         return {
+            "closed": closed,
             "latency_ms": r.latency_ms,
             "decision_ms": r.decide_ms,
             "cost": r.extract_cost + r.decision_cost,
@@ -158,13 +184,16 @@ class EngramArm:
             "stored": len(facts),
             "active": sum(f.is_valid for f in facts),
             "tentative": sum(f.tentative for f in facts),
+            "disputed": sum(f.disputed for f in facts),
+            "same_as_edges": self.engine.store.same_as_count(),
+            "pipeline_stats": dict(self.engine.writer.stats),
         }
 
 
 class Mem0Arm:
     """mem0 default Memory (ADD-only), Haiku 4.5, local MiniLM on CPU, telemetry off. LLM calls go through the cache."""
 
-    def __init__(self, arm_dir: Path, cache: CallCache):
+    def __init__(self, arm_dir: Path, cache: CallCache, dated: bool = False):
         from mem0 import Memory
 
         self.user_id = "conv-26"
@@ -192,8 +221,9 @@ class Mem0Arm:
         import mem0.configs.prompts as mem0_prompts
 
         resolve = mem0_prompts._resolve_dates
+        self.observation: str | None = None  # mem0_dated: the session date of the message being added
         mem0_prompts._resolve_dates = lambda current_date=None, observation_date=None: resolve(
-            current_date or PINNED_DATE, observation_date
+            current_date or PINNED_DATE, observation_date or (self.observation if dated else None)
         )
         client = self.memory.llm.client
         original = client.messages.create
@@ -224,6 +254,7 @@ class Mem0Arm:
 
     async def write(self, m: dict) -> dict:
         self.calls.clear()
+        self.observation = f"{m['at']:%Y-%m-%d}"
         started = time.perf_counter()
         result = await asyncio.to_thread(
             self.memory.add,
@@ -292,7 +323,10 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
     shutil.rmtree(arm_dir, ignore_errors=True)
     arm_dir.mkdir(parents=True)
     cache = CallCache(CACHE, budget=budget)
-    system = EngramArm(arm_dir, spec["flags"], cache) if spec["system"] == "engram" else Mem0Arm(arm_dir, cache)
+    if spec["system"] == "engram":
+        system = EngramArm(arm_dir, spec["flags"], cache)
+    else:
+        system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False))
 
     client = anthropic.AsyncAnthropic(max_retries=5, timeout=120)
     sem = asyncio.Semaphore(6)
@@ -361,6 +395,12 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
     stress = json.loads(SLICES["stress"][0].read_text())["messages"]
     labels = await ensure_labels(stress, cache)
     stale = stale_rate(system.fact_records(), labels, {m["id"] for m in sl["messages"]}, SentenceEmbedder())
+    label_pairs = {(lab["earlier_id"], lab["later_id"]) for lab in labels}
+    closes_detail = [
+        {**c, "labeled": (c["closed_source"], c["by_source"]) in label_pairs}
+        for w in writes
+        for c in w.get("closed", [])
+    ]
     final = max(sl["checkpoints"])
     answers = [a for a in asked if a["checkpoint"] == final]
     first_ids = {q["idx"] for q in sl["questions"] if q["last_evidence_session"] <= min(sl["checkpoints"])}
@@ -399,6 +439,8 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
         "facts_dropped": actions.get("dropped", 0),
         "merges": actions.get("duplicate", 0),
         "closes": sum(w["closes"] for w in writes),
+        "closes_detail": closes_detail,
+        "wrong_closes": sum(not c["labeled"] for c in closes_detail),
         "escalations": sum(w["escalations"] for w in writes),
         "llm_decisions": sum(w.get("llm_decisions", 0) for w in writes),
         "actions": dict(actions),
@@ -439,7 +481,10 @@ def table(results: list[dict]) -> str:
         ("facts extracted", "facts_extracted"),
         ("facts dropped", "facts_dropped"),
         ("merges", "merges"),
-        ("closes", "closes"),
+        ("closes / wrong closes (vs labels) / blocked closes", "closes"),
+        ("disputed facts / same_as links", "disputed"),
+        ("close agreement checks (disagreements, Jev cost)", "agreement"),
+        ("graph candidates: facts with extras / extras / decisions on them", "graph"),
         ("escalations", "escalations"),
         ("LLM relation decisions", "llm_decisions"),
         ("questions with no memories", "no_memory_questions"),
@@ -457,6 +502,28 @@ def table(results: list[dict]) -> str:
             cell = fmt(r, key)
             if key == "stored" and r.get("active") is not None:
                 cell = f"{r['stored']} ({r['active']})"
+            ps = r.get("pipeline_stats") or {}
+            if key == "closes":
+                cell = f"{r['closes']} / {r.get('wrong_closes', '—')} / {ps.get('blocked_closes', 0)}"
+            if key == "disputed":
+                cell = "—" if r["system"] != "engram" else f"{r.get('disputed', 0)} / {r.get('same_as_edges', 0)}"
+            if key == "agreement":
+                n = ps.get("agreement_checks", 0)
+                cell = (
+                    "—"
+                    if not n
+                    else (f"{n} ({ps.get('disagreements', 0)}, ${ps.get('agreement_cost_usd_x1e6', 0) / 1e6:.4f})")
+                )
+            if key == "graph":
+                checked = ps.get("facts_checked", 0)
+                cell = (
+                    "—"
+                    if not checked
+                    else (
+                        f"{ps.get('facts_with_graph_candidates', 0)}/{checked} / {ps.get('graph_candidates', 0)} / "
+                        f"{ps.get('decisions_on_graph_candidates', 0)}"
+                    )
+                )
             if key == "stale_fact_rate" and r.get("stale"):
                 st = r["stale"]
                 rate = "—" if st["rate"] is None else f"{st['rate']:.0%}"

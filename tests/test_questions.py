@@ -5,6 +5,7 @@ import pytest
 
 from engram.decide.questions import (
     ALL_QUESTIONS,
+    EDGE_CARDINALITY,
     MAX_OPTIONS,
     RELATION_TO_CANDIDATE,
     ChoiceQuestion,
@@ -29,8 +30,14 @@ def test_docs_match_code(qid):
     heading = section.splitlines()[0]
     assert ("Noul" if isinstance(q, NoulQuestion) else "Choice") in heading
     if isinstance(q, ChoiceQuestion):
-        documented = re.findall(r"^\| `(\w+)` \| (.+?) \|$", section, flags=re.M)
-        assert dict(documented) == q.criteria
+        rows = [
+            [c.strip() for c in line.strip().strip("|").split(" | ")]
+            for line in section.splitlines()
+            if re.match(r"^\| `\w+` \|", line)
+        ]
+        assert {r[0].strip("`"): r[1] for r in rows} == q.criteria
+        if qid == "edge_type":
+            assert {r[0].strip("`"): r[2] for r in rows} == EDGE_CARDINALITY
     else:
         assert q.true in section and q.false in section
     assert q.instructions in section

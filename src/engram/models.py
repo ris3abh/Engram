@@ -97,6 +97,7 @@ class Fact:
     refines: str | None = None  # id of the fact this one refines
     valid_from_stated: bool = False  # True if the message gave a date; else valid_from is just when we learned it
     source_text: str | None = None  # verbatim source sentence(s), stored when flags.store_source_text
+    disputed: bool = False  # E3: a contradiction on a multi-valued relation; both edges stay valid
     created_at: datetime = field(default_factory=now)
     last_retrieved_at: datetime | None = None
 

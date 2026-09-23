@@ -9,7 +9,7 @@ works without Jev comparing dates. The answer step sees each fact's validity win
 
 import asyncio
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime
 
 from .. import config
@@ -101,6 +101,7 @@ class Retriever:
             results += self._pull(relation, {r.fact.id for r in results}, rank)
         results += self._history([r.fact for r in results])
         results += self._expand([f for f, _ in kept], {r.fact.id for r in results})
+        results = self._collapse_same_as(results)
         self.store.mark_retrieved(r.fact.id for r in results if r.source != "neighbor")
         said: dict[str, datetime | None] = {}
         for r in results:
@@ -118,6 +119,30 @@ class Retriever:
             degraded,
             relation,
         )
+
+    def _collapse_same_as(self, results: list[RetrievedFact]) -> list[RetrievedFact]:
+        """E3 reversible merges: a same_as cluster is shown once, its text the union of its members' texts."""
+        from .write import union_text
+
+        if not results or not self.store.same_as_count():
+            return results
+        out, seen = [], set()
+        for r in results:
+            if r.fact.id in seen:
+                continue
+            cluster = self.store.same_as_cluster(r.fact.id)
+            seen.update(cluster)
+            if len(cluster) == 1:
+                out.append(r)
+                continue
+            members = [m for m in (self.store.get_fact(i, with_decisions=False) for i in cluster) if m]
+            members.sort(key=lambda m: (not m.is_valid, m.created_at, m.text))
+            text, source = members[0].text, members[0].source_text
+            for m in members[1:]:
+                text = union_text(text, m.text)
+                source = union_text(source, m.source_text, sep=" … ")
+            out.append(replace(r, fact=replace(r.fact, text=text, source_text=source)))
+        return out
 
     def _pull(self, relation: str, seen: set[str], rank: dict[str, int]) -> list[RetrievedFact]:
         """Currently valid facts with the queried predicate, closest to the query first."""

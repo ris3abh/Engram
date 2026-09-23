@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS facts (
     refines TEXT,
     valid_from_stated INTEGER NOT NULL DEFAULT 0,
     source_text TEXT,
+    disputed INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL,
     last_retrieved_at TEXT,
     embedding BLOB
@@ -69,11 +70,18 @@ CREATE TABLE IF NOT EXISTS decisions (
     error TEXT
 );
 CREATE INDEX IF NOT EXISTS decisions_fact ON decisions(fact_id);
+CREATE TABLE IF NOT EXISTS same_as (
+    a TEXT NOT NULL REFERENCES facts(id) ON DELETE CASCADE,
+    b TEXT NOT NULL REFERENCES facts(id) ON DELETE CASCADE,
+    p REAL NOT NULL,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (a, b)
+);
 """
 
 _FACT_COLUMNS = (
     "id, text, subject, predicate, object, kind, durability, sensitivity, confidence, valid_from, valid_until, "
-    "source_message_id, tentative, temporal_status, refines, valid_from_stated, source_text, created_at, "
+    "source_message_id, tentative, temporal_status, refines, valid_from_stated, source_text, disputed, created_at, "
     "last_retrieved_at"
 )
 
@@ -101,7 +109,11 @@ class Store:
     def _migrate(self) -> None:
         """Add columns introduced after a database was created."""
         columns = {r["name"] for r in self._db.execute("PRAGMA table_info(facts)")}
-        added = {"valid_from_stated": "INTEGER NOT NULL DEFAULT 0", "source_text": "TEXT"}
+        added = {
+            "valid_from_stated": "INTEGER NOT NULL DEFAULT 0",
+            "source_text": "TEXT",
+            "disputed": "INTEGER NOT NULL DEFAULT 0",
+        }
         for name, ddl in added.items():
             if name not in columns:
                 self._db.execute(f"ALTER TABLE facts ADD COLUMN {name} {ddl}")
@@ -156,7 +168,7 @@ class Store:
                 self._db.execute("INSERT OR IGNORE INTO entities VALUES (?, ?)", (normalize_entity(label), label))
             fact.subject, fact.object = normalize_entity(fact.subject), normalize_entity(fact.object)
             self._db.execute(
-                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 20)})",
+                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 21)})",
                 (
                     fact.id,
                     fact.text,
@@ -175,6 +187,7 @@ class Store:
                     fact.refines,
                     int(fact.valid_from_stated),
                     fact.source_text,
+                    int(fact.disputed),
                     _ts(fact.created_at),
                     _ts(fact.last_retrieved_at),
                     _blob(embedding),
@@ -250,6 +263,7 @@ class Store:
             "tentative",
             "refines",
             "source_text",
+            "disputed",
         }
         if not fields or not set(fields) <= allowed:
             raise ValueError(f"can only update {sorted(allowed)}")
@@ -332,6 +346,33 @@ class Store:
             ],
         )
 
+    # same_as (E3 reversible merges): both facts stay stored; retrieval collapses a cluster into one item
+
+    def add_same_as(self, a: str, b: str, p: float) -> None:
+        a, b = sorted((a, b))
+        with self._lock, self._db:
+            self._db.execute("INSERT OR REPLACE INTO same_as VALUES (?, ?, ?, ?)", (a, b, p, _ts(now())))
+
+    def drop_same_as(self, a: str, b: str) -> None:
+        a, b = sorted((a, b))
+        with self._lock, self._db:
+            self._db.execute("DELETE FROM same_as WHERE a = ? AND b = ?", (a, b))
+
+    def same_as_count(self) -> int:
+        return self._db.execute("SELECT COUNT(*) FROM same_as").fetchone()[0]
+
+    def same_as_cluster(self, fact_id: str) -> list[str]:
+        """Every fact connected to `fact_id` through same_as edges, including itself, in a stable order."""
+        seen, frontier = {fact_id}, [fact_id]
+        while frontier:
+            current = frontier.pop()
+            for a, b in self._db.execute("SELECT a, b FROM same_as WHERE a = ? OR b = ?", (current, current)):
+                other = b if a == current else a
+                if other not in seen:
+                    seen.add(other)
+                    frontier.append(other)
+        return sorted(seen)
+
     def redacted_fact_ids(self) -> set[str]:
         rows = self._db.execute("SELECT DISTINCT fact_id FROM decisions WHERE question = 'redact_credentials'")
         return {r["fact_id"] for r in rows}
@@ -398,6 +439,7 @@ def _fact(row: sqlite3.Row) -> Fact:
         refines=row["refines"],
         valid_from_stated=bool(row["valid_from_stated"]),
         source_text=row["source_text"],
+        disputed=bool(row["disputed"]),
         created_at=_dt(row["created_at"]),
         last_retrieved_at=_dt(row["last_retrieved_at"]),
     )

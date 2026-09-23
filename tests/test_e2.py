@@ -26,14 +26,13 @@ def test_parse_memory_json():
 
 def test_map_update_events():
     none = [{"id": "0", "event": "NONE"}, {"id": "1", "event": "NONE"}]
-    assert map_update_events(none, 2) == ("duplicate", 0)
-    assert map_update_events([*none, {"id": "2", "event": "ADD"}], 2) == ("new", None)
-    assert map_update_events([{"id": "1", "event": "UPDATE"}, {"id": "2", "event": "ADD"}], 2) == ("update", 1)
-    assert map_update_events([{"id": "1", "event": "UPDATE"}, {"id": "0", "event": "DELETE"}], 2) == (
-        "contradiction",
-        0,
-    )
-    assert map_update_events([{"id": "7", "event": "DELETE"}], 2) == ("duplicate", 0)  # unknown id ignored
+    assert map_update_events(none, 2) == ("duplicate", 0, None)
+    assert map_update_events([*none, {"id": "2", "event": "ADD"}], 2) == ("new", None, None)
+    rewrite = [{"id": "1", "event": "UPDATE", "text": "merged"}, {"id": "2", "event": "ADD"}]
+    assert map_update_events(rewrite, 2) == ("rewrite", 1, "merged")  # mem0's UPDATE rewrites; it never closes
+    both = [{"id": "1", "event": "UPDATE", "text": "m"}, {"id": "0", "event": "DELETE"}]
+    assert map_update_events(both, 2) == ("contradiction", 0, None)
+    assert map_update_events([{"id": "7", "event": "DELETE"}], 2) == ("duplicate", 0, None)  # unknown id ignored
 
 
 class Mem0Scripted(ScriptedLLM):
@@ -80,3 +79,14 @@ async def test_llm_decider_replaces_jev_relations(store):
     backends = {d.backend for d in o.decisions if d.question == "relation_to_candidate"}
     assert backends == {"llm_decider"}  # no Jev relation questions were asked
     assert r.decision_cost > 0.0099  # the LLM decision counts toward the decision layer
+
+
+async def test_llm_update_rewrites_instead_of_closing(store):
+    outputs = {"a": ["Mel paints"], "b": ["Mel paints sunsets"]}
+    llm = Mem0Scripted(outputs, [{"id": "0", "event": "UPDATE", "text": "Mel paints, mostly sunsets"}])
+    flags = Flags(extract_prompt="mem0", relation_decider="llm_update")
+    pipe = WritePipeline(store, MockBackend(), llm, HashEmbedder(), flags=flags)
+    first = (await pipe.ingest("x", speaker="Mel", created_at=T0, message_id="a")).outcomes[0]
+    [o] = (await pipe.ingest("y", speaker="Mel", created_at=T0, message_id="b")).outcomes
+    assert o.action == "rewritten" and not o.closed_target and o.fact_id == first.fact_id
+    assert [f.text for f in store.list_facts()] == ["Mel paints, mostly sunsets"]  # one memory, rewritten, active

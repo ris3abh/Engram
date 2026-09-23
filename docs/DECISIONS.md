@@ -85,37 +85,62 @@ Code rule: pick the candidate with the highest non-`new` probability. If that ca
 are in PLAN.md §2. Escalation is only for `update` or `contradiction` below `ESCALATE_BELOW`. Closing an old
 edge also requires `temporal_status` (above).
 
+### 4b. `relation_to_candidate_v2` (Choice, E3 close check)
+
+Asked only when a close on a single-valued relation is about to happen (`flags.close_agreement`). The existing fact is
+carried in `instructions` exactly as in question 4; the options, their order and their rubrics are identical to
+question 4. Only the instruction wording differs:
+
+Instructions: "Once `new_fact` is known, what happens to `existing_fact`?"
+
+| option | rubric |
+|---|---|
+| `new` | They are about different things. Both can be true, and neither changes the other. |
+| `duplicate` | Same information, maybe worded differently. Storing `new_fact` adds nothing. |
+| `update` | Same attribute of the same subject, and `new_fact` gives the newer value. `existing_fact` was true before but is no longer current (for example a move, a job change, a new phone). |
+| `contradiction` | Both cannot be true at the same time, and `new_fact` does not describe a change over time. It directly conflicts with `existing_fact` (for example "is vegetarian" vs "favorite food is steak"). |
+| `refinement` | `new_fact` adds detail to `existing_fact` without making it false (for example "lives in Berlin" becoming "lives in Kreuzberg, Berlin"). |
+
+Code rule: close only if both phrasings say `update` or `contradiction` at p ≥ `ACT_THRESHOLD`. If they disagree, the
+pair goes to the LLM with mem0's `DEFAULT_UPDATE_MEMORY_PROMPT`: DELETE closes, UPDATE rewrites the old fact with the
+merged text, anything else stores the new fact as tentative and keeps the old edge.
+
 ### 5. `edge_type` (Choice, 25 options)
 
 Instructions: "Which relation best describes how `new_fact.subject` relates to `new_fact.object`?"
 
-| option | rubric |
-|---|---|
-| `lives_in` | Current or past place of residence. |
-| `born_in` | Place of birth or origin. |
-| `works_at` | Employer or workplace. |
-| `has_role` | Job title, profession, or role. |
-| `studies_at` | School, university, or course of study. |
-| `member_of` | A club, team, community, or group. |
-| `married_to` | Spouse. |
-| `partner_of` | Romantic partner who is not a spouse. |
-| `family_of` | Parent, child, sibling, or other relative. |
-| `friend_of` | Friend. |
-| `colleague_of` | Coworker, manager, or report. |
-| `owns` | Possesses an object, pet, vehicle, or property. |
-| `uses` | Uses a tool, product, app, or service. |
-| `prefers` | Likes or favors something. |
-| `dislikes` | Dislikes or avoids something. |
-| `allergic_to` | Allergy or intolerance. |
-| `has_condition` | Health condition, injury, or medication. |
-| `follows_diet` | Dietary pattern (vegetarian, keto, halal, ...). |
-| `hobby` | A leisure activity. |
-| `habit` | A recurring routine. |
-| `goal` | Something the subject aims to achieve. |
-| `plans` | A scheduled or intended future action or event. |
-| `attended` | A past event, trip, or visit. |
-| `speaks` | A language. |
-| `related_to` | Fallback: none of the above fits. |
+| option | rubric | cardinality |
+|---|---|---|
+| `lives_in` | Current or past place of residence. | one |
+| `born_in` | Place of birth or origin. | one |
+| `works_at` | Employer or workplace. | one |
+| `has_role` | Job title, profession, or role. | one |
+| `studies_at` | School, university, or course of study. | one |
+| `member_of` | A club, team, community, or group. | many |
+| `married_to` | Spouse. | one |
+| `partner_of` | Romantic partner who is not a spouse. | one |
+| `family_of` | Parent, child, sibling, or other relative. | many |
+| `friend_of` | Friend. | many |
+| `colleague_of` | Coworker, manager, or report. | many |
+| `owns` | Possesses an object, pet, vehicle, or property. | many |
+| `uses` | Uses a tool, product, app, or service. | many |
+| `prefers` | Likes or favors something. | many |
+| `dislikes` | Dislikes or avoids something. | many |
+| `allergic_to` | Allergy or intolerance. | many |
+| `has_condition` | Health condition, injury, or medication. | many |
+| `follows_diet` | Dietary pattern (vegetarian, keto, halal, ...). | one |
+| `hobby` | A leisure activity. | many |
+| `habit` | A recurring routine. | many |
+| `goal` | Something the subject aims to achieve. | many |
+| `plans` | A scheduled or intended future action or event. | many |
+| `attended` | A past event, trip, or visit. | many |
+| `speaks` | A language. | many |
+| `related_to` | Fallback: none of the above fits. | many |
+
+**Cardinality (E3, `flags.cardinality_rule`).** `one` = a subject holds one current value (a new value
+replaces the old). `many` = values accumulate. An update or contradiction may close an existing edge only when the
+existing edge's relation is `one`; on `many` relations both edges stay valid and are marked `disputed`, and the blocked
+close is logged as a rule decision (`close_blocked`).
 
 ### 6. `durability` (Choice)
 

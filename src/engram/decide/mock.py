@@ -154,7 +154,7 @@ class MockBackend(DecisionBackend):
             probs = _peaked(options, _first(_KIND_RULES, text, "bio"))
         elif qid == "temporal_status":
             probs = _peaked(options, temporal_status(text))
-        elif qid == "relation_to_candidate":
+        elif qid in ("relation_to_candidate", "relation_to_candidate_v2"):
             probs = _peaked(options, relation(fact, ask.refs["existing_fact"]))
         elif qid == "edge_type":
             probs = _peaked(options, edge_type(text))
