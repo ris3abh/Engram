@@ -157,6 +157,16 @@ ARMS: dict[str, dict] = {
         "hygiene": True,
         "flags": Flags(**E4_FROZEN),
     },
+    # Part 2 (Laya): the frozen arm with Laya deciding, Jev shadowing every request; and the frozen Jev arm
+    # replayed from cache with Laya shadowing. Same flags as e4_belief_v2.
+    "e4_belief_v2_laya": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**E4_FROZEN),
+        "backend": "laya",
+        "shadow": "jev",
+    },
+    "e4_belief_v2_shadow": {"system": "engram", "hygiene": True, "flags": Flags(**E4_FROZEN), "shadow": "laya"},
     "e4_belief_v2_compact": {"system": "engram", "hygiene": True, "flags": Flags(**E4_FROZEN)},  # alias, step 2
     # step 2 comparison: the same arm with the full rendering.
     "e4_belief_v2_full": {"system": "engram", "hygiene": True, "flags": Flags(**{**E4_FROZEN, "render": "full"})},
@@ -319,9 +329,18 @@ def prior_spend() -> float:
 # ---------------------------------------------------------------- systems
 
 
+def make_backend(name: str, log, cache: CallCache):
+    if name == "laya":
+        from engram.decide.laya import LayaBackend
+
+        return LayaBackend(log, cache=cache)
+    from engram.decide.jev import JevBackend
+
+    return JevBackend(log, cache=cache)
+
+
 class EngramArm:
-    def __init__(self, arm_dir: Path, flags: Flags, cache: CallCache):
-        from engram.decide.jev import JevBackend
+    def __init__(self, arm_dir: Path, flags: Flags, cache: CallCache, backend: str = "jev", shadow: str | None = None):
         from engram.decide.log import DecisionLog
         from engram.embed import SentenceEmbedder
         from engram.engine import Engram
@@ -331,9 +350,14 @@ class EngramArm:
 
         log = DecisionLog(arm_dir / "decisions.jsonl")
         usage = UsageLog(arm_dir / "llm.jsonl")
+        decider = make_backend(backend, log, cache)
+        if shadow:
+            from engram.decide.shadow import ShadowBackend
+
+            decider = ShadowBackend(decider, make_backend(shadow, None, cache), arm_dir / "shadow.jsonl")
         self.engine = Engram(
             Store(arm_dir / "engram.db"),
-            JevBackend(log, cache=cache),
+            decider,
             AnthropicLLM(
                 extract_model=EXTRACT_MODEL, usage_log=usage, cache=cache, extract_prompt=flags.extract_prompt
             ),
@@ -584,7 +608,7 @@ async def run_arm(
     arm_dir.mkdir(parents=True)
     cache = CallCache(CACHE, budget=budget)
     if spec["system"] == "engram":
-        system = EngramArm(arm_dir, spec["flags"], cache)
+        system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"))
     else:
         system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False))
 
@@ -737,6 +761,8 @@ async def run_arm(
         "asked": asked,
     }
     result["options"] = {"top_k": top_k, "no_dates": no_dates}
+    if spec["system"] == "engram":
+        result["backend"] = decider_report(system.engine.backend)
     if hygiene is not None:
         from dataclasses import asdict as _asdict
 
@@ -773,7 +799,21 @@ async def run_arm(
         ksuffix = f"__k{k}" + ("__nodates" if no_dates else "")
         (RESULTS / f"{name}__{out_name}{ksuffix}.json").write_text(json.dumps(rk, indent=1, default=str))
         print(f"[{name}/{slice_name}] k={k}: accuracy {rk['accuracy']:.1%} (Q={len(ans_k)})", flush=True)
+    if spec["system"] == "engram" and hasattr(system.engine.backend, "drain"):
+        await system.engine.backend.drain()
     return result
+
+
+def decider_report(backend) -> dict:
+    """Which backend decided (and which shadowed), plus Laya's hardware, compute time and truncation counts."""
+    main = getattr(backend, "primary", backend)
+    out = {"name": main.name, "model": main.model}
+    if shadow := getattr(backend, "shadow", None):
+        out["shadow"] = {"name": shadow.name, "model": shadow.model}
+    for b in (main, shadow):
+        if b is not None and b.name == "laya":
+            out["laya"] = {"info": b.info, "truncation": dict(b.truncation), "compute_ms": b.compute_ms}
+    return out
 
 
 def update_report(sl: dict, answers: list[dict], system, embedder) -> dict:
