@@ -41,6 +41,26 @@ sources resolve: typesafe2026jev, convai2026laya, mem0blog2026benchmarks, bytero
   messages. Only 30 of 76 messages made an LLM decision call. The caption now says so, with the numbers from
   `bench/results/e2_latency.json` (`bench/e2_latency.py`). No column needed "n/a".
 
+## Layout decisions to confirm
+
+- Figure 9 (calibration, three panels) is a `figure*` like Figure 1. The brief puts figures with fewer than four
+  panels in one column; three square panels at column width would be about 1 in each.
+- Tables 12 (latency by size) and 13 (held-out write side) moved to Appendix D to bring the PDF to 24 pages;
+  Figures 12 and 4 carry them in the body.
+- `inconsolata` loads only if installed (`\IfFileExists`); the Docker TeX Live medium image used for the test
+  build lacks it, so that build uses the Latin Modern typewriter. arXiv's full TeX Live has it.
+
+## Findings from Part 3 the text now states
+
+- **Per-conversation significance.** At matched context the per-conversation 95% interval excludes zero in 2 of 4
+  conversations (conv-42, conv-43); conv-30 and conv-41 are within noise on their own
+  (`bench/results/perconv_diffs.json`). The text says "point estimate ahead in every conversation", not "holds in
+  every conversation".
+- **Retrieval stage for Paris.** No stored run records which stage added Paris in the "before Berlin" example;
+  cosine recall searches closed facts, so it can enter at stage 1 or through history. Figure 2's caption says so.
+  Recording it needs one live Jev call (`pytest -m live tests/test_retrieval_regression.py -s`, prints each hit's
+  source).
+
 ## Claims that want a number we do not have
 
 - [ ] **ε_L**, the LLM's error on the gold pairs: never measured. Figure 4 plots ε_L ∈ {0, 0.1} as an assumption.

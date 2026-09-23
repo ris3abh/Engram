@@ -96,7 +96,7 @@ def number(display: str, source: str) -> str:
     return esc(display) + r"\src{" + source.replace("%", r"\%").replace("#", r"\#").replace("_", r"\_") + "}"
 
 
-XREF_KIND = {"Table": "tab", "Tables": "tab", "Figure": "fig", "Figures": "fig", "Fig.": "fig"}
+XREF_KIND = {"Table": "tab", "Tables": "tab", "Figure": "fig", "Figures": "fig", "Fig.": "fig", "Figs.": "fig"}
 TOKEN = re.compile(
     rf"(?P<num>{OPEN}(?P<nd>[^{SEP}]*){SEP}(?P<ns>[^{CLOSE}]*){CLOSE})"
     r"|(?P<cite>\[(?P<ck>@[\w-]+(?:;\s*@[\w-]+)*)\])"
@@ -105,7 +105,7 @@ TOKEN = re.compile(
     r"|(?P<math>(?<![\w\\])\$(?![\d/ ])(?P<m>[^$\n]+?)(?<! )\$)"
     r"|(?P<bold>\*\*(?P<b>.+?)\*\*)"
     r"|(?P<ital>(?<![\w*])\*(?![\s*])(?P<i>.+?)(?<![\s*])\*(?![\w*]))"
-    r"|(?P<xref>\b(?P<xw>Tables|Table|Figures|Figure|Fig\.) (?P<xn>\d+(?:(?:–|, | and )\d+)*))"
+    r"|(?P<xref>\b(?P<xw>Tables|Table|Figures|Figure|Figs\.|Fig\.) (?P<xn>\d+(?:(?:–|, | and )\d+)*))"
 )
 
 
@@ -333,8 +333,12 @@ def convert(md: str) -> tuple[str, str, str, str]:
             while j < len(lines) and not lines[j].strip():
                 j += 1
             if j < len(lines) and re.match(r"^\*Figure \d+\.", lines[j].strip()):
-                cap = re.sub(r"^Figure \d+\.\s*", "", lines[j].strip().strip("*"))
-                i = j
+                capl = []
+                while j < len(lines) and lines[j].strip():
+                    capl.append(lines[j].strip())
+                    j += 1
+                cap = re.sub(r"^Figure \d+\.\s*", "", " ".join(capl).strip().strip("*"))
+                i = j - 1
             cur.append(figure_tex(path, cap, label))
             i += 1
             continue
@@ -433,7 +437,6 @@ def main() -> None:
             abstract,
             r"\end{abstract}",
             body,
-            r"\clearpage",
             r"\appendix",
             appendix,
             r"\end{document}",

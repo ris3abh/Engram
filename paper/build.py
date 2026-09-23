@@ -1082,14 +1082,33 @@ def a_questions() -> str:
         v = getattr(Q, name)
         if isinstance(v, (Q.ChoiceQuestion, Q.NoulQuestion)) and all(v is not s for s in seen):
             seen.append(v)
+    printed: list[tuple[str, dict]] = []  # (name, criteria) already listed in full
     for q in sorted(seen, key=lambda q: (q.id, getattr(q, "version", 1))):
+        name = f"`{q.id}` version {getattr(q, 'version', 1)}"
         out.append(f"#### `{q.id}` (version {getattr(q, 'version', 1)}, {q.type})\n")
         out.append(f"Instructions: {q.instructions}\n")
         if q.type == "noul":
             out.append(f"- true: {q.true}\n- false: {q.false}\n")
-        else:
-            out += [f"- `{k}`: {v}" for k, v in q.criteria.items()]
+            continue
+        # A repeated option set points back to where it is listed, with only the differences spelled out.
+        base = next(
+            ((n, c) for n, c in printed if sum(c.get(k) == v for k, v in q.criteria.items()) >= len(q.criteria) - 1),
+            None,
+        )
+        if base:
+            bname, bcrit = base
+            added = [k for k in q.criteria if bcrit.get(k) != q.criteria[k]]
+            dropped = [k for k in bcrit if k not in q.criteria]
+            parts = [f"Options and rubrics as {bname}"]
+            if dropped:
+                parts.append("without " + ", ".join(f"`{k}`" for k in dropped))
+            out.append(", ".join(parts) + ("; plus:" if added else ".") + "\n")
+            out += [f"- `{k}`: {q.criteria[k]}" for k in added]
             out.append("")
+            continue
+        out += [f"- `{k}`: {v}" for k, v in q.criteria.items()]
+        out.append("")
+        printed.append((name, q.criteria))
     return "\n".join(out)
 
 

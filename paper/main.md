@@ -9,25 +9,18 @@ Every number carries a src comment naming the file it comes from; paper/numbers.
 
 ## Abstract
 
-We measure what a typed decision layer buys an agent memory system, in cost, store safety and retrieval. Long-term memory systems for LLM agents make one or more LLM calls every time they write a memory. That makes
-re-examining the store unaffordable, so systems drift toward adding facts and never revising them. Most of the
-write path, though, is not generation but choice among fixed options: is this new, a duplicate, or an update, and
-of what?
-
-We split the two. In engram, an LLM extracts facts and every decision is a typed question answered by a hosted
-decision model (Jev). With extraction held identical to mem0 2.1.0's, replacing the LLM decision layer with typed
-decisions cut decision-layer cost by 70.0×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json --> and median decision latency by 27.6×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json -->. Answer
-accuracy was the same: 31/35<!-- src: bench/results/e2_jev__dev.json --> against 31/35<!-- src: bench/results/e2_llm__dev.json -->.
-
-On 610<!-- src: bench/results/heldout_report.json --> held-out LoCoMo questions, under a three-memory retrieval budget, engram answers +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> points more
-questions than mem0 given the same number of context tokens (95% CI +5.2<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> to +12.1<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->). At the default
-k=20 the two systems tie (difference +0.8<!-- src: bench/results/heldout_report.json -->, CI -2.3<!-- src: bench/results/heldout_report.json --> to +3.9<!-- src: bench/results/heldout_report.json -->).
-
-We report two negatives:
-- Closing stale facts does not change answers on current benchmarks.
-- The 421M<!-- src: convai2026laya (model card) --> base checkpoint of the open-weights decision model Laya, used zero-shot as its documentation advises against, does not make the relational decisions reliably.
-
-Code, prompts and per-question results are released.
+We measure what a typed decision layer buys an agent memory system in cost, store safety and retrieval. Memory
+systems make an LLM call for every write decision, which makes revisiting the store unaffordable, yet most of that
+work is choice among fixed options. In engram, an LLM extracts facts and every decision is a typed question answered
+by a hosted decision model (Jev). With extraction held identical to mem0 2.1.0's, typed decisions cut decision-layer
+cost by 70.0×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json --> and median decision latency by 27.6×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json -->, with equal dev accuracy
+(31/35<!-- src: bench/results/e2_jev__dev.json --> against 31/35<!-- src: bench/results/e2_llm__dev.json -->). On 610<!-- src: bench/results/heldout_report.json --> held-out LoCoMo questions under a three-memory
+retrieval budget, engram answers +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> points more than mem0 at matched context tokens (95% CI +5.2<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> to
++12.1<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->); at k=20 the systems tie (+0.8<!-- src: bench/results/heldout_report.json -->, CI -2.3<!-- src: bench/results/heldout_report.json --> to +3.9<!-- src: bench/results/heldout_report.json -->). A belief-state
+store policy over-closed no labeled keep item. Two results are negative: closing stale facts does not change answers
+on current benchmarks, and the 421M<!-- src: convai2026laya (model card) --> base checkpoint of the open-weights decision model Laya, used
+zero-shot as its documentation advises against, does not make the relational decisions. Code, prompts and
+per-question results are released.
 
 ## 1. Introduction
 
@@ -60,18 +53,14 @@ they cost far less than generating text.
 
 **Contributions.**
 
-1. **A decision/generation split, tested with extraction held identical.** Using mem0's own extraction prompt and
-   inputs, typed decisions replace the LLM decision layer at 70.0×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json --> lower decision cost and
-   27.6×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json --> lower median decision latency, with the same dev accuracy (§5.1). On 610<!-- src: bench/results/heldout_report.json --> held-out
-   questions the full system ties mem0 at k=20 (§5.1).
-2. **A belief-state store policy.** Every fact edge carries a belief updated in log-odds from typed answers. Merges
-   and closes are reversible, and structural gates restrict when a close is allowed. No labeled keep item was
-   over-closed in any of our Jev arms (§3.4, §5.3).
-3. **Rerank beats a larger k under a small retrieval budget.** At k=3 engram is +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> points ahead of mem0
-   given matched context tokens, on 610<!-- src: bench/results/heldout_report.json --> held-out questions (§5.2).
-4. **Two documented negatives.** Closing stale facts does not change answers on LoCoMo-style questions, because
-   the answer model resolves recency from dates in the memory text (§5.5). The 421M<!-- src: convai2026laya (model card) --> base checkpoint of Laya, used zero-shot as its documentation advises
-   against, does not make the relational decisions (§5.6).
+1. With extraction held identical, typed decisions replace an LLM decision layer at 70.0×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json --> lower cost and
+   27.6×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json --> lower median latency with no measured accuracy loss (§5.1).
+2. A belief-state store policy with reversible, gated closes over-closes no labeled keep item, and its v3 rule removes
+   a weak-evidence failure that closes true facts (§3.4, §5.3).
+3. Under a three-memory budget a listwise Jev rerank puts engram +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> points ahead of mem0 at matched context
+   on 610<!-- src: bench/results/heldout_report.json --> held-out questions, and the systems tie at k=20 (§5.2).
+4. Closing stale facts does not change answers on current benchmarks, and a zero-shot base checkpoint of an
+   open-weights decision model does not make the relational decisions (§5.5, §5.6).
 
 **Scope.** We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development
 conversation and four held-out conversations). We use update sets written by the system's author, and one hosted
@@ -167,7 +156,7 @@ Table 1 lists the 12<!-- src: src/engram/decide/questions.py (ALL_QUESTIONS) -->
 version. Choice questions carry a rubric per option. When a question's wording changes, its version number is
 bumped and old arms keep the old version.
 
-*Table 1. Jev questions (`src/engram/decide/questions.py`, `docs/DECISIONS.md`). `edge_type` and `query_relation`
+*Table 1. Jev questions (`src/engram/decide/questions.py`, `docs/DECISIONS.md`); design, not a measurement (no slice, Q, k or model). `edge_type` and `query_relation`
 choose among 25<!-- src: src/engram/decide/questions.py (EDGE_TYPES) --> relation types.*
 
 | question | type | version | options |
@@ -299,7 +288,7 @@ differs. The E2 arms differ only in what decides after extraction.
 
 ### 4.3 Update sets
 
-LoCoMo has almost no updates (§2.3), so we wrote two sets in the speakers' voices. Both are appended to the dev
+LoCoMo has almost no updates (§2.3). Two update sets, written in the speakers' voices, extend it. Both are appended to the dev
 slice and were frozen by SHA-256 before any run.
 
 **Set 1** (`bench/updates_conv26.json`, SHA-256 prefix 2330876388f1<!-- src: bench/updates_conv26.json -->) has 30<!-- src: bench/updates_conv26.json --> items:
@@ -380,11 +369,11 @@ Our answer-level result is consistent with the ranking-level improvement AtMem m
 
 At k=3 engram shows the answer model 290<!-- src: bench/results/heldout_report.json --> tokens per question and mem0 159<!-- src: bench/results/heldout_report.json -->. Most of the
 difference is the source quote on each engram line. To separate context size from ranking, we answered the same
-610<!-- src: bench/results/heldout_report.json --> questions from mem0's existing held-out stores at every k from 3 to 8. We chose the k whose mean retrieved
+610<!-- src: bench/results/heldout_report.json --> questions from mem0's existing held-out stores at every k from 3 to 8. The token-matched setting is the k whose mean retrieved
 tokens came closest to engram's 290<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->: k=6<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->, at 315<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> tokens. That gives mem0 slightly more
 context than engram. The run cost $2.52<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->.
 
-*Table 3. Held-out LoCoMo accuracy: conv-30, 41, 42 and 43, 610<!-- src: bench/results/heldout_report.json --> questions, adversarial category excluded.
+*Table 3. Held-out LoCoMo accuracy: conv-30, 41, 42 and 43, 610<!-- src: bench/results/heldout_report.json --> questions, adversarial category excluded, k as labeled.
 Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6. One ingestion per system per conversation.
 Tokens are mean retrieved-context tokens per question.*
 
@@ -397,7 +386,7 @@ Tokens are mean retrieved-context tokens per question.*
 | engram | 20 | 1,461<!-- src: bench/results/heldout_report.json --> | 76.5%<!-- src: bench/results/heldout_report.json --> | 84.2%<!-- src: bench/results/heldout_report.json --> | 78.4%<!-- src: bench/results/heldout_report.json --> | 76.4%<!-- src: bench/results/heldout_report.json --> | 482/610<!-- src: bench/results/heldout_report.json --> |
 | mem0 | 20 | 1,024<!-- src: bench/results/heldout_report.json --> | 77.8%<!-- src: bench/results/heldout_report.json --> | 88.8%<!-- src: bench/results/heldout_report.json --> | 73.4%<!-- src: bench/results/heldout_report.json --> | 74.7%<!-- src: bench/results/heldout_report.json --> | 477/610<!-- src: bench/results/heldout_report.json --> |
 
-*Table 4. Paired differences for the rows of Table 3. 95% CI: per-question normal approximation. Bootstrap:
+*Table 4. Paired differences for the rows of Table 3: held-out, Q = 610<!-- src: bench/results/heldout_report.json -->, k as labeled, models as in Table 3. 95% CI: per-question normal approximation. Bootstrap:
 resampling the four conversations. Discordant: questions only engram / only mem0 answered correctly.*
 
 | comparison | Δ (pts) | 95% CI | 95% CI, bootstrap | discordant | McNemar p |
@@ -428,7 +417,7 @@ conversations (conv-42 and conv-43); conv-30 and conv-41 are within noise on the
 *Figure 6. engram minus mem0 accuracy per held-out conversation, with per-question 95% intervals: engram k=3
 against mem0 k=3, against token-matched mem0 k=6, and both at k=20. Source: `bench/results/perconv_diffs.json`.*
 
-*Table 5. Held-out accuracy by LoCoMo category, 610<!-- src: bench/results/heldout_report.json --> questions. Models as in Table 3.*
+*Table 5. Held-out accuracy by LoCoMo category, 610<!-- src: bench/results/heldout_report.json --> questions, k as labeled. Models as in Table 3.*
 
 | category | Q | engram k=3 | mem0 k=3 | mem0 k=6 (matched) | engram k=20 | mem0 k=20 |
 |---|---|---|---|---|---|---|
@@ -449,7 +438,7 @@ off, and mem0 answered 25/30<!-- src: bench/results/mem0__dev_updates__k3.json -
 
 ### 5.3 Safety and cost of the store
 
-*Table 6. Store safety on dev + update set 1 and set 2. Extraction claude-haiku-4-5, decisions Jev. Columns: set-1
+*Table 6. Store safety on dev + update set 1 and set 2 (storage metrics; no questions answered, so Q and k do not apply). Extraction claude-haiku-4-5, decisions Jev (jev-1.13.0). Columns: set-1
 no_close items over-closed / stored; set-2 keep items kept / stored; closes on dev + set 1, split into those matching
 a labeled pair and those not.*
 - *Over-closed*: a labeled no_close item whose fact was closed by its own update message.
@@ -488,7 +477,7 @@ closes. On set 2 it left 10/16<!-- src: bench/results/e4_belief_v2_shadow__dev_u
 
 **Fulfilled plans.** A relaxed heuristic closed a plan whenever a related past or current fact arrived. Across its
 two arms it fired 25<!-- src: bench/results/e2_jev_v2__dev_updates.json + bench/results/e3_structural_v2__dev_updates.json (fulfills_log) vs bench/updates_conv26.json close_fulfilled pairs --> times. 1<!-- src: bench/results/e2_jev_v2__dev_updates.json + bench/results/e3_structural_v2__dev_updates.json (fulfills_log) vs bench/updates_conv26.json close_fulfilled pairs --> firing matched a labeled (plan, fulfilment) pair,
-and 24<!-- src: bench/results/e2_jev_v2__dev_updates.json + bench/results/e3_structural_v2__dev_updates.json (fulfills_log) vs bench/updates_conv26.json close_fulfilled pairs --> did not. The `plan_fulfilled` question replaced it. In the frozen arm it was asked
+and 24<!-- src: bench/results/e2_jev_v2__dev_updates.json + bench/results/e3_structural_v2__dev_updates.json (fulfills_log) vs bench/updates_conv26.json close_fulfilled pairs --> did not. The frozen arm uses the `plan_fulfilled` question instead; it was asked
 234<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> times on dev + set 1 and closed 2<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> plans correctly and 1<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> wrongly.
 
 **Belief v3.** On the same data, v3 ignored 36<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> weak answers on dev + set 1 and 39<!-- src: bench/results/e4_belief_v3__dev_updates2__k3__noanswer.json -->
@@ -504,7 +493,7 @@ making 9<!-- src: bench/results/e4_belief_v2__heldout_conv-30__k3.json -->, 23<!
 
 ### 5.4 Calibration
 
-**Contradiction regression.** We wrote 50<!-- src: bench/results/tradeoff.json --> contradiction pairs, each an old fact, a new fact and a message, labeled
+**Contradiction regression.** The regression set has 50<!-- src: bench/results/tradeoff.json --> contradiction pairs, each an old fact, a new fact and a message, labeled
 with accepted relations and a temporal status (`bench/contradiction_pairs.jsonl`). Under the current question
 versions:
 - Jev's relation choice is in the accepted set for 90.0%<!-- src: bench/results/jev_regression_v2.json --> of pairs (easy 100.0%<!-- src: bench/results/jev_regression_v2.json -->, medium
@@ -521,7 +510,7 @@ On the gold pairs Jev's relation ECE is 0.14<!-- src: bench/results/calibration.
 temporal ECE is 0.04<!-- src: bench/results/calibration.json -->. On the escalation labels, which are by construction the cases Jev was
 unsure of, relation ECE is 0.15<!-- src: bench/results/calibration.json -->. Table 7 has the full comparison, with Laya.
 
-*Table 7. Calibration. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last
+*Table 7. Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; n per row; k does not apply; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last
 column is out of sample (2-fold). Relation probabilities fold `negates` into `contradiction`, since the pairs
 predate `negates`.*
 
@@ -587,7 +576,7 @@ own benchmark) and fine-tuning on our escalation labels were not tested; they ar
 closes nothing. Its gold-pair relation accuracy is 28.0%<!-- src: bench/results/calibration.json --> (Table 7). A temperature lowers its
 ECE but not its accuracy.
 
-*Table 9. Contradiction regression, 50<!-- src: bench/results/tradeoff.json --> pairs, relation_to_candidate and temporal_status in one request. Laya:
+*Table 9. Contradiction regression (gold pairs, Q = 50<!-- src: bench/results/tradeoff.json -->, k does not apply), relation_to_candidate and temporal_status in one request. Laya:
 convaiinnovations/laya<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> base checkpoint, zero-shot, fp16, on the local MLX server.*
 
 | backend | relation exact | temporal | close rule | closes | false closes |
@@ -605,7 +594,7 @@ the two gave the same answer on 44.8%<!-- src: bench/results/laya_agreement.json
 *Figure 11. Agreement between the Laya base checkpoint (zero-shot) and Jev on identical requests, per
 question, sorted by same answer. Dev + update sets 1 and 2, frozen arm's trajectory.*
 
-*Table 10. Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory. Same action:
+*Table 10. Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory at k=3 (write and retrieval decisions; n per row). Jev jev-1.13.0; Laya base checkpoint, zero-shot. Same action:
 both choose the same label at p ≥ 0.85<!-- src: src/engram/config.py -->, or neither reaches it. Acts: share of decisions at p ≥ 0.85<!-- src: src/engram/config.py -->.*
 
 | question | n | same answer | same action | Jev acts | Laya acts |
@@ -636,7 +625,7 @@ answers below 0.5 lowering belief, the failure belief v3 removes (§3.4).
 - It saved 42.6%<!-- src: bench/results/hybrid_report.json --> of Jev's cost on dev + set 1 ($0.025<!-- src: bench/results/hybrid_report.json --> per run).
 - Table 11 has accuracy.
 
-*Table 11. Hybrid against all-Jev: dev slice with update sets, extraction claude-haiku-4-5, answers and judge
+*Table 11. Hybrid against all-Jev: dev slice with update sets (Q per row: 35<!-- src: bench/results/e2_jev__dev.json --> LoCoMo, 30<!-- src: bench/updates_conv26.json --> set 1, 20<!-- src: bench/updates2_conv26.json --> set 2), k as labeled, extraction claude-haiku-4-5, answers and judge
 claude-sonnet-4-6.*
 
 | questions | all-Jev k=3 | hybrid k=3 | all-Jev k=20 | hybrid k=20 |
@@ -649,42 +638,17 @@ claude-sonnet-4-6.*
 
 **Jev latency is flat in request size.** Across 9,446<!-- src: bench/results/jev_latency.json --> live Jev requests from 25<!-- src: bench/results/jev_latency.json --> runs, median latency
 is between 222 ms<!-- src: bench/results/jev_latency.json --> and 269 ms<!-- src: bench/results/jev_latency.json --> for requests of 1 to 50 questions, and 371 ms<!-- src: bench/results/jev_latency.json --> for
-51–80. A least-squares fit gives 380 ms<!-- src: bench/results/jev_latency.json --> plus 7.19<!-- src: bench/results/jev_latency.json --> ms per question (Figure 12).
+51–80. A least-squares fit gives 380 ms<!-- src: bench/results/jev_latency.json --> plus 7.19<!-- src: bench/results/jev_latency.json --> ms per question (Figure 12; Table 12 in Appendix D).
 
 Variation over time is larger than variation over size. For requests of 16–20 questions, the per-run median was
 between 212 ms<!-- src: bench/results/jev_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests --> and 267 ms<!-- src: bench/results/jev_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests --> in 12<!-- src: bench/results/jev_latency.json: runs with ≥30 16–20-question requests, excluding conv-30 and conv-41 --> runs, and 793 ms<!-- src: bench/results/jev_latency.json: per-run median, 16–20-question requests --> and 607 ms<!-- src: bench/results/jev_latency.json: per-run median, 16–20-question requests --> in the two
 held-out runs made during one slower period.
 
-*Table 12. Jev latency by request size, from the decision logs (`bench/results/jev_latency.json`). Client-measured,
-after the rate limiter, retries included.*
-
-| questions / request | requests | median input tokens | median latency | p90 latency |
-|---|---|---|---|---|
-| 1 | 1,305<!-- src: bench/results/jev_latency.json --> | 564<!-- src: bench/results/jev_latency.json --> | 229 ms<!-- src: bench/results/jev_latency.json --> | 1,052 ms<!-- src: bench/results/jev_latency.json --> |
-| 2–3 | 1,054<!-- src: bench/results/jev_latency.json --> | 870<!-- src: bench/results/jev_latency.json --> | 248 ms<!-- src: bench/results/jev_latency.json --> | 1,176 ms<!-- src: bench/results/jev_latency.json --> |
-| 4–6 | 775<!-- src: bench/results/jev_latency.json --> | 1,562<!-- src: bench/results/jev_latency.json --> | 231 ms<!-- src: bench/results/jev_latency.json --> | 992 ms<!-- src: bench/results/jev_latency.json --> |
-| 7–10 | 1,417<!-- src: bench/results/jev_latency.json --> | 4,314<!-- src: bench/results/jev_latency.json --> | 246 ms<!-- src: bench/results/jev_latency.json --> | 967 ms<!-- src: bench/results/jev_latency.json --> |
-| 11–15 | 227<!-- src: bench/results/jev_latency.json --> | 2,432<!-- src: bench/results/jev_latency.json --> | 231 ms<!-- src: bench/results/jev_latency.json --> | 680 ms<!-- src: bench/results/jev_latency.json --> |
-| 16–20 | 3,240<!-- src: bench/results/jev_latency.json --> | 5,593<!-- src: bench/results/jev_latency.json --> | 255 ms<!-- src: bench/results/jev_latency.json --> | 1,009 ms<!-- src: bench/results/jev_latency.json --> |
-| 21–30 | 184<!-- src: bench/results/jev_latency.json --> | 3,551<!-- src: bench/results/jev_latency.json --> | 222 ms<!-- src: bench/results/jev_latency.json --> | 312 ms<!-- src: bench/results/jev_latency.json --> |
-| 31–50 | 505<!-- src: bench/results/jev_latency.json --> | 6,903<!-- src: bench/results/jev_latency.json --> | 269 ms<!-- src: bench/results/jev_latency.json --> | 472 ms<!-- src: bench/results/jev_latency.json --> |
-| 51–80 | 739<!-- src: bench/results/jev_latency.json --> | 9,187<!-- src: bench/results/jev_latency.json --> | 371 ms<!-- src: bench/results/jev_latency.json --> | 2,290 ms<!-- src: bench/results/jev_latency.json --> |
-
 ![Figure 12: Jev request latency: distribution over all logged requests, and median and p90 by request size.](figures/latency.svg)
 
 **Extraction dominates write cost.** On the held-out set, engram's write cost is $10.22<!-- src: bench/results/heldout_report.json --> to
 $10.55<!-- src: bench/results/heldout_report.json --> per 1,000 messages and mem0's is $9.92<!-- src: bench/results/heldout_report.json --> to $10.16<!-- src: bench/results/heldout_report.json -->. The decision layer is
-3.3%<!-- src: bench/results/heldout_report.json: decision $/1k ÷ write $/1k --> to 4.8%<!-- src: bench/results/heldout_report.json: decision $/1k ÷ write $/1k --> of engram's (Table 13).
-
-*Table 13. Held-out write side. One ingestion per system per conversation. Decision layer = Jev plus
-escalations.*
-
-| conv. | engram $/1k | decision $/1k | mem0 $/1k | decision p50 | engram write p50 | mem0 write p50 | engram facts | mem0 memories |
-|---|---|---|---|---|---|---|---|---|
-| conv-30 | $10.22<!-- src: bench/results/heldout_report.json --> | $0.33<!-- src: bench/results/heldout_report.json --> | $9.92<!-- src: bench/results/heldout_report.json --> | 1,982 ms<!-- src: bench/results/heldout_report.json --> | 928 ms<!-- src: bench/results/heldout_report.json --> | 1,034 ms<!-- src: bench/results/heldout_report.json --> | 267<!-- src: bench/results/heldout_report.json --> | 276<!-- src: bench/results/heldout_report.json --> |
-| conv-41 | $10.54<!-- src: bench/results/heldout_report.json --> | $0.47<!-- src: bench/results/heldout_report.json --> | $10.16<!-- src: bench/results/heldout_report.json --> | 1,614 ms<!-- src: bench/results/heldout_report.json --> | 1,775 ms<!-- src: bench/results/heldout_report.json --> | 1,437 ms<!-- src: bench/results/heldout_report.json --> | 668<!-- src: bench/results/heldout_report.json --> | 822<!-- src: bench/results/heldout_report.json --> |
-| conv-42 | $10.55<!-- src: bench/results/heldout_report.json --> | $0.50<!-- src: bench/results/heldout_report.json --> | $10.04<!-- src: bench/results/heldout_report.json --> | 981 ms<!-- src: bench/results/heldout_report.json --> | 1,824 ms<!-- src: bench/results/heldout_report.json --> | 1,300 ms<!-- src: bench/results/heldout_report.json --> | 708<!-- src: bench/results/heldout_report.json --> | 695<!-- src: bench/results/heldout_report.json --> |
-| conv-43 | $10.45<!-- src: bench/results/heldout_report.json --> | $0.50<!-- src: bench/results/heldout_report.json --> | $9.96<!-- src: bench/results/heldout_report.json --> | 868 ms<!-- src: bench/results/heldout_report.json --> | 1,819 ms<!-- src: bench/results/heldout_report.json --> | 1,210 ms<!-- src: bench/results/heldout_report.json --> | 628<!-- src: bench/results/heldout_report.json --> | 636<!-- src: bench/results/heldout_report.json --> |
+3.3%<!-- src: bench/results/heldout_report.json: decision $/1k ÷ write $/1k --> to 4.8%<!-- src: bench/results/heldout_report.json: decision $/1k ÷ write $/1k --> of engram's (Table 13, Appendix D).
 
 ## 6. Discussion
 
@@ -706,7 +670,7 @@ need:
 - memories stored without dates
 - long chains of changes
 
-Our set 2 was a first attempt, and it hit the ceiling for every arm.
+Update set 2 targets these, and every arm is at its ceiling on it.
 
 **Rerank or larger k.** Under a three-memory budget, a cheap listwise rerank is worth +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> points over
 mem0 at matched tokens. At k=20 the ranking stops mattering. For deployments that pay per context token, reranking
@@ -719,7 +683,7 @@ is the cheaper route to the same accuracy.
 - *One decision model.* Jev is the only decision model evaluated as the deciding backend, at one version. Laya
   was tested only as a zero-shot base checkpoint.
 - *mem0's date handling.* mem0's open-source path gives no observation date, so relative dates resolve against
-  the run date. We kept this as shipped. A variant with the session date patched in scored
+  the run date; the comparison uses it as shipped. A variant with the session date patched in scored
   31/35<!-- src: bench/results/mem0_dated__dev.json --> on dev, against 30/35<!-- src: bench/results/mem0__dev.json --> unpatched, within noise.
 - *Dev-only rerank attribution.* The rerank attribution in §5.2 rests on a dev ablation.
 - *One judge model.* The judge is an LLM (claude-sonnet-4-6). We did not measure its agreement with human labels.
@@ -841,30 +805,8 @@ Instructions: Does the new fact report that the plan in `existing_fact` has now 
 
 Instructions: Which relation about a person is `query` asking about?
 
-- `lives_in`: Current or past place of residence.
-- `born_in`: Place of birth or origin.
-- `works_at`: Employer or workplace.
-- `has_role`: Job title, profession, or role.
-- `studies_at`: School, university, or course of study.
-- `member_of`: A club, team, community, or group.
-- `married_to`: Spouse.
-- `partner_of`: Romantic partner who is not a spouse.
-- `family_of`: Parent, child, sibling, or other relative.
-- `friend_of`: Friend.
-- `colleague_of`: Coworker, manager, or report.
-- `owns`: Possesses an object, pet, vehicle, or property.
-- `uses`: Uses a tool, product, app, or service.
-- `prefers`: Likes or favors something.
-- `dislikes`: Dislikes or avoids something.
-- `allergic_to`: Allergy or intolerance.
-- `has_condition`: Health condition, injury, or medication.
-- `follows_diet`: Dietary pattern (vegetarian, keto, halal, ...).
-- `hobby`: A leisure activity.
-- `habit`: A recurring routine.
-- `goal`: Something the subject aims to achieve.
-- `plans`: A scheduled or intended future action or event.
-- `attended`: A past event, trip, or visit.
-- `speaks`: A language.
+Options and rubrics as `edge_type` version 1, without `related_to`; plus:
+
 - `none`: The query does not ask about one of these relations of a person (for example general knowledge).
 
 #### `relation_to_candidate` (version 1, choice)
@@ -881,32 +823,23 @@ Instructions: How does `new_fact` relate to `existing_fact`?
 
 Instructions: How does `new_fact` relate to `existing_fact`?
 
-- `new`: They are about different things. Both can be true, and neither changes the other.
-- `duplicate`: Same information, maybe worded differently. Storing `new_fact` adds nothing.
-- `update`: Same attribute of the same subject, and `new_fact` gives the newer value. `existing_fact` was true before but is no longer current (for example a move, a job change, a new phone).
-- `contradiction`: Both cannot be true at the same time, and `new_fact` does not describe a change over time. It directly conflicts with `existing_fact` (for example "is vegetarian" vs "favorite food is steak").
-- `refinement`: `new_fact` adds detail to `existing_fact` without making it false (for example "lives in Berlin" becoming "lives in Kreuzberg, Berlin").
+Options and rubrics as `relation_to_candidate` version 1; plus:
+
 - `negates`: `new_fact` says that `existing_fact` itself no longer holds: the same subject, relation and object, now stopped, ended, lost or undone (for example "User goes to a support group" vs "User doesn't go to the support group anymore").
 
 #### `relation_to_candidate_recheck` (version 1, choice)
 
 Instructions: Once `new_fact` is known, what happens to `existing_fact`?
 
-- `new`: They are about different things. Both can be true, and neither changes the other.
-- `duplicate`: Same information, maybe worded differently. Storing `new_fact` adds nothing.
-- `update`: Same attribute of the same subject, and `new_fact` gives the newer value. `existing_fact` was true before but is no longer current (for example a move, a job change, a new phone).
-- `contradiction`: Both cannot be true at the same time, and `new_fact` does not describe a change over time. It directly conflicts with `existing_fact` (for example "is vegetarian" vs "favorite food is steak").
-- `refinement`: `new_fact` adds detail to `existing_fact` without making it false (for example "lives in Berlin" becoming "lives in Kreuzberg, Berlin").
+Options and rubrics as `relation_to_candidate` version 1.
+
 
 #### `relation_to_candidate_recheck` (version 2, choice)
 
 Instructions: Once `new_fact` is known, what happens to `existing_fact`?
 
-- `new`: They are about different things. Both can be true, and neither changes the other.
-- `duplicate`: Same information, maybe worded differently. Storing `new_fact` adds nothing.
-- `update`: Same attribute of the same subject, and `new_fact` gives the newer value. `existing_fact` was true before but is no longer current (for example a move, a job change, a new phone).
-- `contradiction`: Both cannot be true at the same time, and `new_fact` does not describe a change over time. It directly conflicts with `existing_fact` (for example "is vegetarian" vs "favorite food is steak").
-- `refinement`: `new_fact` adds detail to `existing_fact` without making it false (for example "lives in Berlin" becoming "lives in Kreuzberg, Berlin").
+Options and rubrics as `relation_to_candidate` version 1; plus:
+
 - `negates`: `new_fact` says that `existing_fact` itself no longer holds: the same subject, relation and object, now stopped, ended, lost or undone (for example "User goes to a support group" vs "User doesn't go to the support group anymore").
 
 #### `relevant_to_query` (version 1, noul)
@@ -1329,7 +1262,7 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 
 ## Appendix D. Per-conversation held-out tables
 
-*D.1 k=3. Models as in Table 3.*
+*D.1 Held-out, per conversation, k=3. Q per row; models as in Table 3.*
 
 | conv. | Q | engram | mem0 | Δ (questions) | engram tokens / q | mem0 tokens / q |
 |---|---|---|---|---|---|---|
@@ -1338,7 +1271,7 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 | conv-42 | 199<!-- src: bench/results/heldout_report.json --> | 150/199<!-- src: bench/results/heldout_report.json --> | 111/199<!-- src: bench/results/heldout_report.json --> | 39<!-- src: bench/results/heldout_report.json --> | 292<!-- src: bench/results/heldout_report.json --> | 163<!-- src: bench/results/heldout_report.json --> |
 | conv-43 | 178<!-- src: bench/results/heldout_report.json --> | 125/178<!-- src: bench/results/heldout_report.json --> | 101/178<!-- src: bench/results/heldout_report.json --> | 24<!-- src: bench/results/heldout_report.json --> | 283<!-- src: bench/results/heldout_report.json --> | 153<!-- src: bench/results/heldout_report.json --> |
 
-*D.2 engram k=3 against token-matched mem0 (k=6).*
+*D.2 Held-out, per conversation: engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table 3.*
 
 | conv. | Q | engram k=3 | mem0 k=6 | Δ (questions) |
 |---|---|---|---|---|
@@ -1347,7 +1280,7 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 | conv-42 | 199<!-- src: bench/results/heldout_report.json --> | 150/199<!-- src: bench/results/heldout_report.json --> | 119/199<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 31<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> |
 | conv-43 | 178<!-- src: bench/results/heldout_report.json --> | 125/178<!-- src: bench/results/heldout_report.json --> | 112/178<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 13<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> |
 
-*D.3 k=20.*
+*D.3 Held-out, per conversation, k=20. Q per row; models as in Table 3.*
 
 | conv. | Q | engram | mem0 | Δ (questions) | engram tokens / q | mem0 tokens / q |
 |---|---|---|---|---|---|---|
@@ -1356,6 +1289,31 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 | conv-42 | 199<!-- src: bench/results/heldout_report.json --> | 156/199<!-- src: bench/results/heldout_report.json --> | 146/199<!-- src: bench/results/heldout_report.json --> | 10<!-- src: bench/results/heldout_report.json --> | 1,491<!-- src: bench/results/heldout_report.json --> | 1,043<!-- src: bench/results/heldout_report.json --> |
 | conv-43 | 178<!-- src: bench/results/heldout_report.json --> | 136/178<!-- src: bench/results/heldout_report.json --> | 133/178<!-- src: bench/results/heldout_report.json --> | 3<!-- src: bench/results/heldout_report.json --> | 1,389<!-- src: bench/results/heldout_report.json --> | 995<!-- src: bench/results/heldout_report.json --> |
 
+*Table 12. Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices; no questions answered), from the decision logs (`bench/results/jev_latency.json`). Client-measured,
+after the rate limiter, retries included.*
+
+| questions / request | requests | median input tokens | median latency | p90 latency |
+|---|---|---|---|---|
+| 1 | 1,305<!-- src: bench/results/jev_latency.json --> | 564<!-- src: bench/results/jev_latency.json --> | 229 ms<!-- src: bench/results/jev_latency.json --> | 1,052 ms<!-- src: bench/results/jev_latency.json --> |
+| 2–3 | 1,054<!-- src: bench/results/jev_latency.json --> | 870<!-- src: bench/results/jev_latency.json --> | 248 ms<!-- src: bench/results/jev_latency.json --> | 1,176 ms<!-- src: bench/results/jev_latency.json --> |
+| 4–6 | 775<!-- src: bench/results/jev_latency.json --> | 1,562<!-- src: bench/results/jev_latency.json --> | 231 ms<!-- src: bench/results/jev_latency.json --> | 992 ms<!-- src: bench/results/jev_latency.json --> |
+| 7–10 | 1,417<!-- src: bench/results/jev_latency.json --> | 4,314<!-- src: bench/results/jev_latency.json --> | 246 ms<!-- src: bench/results/jev_latency.json --> | 967 ms<!-- src: bench/results/jev_latency.json --> |
+| 11–15 | 227<!-- src: bench/results/jev_latency.json --> | 2,432<!-- src: bench/results/jev_latency.json --> | 231 ms<!-- src: bench/results/jev_latency.json --> | 680 ms<!-- src: bench/results/jev_latency.json --> |
+| 16–20 | 3,240<!-- src: bench/results/jev_latency.json --> | 5,593<!-- src: bench/results/jev_latency.json --> | 255 ms<!-- src: bench/results/jev_latency.json --> | 1,009 ms<!-- src: bench/results/jev_latency.json --> |
+| 21–30 | 184<!-- src: bench/results/jev_latency.json --> | 3,551<!-- src: bench/results/jev_latency.json --> | 222 ms<!-- src: bench/results/jev_latency.json --> | 312 ms<!-- src: bench/results/jev_latency.json --> |
+| 31–50 | 505<!-- src: bench/results/jev_latency.json --> | 6,903<!-- src: bench/results/jev_latency.json --> | 269 ms<!-- src: bench/results/jev_latency.json --> | 472 ms<!-- src: bench/results/jev_latency.json --> |
+| 51–80 | 739<!-- src: bench/results/jev_latency.json --> | 9,187<!-- src: bench/results/jev_latency.json --> | 371 ms<!-- src: bench/results/jev_latency.json --> | 2,290 ms<!-- src: bench/results/jev_latency.json --> |
+
+*Table 13. Held-out write side (conv-30, 41, 42, 43; writes only, so Q and k do not apply). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus
+escalations.*
+
+| conv. | engram $/1k | decision $/1k | mem0 $/1k | decision p50 | engram write p50 | mem0 write p50 | engram facts | mem0 memories |
+|---|---|---|---|---|---|---|---|---|
+| conv-30 | $10.22<!-- src: bench/results/heldout_report.json --> | $0.33<!-- src: bench/results/heldout_report.json --> | $9.92<!-- src: bench/results/heldout_report.json --> | 1,982 ms<!-- src: bench/results/heldout_report.json --> | 928 ms<!-- src: bench/results/heldout_report.json --> | 1,034 ms<!-- src: bench/results/heldout_report.json --> | 267<!-- src: bench/results/heldout_report.json --> | 276<!-- src: bench/results/heldout_report.json --> |
+| conv-41 | $10.54<!-- src: bench/results/heldout_report.json --> | $0.47<!-- src: bench/results/heldout_report.json --> | $10.16<!-- src: bench/results/heldout_report.json --> | 1,614 ms<!-- src: bench/results/heldout_report.json --> | 1,775 ms<!-- src: bench/results/heldout_report.json --> | 1,437 ms<!-- src: bench/results/heldout_report.json --> | 668<!-- src: bench/results/heldout_report.json --> | 822<!-- src: bench/results/heldout_report.json --> |
+| conv-42 | $10.55<!-- src: bench/results/heldout_report.json --> | $0.50<!-- src: bench/results/heldout_report.json --> | $10.04<!-- src: bench/results/heldout_report.json --> | 981 ms<!-- src: bench/results/heldout_report.json --> | 1,824 ms<!-- src: bench/results/heldout_report.json --> | 1,300 ms<!-- src: bench/results/heldout_report.json --> | 708<!-- src: bench/results/heldout_report.json --> | 695<!-- src: bench/results/heldout_report.json --> |
+| conv-43 | $10.45<!-- src: bench/results/heldout_report.json --> | $0.50<!-- src: bench/results/heldout_report.json --> | $9.96<!-- src: bench/results/heldout_report.json --> | 868 ms<!-- src: bench/results/heldout_report.json --> | 1,819 ms<!-- src: bench/results/heldout_report.json --> | 1,210 ms<!-- src: bench/results/heldout_report.json --> | 628<!-- src: bench/results/heldout_report.json --> | 636<!-- src: bench/results/heldout_report.json --> |
+
 ## Appendix E. Reproduction
 
 All commands run from the repository root. With the call cache (`bench/.cache/calls.sqlite`) in place, every
@@ -1363,13 +1321,13 @@ command below replays at no API cost.
 
 | table / figure | command |
 |---|---|
-| Table 2 | `python -m bench.run --arm {e2_jev,e2_llm,mem0} --slice dev` |
-| Tables 3–5, D | `python -m bench.run --arm {e4_belief_v2,mem0} --slice heldout:<conv> --top-k 3 --also-top-k 20`, then `python -m bench.heldout_report` and `python -m bench.token_match` |
-| Table 6, 8 | `python -m bench.run --arm <arm> --slice dev_updates[2] [--top-k 3] [--no-dates]` |
-| Tables 7, 9; Fig. 3 | `python bench/test_contradictions.py --backend laya [--native] --save …`, `python -m bench.calibration`, `python -m bench.jev_regression` (the Laya rows need `bench/laya_server.py` running) |
-| Fig. 4 | `python -m bench.tradeoff` |
+| Table 2; Fig. 4 | `python -m bench.run --arm {e2_jev,e2_llm,mem0} --slice dev` |
+| Tables 3–5, D; Figs. 5–7 | `python -m bench.run --arm {e4_belief_v2,mem0} --slice heldout:<conv> --top-k 3 --also-top-k 20`, then `python -m bench.heldout_report` and `python -m bench.token_match` |
+| Tables 6, 8; Figs. 3, 8 | `python -m bench.run --arm <arm> --slice dev_updates[2] [--top-k 3] [--no-dates]` |
+| Tables 7, 9; Figs. 9, 11 | `python bench/test_contradictions.py --backend laya [--native] --save …`, `python -m bench.calibration`, `python -m bench.jev_regression` (the Laya rows need `bench/laya_server.py` running) |
+| Fig. 10 | `python -m bench.tradeoff` |
 | Tables 10–11 | `python -m bench.laya_report`, `python -m bench.hybrid_report` |
-| Table 12, Fig. 5 | `python -m bench.jev_latency` |
+| Table 12, Fig. 12 | `python -m bench.jev_latency` |
 | this paper | `python paper/build.py`, `python paper/figures.py` |
 
 The spend ledger records cost per run, not per table. Per-arm totals:
