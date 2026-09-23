@@ -27,7 +27,7 @@ class Engram:
     flags: Flags = Flags()
 
     def __post_init__(self) -> None:
-        self.writer = WritePipeline(self.store, self.backend, self.llm, self.embedder, self.log)
+        self.writer = WritePipeline(self.store, self.backend, self.llm, self.embedder, self.log, self.flags)
         self.retriever = Retriever(self.store, self.backend, self.embedder, cosine_floor=self.flags.retrieval_floor)
 
     async def ingest(self, text: str, **kw):

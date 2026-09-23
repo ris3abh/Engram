@@ -55,6 +55,20 @@ ESCALATE_SYSTEM = """You judge how a newly stated fact relates to one existing m
 relation using the definitions given. Pay close attention to time: a plan, a possibility or a finished past \
 event does not replace a current fact."""
 
+# v2 (flags.extract_prompt="v2", experiment E1): v1 plus self-contained sentences, absolute dates grounded on the
+# message date (mirroring mem0's "Temporally Grounded" rule), and a verbatim source quote per fact.
+EXTRACT_SYSTEM_V2 = (
+    EXTRACT_SYSTEM
+    + """
+- Self-contained: every `text` must be understandable on its own. Use full names, never pronouns, and include \
+the context needed to make sense of it (what happened, with whom, where, why).
+- Temporally grounded: convert every relative time reference to an absolute one using the message date, and \
+write it into `text` ("yesterday" -> "on 7 May 2023", "last year" -> "in 2022", "next month" -> "in June 2023"). \
+Keep exact dates, durations and quantities as stated; never make an absolute time vaguer.
+- `source_text`: the exact sentence or sentences of the latest message that this fact comes from, copied \
+verbatim."""
+)
+
 
 class _Fact(BaseModel):
     text: str
@@ -72,6 +86,17 @@ class _Extraction(BaseModel):
     facts: list[_Fact]
 
 
+class _FactV2(_Fact):
+    source_text: str
+
+
+class _ExtractionV2(BaseModel):
+    facts: list[_FactV2]
+
+
+EXTRACT_PROMPTS = {"v1": (EXTRACT_SYSTEM, _Fact, _Extraction), "v2": (EXTRACT_SYSTEM_V2, _FactV2, _ExtractionV2)}
+
+
 class AnthropicLLM(LLMBackend):
     name = "anthropic"
 
@@ -81,9 +106,11 @@ class AnthropicLLM(LLMBackend):
         extract_model: str = config.EXTRACT_MODEL,
         usage_log: UsageLog | None = None,
         cache: CallCache | None = None,
+        extract_prompt: str = "v1",
     ):
         self.model = model
         self.extract_model = extract_model
+        self.extract_prompt = extract_prompt
         self.usage_log = usage_log
         self.cache = cache
         self._clients: dict[int, anthropic.AsyncAnthropic] = {}  # one per event loop
@@ -140,11 +167,12 @@ class AnthropicLLM(LLMBackend):
             f"Earlier messages (context only):\n{earlier}\n\n"
             f"Latest message, sent {message.created_at:%Y-%m-%d} by {speaker}:\n{message.text}"
         )
+        system, fact_model, schema = EXTRACT_PROMPTS[self.extract_prompt]
         request = {
             "message_id": message.id,
-            "system": EXTRACT_SYSTEM,
+            "system": system,
             "prompt": prompt,
-            "schema": _Extraction.model_json_schema(),
+            "schema": schema.model_json_schema(),
         }
 
         async def run():
@@ -153,9 +181,9 @@ class AnthropicLLM(LLMBackend):
                 response = await self._client().messages.parse(
                     model=self.extract_model,
                     max_tokens=4096,
-                    system=EXTRACT_SYSTEM,
+                    system=system,
                     messages=[{"role": "user", "content": prompt}],
-                    output_format=_Extraction,
+                    output_format=schema,
                 )
             except anthropic.APIError as e:
                 raise LLMError(f"extraction failed: {e}") from e
@@ -169,7 +197,7 @@ class AnthropicLLM(LLMBackend):
             request,
             run,
             encode=lambda r: [f.model_dump() for f in r.parsed_output.facts],
-            decode=lambda out: [_to_extracted(_Fact(**f)) for f in out],
+            decode=lambda out: [_to_extracted(fact_model(**f)) for f in out],
         )
         return facts, usage
 
@@ -232,7 +260,7 @@ class AnthropicLLM(LLMBackend):
         )
 
 
-def _to_extracted(f: _Fact) -> ExtractedFact:
+def _to_extracted(f: _Fact | _FactV2) -> ExtractedFact:
     valid_from = None
     if f.valid_from:
         try:
@@ -251,4 +279,5 @@ def _to_extracted(f: _Fact) -> ExtractedFact:
         valid_from=valid_from,
         user_requested=f.user_requested,
         secret_value=f.secret_value or None,
+        source_text=getattr(f, "source_text", None),
     )

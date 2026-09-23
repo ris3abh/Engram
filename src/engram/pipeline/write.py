@@ -17,6 +17,7 @@ Rules (docs/DECISIONS.md, PLAN.md):
 """
 
 import asyncio
+import re
 import time
 from dataclasses import dataclass, field, replace
 from datetime import datetime
@@ -35,6 +36,7 @@ from ..decide.questions import (
     Ask,
 )
 from ..embed import Embedder, top_k
+from ..flags import Flags
 from ..llm.base import LLMBackend, LLMError, LLMUsage
 from ..models import REDACTED, Decision, ExtractedFact, Fact, Message, new_id, normalize_entity, now
 from ..store import Store
@@ -102,7 +104,9 @@ class WritePipeline:
         llm: LLMBackend,
         embedder: Embedder,
         log: DecisionLog | None = None,
+        flags: Flags | None = None,
     ):
+        self.flags = flags or Flags()
         self.store = store
         self.backend = backend
         self.llm = llm
@@ -130,6 +134,13 @@ class WritePipeline:
         self._context = [*self._context, message][-CONTEXT_MESSAGES:]
 
         keep, merged, dedupe_decisions = await self._dedupe(message, drafts)
+        if self.flags.merge_policy == "union":
+            for j, (i, _) in sorted(merged.items()):
+                drafts[i] = replace(
+                    drafts[i],
+                    text=union_text(drafts[i].text, drafts[j].text),
+                    source_text=union_text(drafts[i].source_text, drafts[j].source_text, sep=" … "),
+                )
         results = await asyncio.gather(*(self._write_fact(message, drafts[i]) for i in keep))
         by_index = dict(zip(keep, (o for o, _ in results), strict=True))
         outcomes = []
@@ -215,7 +226,7 @@ class WritePipeline:
         if draft.user_requested:
             decisions.append(self._rule("worth_remembering", "yes", "user explicitly asked to remember this"))
             p_worth = 1.0
-        elif worth.backend != "fallback" and p_worth < config.ESCALATE_BELOW:
+        elif self.flags.worth_filter and worth.backend != "fallback" and p_worth < config.ESCALATE_BELOW:
             return WriteOutcome(draft.text, "dropped", decisions=decisions), []
         tentative = (worth.backend == "fallback" and not draft.user_requested) or p_worth < config.ACT_THRESHOLD
 
@@ -280,6 +291,8 @@ class WritePipeline:
         if relation.label == "duplicate" and confident and not tentative:
             self.store.add_provenance(target.id, message.id)
             self.store.add_decisions(target.id, decisions)
+            if self.flags.merge_policy == "union":
+                await self._union_into(target, fact)
             return outcome("duplicate", target.id, target.id, False, False)
 
         if relation.label == "refinement":
@@ -340,6 +353,16 @@ class WritePipeline:
 
     # helpers
 
+    async def _union_into(self, target: Fact, new: Fact) -> None:
+        """merge_policy=union: the kept fact's text (and source) gain the duplicate's details; never shortened."""
+        text = union_text(target.text, new.text)
+        source = union_text(target.source_text, new.source_text, sep=" … ")
+        if text == target.text and source == target.source_text:
+            return
+        self.store.update_fact(target.id, text=text, source_text=source)
+        vector = (await asyncio.to_thread(self.embedder.embed, [text]))[0]
+        self.store.set_embedding(target.id, vector)
+
     def _candidates(self, vector) -> list[Fact]:
         ids, matrix = self.store.embeddings(valid_only=True)
         if not ids or matrix.shape[1] != vector.shape[0]:
@@ -375,6 +398,7 @@ class WritePipeline:
             decisions=decisions,
             temporal_status=temporal_status,
             valid_from_stated=draft.valid_from is not None,
+            source_text=draft.source_text if self.flags.store_source_text else None,
         )
 
     def _fallback(self, message: Message, draft: ExtractedFact, vector, asks: list[Ask], error: str) -> WriteOutcome:
@@ -409,6 +433,22 @@ class WritePipeline:
         redacted = self._apply_credentials_rule(fact, draft, message, fact.decisions)
         self.store.add_fact(fact, vector)
         return WriteOutcome(fact.text, "fallback", fact.id, tentative=True, redacted=redacted, decisions=decisions)
+
+
+def _words(text: str) -> set[str]:
+    return set(re.findall(r"[a-z0-9']+", text.lower()))
+
+
+def union_text(kept: str | None, other: str | None, sep: str = "; ") -> str | None:
+    """Union of two phrasings of one fact: keep whichever covers the other, else both. Never the shorter alone."""
+    if not other or not kept:
+        return kept or other
+    a, b = _words(kept), _words(other)
+    if b <= a:
+        return kept
+    if a <= b:
+        return other
+    return f"{kept}{sep}{other}"
 
 
 def _redact(text: str, secrets: set[str]) -> str:

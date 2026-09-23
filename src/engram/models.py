@@ -74,6 +74,7 @@ class ExtractedFact:
     valid_from: datetime | None = None  # resolved by the LLM from the message date; None = message time
     user_requested: bool = False  # the speaker explicitly asked to remember this; overrides worth_remembering
     secret_value: str | None = None  # exact secret string (password, PIN, key) if any; never stored
+    source_text: str | None = None  # verbatim sentence(s) of the message this fact came from (extract v2)
 
 
 @dataclass
@@ -95,6 +96,7 @@ class Fact:
     temporal_status: str = "current"
     refines: str | None = None  # id of the fact this one refines
     valid_from_stated: bool = False  # True if the message gave a date; else valid_from is just when we learned it
+    source_text: str | None = None  # verbatim source sentence(s), stored when flags.store_source_text
     created_at: datetime = field(default_factory=now)
     last_retrieved_at: datetime | None = None
 

@@ -22,7 +22,7 @@ class Answer:
         return self.retrieval.latency_ms
 
 
-def render_fact(r: RetrievedFact) -> str:
+def render_fact(r: RetrievedFact, show_source: bool = False) -> str:
     """One memory line. It is anchored on the date it was *said*, like a chat timestamp, so relative words kept in
     the text ("yesterday", "last year") are resolved once, against the right date. A resolved `valid_from` is
     shown only when the message actually stated a time."""
@@ -44,7 +44,8 @@ def render_fact(r: RetrievedFact) -> str:
     else:
         labels = {"history": "earlier value, replaced", "neighbor": "related", "relation": "same kind of fact"}
         notes.append(labels.get(r.source, r.source))
-    return f"- {said}{f.text} ({'; '.join(notes)})"
+    source = f' — source: "{f.source_text}"' if show_source and f.source_text else ""
+    return f"- {said}{f.text}{source} ({'; '.join(notes)})"
 
 
 def render(retrieval: Retrieval) -> str:

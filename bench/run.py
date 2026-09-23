@@ -1,8 +1,15 @@
 """Phase-2 experiment runner: one arm (a named flag set) on the conv-26 dev slice.
 
-    uv run --env-file .env --extra bench python -m bench.run --arm e0_baseline
-    uv run --env-file .env --extra bench python -m bench.run --arm mem0
-    uv run --extra bench python -m bench.run --report e0_baseline mem0     # table only, no API calls
+    uv run --env-file .env --extra bench python -m bench.run --arm e0_baseline                  # dev slice
+    uv run --env-file .env --extra bench python -m bench.run --arm mem0 --slice stress
+    uv run --extra bench python -m bench.run --report e0_baseline mem0 --slice dev   # table only, no API calls
+
+Slices: `dev` = conv-26 sessions 1-4 (76 messages, 35 questions), the cheap slice for every experiment;
+`stress` = sessions 1-10 (215 messages, 80 questions), run at E1, E2 and the gates. The stress slice asks
+questions at three checkpoints (after sessions 4, 7, 10), each question as soon as all its evidence has been
+ingested and again at every later checkpoint, logging the store size each time. The headline accuracy is the
+final checkpoint (every question, full store), the same protocol as before; the checkpoints give the
+store-size buckets, and the session-1-4 questions asked at all three sizes isolate degradation with growth.
 
 Every call goes through one cache (bench/.cache/calls.sqlite): Jev answers keyed by (model, state, question
 payload), Claude calls by (purpose, model, full request), mem0's LLM calls by their full request. A re-run only
@@ -17,6 +24,7 @@ import argparse
 import asyncio
 import json
 import os
+import re
 import shutil
 import statistics
 import time
@@ -35,7 +43,10 @@ os.environ.setdefault("MEM0_TELEMETRY", "False")
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 ROOT = Path(__file__).parents[1]
-SLICE = ROOT / "bench" / "slices" / "conv26_slice.json"
+SLICES = {
+    "dev": (ROOT / "bench" / "slices" / "conv26_slice.json", [4]),
+    "stress": (ROOT / "bench" / "slices" / "conv26_stress.json", [4, 7, 10]),
+}
 ARMS_DIR = ROOT / "bench" / ".cache" / "arms"
 CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
@@ -46,6 +57,12 @@ FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy fro
 
 ARMS: dict[str, dict] = {
     "e0_baseline": {"system": "engram", "flags": Flags()},
+    "e1_recall": {
+        "system": "engram",
+        "flags": Flags(
+            extract_prompt="v2", store_source_text=True, worth_filter=False, retrieval_floor=10, merge_policy="union"
+        ),
+    },
     "mem0": {"system": "mem0"},
 }
 
@@ -54,10 +71,17 @@ def session_time(text: str) -> datetime:
     return datetime.strptime(text.strip(), "%I:%M %p on %d %B, %Y").replace(tzinfo=UTC)
 
 
-def load_slice() -> dict:
-    s = json.loads(SLICE.read_text())
+def load_slice(name: str) -> dict:
+    path, checkpoints = SLICES[name]
+    s = json.loads(path.read_text())
+    s["checkpoints"] = checkpoints
     for m in s["messages"]:
         m["at"] = session_time(m["session_date"]) + timedelta(seconds=m["index"])
+    for q in s["questions"]:
+        q.setdefault(
+            "last_evidence_session",
+            max(int(x) for e in q["evidence"] for x in re.findall(r"D(\d+):", e)),
+        )
     return s
 
 
@@ -85,7 +109,9 @@ class EngramArm:
         self.engine = Engram(
             Store(arm_dir / "engram.db"),
             JevBackend(log, cache=cache),
-            AnthropicLLM(extract_model=EXTRACT_MODEL, usage_log=usage, cache=cache),
+            AnthropicLLM(
+                extract_model=EXTRACT_MODEL, usage_log=usage, cache=cache, extract_prompt=flags.extract_prompt
+            ),
             SentenceEmbedder(),
             log,
             usage,
@@ -109,7 +135,8 @@ class EngramArm:
         from engram.pipeline.answer import render_fact
 
         r = await self.engine.retriever.retrieve(question)
-        return [render_fact(x)[2:] for x in r.facts], r.cost_usd
+        show = self.engine.flags.store_source_text
+        return [render_fact(x, show_source=show)[2:] for x in r.facts], r.cost_usd
 
     def stored(self) -> dict:
         facts = self.engine.store.list_facts()
@@ -228,20 +255,14 @@ async def claude(client, cache: CallCache, purpose: str, sem: asyncio.Semaphore,
 # ---------------------------------------------------------------- run
 
 
-async def run_arm(name: str, budget: Budget) -> dict:
+async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
     spec = ARMS[name]
-    sl = load_slice()
-    arm_dir = ARMS_DIR / name
+    sl = load_slice(slice_name)
+    arm_dir = ARMS_DIR / name / slice_name
     shutil.rmtree(arm_dir, ignore_errors=True)
     arm_dir.mkdir(parents=True)
     cache = CallCache(CACHE, budget=budget)
     system = EngramArm(arm_dir, spec["flags"], cache) if spec["system"] == "engram" else Mem0Arm(arm_dir, cache)
-
-    writes = []
-    for n, m in enumerate(sl["messages"], 1):
-        writes.append(await system.write(m))
-        if n % 20 == 0:
-            print(f"[{name}] {n}/{len(sl['messages'])} messages, real spend ${budget.run_total:.3f}", flush=True)
 
     client = anthropic.AsyncAnthropic(max_retries=5, timeout=120)
     sem = asyncio.Semaphore(6)
@@ -286,7 +307,40 @@ async def run_arm(name: str, budget: Budget) -> dict:
             "query_cost": retrieve_cost + ans["cost"],
         }
 
-    answers = await asyncio.gather(*(one(q) for q in sl["questions"]))
+    writes, asked = [], []
+    last_of_session = {m["session"]: m["id"] for m in sl["messages"]}
+    for n, m in enumerate(sl["messages"], 1):
+        writes.append(await system.write(m))
+        if n % 20 == 0:
+            print(
+                f"[{name}/{slice_name}] {n}/{len(sl['messages'])} messages, real spend ${budget.run_total:.3f}",
+                flush=True,
+            )
+        if m["session"] in sl["checkpoints"] and m["id"] == last_of_session[m["session"]]:
+            cp = m["session"]
+            size = system.stored()["stored"]
+            due = [q for q in sl["questions"] if q["last_evidence_session"] <= cp]
+            got = await asyncio.gather(*(one(q) for q in due))
+            asked += [{**a, "checkpoint": cp, "store_size": size} for a in got]
+            print(f"[{name}/{slice_name}] checkpoint session {cp}: store {size}, {len(due)} questions", flush=True)
+
+    final = max(sl["checkpoints"])
+    answers = [a for a in asked if a["checkpoint"] == final]
+    first_ids = {q["idx"] for q in sl["questions"] if q["last_evidence_session"] <= min(sl["checkpoints"])}
+    buckets = [
+        {
+            "checkpoint": cp,
+            "store_size": next(a["store_size"] for a in asked if a["checkpoint"] == cp),
+            "questions": sum(a["checkpoint"] == cp for a in asked),
+            "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in asked if a["checkpoint"] == cp),
+            "no_memory": sum(a["memories"] == 0 for a in asked if a["checkpoint"] == cp),
+            "early_questions": len(first_ids),
+            "early_accuracy": statistics.fmean(
+                a["label"] == "CORRECT" for a in asked if a["checkpoint"] == cp and a["idx"] in first_ids
+            ),
+        }
+        for cp in sl["checkpoints"]
+    ]
     actions = Counter(a for w in writes for a in w["actions"])
     n_msgs = len(writes)
     # Only messages that produced facts have a decision layer to time; the rest decide nothing in ~0 ms.
@@ -296,7 +350,8 @@ async def run_arm(name: str, budget: Budget) -> dict:
         "arm": name,
         "system": spec["system"],
         "flags": spec["flags"].describe() if "flags" in spec else None,
-        "slice": {"sessions": sl["sessions"], "messages": n_msgs, "questions": len(answers)},
+        "slice": {"name": slice_name, "sessions": sl["sessions"], "messages": n_msgs, "questions": len(answers)},
+        "store_size_buckets": buckets,
         "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in answers),
         "accuracy_by_category": {
             str(c): statistics.fmean(a["label"] == "CORRECT" for a in answers if a["category"] == c)
@@ -318,9 +373,10 @@ async def run_arm(name: str, budget: Budget) -> dict:
         "spend": dict(budget.spent),
         "cache": {"hits": cache.hits, "misses": cache.misses},
         "answers": answers,
+        "asked": asked,
     }
     RESULTS.mkdir(parents=True, exist_ok=True)
-    (RESULTS / f"{name}.json").write_text(json.dumps(result, indent=1, default=str))
+    (RESULTS / f"{name}__{slice_name}.json").write_text(json.dumps(result, indent=1, default=str))
     return result
 
 
@@ -363,6 +419,20 @@ def table(results: list[dict]) -> str:
                 cell = f"{r['stored']} ({r['active']})"
             cells.append(cell)
         lines.append(f"| {label} | " + " | ".join(cells) + " |")
+    for i, cp in enumerate(results[0]["store_size_buckets"]):
+
+        def cell(r, i=i):
+            b = r["store_size_buckets"][i]
+            return f"{b['accuracy']:.0%} (Q={b['questions']}, store {b['store_size']}, no-memory {b['no_memory']})"
+
+        lines.append(f"| after session {cp['checkpoint']}: accuracy | " + " | ".join(cell(r) for r in results) + " |")
+    if len(results[0]["store_size_buckets"]) > 1:
+        n_early = results[0]["store_size_buckets"][0]["early_questions"]
+        lines.append(
+            f"| same {n_early} session-1-4 questions at each store size | "
+            + " | ".join(" → ".join(f"{b['early_accuracy']:.0%}" for b in r["store_size_buckets"]) for r in results)
+            + " |"
+        )
     cats = sorted({c for r in results for c in r["accuracy_by_category"]})
     for c in cats:
         n = sum(1 for a in results[0]["answers"] if str(a["category"]) == c)
@@ -377,15 +447,16 @@ def table(results: list[dict]) -> str:
 async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--arm", choices=list(ARMS))
+    parser.add_argument("--slice", choices=list(SLICES), default="dev")
     parser.add_argument("--report", nargs="*", help="print the table for these arms from bench/results")
     args = parser.parse_args()
     if args.report is not None:
-        print(table([json.loads((RESULTS / f"{a}.json").read_text()) for a in args.report]))
+        print(table([json.loads((RESULTS / f"{a}__{args.slice}.json").read_text()) for a in args.report]))
         return
     budget = Budget(run_limit=RUN_LIMIT, total_limit=PHASE_LIMIT, prior_total=prior_spend())
     started = time.time()
     try:
-        result = await run_arm(args.arm, budget)
+        result = await run_arm(args.arm, args.slice, budget)
     finally:
         LEDGER.parent.mkdir(parents=True, exist_ok=True)
         with LEDGER.open("a") as f:

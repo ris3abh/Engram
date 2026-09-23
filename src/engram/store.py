@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS facts (
     temporal_status TEXT NOT NULL DEFAULT 'current',
     refines TEXT,
     valid_from_stated INTEGER NOT NULL DEFAULT 0,
+    source_text TEXT,
     created_at TEXT NOT NULL,
     last_retrieved_at TEXT,
     embedding BLOB
@@ -72,7 +73,8 @@ CREATE INDEX IF NOT EXISTS decisions_fact ON decisions(fact_id);
 
 _FACT_COLUMNS = (
     "id, text, subject, predicate, object, kind, durability, sensitivity, confidence, valid_from, valid_until, "
-    "source_message_id, tentative, temporal_status, refines, valid_from_stated, created_at, last_retrieved_at"
+    "source_message_id, tentative, temporal_status, refines, valid_from_stated, source_text, created_at, "
+    "last_retrieved_at"
 )
 
 
@@ -99,9 +101,11 @@ class Store:
     def _migrate(self) -> None:
         """Add columns introduced after a database was created."""
         columns = {r["name"] for r in self._db.execute("PRAGMA table_info(facts)")}
-        if "valid_from_stated" not in columns:
-            self._db.execute("ALTER TABLE facts ADD COLUMN valid_from_stated INTEGER NOT NULL DEFAULT 0")
-            self._db.commit()
+        added = {"valid_from_stated": "INTEGER NOT NULL DEFAULT 0", "source_text": "TEXT"}
+        for name, ddl in added.items():
+            if name not in columns:
+                self._db.execute(f"ALTER TABLE facts ADD COLUMN {name} {ddl}")
+        self._db.commit()
 
     def close(self) -> None:
         self._db.close()
@@ -152,7 +156,7 @@ class Store:
                 self._db.execute("INSERT OR IGNORE INTO entities VALUES (?, ?)", (normalize_entity(label), label))
             fact.subject, fact.object = normalize_entity(fact.subject), normalize_entity(fact.object)
             self._db.execute(
-                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 19)})",
+                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 20)})",
                 (
                     fact.id,
                     fact.text,
@@ -170,6 +174,7 @@ class Store:
                     fact.temporal_status,
                     fact.refines,
                     int(fact.valid_from_stated),
+                    fact.source_text,
                     _ts(fact.created_at),
                     _ts(fact.last_retrieved_at),
                     _blob(embedding),
@@ -235,7 +240,17 @@ class Store:
             )
 
     def update_fact(self, fact_id: str, **fields: object) -> None:
-        allowed = {"text", "predicate", "kind", "durability", "sensitivity", "confidence", "tentative", "refines"}
+        allowed = {
+            "text",
+            "predicate",
+            "kind",
+            "durability",
+            "sensitivity",
+            "confidence",
+            "tentative",
+            "refines",
+            "source_text",
+        }
         if not fields or not set(fields) <= allowed:
             raise ValueError(f"can only update {sorted(allowed)}")
         values = [int(v) if isinstance(v, bool) else v for v in fields.values()]
@@ -381,6 +396,7 @@ def _fact(row: sqlite3.Row) -> Fact:
         temporal_status=row["temporal_status"],
         refines=row["refines"],
         valid_from_stated=bool(row["valid_from_stated"]),
+        source_text=row["source_text"],
         created_at=_dt(row["created_at"]),
         last_retrieved_at=_dt(row["last_retrieved_at"]),
     )
