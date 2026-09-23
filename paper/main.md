@@ -31,6 +31,15 @@ write has two parts:
 - Decisions: is each fact new, a duplicate, a refinement, or a change to something already stored? Is it worth
   keeping? Is it sensitive?
 
+In current open-source systems both parts are LLM calls. mem0 2.1.0's default `add()` makes a single LLM call per
+message with its additive extraction prompt, and has no separate update or delete step (`mem0/memory/main.py`,
+`Memory._add_to_vector_store`; prompts reproduced in Appendix B). An LLM call per decision is expensive enough
+that nothing re-examines the store afterwards. Facts that stopped being true stay in it.
+
+**The observation.** The decisions are choices among options fixed in advance. That is the setting typed decision
+models are built for. They return a probability over a fixed option set in one short request, and
+they cost far less than generating text.
+
 **Concurrent work.** The architectural idea of routing memory decisions to a typed decision model was reached
 independently by Jev-Mem [jiang2026jevmem], which uses Jev for typing, relation construction, query routing,
 budget allocation, traversal, candidate scoring and stopping. It reports a LoCoMo judge score of
@@ -42,15 +51,6 @@ level: MRR@5 rose from 0.4259<!-- src: taghia2026atmem (MRR@5, AtMem) --> to 0.5
 0.3399<!-- src: taghia2026atmem (Recall@1, AtMem) --> to 0.5423<!-- src: taghia2026atmem (Recall@1, AtMem + Jev) --> [taghia2026atmem]. This paper's contribution is the controlled
 measurement: an identical-extraction ablation of the decision layer, its calibration, the safety of the store it
 drives, the rerank effect on answers with a matched-context control, and the negatives.
-
-In current open-source systems both parts are LLM calls. mem0 2.1.0's default `add()` makes a single LLM call per
-message with its additive extraction prompt, and has no separate update or delete step (`mem0/memory/main.py`,
-`Memory._add_to_vector_store`; prompts reproduced in Appendix B). An LLM call per decision is expensive enough
-that nothing re-examines the store afterwards. Facts that stopped being true stay in it.
-
-**The observation.** The decisions are choices among options fixed in advance. That is the setting typed decision
-models are built for. They return a calibrated probability over a fixed option set in one short request, and
-they cost far less than generating text.
 
 **Contributions.**
 
