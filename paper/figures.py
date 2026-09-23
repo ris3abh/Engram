@@ -63,9 +63,41 @@ def load(name: str) -> dict:
     return json.loads((RES / name).read_text())
 
 
+TEX_FIGS = ROOT / "paper" / "latex" / "figures"
+TEX_FIGS.mkdir(parents=True, exist_ok=True)
+
+
 def save(fig, name: str) -> None:
     fig.savefig(OUT / name, bbox_inches="tight", pad_inches=0.25, facecolor="white")
+    fig.savefig(TEX_FIGS / Path(name).with_suffix(".pdf"), bbox_inches="tight", pad_inches=0.1, facecolor="white")
     plt.close(fig)
+
+
+def svg_to_pdf(svg: Path, pdf: Path, width: int, height: int) -> None:
+    """Print a hand-built SVG to a one-page PDF with headless Chrome (no other converter is installed)."""
+    import subprocess
+    import tempfile
+
+    chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    html = (
+        f"<html><head><style>@page{{size:{width}px {height}px;margin:0}}body{{margin:0}}</style></head>"
+        f'<body><img src="file://{svg}" style="width:{width}px;height:{height}px;display:block"></body></html>'
+    )
+    with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False) as f:
+        f.write(html)
+    subprocess.run(
+        [
+            chrome,
+            "--headless=new",
+            "--disable-gpu",
+            "--allow-file-access-from-files",
+            "--no-pdf-header-footer",
+            f"--print-to-pdf={pdf}",
+            f"file://{f.name}",
+        ],
+        check=True,
+        capture_output=True,
+    )
 
 
 # ---------------------------------------------------------------- per-category accuracy (Figure 2)
@@ -529,6 +561,7 @@ def pipeline() -> None:
         lx += 36 + 7.2 * len(name)
     s.append("</svg>")
     (OUT / "pipeline.svg").write_text("\n".join(s))
+    svg_to_pdf(OUT / "pipeline.svg", TEX_FIGS / "pipeline.pdf", W, H)
 
 
 if __name__ == "__main__":

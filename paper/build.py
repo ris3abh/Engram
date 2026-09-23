@@ -501,7 +501,43 @@ def numbers() -> None:
 # ---------------------------------------------------------------- generated tables
 
 
+SHORT_HEADERS = {
+    "Δ (points)": "Δ (pts)",
+    "95% CI, per question": "95% CI",
+    "95% CI, conversation bootstrap": "95% CI, bootstrap",
+    "only engram right / only mem0 right": "discordant",
+    "mem0 k=6 (token-matched)": "mem0 k=6 (matched)",
+    "decision layer $/1k msgs": "decision $/1k",
+    "decision layer p50": "decision p50",
+    "end-to-end $/1k msgs": "total $/1k",
+    "end-to-end write p50": "write p50",
+    "facts stored": "facts",
+    "set 1: stale / close items stored": "set-1 stale",
+    "set 2: stale values / stored": "set-2 stale",
+    "set 1 accuracy (default k)": "set-1 acc.",
+    "set 2 accuracy (default k)": "set-2 acc.",
+    "set 1 accuracy (k=3)": "set-1 acc. k=3",
+    "set 1 accuracy (no dates)": "set-1 acc. no dates",
+    "set 1 no_close items over-closed / stored": "set-1 over-closed",
+    "set 2 keep items kept / stored": "set-2 kept",
+    "closes (dev + set 1)": "closes",
+    "matching a labeled pair": "labeled",
+    "not matching": "unlabeled",
+    "top-1 accuracy": "top-1 acc.",
+    "mean confidence": "mean conf.",
+    "ECE at T (2-fold)": "ECE at T",
+    "conversation": "conv.",
+    "engram write $/1k msgs": "engram $/1k",
+    "of which decision layer": "decision $/1k",
+    "mem0 write $/1k msgs": "mem0 $/1k",
+    "engram decision p50": "decision p50",
+    "same action at 0.85": "same action",
+    "Jev acts (p ≥ 0.85)": "Jev acts",
+}
+
+
 def table(header: list[str], rows: list[list[str]]) -> str:
+    header = [SHORT_HEADERS.get(h, h) for h in header]
     out = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
     out += ["| " + " | ".join(r) + " |" for r in rows]
     return "\n".join(out)
@@ -541,7 +577,7 @@ def t_heldout() -> str:
             + [c((sum(x[f"{key}_correct"] for x in R), n), hf, "frac")]
         )
     qrow = ["Q", "", ""] + [c(qs[cv], hf, "int") for cv in CONVS] + [c(sum(qs.values()), hf, "int")]
-    return table(["system", "k", "tokens / question", *CONVS, "pooled"], [qrow, *rows])
+    return table(["system", "k", "tokens/q", *CONVS, "pooled"], [qrow, *rows])
 
 
 def t_heldout_diff() -> str:
@@ -826,7 +862,7 @@ def t_calibration() -> str:
                 rows.append(
                     [
                         lab,
-                        f"`{q}`",
+                        {"relation_to_candidate": "relation", "temporal_status": "temporal status"}.get(q, q),
                         b,
                         c(s["n"], cf, "int"),
                         c(s["accuracy"], cf, "pct"),

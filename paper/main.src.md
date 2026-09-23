@@ -323,7 +323,8 @@ Tokens are mean retrieved-context tokens per question.*
 
 {{table:heldout}}
 
-*Table 4. Paired differences for the rows of Table 3.*
+*Table 4. Paired differences for the rows of Table 3. 95% CI: per-question normal approximation. Bootstrap:
+resampling the four conversations. Discordant: questions only engram / only mem0 answered correctly.*
 
 {{table:heldout_diff}}
 
@@ -349,8 +350,9 @@ off, and mem0 answered {{abl.mem0.upd}}. We did not run a held-out no-rerank arm
 
 ### 5.3 Safety and cost of the store
 
-*Table 6. Store safety on dev + update set 1 (the "closes" columns) and set 2 (keep items). Extraction
-claude-haiku-4-5, decisions Jev.*
+*Table 6. Store safety on dev + update set 1 and set 2. Extraction claude-haiku-4-5, decisions Jev. Columns: set-1
+no_close items over-closed / stored; set-2 keep items kept / stored; closes on dev + set 1, split into those matching
+a labeled pair and those not.*
 - *Over-closed*: a labeled no_close item whose fact was closed by its own update message.
 - *Matching a labeled pair*: a close whose (closed fact's message, closing message) is a labeled update or
   superseded pair.
@@ -425,13 +427,13 @@ With Jev alone the error is {{tr.jev_err}}. At $\theta$ = 0.85, {{tr.0.85.pesc}}
 
 ![Figure 4: C(θ) and E(θ) on the gold contradiction pairs.](figures/tradeoff.svg)
 
-*Figure 4. C(θ) and E(θ) on the {{tr.n}} gold pairs. ε_L is assumed, not measured; the {{cal.esc.rel.jev.n}} escalation labels were too few for a curve.*
+*Figure 4. $C(\theta)$ and $E(\theta)$ on the {{tr.n}} gold pairs. $\varepsilon_L$ is assumed, not measured; the {{cal.esc.rel.jev.n}} escalation labels were too few for a curve.*
 
 ### 5.5 Negative result: closing stale facts does not change answers
 
 *Table 8. Update sets on the dev slice (conv-26 sessions 1–4 plus the update messages). Set 1 has {{u1.n}} update
 questions and set 2 has {{u2.nq}}. Stale counts are close items whose old fact is still active, over close items
-stored. Default k means all retrieved memories. Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6.*
+stored. Accuracy is at default k (all retrieved memories) unless marked. Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6.*
 
 {{table:updates}}
 
@@ -465,7 +467,8 @@ ECE but not its accuracy.
 the two gave the same answer on {{agree.all}} of {{agree.n}} decisions and the same action at the {{k.act}} threshold on
 {{agree.act}}. On `relation_to_candidate` they agreed on {{agree.rel}} (Table 10).
 
-*Table 10. Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory.*
+*Table 10. Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory. Same action:
+both choose the same label at p ≥ {{k.act}}, or neither reaches it. Acts: share of decisions at p ≥ {{k.act}}.*
 
 {{table:agreement}}
 
