@@ -33,10 +33,10 @@ from ..decide.questions import (
     FACT_KIND,
     PLAN_FULFILLED,
     SENSITIVITY,
-    TEMPORAL_STATUS,
     WORTH_REMEMBERING,
     Ask,
     relation_questions,
+    temporal_question,
 )
 from ..embed import Embedder, top_k
 from ..flags import Flags
@@ -48,7 +48,10 @@ from .extract import extract
 SUPERSEDE = {"update", "contradiction", "negates"}  # relations that can close the existing fact (negates: v2)
 PLAN_RELATIONS = {"plans", "goal"}
 CONTEXT_MESSAGES = 6
-FACT_QUESTIONS = (WORTH_REMEMBERING, FACT_KIND, TEMPORAL_STATUS, EDGE_TYPE, DURABILITY, SENSITIVITY)
+
+
+def fact_questions(temporal_version: int = 1) -> tuple:
+    return (WORTH_REMEMBERING, FACT_KIND, temporal_question(temporal_version), EDGE_TYPE, DURABILITY, SENSITIVITY)
 
 
 @dataclass
@@ -232,7 +235,7 @@ class WritePipeline:
         vector = (await asyncio.to_thread(self.embedder.embed, [draft.text]))[0]
         candidates = self._candidates(vector)
         state = {"new_fact": _draft_ref(draft), "source_message": message.text}
-        asks = [Ask(q.id, q) for q in FACT_QUESTIONS]
+        asks = [Ask(q.id, q) for q in fact_questions(self.flags.temporal_version)]
         if self.flags.relation_decider == "jev":
             asks += [
                 Ask(f"relation_to_candidate__{i}", self.rel_q, {"existing_fact": _ref(c)}, target=c.id)

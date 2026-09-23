@@ -147,7 +147,9 @@ ARMS: dict[str, dict] = {
     },
     # E4 v2: gate fixes. The temporal gate blocks only planned/hypothetical; update may close a sibling on a
     # multi-valued relation (two-phrasing agreement every time); contradiction stays single-valued only.
-    "e4_belief_v2": {"system": "engram", "hygiene": True, "flags": Flags(**E4_V2)},
+    # E4 v2 with temporal_status v1, as run before phase-2 step 1 (kept so its results reproduce).
+    "e4_belief_v2_t1": {"system": "engram", "hygiene": True, "flags": Flags(**E4_V2)},
+    "e4_belief_v2": {"system": "engram", "hygiene": True, "flags": Flags(**E4_V2, temporal_version=2)},
     # Attribution of the top-k=3 gain (read path only; ingestion identical and cached).
     "e4_belief_v2_nohist": {
         "system": "engram",

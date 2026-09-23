@@ -137,7 +137,7 @@ RELATION_TO_CANDIDATE = ChoiceQuestion(
     version=2,
 )
 
-TEMPORAL_STATUS = ChoiceQuestion(
+TEMPORAL_STATUS_V1 = ChoiceQuestion(
     id="temporal_status",
     instructions="According to `source_message`, when is `new_fact` true?",
     criteria={
@@ -152,7 +152,36 @@ TEMPORAL_STATUS = ChoiceQuestion(
         ),
         "hypothetical": "Possible, conditional, wished for, or uncertain; not stated as actually happening.",
     },
+    version=1,
 )
+
+# v2 (phase 2, step 1): reports of completed changes are never hypothetical. Same options, same order.
+TEMPORAL_STATUS = ChoiceQuestion(
+    id="temporal_status",
+    instructions="According to `source_message`, when is `new_fact` true?",
+    criteria={
+        "current": (
+            "True now. Includes a change that already happened and still holds: a report that someone switched "
+            "to, sold, replaced, stopped, quit, moved to, started or finished something describes the new state, "
+            "which is current."
+        ),
+        "planned": "Expected or intended to happen in the future; not true yet.",
+        "past": (
+            "Only about an earlier time: a finished event or former situation that says nothing about what is "
+            "true now (a past trip, a former job, childhood)."
+        ),
+        "hypothetical": (
+            "Possible, conditional, wished for, or uncertain; not stated as actually happening. A report that a "
+            "change happened (switched, sold, replaced, stopped, moved) is never hypothetical."
+        ),
+    },
+    version=2,
+)
+
+
+def temporal_question(version: int) -> ChoiceQuestion:
+    return {1: TEMPORAL_STATUS_V1, 2: TEMPORAL_STATUS}[version]
+
 
 EDGE_TYPES: dict[str, str] = {
     "lives_in": "Current or past place of residence.",

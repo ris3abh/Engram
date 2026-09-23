@@ -43,16 +43,20 @@ Instructions: "What kind of personal fact is `new_fact`?"
 | `task` | Something the user intends or needs to do: a goal, a to-do, a plan. |
 | `opinion` | A belief or judgment about something, not a personal taste. |
 
-### 3. `temporal_status` (Choice)
+### 3. `temporal_status` (Choice, version 2)
 
 Instructions: "According to `source_message`, when is `new_fact` true?"
 
 | option | rubric |
 |---|---|
-| `current` | True now. Includes a change that already happened and still holds (moved, graduated, got married, switched jobs). |
+| `current` | True now. Includes a change that already happened and still holds: a report that someone switched to, sold, replaced, stopped, quit, moved to, started or finished something describes the new state, which is current. |
 | `planned` | Expected or intended to happen in the future; not true yet. |
 | `past` | Only about an earlier time: a finished event or former situation that says nothing about what is true now (a past trip, a former job, childhood). |
-| `hypothetical` | Possible, conditional, wished for, or uncertain; not stated as actually happening. |
+| `hypothetical` | Possible, conditional, wished for, or uncertain; not stated as actually happening. A report that a change happened (switched, sold, replaced, stopped, moved) is never hypothetical. |
+
+**Versions.** v1 (through E4 v2) lacked the "completed change" wording in `current` and `hypothetical`. In E4 v2,
+two-thirds of the against-evidence was blocked because reports like "switched from reading to meditation" were
+labeled hypothetical. `flags.temporal_version` picks the version; old arms keep v1.
 
 Code rule (added after the contradiction test): `write.py` may close an old edge only when this answer is
 `current` with p ≥ `ACT_THRESHOLD` **and** `relation_to_candidate` is `update` or `contradiction` (acted on or

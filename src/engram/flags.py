@@ -43,6 +43,7 @@ class Flags:
     retrieval_history: bool = True
     retrieval_rerank: bool = True
     relation_version: int = 1  # relation_to_candidate version: 1 (E0-E3) | 2 (adds `negates`, E5 on)
+    temporal_version: int = 1  # temporal_status version: 1 | 2 (completed changes never hypothetical)
 
     def describe(self) -> dict:
         return asdict(self)
