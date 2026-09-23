@@ -4,7 +4,7 @@ import json
 import sqlite3
 import threading
 from collections.abc import Iterable
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import networkx as nx
@@ -200,6 +200,22 @@ class Store:
             for fact in facts:
                 fact.decisions = self.decisions_for(fact.id)
         return facts
+
+    def superseded_chain(self, fact: Fact, max_depth: int = 5, tolerance: timedelta = timedelta(days=1)) -> list[Fact]:
+        """Facts this one replaced, newest first: same subject and predicate, each closed (valid_until) at or
+        before its successor became valid."""
+        same = [f for f in self.list_facts(subject=fact.subject) if f.predicate == fact.predicate and f.valid_until]
+        chain: list[Fact] = []
+        seen = {fact.id}
+        current = fact
+        for _ in range(max_depth):
+            earlier = [f for f in same if f.id not in seen and f.valid_until <= current.valid_from + tolerance]
+            if not earlier:
+                break
+            current = max(earlier, key=lambda f: f.valid_until)
+            seen.add(current.id)
+            chain.append(current)
+        return chain
 
     def expire_fact(self, fact_id: str, when: datetime | None = None) -> None:
         with self._lock, self._db:

@@ -1,6 +1,7 @@
-"""Read path: embeddings shortlist -> one Jev rerank request -> one-hop graph expansion.
+"""Read path: embeddings shortlist -> one Jev rerank request -> history chain -> one-hop graph expansion.
 
-Expired facts stay in the shortlist on purpose: "where did the user live before?" needs them, and the answer
+Expired facts stay in the shortlist, and every kept fact brings the chain of facts it superseded (same subject
+and predicate, linked by valid_until), so "what was it before?" works without Jev comparing dates. The answer
 step sees each fact's validity window.
 """
 
@@ -22,8 +23,8 @@ HUB_DEGREE = 25  # do not expand through nodes this connected (usually the user 
 @dataclass
 class RetrievedFact:
     fact: Fact
-    relevance: float | None  # Jev's P(relevant); None for facts added by graph expansion
-    hop: int  # 0 = reranked hit, 1 = neighbor of a hit
+    relevance: float | None  # Jev's P(relevant); None for facts added by expansion
+    source: str  # rerank (kept by Jev) | history (superseded by a kept fact) | neighbor (one graph hop)
 
 
 @dataclass
@@ -72,17 +73,28 @@ class Retriever:
             degraded, decisions = str(e), []
             kept = [(f, None) for f in shortlist[:10]]
 
-        results = [RetrievedFact(f, p, 0) for f, p in kept]
-        results += self._expand([f for f, _ in kept])
-        self.store.mark_retrieved(r.fact.id for r in results if r.hop == 0)
+        results = [RetrievedFact(f, p, "rerank") for f, p in kept]
+        results += self._history([f for f, _ in kept])
+        results += self._expand([f for f, _ in kept], {r.fact.id for r in results})
+        self.store.mark_retrieved(r.fact.id for r in results if r.source != "neighbor")
         return Retrieval(query, results, decisions, (time.perf_counter() - started) * 1000, len(shortlist), degraded)
 
-    def _expand(self, hits: list[Fact]) -> list[RetrievedFact]:
+    def _history(self, hits: list[Fact]) -> list[RetrievedFact]:
+        seen = {f.id for f in hits}
+        out = []
+        for fact in hits:
+            for earlier in self.store.superseded_chain(fact):
+                if earlier.id not in seen:
+                    seen.add(earlier.id)
+                    out.append(RetrievedFact(earlier, None, "history"))
+        return out
+
+    def _expand(self, hits: list[Fact], seen: set[str]) -> list[RetrievedFact]:
         """One hop from each hit's object node: the other edges touching that entity."""
         if not hits:
             return []
         graph = self.store.to_networkx(include_expired=True)
-        seen = {f.id for f in hits}
+        seen = set(seen)
         out: list[RetrievedFact] = []
         for fact in hits:
             node = fact.object
@@ -95,7 +107,7 @@ class Retriever:
                 if key in seen:
                     continue
                 seen.add(key)
-                out.append(RetrievedFact(data["fact"], None, 1))
+                out.append(RetrievedFact(data["fact"], None, "neighbor"))
                 if len(out) >= MAX_EXPANDED:
                     return out
         return out

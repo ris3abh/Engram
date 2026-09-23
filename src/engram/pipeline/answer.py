@@ -34,7 +34,7 @@ def render_fact(r: RetrievedFact) -> str:
     if r.relevance is not None:
         notes.append(f"relevance {r.relevance:.2f}")
     else:
-        notes.append("related")
+        notes.append({"history": "earlier value, replaced", "neighbor": "related"}.get(r.source, r.source))
     return f"- {f.text} ({'; '.join(notes)})"
 
 

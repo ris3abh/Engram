@@ -33,7 +33,7 @@ def seed(store):
 async def test_reranks_keeps_expired_and_marks_retrieved(store):
     paris, berlin, *_ = seed(store)
     r = await Retriever(store, MockBackend(), HashEmbedder()).retrieve("where does the user live")
-    hits = [x for x in r.facts if x.hop == 0]
+    hits = [x for x in r.facts if x.source == "rerank"]
     assert {x.fact.id for x in hits} == {paris.id, berlin.id}
     assert all(x.relevance > 0.5 for x in hits)
     assert r.shortlist == 5 and len(r.decisions) == 5
@@ -45,8 +45,8 @@ async def test_reranks_keeps_expired_and_marks_retrieved(store):
 async def test_one_hop_expansion(store):
     _, _, stripe, dublin, _ = seed(store)
     r = await Retriever(store, MockBackend(), HashEmbedder()).retrieve("where does the user work")
-    assert stripe.id in {x.fact.id for x in r.facts if x.hop == 0}
-    assert dublin.id in {x.fact.id for x in r.facts if x.hop == 1}  # reached through the Stripe node
+    assert stripe.id in {x.fact.id for x in r.facts if x.source == "rerank"}
+    assert dublin.id in {x.fact.id for x in r.facts if x.source == "neighbor"}  # reached through the Stripe node
 
 
 class Down(DecisionBackend):
@@ -70,3 +70,25 @@ async def test_answer(store, seeded):
     a = await answer(ScriptedLLM({}), r)
     assert (a.usage is not None) is seeded
     assert (a.text == "I don't know.") is (not seeded)
+
+
+async def test_history_chain_follows_valid_until(store):
+    """Lisbon -> Paris -> Berlin. Retrieving only Berlin brings back Paris, then Lisbon, newest first."""
+    emb = HashEmbedder()
+    t0 = now() - timedelta(days=900)
+    lisbon = make_fact("User lives in Lisbon", obj="Lisbon", valid_from=t0)
+    paris = make_fact("User lives in Paris", obj="Paris", valid_from=t0 + timedelta(days=300))
+    berlin = make_fact("User moved to Berlin", obj="Berlin", valid_from=t0 + timedelta(days=800))
+    jazz = make_fact("User likes jazz", predicate="prefers", obj="jazz", valid_from=t0)
+    for f in (lisbon, paris, berlin, jazz):
+        store.add_fact(f, emb.embed([f.text])[0])
+    store.expire_fact(lisbon.id, paris.valid_from)
+    store.expire_fact(paris.id, berlin.valid_from)
+    store.expire_fact(jazz.id, berlin.valid_from)  # different predicate: never part of the chain
+    assert [f.id for f in store.superseded_chain(store.get_fact(berlin.id))] == [paris.id, lisbon.id]
+
+    r = await Retriever(store, MockBackend(), HashEmbedder()).retrieve("did the user move to berlin")
+    by_source = {x.fact.id: x.source for x in r.facts}
+    assert by_source[berlin.id] == "rerank"
+    assert by_source[paris.id] == "history" and by_source[lisbon.id] == "history"
+    assert "earlier value, replaced" in render(r)

@@ -193,12 +193,9 @@ SENSITIVITY = ChoiceQuestion(
 
 RELEVANT_TO_QUERY = NoulQuestion(
     id="relevant_to_query",
-    instructions="Would `memory` help someone answer `query`?",
-    true=(
-        "It is about what the query asks (the same person, attribute or topic), even if it gives only part of the "
-        "answer, an older value, or a value that is hidden or incomplete."
-    ),
-    false="It is about something else, or only shares a word with the query.",
+    instructions="Does `memory` help answer `query`?",
+    true="It states or directly implies part of the answer.",
+    false="It is off-topic or only shares a keyword.",
 )
 
 # Hygiene. State: {"subject": "..."}
