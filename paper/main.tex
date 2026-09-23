@@ -145,7 +145,7 @@ Table~\ref{tab:1} lists the 12\src{src/engram/decide/questions.py (ALL\_QUESTION
 \begin{table}[tbp]
 \centering
 \small\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{Jev questions (\texttt{src/engram/decide/questions.py}, \texttt{docs/DECISIONS.md}); design, not a measurement (no slice, Q, k or model). \texttt{edge\_\allowbreak{}type} and \texttt{query\_\allowbreak{}relation} choose among 25\src{src/engram/decide/questions.py (EDGE\_TYPES)} relation types.}\label{tab:1}
+\caption{Jev questions (\texttt{src/engram/decide/questions.py}, \texttt{docs/DECISIONS.md}). \texttt{edge\_\allowbreak{}type} and \texttt{query\_\allowbreak{}relation} choose among 25\src{src/engram/decide/questions.py (EDGE\_TYPES)} relation types.}\label{tab:1}
 \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
 \toprule
 \textbf{question} & \textbf{type} & \textbf{options} \\
@@ -235,7 +235,7 @@ where $\varepsilon_J(\theta)$ is Jev's error rate on the decisions it keeps and 
 \end{itemize}
 LoCoMo's adversarial category is excluded throughout. Each held-out conversation is ingested once per system, and k=3 and k=20 are answered from the same store.
 
-\textbf{Caching and budget.} Every LLM and Jev call is cached by its full request, and budget guards stop any run past a spending limit. Phase 2 (all experiments reported here) spent \$93.26\src{bench/results/phase2\_spend.jsonl} over 80\src{bench/results/phase2\_spend.jsonl} ledgered runs. Jev accounts for \$1.47\src{bench/results/phase2\_spend.jsonl} of it (\texttt{bench/results/phase2\_\allowbreak{}spend.jsonl}; per-arm totals in \hyperref[app:E]{Appendix~E}). The build phase before it was not ledgered; the author's estimate for it is about \$10 [no file].
+\textbf{Caching and budget.} Every LLM and Jev call is cached by its full request, and budget guards stop any run past a spending limit. Phase 2 (all experiments reported here) spent \$93.26\src{bench/results/phase2\_spend.jsonl} over 80\src{bench/results/phase2\_spend.jsonl} ledgered runs. Jev accounts for \$1.47\src{bench/results/phase2\_spend.jsonl} of it (\texttt{bench/results/phase2\_\allowbreak{}spend.jsonl}; per-arm totals in \hyperref[app:E]{Appendix~E}). The build phase was not ledgered; roughly \$10 by the author's estimate.
 
 \subsection{The identical-extraction protocol}\label{sec:4.2}
 For each message, mem0 2.1.0's \texttt{add()} builds its extraction prompt from:
@@ -397,7 +397,7 @@ We attribute that remainder to which memories reach the top three, which rests o
 \begin{table*}[tbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{Store safety on dev + update set 1 and set 2 (storage metrics; no questions answered, so Q and k do not apply). Extraction claude-haiku-4-5, decisions Jev (jev-1.13.0). Columns: set-1 no\_close items over-closed / stored; set-2 keep items kept / stored; closes on dev + set 1, split into those matching a labeled pair and those not. Over-closed: a labeled no\_close item whose fact was closed by its own update message. Matching a labeled pair: a close whose (closed fact's message, closing message) is a labeled update or superseded pair. The set-2 keep set has one item.}\label{tab:6}
+\caption{Store safety on dev + update set 1 and set 2 (storage metrics only). Extraction claude-haiku-4-5, decisions Jev (jev-1.13.0). Columns: set-1 no\_close items over-closed / stored; set-2 keep items kept / stored; closes on dev + set 1, split into those matching a labeled pair and those not. Over-closed: a labeled no\_close item whose fact was closed by its own update message. Matching a labeled pair: a close whose (closed fact's message, closing message) is a labeled update or superseded pair. The set-2 keep set has one item.}\label{tab:6}
 \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{arm} & \textbf{set-1 over-closed} & \textbf{set-2 kept} & \textbf{closes} & \textbf{labeled} & \textbf{unlabeled} \\
@@ -455,7 +455,7 @@ On the gold pairs Jev's relation ECE is 0.14\src{bench/results/calibration.json}
 \begin{table*}[tbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; n per row; k does not apply; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last column is out of sample (2-fold). Relation probabilities fold \texttt{negates} into \texttt{contradiction}, since the pairs predate \texttt{negates}.}\label{tab:7}
+\caption{Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last column is out of sample (2-fold). Relation probabilities fold \texttt{negates} into \texttt{contradiction}, since the pairs predate \texttt{negates}.}\label{tab:7}
 \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{labels} & \textbf{question} & \textbf{backend} & \textbf{n} & \textbf{top-1 acc.} & \textbf{mean conf.} & \textbf{ECE} & \textbf{fitted T} & \textbf{ECE at T} \\
@@ -518,7 +518,7 @@ Everything in this section concerns the 421M\src{convai2026laya (model card)} ba
 \begin{table*}[tbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{Contradiction regression (gold pairs, Q = 50\src{bench/results/tradeoff.json}, k does not apply), relation\_to\_candidate and temporal\_status in one request. Laya: convaiinnovations/laya\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} base checkpoint, zero-shot, fp16, on the local MLX server.}\label{tab:9}
+\caption{Contradiction regression (50\src{bench/results/tradeoff.json} gold pairs), relation\_to\_candidate and temporal\_status in one request. Laya: convaiinnovations/laya\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} base checkpoint, zero-shot, fp16, on the local MLX server.}\label{tab:9}
 \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{backend} & \textbf{relation exact} & \textbf{temporal} & \textbf{close rule} & \textbf{closes} & \textbf{false closes} \\
@@ -1236,7 +1236,7 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/result
 \begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices; no questions answered), from the decision logs (\texttt{bench/results/jev\_\allowbreak{}latency.json}). Client-measured, after the rate limiter, retries included.}\label{tab:12}
+\caption{Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices), from the decision logs (\texttt{bench/results/jev\_\allowbreak{}latency.json}). Client-measured, after the rate limiter, retries included.}\label{tab:12}
 \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{questions / request} & \textbf{requests} & \textbf{median input tokens} & \textbf{median latency} & \textbf{p90 latency} \\
@@ -1256,7 +1256,7 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/result
 \begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{Held-out write side (conv-30, 41, 42, 43; writes only, so Q and k do not apply). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus escalations.}\label{tab:13}
+\caption{Held-out write side (conv-30, 41, 42, 43; writes only). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus escalations.}\label{tab:13}
 \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{conv.} & \textbf{engram \$/1k} & \textbf{decision \$/1k} & \textbf{mem0 \$/1k} & \textbf{decision p50} & \textbf{engram write p50} & \textbf{mem0 write p50} & \textbf{engram facts} & \textbf{mem0 memories} \\

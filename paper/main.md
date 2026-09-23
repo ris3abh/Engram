@@ -157,7 +157,7 @@ Table 1 lists the 12<!-- src: src/engram/decide/questions.py (ALL_QUESTIONS) -->
 version. Choice questions carry a rubric per option. When a question's wording changes, its version number is
 bumped and old arms keep the old version.
 
-*Table 1. Jev questions (`src/engram/decide/questions.py`, `docs/DECISIONS.md`); design, not a measurement (no slice, Q, k or model). `edge_type` and `query_relation`
+*Table 1. Jev questions (`src/engram/decide/questions.py`, `docs/DECISIONS.md`). `edge_type` and `query_relation`
 choose among 25<!-- src: src/engram/decide/questions.py (EDGE_TYPES) --> relation types.*
 
 | question | type | options |
@@ -275,7 +275,7 @@ k=3 and k=20 are answered from the same store.
 **Caching and budget.** Every LLM and Jev call is cached by its full request, and budget guards stop any run past
 a spending limit. Phase 2 (all experiments reported here) spent $93.26<!-- src: bench/results/phase2_spend.jsonl --> over 80<!-- src: bench/results/phase2_spend.jsonl --> ledgered runs.
 Jev accounts for $1.47<!-- src: bench/results/phase2_spend.jsonl --> of it (`bench/results/phase2_spend.jsonl`; per-arm totals in Appendix E). The build
-phase before it was not ledgered; the author's estimate for it is about $10 [no file].
+phase was not ledgered; roughly $10 by the author's estimate.
 
 ### 4.2 The identical-extraction protocol
 
@@ -444,7 +444,7 @@ off, and mem0 answered 25/30<!-- src: bench/results/mem0__dev_updates__k3.json -
 
 ### 5.3 Safety and cost of the store
 
-*Table 6. Store safety on dev + update set 1 and set 2 (storage metrics; no questions answered, so Q and k do not apply). Extraction claude-haiku-4-5, decisions Jev (jev-1.13.0). Columns: set-1
+*Table 6. Store safety on dev + update set 1 and set 2 (storage metrics only). Extraction claude-haiku-4-5, decisions Jev (jev-1.13.0). Columns: set-1
 no_close items over-closed / stored; set-2 keep items kept / stored; closes on dev + set 1, split into those matching
 a labeled pair and those not.*
 - *Over-closed*: a labeled no_close item whose fact was closed by its own update message.
@@ -516,7 +516,7 @@ On the gold pairs Jev's relation ECE is 0.14<!-- src: bench/results/calibration.
 temporal ECE is 0.04<!-- src: bench/results/calibration.json -->. On the escalation labels, which are by construction the cases Jev was
 unsure of, relation ECE is 0.15<!-- src: bench/results/calibration.json -->. Table 7 has the full comparison, with Laya.
 
-*Table 7. Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; n per row; k does not apply; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last
+*Table 7. Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last
 column is out of sample (2-fold). Relation probabilities fold `negates` into `contradiction`, since the pairs
 predate `negates`.*
 
@@ -582,7 +582,7 @@ own benchmark) and fine-tuning on our escalation labels were not tested; they ar
 closes nothing. Its gold-pair relation accuracy is 28.0%<!-- src: bench/results/calibration.json --> (Table 7). A temperature lowers its
 ECE but not its accuracy.
 
-*Table 9. Contradiction regression (gold pairs, Q = 50<!-- src: bench/results/tradeoff.json -->, k does not apply), relation_to_candidate and temporal_status in one request. Laya:
+*Table 9. Contradiction regression (50<!-- src: bench/results/tradeoff.json --> gold pairs), relation_to_candidate and temporal_status in one request. Laya:
 convaiinnovations/laya<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> base checkpoint, zero-shot, fp16, on the local MLX server.*
 
 | backend | relation exact | temporal | close rule | closes | false closes |
@@ -1295,7 +1295,7 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 | conv-42 | 199<!-- src: bench/results/heldout_report.json --> | 156/199<!-- src: bench/results/heldout_report.json --> | 146/199<!-- src: bench/results/heldout_report.json --> | 10<!-- src: bench/results/heldout_report.json --> | 1,491<!-- src: bench/results/heldout_report.json --> | 1,043<!-- src: bench/results/heldout_report.json --> |
 | conv-43 | 178<!-- src: bench/results/heldout_report.json --> | 136/178<!-- src: bench/results/heldout_report.json --> | 133/178<!-- src: bench/results/heldout_report.json --> | 3<!-- src: bench/results/heldout_report.json --> | 1,389<!-- src: bench/results/heldout_report.json --> | 995<!-- src: bench/results/heldout_report.json --> |
 
-*Table 12. Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices; no questions answered), from the decision logs (`bench/results/jev_latency.json`). Client-measured,
+*Table 12. Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices), from the decision logs (`bench/results/jev_latency.json`). Client-measured,
 after the rate limiter, retries included.*
 
 | questions / request | requests | median input tokens | median latency | p90 latency |
@@ -1310,7 +1310,7 @@ after the rate limiter, retries included.*
 | 31–50 | 505<!-- src: bench/results/jev_latency.json --> | 6,903<!-- src: bench/results/jev_latency.json --> | 269 ms<!-- src: bench/results/jev_latency.json --> | 472 ms<!-- src: bench/results/jev_latency.json --> |
 | 51–80 | 739<!-- src: bench/results/jev_latency.json --> | 9,187<!-- src: bench/results/jev_latency.json --> | 371 ms<!-- src: bench/results/jev_latency.json --> | 2,290 ms<!-- src: bench/results/jev_latency.json --> |
 
-*Table 13. Held-out write side (conv-30, 41, 42, 43; writes only, so Q and k do not apply). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus
+*Table 13. Held-out write side (conv-30, 41, 42, 43; writes only). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus
 escalations.*
 
 | conv. | engram $/1k | decision $/1k | mem0 $/1k | decision p50 | engram write p50 | mem0 write p50 | engram facts | mem0 memories |
