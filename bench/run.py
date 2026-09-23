@@ -849,14 +849,28 @@ def table(results: list[dict]) -> str:
 
         lines.append(
             "| LoCoMo dev without Q84/Q86/Q87 | "
-            + " | ".join(f"{r['locomo_accuracy_excl']:.1%} (Q={r['locomo_q_excl']})" for r in results)
+            + " | ".join(
+                (
+                    f"{r['locomo_accuracy_excl']:.1%} (Q={r['locomo_q_excl']})"
+                    if r["locomo_accuracy_excl"] is not None
+                    else "—"
+                )
+                for r in results
+            )
             + " |"
         )
-        lines.append("| update accuracy (Q=30) | " + " | ".join(f"{r['update_accuracy']:.0%}" for r in results) + " |")
+        lines.append(
+            "| update accuracy (Q=30) | "
+            + " | ".join((f"{r['update_accuracy']:.0%}" if r["update_accuracy"] is not None else "—") for r in results)
+            + " |"
+        )
         for t, n in (("easy", 15), ("subtle", 10), ("fulfilled", 5)):
             lines.append(
                 f"| update accuracy, {t} (Q={n}) | "
-                + " | ".join(f"{r['update_accuracy_by_tier'][t]:.0%}" for r in results)
+                + " | ".join(
+                    (f"{r['update_accuracy_by_tier'][t]:.0%}" if r["update_accuracy_by_tier"][t] is not None else "—")
+                    for r in results
+                )
                 + " |"
             )
         lines.append(
