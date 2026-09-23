@@ -63,7 +63,7 @@ def load(name: str) -> dict:
     return json.loads((RES / name).read_text())
 
 
-TEX_FIGS = ROOT / "paper" / "latex" / "figures"
+TEX_FIGS = OUT  # PDFs for main.tex sit next to the SVGs
 TEX_FIGS.mkdir(parents=True, exist_ok=True)
 
 

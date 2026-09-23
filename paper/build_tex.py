@@ -1,11 +1,14 @@
-"""Build the arXiv LaTeX version: paper/latex/main.tex (+ figures as PDF), from paper/main.src.md and the results.
+"""Build the two-column arXiv preprint: paper/main.tex, from paper/main.src.md and the result files.
 
 Numbers come from the same computation as paper/main.md (paper/build.py). Each is written as `display\\src{path}`;
-`\\src` expands to nothing, so the PDF shows the number and the .tex keeps its source for the audit.
+`\\src` expands to nothing, so the PDF shows the number and the .tex keeps its source for the audit. The output
+compiles with pdflatex (arXiv's default): pdflatex -> bibtex -> pdflatex x2 (`make paper` in paper/).
 
-    uv run python paper/build_tex.py                 # writes paper/latex/main.tex
-    uv run --with matplotlib python paper/figures.py # figures (SVG and PDF)
-    cd paper/latex && tectonic main.tex              # main.pdf
+Markdown conventions the converter understands, beyond the basics:
+- `[@key]`, `[@a; @b]`: \\citep; bibliography in paper/references.bib (plainnat, numbers).
+- "Table N", "Figure N" in running text: \\ref to the label of the table/figure whose caption carries that number.
+- A table goes in table* (both columns) when its estimated width exceeds one column; figures listed in WIDE_FIGS
+  go in figure*. Appendices from B on are set in one column, and only there do tables become longtables.
 """
 
 import re
@@ -16,8 +19,12 @@ ROOT = Path(__file__).parents[1]
 sys.path.insert(0, str(ROOT / "paper"))
 import build  # noqa: E402
 
-OUT = ROOT / "paper" / "latex"
+OUT = ROOT / "paper"
 OPEN, SEP, CLOSE = "\x00", "\x01", "\x02"  # sourced-number markers inside the intermediate Markdown
+WIDE_FIGS = {"pipeline", "calibration"}  # figure*: the pipeline, and the three-panel reliability diagram
+COLUMN_PT = 243.0  # one column at 0.75in margins, 0.25in column sep, letter paper
+CHAR_PT = 4.4  # average character width at \footnotesize
+ONECOLUMN_FROM = "Appendix B"
 
 
 def marker_cite(key: str) -> str:
@@ -46,9 +53,10 @@ TEXT_MAP = {
     "©": r"\textcopyright{}",
     "é": r"\'{e}",
     "…": r"\ldots{}",
-    "⁻³": r"$^{-3}$",
     "·": r"$\cdot$",
     "∝": r"$\propto$",
+    "“": "``",
+    "”": "''",
 }
 SPECIAL = {
     "&": r"\&",
@@ -73,6 +81,8 @@ def esc(text: str) -> str:
             out.append(SPECIAL[ch])
         elif ch in TEXT_MAP:
             out.append(TEXT_MAP[ch])
+        elif ord(ch) > 127:
+            raise ValueError(f"no LaTeX mapping for {ch!r} (U+{ord(ch):04X}) in: {text[:80]!r}")
         else:
             out.append(ch)
     return "".join(out).replace("\x03", "``").replace("\x04", "''").replace("\x06", "~")
@@ -83,47 +93,58 @@ def esc_tt(text: str) -> str:
 
 
 def number(display: str, source: str) -> str:
-    return esc(display) + r"\src{" + source.replace("%", r"\%").replace("#", r"\#") + "}"
+    return esc(display) + r"\src{" + source.replace("%", r"\%").replace("#", r"\#").replace("_", r"\_") + "}"
 
 
+XREF_KIND = {"Table": "tab", "Tables": "tab", "Figure": "fig", "Figures": "fig", "Fig.": "fig"}
 TOKEN = re.compile(
     rf"(?P<num>{OPEN}(?P<nd>[^{SEP}]*){SEP}(?P<ns>[^{CLOSE}]*){CLOSE})"
+    r"|(?P<cite>\[(?P<ck>@[\w-]+(?:;\s*@[\w-]+)*)\])"
     r"|(?P<code>`(?P<c>[^`]+)`)"
     r"|(?P<dmath>\$\$(?P<dm>.+?)\$\$)"
     r"|(?P<math>(?<![\w\\])\$(?![\d/ ])(?P<m>[^$\n]+?)(?<! )\$)"
     r"|(?P<bold>\*\*(?P<b>.+?)\*\*)"
     r"|(?P<ital>(?<![\w*])\*(?![\s*])(?P<i>.+?)(?<![\s*])\*(?![\w*]))"
+    r"|(?P<xref>\b(?P<xw>Tables|Table|Figures|Figure|Fig\.) (?P<xn>\d+(?:(?:–|, | and )\d+)*))"
 )
 
 
+def xref(word: str, nums: str) -> str:
+    kind = XREF_KIND[word]
+    parts = re.split(r"(–|, | and )", nums)
+    return esc(word) + "~" + "".join(rf"\ref{{{kind}:{p}}}" if p.isdigit() else esc(p) for p in parts)
+
+
 def inline(text: str) -> str:
-    text = re.sub(r'"([^"`\n]{1,80})"', "\x03\\1\x04", text)
+    text = re.sub(r'"([^"`\n]{1,120})"', "\x03\\1\x04", text)
     out, pos = [], 0
     for m in TOKEN.finditer(text):
         out.append(esc(text[pos : m.start()]))
         if m.group("num"):
             out.append(number(m.group("nd"), m.group("ns")))
+        elif m.group("cite"):
+            keys = [k.strip().lstrip("@") for k in m.group("ck").split(";")]
+            out.append(r"\citep{" + ",".join(keys) + "}")
         elif m.group("code"):
             inner = m.group("c")
-            if OPEN in inner:  # a sourced number inside code: keep the number, drop the code font
-                out.append(inline(inner))
-            else:
-                out.append(esc_tt(inner))
+            out.append(inline(inner) if OPEN in inner else esc_tt(inner))
         elif m.group("dmath"):
             out.append(r"\[" + m.group("dm") + r"\]")
         elif m.group("math"):
             out.append("$" + math_fix(m.group("m")) + "$")
         elif m.group("bold"):
             out.append(r"\textbf{" + inline(m.group("b")) + "}")
-        else:
+        elif m.group("ital"):
             out.append(r"\emph{" + inline(m.group("i")) + "}")
+        else:
+            out.append(xref(m.group("xw"), m.group("xn")))
         pos = m.end()
     out.append(esc(text[pos:]))
     return "".join(out)
 
 
 def math_fix(m: str) -> str:
-    """Math spans may contain sourced numbers (bounds like [ 0.02, 0.98 ]); render those as plain numbers."""
+    """Math spans may contain sourced numbers (bounds like [ 0.02, 0.98 ]); render those as text."""
     m = re.sub(
         rf"{OPEN}([^{SEP}]*){SEP}([^{CLOSE}]*){CLOSE}", lambda x: r"\text{" + number(x.group(1), x.group(2)) + "}", m
     )
@@ -133,82 +154,83 @@ def math_fix(m: str) -> str:
 # ---------------------------------------------------------------- blocks
 
 
-def plain_len(cell: str) -> int:
-    return len(re.sub(r"[`*]", "", re.sub(rf"{OPEN}([^{SEP}]*){SEP}[^{CLOSE}]*{CLOSE}", r"\1", cell)))
+def plain(cell: str) -> str:
+    return re.sub(r"[`*]", "", re.sub(rf"{OPEN}([^{SEP}]*){SEP}[^{CLOSE}]*{CLOSE}", r"\1", cell))
 
 
-def table_tex(rows: list[list[str]], caption: str | None, label: str | None, appendix: bool = False) -> str:
+def numeric_col(body: list[list[str]], j: int) -> bool:
+    return sum(OPEN in r[j] for r in body) * 2 >= max(1, len(body))
+
+
+def natural_width(header: list[str], body: list[list[str]]) -> float:
+    """Estimated width at \\footnotesize if headers wrap at word boundaries and cells do not."""
+    width = 0.0
+    for j in range(len(header)):
+        words = plain(header[j]).split()
+        head_word = max((len(w) for w in words), default=1)
+        cells = max((len(plain(r[j])) for r in body), default=1)
+        width += CHAR_PT * max(head_word, min(cells, 40)) + 10
+    return width
+
+
+def table_tex(rows: list[list[str]], caption: str | None, label: str | None, onecolumn: bool) -> str:
     header, body = rows[0], rows[2:]
     ncol = len(header)
-    long_text = appendix and (max(plain_len(c) for r in rows for c in r) > 40 or len(body) > 15)
-    if long_text:  # appendix data tables: breakable columns sized by content
-        widths = []
-        for j in range(ncol):
-            col = [re.sub(rf"{OPEN}([^{SEP}]*){SEP}[^{CLOSE}]*{CLOSE}", r"\1", r[j]) for r in [header, *body]]
-            widths.append(min(60, max(14, max(len(c) for c in col))))
+    cap = (rf"\caption{{{inline(caption)}}}" + (rf"\label{{{label}}}" if label else "")) if caption else ""
+    longest = max(len(plain(c)) for r in rows for c in r)
+    if onecolumn and (longest > 40 or len(body) > 15):  # long appendix data: a longtable that breaks across pages
+        widths = [min(60, max(14, max(len(plain(r[j])) for r in [header, *body]))) for j in range(ncol)]
         total = sum(widths)
-        usable = 1 - 0.0265 * ncol - 0.01  # column padding is 2 x 6pt per column on a 452pt line
+        usable = 1 - 0.0265 * ncol - 0.01
         spec = "".join(rf">{{\raggedright\arraybackslash}}p{{{usable * w / total:.3f}\linewidth}}" for w in widths)
         head = " & ".join(r"\textbf{" + inline(h) + "}" for h in header) + r" \\"
         lines = [r"\begingroup\scriptsize", rf"\begin{{longtable}}{{{spec}}}"]
-        if caption:
-            lines.append(rf"\caption{{{inline(caption)}}}" + (rf"\label{{{label}}}" if label else "") + r"\\")
+        if cap:
+            lines.append(cap + r"\\")
         lines += [r"\toprule", head, r"\midrule", r"\endhead"]
         lines += [" & ".join(inline(c).replace(r"\_", r"\_\allowbreak{}") for c in r) + r" \\" for r in body]
         lines += [r"\bottomrule", r"\end{longtable}", r"\endgroup"]
         return "\n".join(lines)
-    # natural width at \small: about 5.2pt per character plus 12pt of column padding; text width is about 452pt
-    natural = sum(5.2 * max(plain_len(r[j]) for r in [header, *body]) + 12 for j in range(ncol))
+    wide = not onecolumn and natural_width(header, body) > COLUMN_PT
+    first = max(len(plain(r[0])) for r in [header, *body])
+    share = min(0.34, max(0.14, first * CHAR_PT / (COLUMN_PT * (2.05 if wide or onecolumn else 1))))
+    spec = rf">{{\raggedright\arraybackslash}}p{{{share:.2f}\linewidth}}" + "".join(
+        r">{\raggedleft\arraybackslash}X" if numeric_col(body, j) else r">{\raggedright\arraybackslash}X"
+        for j in range(1, ncol)
+    )
     body_tex = [
         " & ".join(inline(c.replace(", ", ",\x06") if c.startswith("[") else c) for c in r) + r" \\" for r in body
     ]
-    if natural <= 452 and ncol < 5:
-        spec = "l" + "r" * (ncol - 1) if ncol > 2 else "ll"
-        begin, end = rf"\begin{{tabular}}{{{spec}}}", r"\end{tabular}"
-    else:  # wrap headers and long cells instead of shrinking the font
-
-        def numeric(j: int) -> bool:
-            return sum(OPEN in r[j] for r in body) * 2 >= len(body)
-
-        first = max(plain_len(r[0]) for r in [header, *body])
-        share = min(0.30, max(0.14, first * 4.8 / 452))
-        spec = rf">{{\raggedright\arraybackslash}}p{{{share:.2f}\linewidth}}" + "".join(
-            r">{\raggedleft\arraybackslash}X" if numeric(j) else r">{\raggedright\arraybackslash}X"
-            for j in range(1, ncol)
-        )
-        begin, end = rf"\begin{{tabularx}}{{\linewidth}}{{{spec}}}", r"\end{tabularx}"
-    tab = [
-        begin,
-        r"\toprule",
-        " & ".join(r"\textbf{" + inline(h) + "}" for h in header) + r" \\",
-        r"\midrule",
-        *body_tex,
-        r"\bottomrule",
-        end,
-    ]
-    inner = "\n".join(tab)
-    cap = (rf"\caption{{{inline(caption)}}}" + (rf"\label{{{label}}}" if label else "")) if caption else ""
+    env = "table*" if wide else "table"
     return "\n".join(
         [
-            r"\begin{table}[htbp]",
+            rf"\begin{{{env}}}[tbp]",
             r"\centering",
-            (r"\footnotesize" if ncol >= 6 else r"\small") + r"\hyphenpenalty=10000\exhyphenpenalty=10000",
+            r"\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000",
             cap,
-            inner,
-            r"\end{table}",
+            rf"\begin{{tabularx}}{{\linewidth}}{{{spec}}}",
+            r"\toprule",
+            " & ".join(r"\textbf{" + inline(h) + "}" for h in header) + r" \\",
+            r"\midrule",
+            *body_tex,
+            r"\bottomrule",
+            r"\end{tabularx}",
+            rf"\end{{{env}}}",
         ]
     )
 
 
-def figure_tex(path: str, caption: str) -> str:
-    pdf = Path(path).with_suffix(".pdf").name
+def figure_tex(path: str, caption: str, label: str | None) -> str:
+    stem = Path(path).stem
+    env = "figure*" if stem in WIDE_FIGS else "figure"
+    width = r"\textwidth" if env == "figure*" else r"\columnwidth"
     return "\n".join(
         [
-            r"\begin{figure}[htbp]",
+            rf"\begin{{{env}}}[tbp]",
             r"\centering",
-            rf"\includegraphics[width=\linewidth]{{figures/{pdf}}}",
-            rf"\caption{{{inline(caption)}}}",
-            r"\end{figure}",
+            rf"\includegraphics[width={width}]{{figures/{stem}.pdf}}",
+            rf"\caption{{{inline(caption)}}}" + (rf"\label{{{label}}}" if label else ""),
+            rf"\end{{{env}}}",
         ]
     )
 
@@ -220,19 +242,17 @@ def convert(md: str) -> tuple[str, str, str, str]:
     """Returns (title, abstract, body, appendix) as LaTeX."""
     md = re.sub(r"<!--.*?-->", "", md, flags=re.S)
     lines = md.split("\n")
-    title, abstract, body, appendix, bib = "", [], [], [], []
-    bib_items: list[str] = []
+    title, abstract, body, appendix = "", [], [], []
     cur = body
-    section = None
+    onecolumn = False
     i = 0
     pending_caption: str | None = None
     list_stack: list[str] = []
+    para: list[str] = []
 
     def close_lists(target, depth=0):
         while len(list_stack) > depth:
             target.append(r"\end{" + list_stack.pop() + "}")
-
-    para: list[str] = []
 
     def flush(target):
         nonlocal para
@@ -257,14 +277,17 @@ def convert(md: str) -> tuple[str, str, str, str]:
             close_lists(cur)
             level, text = len(h.group(1)), h.group(2)
             if level == 2:
-                section = text
                 if text == "Abstract":
                     cur = abstract
                 elif text.startswith("Appendix"):
                     cur = appendix
+                    if text.startswith(ONECOLUMN_FROM) and not onecolumn:
+                        cur.append(r"\onecolumn")
+                        onecolumn = True
                     cur.append(r"\section{" + inline(re.sub(r"^Appendix [A-E]\.\s*", "", text)) + "}")
                 elif text == "References":
-                    cur = bib
+                    cur = body
+                    cur += [r"\bibliographystyle{plainnat}", r"\bibliography{references}"]
                 else:
                     cur = body
                     cur.append(r"\section{" + inline(re.sub(r"^\d+\.\s*", "", text)) + "}")
@@ -274,7 +297,7 @@ def convert(md: str) -> tuple[str, str, str, str]:
                 cur.append(r"\paragraph{" + inline(text) + "}")
             i += 1
             continue
-        if s.startswith("````") or s.startswith("```"):
+        if s.startswith("```"):
             flush(cur)
             fence = s[:4] if s.startswith("````") else s[:3]
             j = i + 1
@@ -282,9 +305,7 @@ def convert(md: str) -> tuple[str, str, str, str]:
             while j < len(lines) and not lines[j].strip().startswith(fence):
                 code.append(lines[j])
                 j += 1
-            cur.append(r"\begin{lstlisting}")
-            cur.append("\n".join(code))
-            cur.append(r"\end{lstlisting}")
+            cur += [r"\begin{lstlisting}", "\n".join(code), r"\end{lstlisting}"]
             i = j + 1
             continue
         if s.startswith("|"):
@@ -292,45 +313,40 @@ def convert(md: str) -> tuple[str, str, str, str]:
             close_lists(cur)
             rows = []
             while i < len(lines) and lines[i].strip().startswith("|"):
-                cells = [c.strip() for c in lines[i].strip().strip("|").split(" | ")]
-                rows.append(cells)
+                rows.append([c.strip() for c in lines[i].strip().strip("|").split(" | ")])
                 i += 1
-            if section and section.startswith("Appendix E") and rows[0][0] == "table / figure":
-                pass
-            cap = pending_caption
-            label = None
+            cap, label = pending_caption, None
             if cap:
                 m = re.match(r"^Table (\d+)\.\s*(.*)$", cap, flags=re.S)
                 if m:
                     label, cap = f"tab:{m.group(1)}", m.group(2)
-            cur.append(table_tex(rows, cap, label, appendix=cur is appendix))
+            cur.append(table_tex(rows, cap, label, onecolumn))
             pending_caption = None
             continue
         img = re.match(r"^!\[(.*?)\]\((.*?)\)$", s)
         if img:
             flush(cur)
             alt, path = img.group(1), img.group(2)
-            cap = re.sub(r"^Figure \d+[:.]\s*", "", alt)
+            m = re.match(r"^Figure (\d+)[:.]\s*(.*)$", alt)
+            label, cap = (f"fig:{m.group(1)}", m.group(2)) if m else (None, alt)
             j = i + 1
             while j < len(lines) and not lines[j].strip():
                 j += 1
             if j < len(lines) and re.match(r"^\*Figure \d+\.", lines[j].strip()):
                 cap = re.sub(r"^Figure \d+\.\s*", "", lines[j].strip().strip("*"))
                 i = j
-            cur.append(figure_tex(path, cap))
+            cur.append(figure_tex(path, cap, label))
             i += 1
             continue
-        if re.match(r"^\*(Table \d+\.|D\.\d)", s):  # caption paragraph for the next table
+        if re.match(r"^\*(Table \d+\.|D\.\d)", s):  # caption paragraph (and its bullets) for the next table
             flush(cur)
             capl = [s]
             j = i + 1
             while j < len(lines) and lines[j].strip() and not lines[j].strip().startswith("|"):
                 capl.append(lines[j].strip())
                 j += 1
-            parts = [re.sub(r"^- ", "", c) for c in capl]
-            text = " ".join(parts)
+            text = " ".join(re.sub(r"^- ", "", c) for c in capl)
             pending_caption = re.sub(r"(?<!\*)\*(?!\*)", "", text).strip()
-            # the caption may be followed by a bullet list that belongs to it (Table 6)
             i = j
             continue
         li = LIST_ITEM.match(line)
@@ -338,14 +354,6 @@ def convert(md: str) -> tuple[str, str, str, str]:
             flush(cur)
             depth = len(li.group("ind")) // 2 + 1
             kind = "itemize" if li.group("mark") == "- " else "enumerate"
-            if cur is bib:
-                bib_items.append(li.group("text"))
-                i += 1
-                continue
-            if pending_caption is not None and kind == "itemize":  # bullets under a table caption join it
-                pending_caption += " " + " ".join(re.sub(r"^\*|\*$", "", li.group("text")).split())
-                i += 1
-                continue
             while len(list_stack) > depth:
                 cur.append(r"\end{" + list_stack.pop() + "}")
             if len(list_stack) < depth:
@@ -371,37 +379,38 @@ def convert(md: str) -> tuple[str, str, str, str]:
         i += 1
     flush(cur)
     close_lists(cur)
-    bib_tex = [r"\begin{thebibliography}{99}"]
-    for k, entry in enumerate(bib_items, 1):
-        bib_tex.append(rf"\bibitem{{r{k}}} " + inline(entry))
-    bib_tex.append(r"\end{thebibliography}")
-    return title, "\n".join(abstract), "\n".join(body) + "\n" + "\n".join(bib_tex), "\n".join(appendix)
+    return title, "\n".join(abstract), "\n".join(body), "\n".join(appendix)
 
 
-PREAMBLE = r"""\documentclass[11pt]{article}
-\usepackage[a4paper,margin=1in]{geometry}
-\usepackage{fontspec}
+PREAMBLE = r"""\documentclass[10pt,twocolumn]{article}
+\usepackage[letterpaper,margin=0.75in,columnsep=0.25in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\IfFileExists{inconsolata.sty}{\usepackage[scaled=0.92]{inconsolata}}{}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs,longtable,array,tabularx}
-\usepackage[section]{placeins}
 \usepackage[table]{xcolor}
 \usepackage{caption}
 \usepackage{microtype}
 \usepackage{listings}
 \usepackage{enumitem}
+\usepackage{url}
+\usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram]{hyperref}
 \definecolor{engram}{HTML}{4453C4}
 \definecolor{codebg}{HTML}{F5F7FA}
-\captionsetup{font=small,labelfont=bf,skip=6pt}
-\setlist{itemsep=1pt,topsep=3pt}
-\newfontfamily\promptfont{DejaVuSansMono.ttf}[Scale=0.82]
-\lstset{basicstyle=\promptfont\scriptsize,breaklines=true,breakatwhitespace=false,columns=fullflexible,
-  keepspaces=true,backgroundcolor=\color{codebg},frame=none,xleftmargin=4pt,xrightmargin=4pt,extendedchars=true}
-\setlength{\parskip}{3pt}
-\setlength{\emergencystretch}{3em}
+\captionsetup{font=small,labelfont=bf,skip=5pt}
+\setlist{itemsep=1pt,topsep=2pt,leftmargin=*}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,columns=fullflexible,
+  keepspaces=true,backgroundcolor=\color{codebg},frame=none,xleftmargin=4pt,xrightmargin=4pt,
+  inputencoding=utf8,extendedchars=true,
+  literate={→}{{$\rightarrow$}}2 {—}{{---}}1 {–}{{--}}1 {’}{{'}}1 {©}{{\textcopyright}}1 {é}{{\'e}}1 {…}{{\ldots}}1}
+\setlength{\emergencystretch}{2em}
 \renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.8}\renewcommand{\textfraction}{0.1}
-\renewcommand{\floatpagefraction}{0.8}\setcounter{topnumber}{3}\setcounter{totalnumber}{5}
+\renewcommand{\floatpagefraction}{0.75}\renewcommand{\dbltopfraction}{0.9}\renewcommand{\dblfloatpagefraction}{0.75}
+\setcounter{topnumber}{3}\setcounter{totalnumber}{5}\setcounter{dbltopnumber}{2}
 % Every number is written as value\src{source file}; \src prints nothing. See paper/numbers.json.
 \newcommand{\src}[1]{}
 """
@@ -430,7 +439,6 @@ def main() -> None:
             r"\end{document}",
         ]
     )
-    OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "main.tex").write_text(tex)
     print(f"wrote {OUT / 'main.tex'} ({len(tex):,} chars)")
 

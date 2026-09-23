@@ -1,0 +1,1307 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[letterpaper,margin=0.75in,columnsep=0.25in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\IfFileExists{inconsolata.sty}{\usepackage[scaled=0.92]{inconsolata}}{}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{microtype}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{url}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram]{hyperref}
+\definecolor{engram}{HTML}{4453C4}
+\definecolor{codebg}{HTML}{F5F7FA}
+\captionsetup{font=small,labelfont=bf,skip=5pt}
+\setlist{itemsep=1pt,topsep=2pt,leftmargin=*}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,columns=fullflexible,
+  keepspaces=true,backgroundcolor=\color{codebg},frame=none,xleftmargin=4pt,xrightmargin=4pt,
+  inputencoding=utf8,extendedchars=true,
+  literate={→}{{$\rightarrow$}}2 {—}{{---}}1 {–}{{--}}1 {’}{{'}}1 {©}{{\textcopyright}}1 {é}{{\'e}}1 {…}{{\ldots}}1}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.8}\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}\renewcommand{\dbltopfraction}{0.9}\renewcommand{\dblfloatpagefraction}{0.75}
+\setcounter{topnumber}{3}\setcounter{totalnumber}{5}\setcounter{dbltopnumber}{2}
+% Every number is written as value\src{source file}; \src prints nothing. See paper/numbers.json.
+\newcommand{\src}[1]{}
+
+\title{\textbf{What Does a Typed Decision Layer Buy Agent Memory? A Controlled Study of Cost, Safety and Retrieval}}
+\author{[Author(s) TBD]\\\small Code: [REPO URL PLACEHOLDER]}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+We measure what a typed decision layer buys an agent memory system, in cost, store safety and retrieval. Long-term memory systems for LLM agents make one or more LLM calls every time they write a memory. That makes re-examining the store unaffordable, so systems drift toward adding facts and never revising them. Most of the write path, though, is not generation but choice among fixed options: is this new, a duplicate, or an update, and of what?
+
+We split the two. In engram, an LLM extracts facts and every decision is a typed question answered by a hosted decision model (Jev). With extraction held identical to mem0 2.1.0's, replacing the LLM decision layer with typed decisions cut decision-layer cost by 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} and median decision latency by 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json}. Answer accuracy was the same: 31/35\src{bench/results/e2\_jev\_\_dev.json} against 31/35\src{bench/results/e2\_llm\_\_dev.json}.
+
+On 610\src{bench/results/heldout\_report.json} held-out LoCoMo questions, under a three-memory retrieval budget, engram answers +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points more questions than mem0 given the same number of context tokens (95\% CI +5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} to +12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}). At the default k=20 the two systems tie (difference +0.8\src{bench/results/heldout\_report.json}, CI -2.3\src{bench/results/heldout\_report.json} to +3.9\src{bench/results/heldout\_report.json}).
+
+We report two negatives:
+
+\begin{itemize}
+\item Closing stale facts does not change answers on current benchmarks.
+\item The 421M\src{convai2026laya (model card)} base checkpoint of the open-weights decision model Laya, used zero-shot as its documentation advises against, does not make the relational decisions reliably.
+\end{itemize}
+Code, prompts and per-question results are released.
+
+\end{abstract}
+\section{Introduction}
+\textbf{The cost problem.} A memory system for an LLM agent turns conversation into facts it can retrieve later. Each write has two parts:
+
+\begin{itemize}
+\item Extraction: what facts does this message state?
+\item Decisions: is each fact new, a duplicate, a refinement, or a change to something already stored? Is it worth keeping? Is it sensitive?
+\end{itemize}
+\textbf{Concurrent work.} The architectural idea of routing memory decisions to a typed decision model was reached independently by Jev-Mem \citep{jiang2026jevmem}, which uses Jev for typing, relation construction, query routing, budget allocation, traversal, candidate scoring and stopping. It reports a LoCoMo judge score of 0.777\src{jiang2026jevmem (reported LoCoMo judge score)} with a 158\src{jiang2026jevmem (reported build time, s)} s build and 0.93\src{jiang2026jevmem (reported query time, s)} s query against A-MEM \citep{xu2025amem}, Nemori, MemoryOS and MAGMA \citep{jiang2026magma}. It does not isolate the decision layer, evaluate updates or closes, measure calibration, or use a held-out split or confidence intervals. Separately, a community article reranked AtMem's top-10 with Jev on 1,986\src{taghia2026atmem (LoCoMo questions)} LoCoMo questions and measured the effect at the ranking level: MRR@5 rose from 0.4259\src{taghia2026atmem (MRR@5, AtMem)} to 0.5868\src{taghia2026atmem (MRR@5, AtMem + Jev)} and Recall@1 from 0.3399\src{taghia2026atmem (Recall@1, AtMem)} to 0.5423\src{taghia2026atmem (Recall@1, AtMem + Jev)} \citep{taghia2026atmem}. This paper's contribution is the controlled measurement: an identical-extraction ablation of the decision layer, its calibration, the safety of the store it drives, the rerank effect on answers with a matched-context control, and the negatives.
+
+In current open-source systems both parts are LLM calls. mem0 2.1.0's default \texttt{add()} makes a single LLM call per message with its additive extraction prompt, and has no separate update or delete step (\texttt{mem0/memory/main.py}, \texttt{Memory.\_\allowbreak{}add\_\allowbreak{}to\_\allowbreak{}vector\_\allowbreak{}store}; prompts reproduced in Appendix B). An LLM call per decision is expensive enough that nothing re-examines the store afterwards. Facts that stopped being true stay in it.
+
+\textbf{The observation.} The decisions are choices among options fixed in advance. That is the setting typed decision models are built for. They return a calibrated probability over a fixed option set in one short request, and they cost far less than generating text.
+
+\textbf{Contributions.}
+
+\begin{enumerate}
+\item \textbf{A decision/generation split, tested with extraction held identical.} Using mem0's own extraction prompt and inputs, typed decisions replace the LLM decision layer at 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower decision cost and 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower median decision latency, with the same dev accuracy (\S{}5.1). On 610\src{bench/results/heldout\_report.json} held-out questions the full system ties mem0 at k=20 (\S{}5.1).
+\item \textbf{A belief-state store policy.} Every fact edge carries a belief updated in log-odds from typed answers. Merges and closes are reversible, and structural gates restrict when a close is allowed. No labeled keep item was over-closed in any of our Jev arms (\S{}3.4, \S{}5.3).
+\item \textbf{Rerank beats a larger k under a small retrieval budget.} At k=3 engram is +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points ahead of mem0 given matched context tokens, on 610\src{bench/results/heldout\_report.json} held-out questions (\S{}5.2).
+\item \textbf{Two documented negatives.} Closing stale facts does not change answers on LoCoMo-style questions, because the answer model resolves recency from dates in the memory text (\S{}5.5). The 421M\src{convai2026laya (model card)} base checkpoint of Laya, used zero-shot as its documentation advises against, does not make the relational decisions (\S{}5.6).
+\end{enumerate}
+\textbf{Scope.} We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development conversation and four held-out conversations). We use update sets written by the system's author, and one hosted decision model (Jev, \texttt{jev-1.13.0}).
+
+We did not test:
+
+\begin{itemize}
+\item Zep/Graphiti or Letta
+\item LongMemEval
+\item other extraction, answer or judge models
+\item multi-user stores
+\item non-English text
+\end{itemize}
+\section{Background}
+\subsection{How memory systems make write decisions}
+\begin{itemize}
+\item \textbf{mem0} \citep{chhikara2025mem0} (2.1.0) extracts facts with one LLM call per message. The prompt receives the new message, the last 10\src{src/engram/flags.py (extract\_last\_k, as mem0 2.1.0)} messages and the 10\src{src/engram/config.py} most similar existing memories, and emits only additions. Its older update step, which asked an LLM to label each new fact as ADD, UPDATE, DELETE or NONE against existing memories, is still shipped as \texttt{DEFAULT\_\allowbreak{}UPDATE\_\allowbreak{}MEMORY\_\allowbreak{}PROMPT}. We use it as the LLM decision layer in \S{}5.1.
+\item \textbf{Zep's Graphiti} resolves entities and invalidates edges with LLM calls \citep{rasmussen2025zep}.
+\item \textbf{ByteRover} curates a hierarchical context with an LLM; its retrieval is a five-tier progressive strategy that answers most queries in under 100\src{nguyen2026byterover (sub-100 ms tier resolution)} ms without LLM calls and escalates to agentic reasoning only for novel questions \citep{nguyen2026byterover}.
+\end{itemize}
+\subsection{Typed decision models}
+A typed decision model takes a shared \emph{state} (JSON) and a set of questions. Each question is one of:
+
+\begin{itemize}
+\item a choice among named options, each with a rubric
+\item a yes/no (``noul'') question
+\item a score
+\end{itemize}
+It returns a probability distribution per question.
+
+\textbf{Jev.} We use Jev through TypeSafe's API: model \texttt{jev-1.13.0}, priced at 0.042\src{src/engram/config.py (USD per million input tokens)} USD per million input tokens (\texttt{src/engram/config.py}). Its documentation gives a limit of 255\src{typesafe2026jev (max options per Choice)} options per choice question \citep{typesafe2026jev}. Measured latency is flat in request size (\S{}5.7).
+
+\textbf{Laya.} Laya is an open-weights model with the same request format. We ran checkpoint convaiinnovations/laya\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} locally through the laya-mlx port on an Apple M2 Pro\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} with 32\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} GB. It reads at most 512\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} tokens per question, of which at most 192\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} go to the instructions and options. This is the 421M\src{convai2026laya (model card)} base checkpoint. Its model card reports zero-shot typed-decision accuracy of 0.362\src{convai2026laya (base checkpoint, typed-decisions, zero-shot)} against a 0.318\src{convai2026laya (random baseline)} random baseline, calls it ``a fast base to specialise, not a zero-shot decision engine,'' and offers a separate checkpoint fine-tuned for typed decisions \citep{convai2026laya}. We used the base checkpoint zero-shot.
+
+\subsection{LoCoMo and its limits}
+LoCoMo \citep{maharana2024locomo} contains long multi-session conversations with questions in four scored categories.
+
+\textbf{It barely tests updates.} In the first 215\src{bench/results/e2\_jev\_\_stress.json} messages of conv-26, an LLM labeler (claude-sonnet-4-6, prompt in \texttt{bench/stale.py}) found 2\src{bench/results/e0\_baseline\_\_stress.json} claims that a later message makes no longer true (\texttt{bench/slices/conv26\_\allowbreak{}superseded.json}).
+
+\textbf{Public scores are not comparable.} Published LoCoMo scores for the same systems differ between the systems' own reports and third-party reports \citep{mem0blog2026benchmarks,byteroverblog2026benchmark}. We do not quote those numbers. All comparisons here run both systems under one protocol.
+
+\section{engram}
+\subsection{Pipeline}
+\begin{figure*}[tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/pipeline.pdf}
+\caption{engram's write and read paths. Orange boxes are LLM calls, blue boxes are typed Jev decisions.}\label{fig:1}
+\end{figure*}
+\textbf{Write path.}
+
+\begin{enumerate}
+\item An LLM extracts facts from a message. In the experiments this uses mem0's prompt and inputs; \S{}4.2.
+\item Each fact goes to Jev as a single request. The request carries the fact questions and one \texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} question for each of up to 10\src{src/engram/config.py} candidate facts.
+\item A policy layer (\S{}3.3) and a belief state (\S{}3.4) turn the answers into store operations.
+\item The store is SQLite plus NetworkX. Facts are edges with validity windows, and every decision is logged with its probabilities.
+\end{enumerate}
+\textbf{Read path.}
+
+\begin{enumerate}
+\item Embed the question and take the cosine top-k.
+\item Jev reranks the candidates with one yes/no relevance question per candidate, plus a \texttt{query\_\allowbreak{}relation} question that can pull in facts by relation type.
+\item Add history: the facts each retrieved fact superseded.
+\item Render compact lines for the answer model: the date the fact was said, the fact, and the verbatim source quote.
+\end{enumerate}
+\subsection{The decision chain}
+Table~\ref{tab:1} lists the 12\src{src/engram/decide/questions.py (ALL\_QUESTIONS)} questions in the current chain; Appendix A gives the full option text of every version. Choice questions carry a rubric per option. When a question's wording changes, its version number is bumped and old arms keep the old version.
+
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Jev questions (\texttt{src/engram/decide/questions.py}, \texttt{docs/DECISIONS.md}). \texttt{edge\_\allowbreak{}type} and \texttt{query\_\allowbreak{}relation} choose among 25\src{src/engram/decide/questions.py (EDGE\_TYPES)} relation types.}\label{tab:1}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+\toprule
+\textbf{question} & \textbf{type} & \textbf{version} & \textbf{options} \\
+\midrule
+\texttt{worth\_\allowbreak{}remembering} & noul & 1 & yes / no \\
+\texttt{fact\_\allowbreak{}kind} & choice & 1 & \texttt{preference}, \texttt{bio}, \texttt{event}, \texttt{relationship}, \texttt{task}, \texttt{opinion} \\
+\texttt{temporal\_\allowbreak{}status} & choice & 2 & \texttt{current}, \texttt{planned}, \texttt{past}, \texttt{hypothetical} \\
+\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} & choice & 2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
+\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck} & choice & 2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
+\texttt{edge\_\allowbreak{}type} & choice & 1 & 25\src{src/engram/decide/questions.py} relation types \\
+\texttt{durability} & choice & 1 & \texttt{permanent}, \texttt{long\_\allowbreak{}term}, \texttt{short\_\allowbreak{}lived} \\
+\texttt{sensitivity} & choice & 1 & \texttt{none}, \texttt{health}, \texttt{financial}, \texttt{relationship}, \texttt{credentials} \\
+\texttt{plan\_\allowbreak{}fulfilled} & noul & 1 & yes / no \\
+\texttt{relevant\_\allowbreak{}to\_\allowbreak{}query} & noul & 1 & yes / no \\
+\texttt{query\_\allowbreak{}relation} & choice & 1 & 25\src{src/engram/decide/questions.py} relation types \\
+\texttt{same\_\allowbreak{}fact} & noul & 1 & yes / no \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+\subsection{Policy layer}
+Decisions act only through explicit rules (\texttt{src/engram/pipeline/write.py}):
+
+\begin{itemize}
+\item \textbf{Thresholds.} A decision acts at $p \ge$ 0.85\src{src/engram/config.py}. A superseding relation (update, contradiction, negates) below 0.60\src{src/engram/config.py} is escalated to an LLM, using mem0's update prompt. Anything in between is stored as tentative.
+\item \textbf{Temporal gate.} An old edge can close only if the new fact is current or past: $P(\text{current}) + P(\text{past}) \ge$ 0.85\src{src/engram/config.py}. Planned and hypothetical statements never close anything.
+\item \textbf{Cardinality.} Each relation type is single- or multi-valued. \texttt{contradiction} closes only a sibling (same subject and relation) on a single-valued relation. \texttt{update} may also close a multi-valued sibling. \texttt{negates} (the new fact says the old one stopped) may close any edge.
+\item \textbf{Two-phrasing agreement.} The first piece of evidence against an edge must be confirmed by a second phrasing of the relation question (\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck}). Otherwise it does not count.
+\item \textbf{Plans.} A dedicated yes/no question, \texttt{plan\_\allowbreak{}fulfilled}, asks whether a new fact reports that a stored plan has happened. At $p \ge$ 0.85\src{src/engram/config.py} the plan closes with reason \emph{fulfilled}.
+\item \textbf{Merges are links.} A duplicate becomes a \texttt{same\_\allowbreak{}as} link, collapsed at retrieval and removable. Text is never merged.
+\item \textbf{Overrides.} An explicit request to remember overrides \texttt{worth\_\allowbreak{}remembering}. A credential is redacted before storage, whatever the other answers say.
+\end{itemize}
+\subsection{Belief state}
+Each edge $i$ carries a belief $b_i \in [$ 0.02\src{src/engram/pipeline/belief.py}, 0.98\src{src/engram/pipeline/belief.py} $]$ that it is currently true. A typed answer $z$ about the edge, with probability $q$ for its chosen label, updates it in log-odds:
+
+\[\operatorname{logit} b_i \leftarrow \operatorname{logit} b_i + w(z)\, \operatorname{logit} q .\]
+
+With a per-question temperature $T$ (\S{}5.4), $\operatorname{logit} q$ is replaced by $\operatorname{logit} q / T$. We use $\vert w\vert  = 1$. The sign and the zero cases are exactly the policy rules of \S{}3.3:
+
+\begin{itemize}
+\item $w = +1$ for \texttt{duplicate} and \texttt{refinement} (support)
+\item $w = -1$ for \texttt{update}, \texttt{contradiction} and \texttt{negates} where \S{}3.3 permits a close
+\item $w = 0$ for \texttt{new}, and for any answer a gate blocks
+\end{itemize}
+An open edge closes when $b_i <$ 0.25\src{src/engram/pipeline/belief.py} and reopens when $b_i >$ 0.60\src{src/engram/pipeline/belief.py}. The gap between the two gives hysteresis.
+
+\textbf{Belief v3.} The v2 rule used in the held-out runs lets any answer count. A \texttt{duplicate} at $q < 0.5$ therefore has $\operatorname{logit} q < 0$ and \emph{lowers} belief, and a weak against-answer raises it. v3 counts an answer only when its label is the argmax and $q > 0.5$ (\S{}5.3).
+
+\textbf{What this assumes.} The log-odds rule treats $q$ as a calibrated likelihood. Where the model is miscalibrated, belief moves by the wrong amount. This is why \S{}5.4 measures calibration and why a per-question temperature is part of the rule.
+
+\subsection{Hygiene pass}
+After ingestion, one pass re-checks every group of facts that share a subject and relation. It asks the yes/no question \texttt{same\_\allowbreak{}fact} for each pair, 50\src{src/engram/pipeline/hygiene.py} pairs per request. At $p \ge$ 0.85\src{src/engram/config.py} the pair is linked, and at $p \le$ 0.15\src{src/engram/pipeline/hygiene.py (1 − ACT\_THRESHOLD)} an existing link is dropped.
+
+On the held-out conversations one pass made between 1,865\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-30\_\_k3.json} and 5,446\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-42\_\_k3.json} decisions, for between \$0.0112\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-30\_\_k3.json} and \$0.0332\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-42\_\_k3.json} (\S{}5.3). With LLM decisions, re-examining the store at that scale is what becomes unaffordable.
+
+\subsection{Cost model}
+With a per-decision Jev cost $c_J$, an LLM escalation cost $c_L$ and an escalation threshold $\theta$ on the top probability $q$:
+
+\[C(\theta) = c_J + P(q < \theta)\, c_L ,\] \[E(\theta) = P(q \ge \theta)\, \varepsilon_J(\theta) + P(q < \theta)\, \varepsilon_L ,\]
+
+where $\varepsilon_J(\theta)$ is Jev's error rate on the decisions it keeps and $\varepsilon_L$ is the LLM's error rate on the escalated ones. \S{}5.4 draws the empirical curve.
+
+\section{Experimental setup}
+\subsection{Models, data, caching and budget}
+\textbf{Models} (the same in every arm):
+
+\begin{itemize}
+\item Extraction: \texttt{claude-haiku-4-5}.
+\item Answers and judging: \texttt{claude-sonnet-4-6}, with mem0's LoCoMo evaluation prompts (Appendix B).
+\item The LLM decision layer and all escalations: \texttt{claude-sonnet-4-6} with mem0's update prompt.
+\item mem0 2.1.0 runs on \texttt{claude-haiku-4-5} with telemetry off.
+\end{itemize}
+\textbf{Slices:}
+
+\begin{itemize}
+\item \emph{dev}: conv-26 sessions 1--4, 76\src{bench/results/e2\_jev\_\_dev.json} messages, 35\src{bench/results/e2\_jev\_\_dev.json} questions.
+\item \emph{stress}: conv-26 sessions 1--10, 215\src{bench/results/e2\_jev\_\_stress.json} messages, 80\src{bench/results/e2\_jev\_\_stress.json} questions.
+\item \emph{held-out}: conv-30, conv-41, conv-42 and conv-43 whole, 610\src{bench/results/heldout\_report.json} questions. These were not used during development. The system configuration was frozen (git tag \texttt{e4-frozen}) before any held-out run.
+\end{itemize}
+LoCoMo's adversarial category is excluded throughout. Each held-out conversation is ingested once per system, and k=3 and k=20 are answered from the same store.
+
+\textbf{Caching and budget.} Every LLM and Jev call is cached by its full request, and budget guards stop any run past a spending limit. Phase 2 (all experiments reported here) spent \$93.26\src{bench/results/phase2\_spend.jsonl} over 78\src{bench/results/phase2\_spend.jsonl} ledgered runs. Jev accounts for \$1.47\src{bench/results/phase2\_spend.jsonl} of it (\texttt{bench/results/phase2\_\allowbreak{}spend.jsonl}; per-arm totals in Appendix E). The build phase before it was not ledgered; the author's estimate for it is about \$10 [no file].
+
+\subsection{The identical-extraction protocol}
+For each message, mem0 2.1.0's \texttt{add()} builds its extraction prompt from:
+
+\begin{itemize}
+\item the new message, as \texttt{[date] speaker: text}
+\item the last 10\src{src/engram/flags.py (extract\_last\_k, as mem0 2.1.0)} messages
+\item the 10\src{src/engram/config.py} existing memories most similar to it
+\item a current date
+\end{itemize}
+It passes no observation date, so relative dates in historical conversations resolve against the current date. We report this as-is, and a patched variant in \S{}6.
+
+engram's E-arms build the same prompt with the same function (\texttt{generate\_\allowbreak{}additive\_\allowbreak{}extraction\_\allowbreak{}prompt}), inputs and model (\texttt{bench/run.py}, \texttt{src/engram/flags.py}). The ``existing memories'' differ only because each system's store differs. The E2 arms differ only in what decides after extraction.
+
+\subsection{Update sets}
+LoCoMo has almost no updates (\S{}2.3), so we wrote two sets in the speakers' voices. Both are appended to the dev slice and were frozen by SHA-256 before any run.
+
+\textbf{Set 1} (\texttt{bench/updates\_\allowbreak{}conv26.json}, SHA-256 prefix 2330876388f1\src{bench/updates\_conv26.json}) has 30\src{bench/updates\_conv26.json} items:
+
+\begin{itemize}
+\item 15\src{bench/updates\_conv26.json} easy closes
+\item 10\src{bench/updates\_conv26.json} subtle items labeled \emph{no\_close}: past-tense mentions and unrealised plans
+\item 5\src{bench/updates\_conv26.json} fulfilled plans
+\end{itemize}
+\textbf{Set 2} (\texttt{bench/updates2\_\allowbreak{}conv26.json}, prefix d4f3c8d2de61\src{bench/updates2\_conv26.json}) adds 28\src{bench/updates2\_conv26.json} messages and 20\src{bench/updates2\_conv26.json} questions:
+
+\begin{itemize}
+\item 5\src{bench/updates2\_conv26.json} point-in-time questions
+\item 5\src{bench/updates2\_conv26.json} chains of 3--5 changes asked about now
+\item 5\src{bench/updates2\_conv26.json} chains asked about a past moment
+\item 5\src{bench/updates2\_conv26.json} updates with no temporal cue in the message
+\end{itemize}
+All items are in Appendix C. The system's author wrote and labeled them, and this is a source of bias.
+
+\subsection{Statistics}
+Both systems answer the same questions, so comparisons are paired: $d_i = \text{engram}_i - \text{mem0}_i$. We report:
+
+\begin{itemize}
+\item an exact McNemar test on the discordant questions
+\item a 95\% interval from the per-question normal approximation
+\item a cluster bootstrap that resamples the four held-out conversations. With four clusters, treat it as a robustness check.
+\end{itemize}
+The token-matched comparison reports the per-question interval only.
+
+\section{Results}
+\subsection{Replacing the decision layer}
+The three arms in Table~\ref{tab:2} share extraction. The two engram arms differ only in what decides after it:
+
+\begin{itemize}
+\item Jev typed questions (E2 Jev)
+\item \texttt{claude-sonnet-4-6} with mem0's update prompt, one call per extracted fact (E2 LLM)
+\end{itemize}
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Dev slice, conv-26 sessions 1--4, 76\src{bench/results/e2\_jev\_\_dev.json} messages, 35\src{bench/results/e2\_jev\_\_dev.json} questions, all retrieved memories (default k). Extraction claude-haiku-4-5 for all arms; answers and judge claude-sonnet-4-6; E2 LLM decides with claude-sonnet-4-6. Costs are per 1,000 messages written. Decision p50: median time after extraction, per message, over messages that produced at least one fact. Write p50: median end-to-end write time per message over all messages, including those that produced no facts.}\label{tab:2}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{system} & \textbf{accuracy} & \textbf{decision \$/1k} & \textbf{decision p50} & \textbf{total \$/1k} & \textbf{write p50} & \textbf{facts} \\
+\midrule
+mem0 2.1.0 (one LLM call per write) & 30/35\src{bench/results/mem0\_\_dev.json} & -- & -- & \$9.80\src{bench/results/mem0\_\_dev.json} & 879 ms\src{bench/results/mem0\_\_dev.json} & 46\src{bench/results/mem0\_\_dev.json} \\
+engram E2, LLM decision layer (mem0 update prompt) & 31/35\src{bench/results/e2\_llm\_\_dev.json} & \$8.782\src{bench/results/e2\_llm\_\_dev.json} & 7,675 ms\src{bench/results/e2\_llm\_\_dev.json} & \$18.70\src{bench/results/e2\_llm\_\_dev.json} & 918 ms\src{bench/results/e2\_llm\_\_dev.json} & 18\src{bench/results/e2\_llm\_\_dev.json} \\
+engram E2, Jev decision layer & 31/35\src{bench/results/e2\_jev\_\_dev.json} & \$0.125\src{bench/results/e2\_jev\_\_dev.json} & 278 ms\src{bench/results/e2\_jev\_\_dev.json} & \$9.90\src{bench/results/e2\_jev\_\_dev.json} & 895 ms\src{bench/results/e2\_jev\_\_dev.json} & 47\src{bench/results/e2\_jev\_\_dev.json} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+The two decision layers answer the same number of questions and mem0 one fewer, within noise. The Jev decision layer costs 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} less and has 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower median decision latency. The LLM decision layer stores fewer facts (18\src{bench/results/e2\_llm\_\_dev.json} against 47\src{bench/results/e2\_jev\_\_dev.json}) because mem0's UPDATE event rewrites an existing memory instead of adding one.
+
+The two latency columns are medians over different messages. In the E2 LLM arm only 30\src{bench/results/e2\_latency.json} of 76\src{bench/results/e2\_latency.json} messages made an LLM decision call, so the write median falls on an extraction-only message (median extraction 869 ms\src{bench/results/e2\_latency.json}); on the messages with decisions, the logged median of the slowest decision call is 7,892 ms\src{bench/results/e2\_latency.json} (\texttt{bench/e2\_\allowbreak{}latency.py}).
+
+These ratios compare Jev against \texttt{claude-sonnet-4-6} as the decider. We have no measurement with a smaller LLM decider. On the stress slice the Jev arm scored 67/80\src{bench/results/e2\_jev\_\_stress.json} and mem0 64/80\src{bench/results/mem0\_\_stress.json}; the LLM arm was not run there.
+
+\textbf{Held-out parity at default k.} The held-out runs compare the frozen full system (E4 belief v2, \S{}3.4) with mem0, not the E2 arms. At k=20 engram answers 482/610\src{bench/results/heldout\_report.json} and mem0 477/610\src{bench/results/heldout\_report.json}. The difference is +0.8\src{bench/results/heldout\_report.json} points (95\% CI -2.3\src{bench/results/heldout\_report.json} to +3.9\src{bench/results/heldout\_report.json}; conversation bootstrap -4.5\src{bench/results/heldout\_report.json} to +5.4\src{bench/results/heldout\_report.json}; McNemar $p$ = 0.679\src{bench/results/heldout\_report.json}), within noise.
+
+\subsection{Retrieval under a small budget}
+Our answer-level result is consistent with the ranking-level improvement AtMem measured when reranking with Jev \citep{taghia2026atmem}.
+
+At k=3 engram shows the answer model 290\src{bench/results/heldout\_report.json} tokens per question and mem0 159\src{bench/results/heldout\_report.json}. Most of the difference is the source quote on each engram line. To separate context size from ranking, we answered the same 610\src{bench/results/heldout\_report.json} questions from mem0's existing held-out stores at every k from 3 to 8. We chose the k whose mean retrieved tokens came closest to engram's 290\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}: k=6\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}, at 315\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} tokens. That gives mem0 slightly more context than engram. The run cost \$2.52\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}.
+
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Held-out LoCoMo accuracy: conv-30, 41, 42 and 43, 610\src{bench/results/heldout\_report.json} questions, adversarial category excluded. Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6. One ingestion per system per conversation. Tokens are mean retrieved-context tokens per question.}\label{tab:3}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{system} & \textbf{k} & \textbf{tokens/q} & \textbf{conv-30} & \textbf{conv-41} & \textbf{conv-42} & \textbf{conv-43} & \textbf{pooled} \\
+\midrule
+Q &  &  & 81\src{bench/results/heldout\_report.json} & 152\src{bench/results/heldout\_report.json} & 199\src{bench/results/heldout\_report.json} & 178\src{bench/results/heldout\_report.json} & 610\src{bench/results/heldout\_report.json} \\
+engram & 3 & 290\src{bench/results/heldout\_report.json} & 72.8\%\src{bench/results/heldout\_report.json} & 74.3\%\src{bench/results/heldout\_report.json} & 75.4\%\src{bench/results/heldout\_report.json} & 70.2\%\src{bench/results/heldout\_report.json} & 447/610\src{bench/results/heldout\_report.json} \\
+mem0 & 3 & 159\src{bench/results/heldout\_report.json} & 67.9\%\src{bench/results/heldout\_report.json} & 58.6\%\src{bench/results/heldout\_report.json} & 55.8\%\src{bench/results/heldout\_report.json} & 56.7\%\src{bench/results/heldout\_report.json} & 356/610\src{bench/results/heldout\_report.json} \\
+mem0 (token-matched) & 6\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 315\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 66.7\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 71.7\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 59.8\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 62.9\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 394/610\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} \\
+engram & 20 & 1,461\src{bench/results/heldout\_report.json} & 76.5\%\src{bench/results/heldout\_report.json} & 84.2\%\src{bench/results/heldout\_report.json} & 78.4\%\src{bench/results/heldout\_report.json} & 76.4\%\src{bench/results/heldout\_report.json} & 482/610\src{bench/results/heldout\_report.json} \\
+mem0 & 20 & 1,024\src{bench/results/heldout\_report.json} & 77.8\%\src{bench/results/heldout\_report.json} & 88.8\%\src{bench/results/heldout\_report.json} & 73.4\%\src{bench/results/heldout\_report.json} & 74.7\%\src{bench/results/heldout\_report.json} & 477/610\src{bench/results/heldout\_report.json} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Paired differences for the rows of Table~\ref{tab:3}. 95\% CI: per-question normal approximation. Bootstrap: resampling the four conversations. Discordant: questions only engram / only mem0 answered correctly.}\label{tab:4}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.33\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{comparison} & \textbf{$\Delta$ (pts)} & \textbf{95\% CI} & \textbf{95\% CI, bootstrap} & \textbf{discordant} & \textbf{McNemar p} \\
+\midrule
+engram k=3 $-$ mem0 k=3 & +14.9\src{bench/results/heldout\_report.json} & [+11.2\src{bench/results/heldout\_report.json},~+18.7\src{bench/results/heldout\_report.json}] & [+8.2\src{bench/results/heldout\_report.json},~+19.8\src{bench/results/heldout\_report.json}] & 120\src{bench/results/heldout\_report.json} / 29\src{bench/results/heldout\_report.json} & 2.4e-14\src{bench/results/heldout\_report.json} \\
+engram k=3 $-$ mem0 k=6 (token-matched) & +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & [+5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json},~+12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}] & not computed & 86\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} / 33\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 1.3e-06\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} \\
+engram k=20 $-$ mem0 k=20 & +0.8\src{bench/results/heldout\_report.json} & [-2.3\src{bench/results/heldout\_report.json},~+3.9\src{bench/results/heldout\_report.json}] & [-4.5\src{bench/results/heldout\_report.json},~+5.4\src{bench/results/heldout\_report.json}] & 49\src{bench/results/heldout\_report.json} / 44\src{bench/results/heldout\_report.json} & 0.679\src{bench/results/heldout\_report.json} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+At k=3 engram is ahead of mem0 by +14.9\src{bench/results/heldout\_report.json} points (95\% CI +11.2\src{bench/results/heldout\_report.json} to +18.7\src{bench/results/heldout\_report.json}). Against token-matched mem0 the difference is +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points (95\% CI +5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} to +12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}; McNemar $p$ = 1.3e-06\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}; 86\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} questions only engram answered against 33\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} only mem0 answered).
+
+engram is ahead in every conversation (Appendix D) and in every category at matched context (Table~\ref{tab:5}, Figure~\ref{fig:2}).
+
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Held-out accuracy by LoCoMo category, 610\src{bench/results/heldout\_report.json} questions. Models as in Table~\ref{tab:3}.}\label{tab:5}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{category} & \textbf{Q} & \textbf{engram k=3} & \textbf{mem0 k=3} & \textbf{mem0 k=6 (matched)} & \textbf{engram k=20} & \textbf{mem0 k=20} \\
+\midrule
+multi-hop & 110\src{bench/results/heldout\_report.json} & 49.1\%\src{bench/results/heldout\_report.json} & 31.8\%\src{bench/results/heldout\_report.json} & 40.9\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 67.3\%\src{bench/results/heldout\_report.json} & 61.8\%\src{bench/results/heldout\_report.json} \\
+temporal & 119\src{bench/results/heldout\_report.json} & 84.0\%\src{bench/results/heldout\_report.json} & 71.4\%\src{bench/results/heldout\_report.json} & 73.9\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 88.2\%\src{bench/results/heldout\_report.json} & 84.0\%\src{bench/results/heldout\_report.json} \\
+open-domain & 33\src{bench/results/heldout\_report.json} & 51.5\%\src{bench/results/heldout\_report.json} & 30.3\%\src{bench/results/heldout\_report.json} & 33.3\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 51.5\%\src{bench/results/heldout\_report.json} & 57.6\%\src{bench/results/heldout\_report.json} \\
+single-hop & 348\src{bench/results/heldout\_report.json} & 79.3\%\src{bench/results/heldout\_report.json} & 64.9\%\src{bench/results/heldout\_report.json} & 71.8\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 82.2\%\src{bench/results/heldout\_report.json} & 83.3\%\src{bench/results/heldout\_report.json} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/per_category_k3.pdf}
+\caption{held-out accuracy by category at k=3, for engram, token-matched mem0 (k=6) and mem0 (k=3).}\label{fig:2}
+\end{figure}
+\textbf{Attribution.} Matching context removes 41.8\%\src{bench/results/heldout\_report.json and bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json: (Δk3 − Δtoken-matched) / Δk3} of the k=3 difference. The other 58.2\%\src{bench/results/heldout\_report.json and bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json: 1 − context share} is what remains once context is matched.
+
+We attribute that remainder to which memories reach the top three, which rests on a dev-slice ablation, not a held-out one. On dev + set 1 at k=3 the frozen arm answered 30/30\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} update questions. It answered 26/30\src{bench/results/e4\_belief\_v2\_norerank\_\_dev\_updates\_\_k3.json} with Jev reranking off, 30/30\src{bench/results/e4\_belief\_v2\_nohist\_\_dev\_updates\_\_k3.json} with history expansion off, and mem0 answered 25/30\src{bench/results/mem0\_\_dev\_updates\_\_k3.json}. We did not run a held-out no-rerank arm.
+
+\subsection{Safety and cost of the store}
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Store safety on dev + update set 1 and set 2. Extraction claude-haiku-4-5, decisions Jev. Columns: set-1 no\_close items over-closed / stored; set-2 keep items kept / stored; closes on dev + set 1, split into those matching a labeled pair and those not. Over-closed: a labeled no\_close item whose fact was closed by its own update message. Matching a labeled pair: a close whose (closed fact's message, closing message) is a labeled update or superseded pair. The set-2 keep set has one item.}\label{tab:6}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{arm} & \textbf{set-1 over-closed} & \textbf{set-2 kept} & \textbf{closes} & \textbf{labeled} & \textbf{unlabeled} \\
+\midrule
+mem0 & 0/7\src{bench/results/mem0\_\_dev\_updates.json} & 1/1\src{bench/results/mem0\_\_dev\_updates2.json} & 0\src{bench/results/mem0\_\_dev\_updates.json} & 0\src{bench/results/mem0\_\_dev\_updates.json} & 0\src{bench/results/mem0\_\_dev\_updates.json} \\
+E2: Jev, replace-on-update & 0/8\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json} & 1/1\src{bench/results/e2\_jev\_v2\_\_dev\_updates2.json} & 11\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json} & 3\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json} & 8\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json} \\
+E3: structural rules & 0/8\src{bench/results/e3\_structural\_v3\_\_dev\_updates.json} & not run & 3\src{bench/results/e3\_structural\_v3\_\_dev\_updates.json} & 2\src{bench/results/e3\_structural\_v3\_\_dev\_updates.json} & 1\src{bench/results/e3\_structural\_v3\_\_dev\_updates.json} \\
+E4: belief v1 & 0/8\src{bench/results/e4\_belief\_\_dev\_updates.json} & 1/1\src{bench/results/e4\_belief\_\_dev\_updates2.json} & 3\src{bench/results/e4\_belief\_\_dev\_updates.json} & 2\src{bench/results/e4\_belief\_\_dev\_updates.json} & 1\src{bench/results/e4\_belief\_\_dev\_updates.json} \\
+E4: belief v2 (frozen) & 0/8\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & 1/1\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_\_k3.json} & 4\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & 3\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & 1\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} \\
+E4: belief v3 & 0/8\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} & 1/1\src{bench/results/e4\_belief\_v3\_\_dev\_updates2\_\_k3\_\_noanswer.json} & 4\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} & 2\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} & 2\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+\textbf{Over-closes.} No labeled keep item was over-closed by any arm.
+
+\textbf{Closes outside the labels.} They separate the policies:
+
+\begin{itemize}
+\item The first Jev arm (E2), which closed whenever a superseding label cleared 0.85\src{src/engram/config.py}, made 11\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json} closes on dev + set 1. 8\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json} of them match no labeled pair.
+\item Belief v2 made 4\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json}, of which 1\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} match no labeled pair.
+\item On set 2 the same comparison is 10\src{bench/results/e2\_jev\_v2\_\_dev\_updates2.json} of 14\src{bench/results/e2\_jev\_v2\_\_dev\_updates2.json} against 1\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_\_k3.json} of 10\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_\_k3.json}.
+\end{itemize}
+\textbf{Stale items.} A stale item is a close item whose old fact is still active. Belief v2 left 14/18\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} of the set-1 close items stale, against 17/18\src{bench/results/e4\_belief\_\_dev\_updates.json} under belief v1 and 18/18\src{bench/results/mem0\_\_dev\_updates.json} for mem0, which never closes. On set 2 it left 10/16\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_\_k3.json} stale, against 15/16\src{bench/results/e4\_belief\_\_dev\_updates2.json} and 16/16\src{bench/results/mem0\_\_dev\_updates2.json}.
+
+\textbf{Fulfilled plans.} A relaxed heuristic closed a plan whenever a related past or current fact arrived. Across its two arms it fired 25\src{bench/results/e2\_jev\_v2\_\_dev\_updates.json + bench/results/e3\_structural\_v2\_\_dev\_updates.json (fulfills\_log) vs bench/updates\_conv26.json close\_fulfilled pairs} times. 1\src{bench/results/e2\_jev\_v2\_\_dev\_updates.json + bench/results/e3\_structural\_v2\_\_dev\_updates.json (fulfills\_log) vs bench/updates\_conv26.json close\_fulfilled pairs} firing matched a labeled (plan, fulfilment) pair, and 24\src{bench/results/e2\_jev\_v2\_\_dev\_updates.json + bench/results/e3\_structural\_v2\_\_dev\_updates.json (fulfills\_log) vs bench/updates\_conv26.json close\_fulfilled pairs} did not. The \texttt{plan\_\allowbreak{}fulfilled} question replaced it. In the frozen arm it was asked 234\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} times on dev + set 1 and closed 2\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} plans correctly and 1\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} wrongly.
+
+\textbf{Belief v3.} On the same data, v3 ignored 36\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} weak answers on dev + set 1 and 39\src{bench/results/e4\_belief\_v3\_\_dev\_updates2\_\_k3\_\_noanswer.json} with set 2 added. It closed the same four facts as v2 on dev + set 1. One of them, D2:5, crossed the close line at a different message (U:S01 rather than U:E11). Since that pair is not labeled, the audit scores v3 at 2\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} matching and 2\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} not matching, against v2's 3\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} and 1\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json}. Stale and over-close counts are unchanged. v3 targets the weak-support failure that closed true facts under Laya (\S{}5.6).
+
+\textbf{Hygiene.} One pass cost \$0.0015\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} on dev + set 1 (235\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} decisions). On the held-out conversations it cost \$0.0112\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-30\_\_k3.json}, \$0.0254\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-41\_\_k3.json}, \$0.0332\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-42\_\_k3.json} and \$0.0323\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-43\_\_k3.json}, making 9\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-30\_\_k3.json}, 23\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-41\_\_k3.json}, 32\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-42\_\_k3.json} and 24\src{bench/results/e4\_belief\_v2\_\_heldout\_conv-43\_\_k3.json} links.
+
+\subsection{Calibration}
+\textbf{Contradiction regression.} We wrote 50\src{bench/results/tradeoff.json} contradiction pairs, each an old fact, a new fact and a message, labeled with accepted relations and a temporal status (\texttt{bench/contradiction\_\allowbreak{}pairs.jsonl}). Under the current question versions:
+
+\begin{itemize}
+\item Jev's relation choice is in the accepted set for 90.0\%\src{bench/results/jev\_regression\_v2.json} of pairs (easy 100.0\%\src{bench/results/jev\_regression\_v2.json}, medium 93.3\%\src{bench/results/jev\_regression\_v2.json}, subtle 73.3\%\src{bench/results/jev\_regression\_v2.json}).
+\item Its temporal status is right for 94.0\%\src{bench/results/jev\_regression\_v2.json}.
+\item The write path's close rule is right for 76.0\%\src{bench/results/jev\_regression\_v2.json}, with 0\src{bench/results/jev\_regression\_v2.json} false closes.
+\item Its mean top probability is 0.88\src{bench/results/jev\_regression\_v2.json} when right and 0.81\src{bench/results/jev\_regression\_v2.json} when wrong.
+\end{itemize}
+\textbf{Calibration error.} We measure expected calibration error (ECE) on two label sets:
+
+\begin{itemize}
+\item 29\src{bench/results/calibration.json} escalation labels, where Sonnet decided a relation Jev was unsure of
+\item the 50\src{bench/results/tradeoff.json} gold pairs
+\end{itemize}
+On the gold pairs Jev's relation ECE is 0.14\src{bench/results/calibration.json} (fitted $T$ = 1.48\src{bench/results/calibration.json}) and its temporal ECE is 0.04\src{bench/results/calibration.json}. On the escalation labels, which are by construction the cases Jev was unsure of, relation ECE is 0.15\src{bench/results/calibration.json}. Table~\ref{tab:7} has the full comparison, with Laya.
+
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Calibration. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last column is out of sample (2-fold). Relation probabilities fold \texttt{negates} into \texttt{contradiction}, since the pairs predate \texttt{negates}.}\label{tab:7}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{labels} & \textbf{question} & \textbf{backend} & \textbf{n} & \textbf{top-1 acc.} & \textbf{mean conf.} & \textbf{ECE} & \textbf{fitted T} & \textbf{ECE at T} \\
+\midrule
+escalation & relation & jev & 29\src{bench/results/calibration.json} & 79.3\%\src{bench/results/calibration.json} & 0.92\src{bench/results/calibration.json} & 0.15\src{bench/results/calibration.json} & 2.51\src{bench/results/calibration.json} & 0.10\src{bench/results/calibration.json} \\
+escalation & relation & laya & 29\src{bench/results/calibration.json} & 10.3\%\src{bench/results/calibration.json} & 0.47\src{bench/results/calibration.json} & 0.37\src{bench/results/calibration.json} & 5.41\src{bench/results/calibration.json} & 0.12\src{bench/results/calibration.json} \\
+gold pairs & relation & jev & 50\src{bench/results/calibration.json} & 82.0\%\src{bench/results/calibration.json} & 0.87\src{bench/results/calibration.json} & 0.14\src{bench/results/calibration.json} & 1.48\src{bench/results/calibration.json} & 0.14\src{bench/results/calibration.json} \\
+gold pairs & relation & laya & 50\src{bench/results/calibration.json} & 28.0\%\src{bench/results/calibration.json} & 0.47\src{bench/results/calibration.json} & 0.20\src{bench/results/calibration.json} & 4.22\src{bench/results/calibration.json} & 0.02\src{bench/results/calibration.json} \\
+gold pairs & temporal status & jev & 50\src{bench/results/calibration.json} & 94.0\%\src{bench/results/calibration.json} & 0.95\src{bench/results/calibration.json} & 0.04\src{bench/results/calibration.json} & 1.13\src{bench/results/calibration.json} & 0.04\src{bench/results/calibration.json} \\
+gold pairs & temporal status & laya & 50\src{bench/results/calibration.json} & 76.0\%\src{bench/results/calibration.json} & 0.72\src{bench/results/calibration.json} & 0.06\src{bench/results/calibration.json} & 0.74\src{bench/results/calibration.json} & 0.07\src{bench/results/calibration.json} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+\begin{figure*}[tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/calibration.pdf}
+\caption{reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.}\label{fig:3}
+\end{figure*}
+\textbf{Cost/error tradeoff.} The 29\src{bench/results/calibration.json} escalation labels are too few for a curve, so Figure~\ref{fig:4} uses the 50\src{bench/results/tradeoff.json} gold pairs.
+
+\begin{itemize}
+\item $c_J$ = \$0.000016\src{bench/results/tradeoff.json} is the mean Jev cost of one relation decision over 36,429\src{bench/results/tradeoff.json} held-out decisions.
+\item $c_L$ = \$0.0073\src{bench/results/tradeoff.json} is the mean cost of one escalation over 148\src{bench/results/tradeoff.json} logged escalations.
+\item No LLM run on the gold pairs is saved, so $\varepsilon_L$ is an assumption, plotted at 0 and 0.1.
+\end{itemize}
+With Jev alone the error is 10.0\%\src{bench/results/tradeoff.json}. At $\theta$ = 0.85, 32.0\%\src{bench/results/tradeoff.json} of decisions escalate, the cost is \$0.002368\src{bench/results/tradeoff.json} per decision, and $E$ is 6.0\%\src{bench/results/tradeoff.json} ($\varepsilon_L$ = 0) or 9.2\%\src{bench/results/tradeoff.json} ($\varepsilon_L$ = 0.1). At the production threshold of 0.60\src{src/engram/config.py}, 8.0\%\src{bench/results/tradeoff.json} escalate and $E$ is 10.0\%\src{bench/results/tradeoff.json} or 10.8\%\src{bench/results/tradeoff.json}.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/tradeoff.pdf}
+\caption{$C(\theta)$ and $E(\theta)$ on the 50\src{bench/results/tradeoff.json} gold pairs. $\varepsilon_L$ is assumed, not measured; the 29\src{bench/results/calibration.json} escalation labels were too few for a curve.}\label{fig:4}
+\end{figure}
+\subsection{Negative result: closing stale facts does not change answers}
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Update sets on the dev slice (conv-26 sessions 1--4 plus the update messages). Set 1 has 30\src{bench/updates\_conv26.json} update questions and set 2 has 20\src{bench/updates2\_conv26.json}. Stale counts are close items whose old fact is still active, over close items stored. Accuracy is at default k (all retrieved memories) unless marked. Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6.}\label{tab:8}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{arm} & \textbf{set-1 stale} & \textbf{set-2 stale} & \textbf{set-1 acc.} & \textbf{set-2 acc.} & \textbf{set-1 acc. k=3} & \textbf{set-1 acc. no dates} \\
+\midrule
+mem0 (add-only) & 18/18\src{bench/results/mem0\_\_dev\_updates.json} & 16/16\src{bench/results/mem0\_\_dev\_updates2.json} & 29/30\src{bench/results/mem0\_\_dev\_updates.json} & 20/20\src{bench/results/mem0\_\_dev\_updates2.json} & 25/30\src{bench/results/mem0\_\_dev\_updates\_\_k3.json} & 29/30\src{bench/results/mem0\_\_dev\_updates\_\_nodates.json} \\
+E2: Jev, replace-on-update & 10/18\src{bench/results/e2\_jev\_v2\_\_dev\_updates.json} & 15/16\src{bench/results/e2\_jev\_v2\_\_dev\_updates2.json} & 30/30\src{bench/results/e2\_jev\_v2\_\_dev\_updates.json} & 19/20\src{bench/results/e2\_jev\_v2\_\_dev\_updates2.json} & 30/30\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json} & 30/30\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_nodates.json} \\
+E4: belief v1 & 17/18\src{bench/results/e4\_belief\_\_dev\_updates.json} & 15/16\src{bench/results/e4\_belief\_\_dev\_updates2.json} & 30/30\src{bench/results/e4\_belief\_\_dev\_updates.json} & 19/20\src{bench/results/e4\_belief\_\_dev\_updates2.json} & 30/30\src{bench/results/e4\_belief\_\_dev\_updates\_\_k3.json} & 29/30\src{bench/results/e4\_belief\_\_dev\_updates\_\_nodates.json} \\
+E4: belief v2 (frozen) & 14/18\src{bench/results/e4\_belief\_v2\_full\_\_dev\_updates.json} & 10/16\src{bench/results/e4\_belief\_v2\_full\_\_dev\_updates2.json} & 30/30\src{bench/results/e4\_belief\_v2\_full\_\_dev\_updates.json} & 20/20\src{bench/results/e4\_belief\_v2\_full\_\_dev\_updates2.json} & 30/30\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & not run \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+mem0 never closes anything and leaves every set-1 close item stale (18/18\src{bench/results/mem0\_\_dev\_updates.json}), yet answers 29/30\src{bench/results/mem0\_\_dev\_updates.json} set-1 questions at default k. The arm that closes most aggressively leaves 10/18\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json} stale and answers 30/30\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json}.
+
+The answer model resolves recency itself: extraction writes dates into the memory text, and the compact rendering adds the date each fact was said. Removing all dates, validity and source from the answer context (no-dates column) still leaves every arm we ran that way at 29/30\src{bench/results/mem0\_\_dev\_updates\_\_nodates.json} or higher on set 1. Only the k=3 budget separates the systems (25/30\src{bench/results/mem0\_\_dev\_updates\_\_k3.json} for mem0, 30/30\src{bench/results/e2\_jev\_v2\_\_dev\_updates\_\_k3.json} for engram), and \S{}5.2 attributes that to ranking, not to closes.
+
+Set 2, which asks about chains of changes and past moments, is at its ceiling for every arm. Current LoCoMo-style questions do not reward a correct store.
+
+\subsection{Negative result: Laya, base checkpoint, zero-shot}
+Everything in this section concerns the 421M\src{convai2026laya (model card)} base checkpoint, used zero-shot as its documentation advises against \citep{convai2026laya}. The checkpoint fine-tuned for typed decisions (reported at 0.766\src{convai2026laya (laya-typed-decisions, fine-tuned)} on its own benchmark) and fine-tuning on our escalation labels were not tested; they are the obvious follow-up.
+
+\textbf{Regression and calibration.} On the 50\src{bench/results/tradeoff.json} regression pairs (Table~\ref{tab:9}), Laya chooses an accepted relation for 48.0\%\src{bench/results/laya\_regression\_jev\_wording.json} with Jev's question wording and 38.0\%\src{bench/results/laya\_regression\_native.json} with wording rewritten to fit its 192\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json}-token question budget. Jev scores 90.0\%\src{bench/results/jev\_regression\_v2.json}. Laya never reaches the action threshold, so it closes nothing. Its gold-pair relation accuracy is 28.0\%\src{bench/results/calibration.json} (Table~\ref{tab:7}). A temperature lowers its ECE but not its accuracy.
+
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Contradiction regression, 50\src{bench/results/tradeoff.json} pairs, relation\_to\_candidate and temporal\_status in one request. Laya: convaiinnovations/laya\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} base checkpoint, zero-shot, fp16, on the local MLX server.}\label{tab:9}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{backend} & \textbf{relation exact} & \textbf{temporal} & \textbf{close rule} & \textbf{closes} & \textbf{false closes} \\
+\midrule
+Jev (jev-1.13.0) & 90.0\%\src{bench/results/jev\_regression\_v2.json} & 94.0\%\src{bench/results/jev\_regression\_v2.json} & 76.0\%\src{bench/results/jev\_regression\_v2.json} & 22\src{bench/results/jev\_regression\_v2.json} & 0\src{bench/results/jev\_regression\_v2.json} \\
+Laya, Jev wording (truncated) & 48.0\%\src{bench/results/laya\_regression\_jev\_wording.json} & 76.0\%\src{bench/results/laya\_regression\_jev\_wording.json} & 32.0\%\src{bench/results/laya\_regression\_jev\_wording.json} & 0\src{bench/results/laya\_regression\_jev\_wording.json} & 0\src{bench/results/laya\_regression\_jev\_wording.json} \\
+Laya, native wording (fits) & 38.0\%\src{bench/results/laya\_regression\_native.json} & 76.0\%\src{bench/results/laya\_regression\_native.json} & 32.0\%\src{bench/results/laya\_regression\_native.json} & 0\src{bench/results/laya\_regression\_native.json} & 0\src{bench/results/laya\_regression\_native.json} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+\textbf{Agreement with Jev.} With the frozen Jev arm replayed from cache and Laya answering every request on the side, the two gave the same answer on 44.8\%\src{bench/results/laya\_agreement.json} of 6,764\src{bench/results/laya\_agreement.json} decisions and the same action at the 0.85\src{src/engram/config.py} threshold on 31.2\%\src{bench/results/laya\_agreement.json}. On \texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} they agreed on 5.9\%\src{bench/results/laya\_agreement.json} (Table~\ref{tab:10}).
+
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory. Same action: both choose the same label at p $\geq$ 0.85\src{src/engram/config.py}, or neither reaches it. Acts: share of decisions at p $\geq$ 0.85\src{src/engram/config.py}.}\label{tab:10}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{question} & \textbf{n} & \textbf{same answer} & \textbf{same action} & \textbf{Jev acts} & \textbf{Laya acts} \\
+\midrule
+\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} & 2,779\src{bench/results/laya\_agreement.json} & 5.9\%\src{bench/results/laya\_agreement.json} & 18.5\%\src{bench/results/laya\_agreement.json} & 79.9\%\src{bench/results/laya\_agreement.json} & 6.4\%\src{bench/results/laya\_agreement.json} \\
+\texttt{relevant\_\allowbreak{}to\_\allowbreak{}query} & 1,440\src{bench/results/laya\_agreement.json} & 93.5\%\src{bench/results/laya\_agreement.json} & 38.9\%\src{bench/results/laya\_agreement.json} & 89.7\%\src{bench/results/laya\_agreement.json} & 31.3\%\src{bench/results/laya\_agreement.json} \\
+\texttt{same\_\allowbreak{}fact} & 585\src{bench/results/laya\_agreement.json} & 72.6\%\src{bench/results/laya\_agreement.json} & 35.2\%\src{bench/results/laya\_agreement.json} & 96.2\%\src{bench/results/laya\_agreement.json} & 34.4\%\src{bench/results/laya\_agreement.json} \\
+\texttt{plan\_\allowbreak{}fulfilled} & 522\src{bench/results/laya\_agreement.json} & 66.5\%\src{bench/results/laya\_agreement.json} & 16.1\%\src{bench/results/laya\_agreement.json} & 90.0\%\src{bench/results/laya\_agreement.json} & 32.6\%\src{bench/results/laya\_agreement.json} \\
+\texttt{worth\_\allowbreak{}remembering} & 226\src{bench/results/laya\_agreement.json} & 53.5\%\src{bench/results/laya\_agreement.json} & 77.0\%\src{bench/results/laya\_agreement.json} & 18.1\%\src{bench/results/laya\_agreement.json} & 4.9\%\src{bench/results/laya\_agreement.json} \\
+\texttt{fact\_\allowbreak{}kind} & 226\src{bench/results/laya\_agreement.json} & 41.6\%\src{bench/results/laya\_agreement.json} & 38.1\%\src{bench/results/laya\_agreement.json} & 63.7\%\src{bench/results/laya\_agreement.json} & 15.5\%\src{bench/results/laya\_agreement.json} \\
+\texttt{temporal\_\allowbreak{}status} & 226\src{bench/results/laya\_agreement.json} & 66.8\%\src{bench/results/laya\_agreement.json} & 42.5\%\src{bench/results/laya\_agreement.json} & 62.8\%\src{bench/results/laya\_agreement.json} & 5.3\%\src{bench/results/laya\_agreement.json} \\
+\texttt{edge\_\allowbreak{}type} & 226\src{bench/results/laya\_agreement.json} & 41.6\%\src{bench/results/laya\_agreement.json} & 50.9\%\src{bench/results/laya\_agreement.json} & 29.2\%\src{bench/results/laya\_agreement.json} & 55.3\%\src{bench/results/laya\_agreement.json} \\
+\texttt{durability} & 226\src{bench/results/laya\_agreement.json} & 43.8\%\src{bench/results/laya\_agreement.json} & 47.3\%\src{bench/results/laya\_agreement.json} & 52.7\%\src{bench/results/laya\_agreement.json} & 0.0\%\src{bench/results/laya\_agreement.json} \\
+\texttt{sensitivity} & 226\src{bench/results/laya\_agreement.json} & 66.4\%\src{bench/results/laya\_agreement.json} & 57.5\%\src{bench/results/laya\_agreement.json} & 45.1\%\src{bench/results/laya\_agreement.json} & 7.1\%\src{bench/results/laya\_agreement.json} \\
+\texttt{query\_\allowbreak{}relation} & 48\src{bench/results/laya\_agreement.json} & 54.2\%\src{bench/results/laya\_agreement.json} & 47.9\%\src{bench/results/laya\_agreement.json} & 39.6\%\src{bench/results/laya\_agreement.json} & 75.0\%\src{bench/results/laya\_agreement.json} \\
+\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck} & 34\src{bench/results/laya\_agreement.json} & 29.4\%\src{bench/results/laya\_agreement.json} & 41.2\%\src{bench/results/laya\_agreement.json} & 35.3\%\src{bench/results/laya\_agreement.json} & 26.5\%\src{bench/results/laya\_agreement.json} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+\textbf{Laya deciding every question.} On dev + set 1 at k=3 it scored 24/35\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} LoCoMo and 26/30\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} update questions. Jev scored 29/35\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k3.json} and 30/30\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k3.json}. It made 23\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} closes, of which 23\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} match no labeled pair, and left 43\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} of 66\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} facts active. Most of these closes came from weak \texttt{duplicate} and \texttt{refinement} answers below 0.5 lowering belief, the failure belief v3 removes (\S{}3.4).
+
+\textbf{Hybrid.} Laya answered the two high-volume yes/no questions (\texttt{relevant\_\allowbreak{}to\_\allowbreak{}query}, \texttt{same\_\allowbreak{}fact}) and Jev the rest.
+
+\begin{itemize}
+\item Agreement on the routed questions: same answer 86.9\%\src{bench/results/hybrid\_report.json}, same action 34.1\%\src{bench/results/hybrid\_report.json}.
+\item Writes were identical to the all-Jev arm. At k=3 only 51.8\%\src{bench/results/hybrid\_report.json} of Jev's top-3 lines survived.
+\item It saved 42.6\%\src{bench/results/hybrid\_report.json} of Jev's cost on dev + set 1 (\$0.025\src{bench/results/hybrid\_report.json} per run).
+\item Table~\ref{tab:11} has accuracy.
+\end{itemize}
+\begin{table}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Hybrid against all-Jev: dev slice with update sets, extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6.}\label{tab:11}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{questions} & \textbf{all-Jev k=3} & \textbf{hybrid k=3} & \textbf{all-Jev k=20} & \textbf{hybrid k=20} \\
+\midrule
+update set 1 & 30/30\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k3.json} & 27/30\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates\_\_k3.json} & 30/30\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k20.json} & 30/30\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates\_\_k20.json} \\
+LoCoMo dev & 29/35\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k3.json} & 29/35\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates\_\_k3.json} & 31/35\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k20.json} & 31/35\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates\_\_k20.json} \\
+update set 2 & 19/20\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_\_k3.json} & 17/20\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates2\_\_k3.json} & 20/20\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_\_k20.json} & 20/20\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates2\_\_k20.json} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\subsection{Systems notes}
+\textbf{Jev latency is flat in request size.} Across 9,446\src{bench/results/jev\_latency.json} live Jev requests from 25\src{bench/results/jev\_latency.json} runs, median latency is between 222 ms\src{bench/results/jev\_latency.json} and 269 ms\src{bench/results/jev\_latency.json} for requests of 1 to 50 questions, and 371 ms\src{bench/results/jev\_latency.json} for 51--80. A least-squares fit gives 380 ms\src{bench/results/jev\_latency.json} plus 7.19\src{bench/results/jev\_latency.json} ms per question.
+
+Variation over time is larger than variation over size. For requests of 16--20 questions, the per-run median was between 212 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests} and 267 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests} in 12\src{bench/results/jev\_latency.json: runs with ≥30 16–20-question requests, excluding conv-30 and conv-41} runs, and 793 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests} and 607 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests} in the two held-out runs made during one slower period.
+
+\begin{table}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Jev latency by request size, from the decision logs (\texttt{bench/results/jev\_\allowbreak{}latency.json}). Client-measured, after the rate limiter, retries included.}\label{tab:12}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{questions / request} & \textbf{requests} & \textbf{median input tokens} & \textbf{median latency} & \textbf{p90 latency} \\
+\midrule
+1 & 1,305\src{bench/results/jev\_latency.json} & 564\src{bench/results/jev\_latency.json} & 229 ms\src{bench/results/jev\_latency.json} & 1,052 ms\src{bench/results/jev\_latency.json} \\
+2--3 & 1,054\src{bench/results/jev\_latency.json} & 870\src{bench/results/jev\_latency.json} & 248 ms\src{bench/results/jev\_latency.json} & 1,176 ms\src{bench/results/jev\_latency.json} \\
+4--6 & 775\src{bench/results/jev\_latency.json} & 1,562\src{bench/results/jev\_latency.json} & 231 ms\src{bench/results/jev\_latency.json} & 992 ms\src{bench/results/jev\_latency.json} \\
+7--10 & 1,417\src{bench/results/jev\_latency.json} & 4,314\src{bench/results/jev\_latency.json} & 246 ms\src{bench/results/jev\_latency.json} & 967 ms\src{bench/results/jev\_latency.json} \\
+11--15 & 227\src{bench/results/jev\_latency.json} & 2,432\src{bench/results/jev\_latency.json} & 231 ms\src{bench/results/jev\_latency.json} & 680 ms\src{bench/results/jev\_latency.json} \\
+16--20 & 3,240\src{bench/results/jev\_latency.json} & 5,593\src{bench/results/jev\_latency.json} & 255 ms\src{bench/results/jev\_latency.json} & 1,009 ms\src{bench/results/jev\_latency.json} \\
+21--30 & 184\src{bench/results/jev\_latency.json} & 3,551\src{bench/results/jev\_latency.json} & 222 ms\src{bench/results/jev\_latency.json} & 312 ms\src{bench/results/jev\_latency.json} \\
+31--50 & 505\src{bench/results/jev\_latency.json} & 6,903\src{bench/results/jev\_latency.json} & 269 ms\src{bench/results/jev\_latency.json} & 472 ms\src{bench/results/jev\_latency.json} \\
+51--80 & 739\src{bench/results/jev\_latency.json} & 9,187\src{bench/results/jev\_latency.json} & 371 ms\src{bench/results/jev\_latency.json} & 2,290 ms\src{bench/results/jev\_latency.json} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/latency.pdf}
+\caption{Jev request latency: distribution over all logged requests, and median and p90 by request size.}\label{fig:5}
+\end{figure}
+\textbf{Extraction dominates write cost.} On the held-out set, engram's write cost is \$10.22\src{bench/results/heldout\_report.json} to \$10.55\src{bench/results/heldout\_report.json} per 1,000 messages and mem0's is \$9.92\src{bench/results/heldout\_report.json} to \$10.16\src{bench/results/heldout\_report.json}. The decision layer is 3.3\%\src{bench/results/heldout\_report.json: decision $/1k ÷ write $/1k} to 4.8\%\src{bench/results/heldout\_report.json: decision $/1k ÷ write $/1k} of engram's (Table~\ref{tab:13}).
+
+\begin{table*}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{Held-out write side. One ingestion per system per conversation. Decision layer = Jev plus escalations.}\label{tab:13}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{conv.} & \textbf{engram \$/1k} & \textbf{decision \$/1k} & \textbf{mem0 \$/1k} & \textbf{decision p50} & \textbf{engram write p50} & \textbf{mem0 write p50} & \textbf{engram facts} & \textbf{mem0 memories} \\
+\midrule
+conv-30 & \$10.22\src{bench/results/heldout\_report.json} & \$0.33\src{bench/results/heldout\_report.json} & \$9.92\src{bench/results/heldout\_report.json} & 1,982 ms\src{bench/results/heldout\_report.json} & 928 ms\src{bench/results/heldout\_report.json} & 1,034 ms\src{bench/results/heldout\_report.json} & 267\src{bench/results/heldout\_report.json} & 276\src{bench/results/heldout\_report.json} \\
+conv-41 & \$10.54\src{bench/results/heldout\_report.json} & \$0.47\src{bench/results/heldout\_report.json} & \$10.16\src{bench/results/heldout\_report.json} & 1,614 ms\src{bench/results/heldout\_report.json} & 1,775 ms\src{bench/results/heldout\_report.json} & 1,437 ms\src{bench/results/heldout\_report.json} & 668\src{bench/results/heldout\_report.json} & 822\src{bench/results/heldout\_report.json} \\
+conv-42 & \$10.55\src{bench/results/heldout\_report.json} & \$0.50\src{bench/results/heldout\_report.json} & \$10.04\src{bench/results/heldout\_report.json} & 981 ms\src{bench/results/heldout\_report.json} & 1,824 ms\src{bench/results/heldout\_report.json} & 1,300 ms\src{bench/results/heldout\_report.json} & 708\src{bench/results/heldout\_report.json} & 695\src{bench/results/heldout\_report.json} \\
+conv-43 & \$10.45\src{bench/results/heldout\_report.json} & \$0.50\src{bench/results/heldout\_report.json} & \$9.96\src{bench/results/heldout\_report.json} & 868 ms\src{bench/results/heldout\_report.json} & 1,819 ms\src{bench/results/heldout\_report.json} & 1,210 ms\src{bench/results/heldout\_report.json} & 628\src{bench/results/heldout\_report.json} & 636\src{bench/results/heldout\_report.json} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+\section{Discussion}
+\textbf{What the decision layer buys.}
+
+\begin{itemize}
+\item Cost and latency (\S{}5.1).
+\item An audit trail: every decision has probabilities and a version.
+\item Store operations that are reversible and gated (\S{}5.3).
+\item A price at which re-examining the store is routine (\S{}3.5).
+\end{itemize}
+\textbf{What it does not buy.}
+
+\begin{itemize}
+\item Accuracy at default k: it ties (\S{}5.1).
+\item Update-question accuracy on today's questions: every arm is near its ceiling (\S{}5.5).
+\end{itemize}
+\textbf{Benchmarks do not see storage correctness.} A question about a fact that changed is answerable from a store that kept both versions, as long as the memories carry dates. An evaluation that rewards a correct store would need:
+
+\begin{itemize}
+\item questions scored against validity windows
+\item small retrieval budgets, where a stale fact displaces a current one
+\item memories stored without dates
+\item long chains of changes
+\end{itemize}
+Our set 2 was a first attempt, and it hit the ceiling for every arm.
+
+\textbf{Rerank or larger k.} Under a three-memory budget, a cheap listwise rerank is worth +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points over mem0 at matched tokens. At k=20 the ranking stops mattering. For deployments that pay per context token, reranking is the cheaper route to the same accuracy.
+
+\textbf{Threats to validity.}
+
+\begin{itemize}
+\item \emph{One baseline and one benchmark.} We compare only mem0 OSS 2.1.0, on four held-out LoCoMo conversations.
+\item \emph{Author-written update sets.} The update sets and the regression pairs were written and labeled by the system's author.
+\item \emph{One decision model.} Jev is the only decision model evaluated as the deciding backend, at one version. Laya was tested only as a zero-shot base checkpoint.
+\item \emph{mem0's date handling.} mem0's open-source path gives no observation date, so relative dates resolve against the run date. We kept this as shipped. A variant with the session date patched in scored 31/35\src{bench/results/mem0\_dated\_\_dev.json} on dev, against 30/35\src{bench/results/mem0\_\_dev.json} unpatched, within noise.
+\item \emph{Dev-only rerank attribution.} The rerank attribution in \S{}5.2 rests on a dev ablation.
+\item \emph{One judge model.} The judge is an LLM (claude-sonnet-4-6). We did not measure its agreement with human labels.
+\end{itemize}
+\section{Related work}
+\textbf{Memory systems.} mem0 \citep{chhikara2025mem0} extracts and consolidates facts with LLM calls; its 2.x open-source default is add-only. Zep/Graphiti \citep{rasmussen2025zep} builds a temporal knowledge graph and invalidates edges with an LLM. MemGPT/Letta \citep{packer2023memgpt} manages memory tiers through LLM function calls. A-MEM \citep{xu2025amem} links notes with LLM-written attributes, and MAGMA \citep{jiang2026magma} organizes memory as multiple graphs. ByteRover \citep{nguyen2026byterover} resolves most queries through a five-tier progressive retrieval, in under 100\src{nguyen2026byterover (sub-100 ms tier resolution)} ms and without LLM calls, and escalates to agentic reasoning only for novel questions.
+
+\textbf{Typed decisions in memory.} Jev-Mem \citep{jiang2026jevmem} is the closest design: Jev controls typing, relation construction, query routing, budget allocation, traversal, candidate scoring and stopping. The two designs differ in the store and in retrieval. Jev-Mem runs with admission filtering off and preserves every observation, so its store is never updated or closed; engram's store is governed by a close/belief policy with reversible closes and merges (\S{}3.3--3.4). Jev-Mem routes queries across multiple views; engram uses a single listwise rerank over cosine candidates plus a query-relation pull (\S{}3.1). The AtMem--Jev article \citep{taghia2026atmem} measured the rerank at the ranking level (Recall@10 unchanged; median batch latency 3.32\src{taghia2026atmem (median batch latency, s)} s) and reported no answer accuracy or intervals.
+
+\textbf{Benchmarks.} LoCoMo \citep{maharana2024locomo} and LongMemEval \citep{wu2025longmemeval} evaluate long-term conversational memory. We used only LoCoMo.
+
+\textbf{Reranking and context.} Long contexts are used poorly by language models \citep{liu2024lost}, and LLMs rerank candidates well \citep{sun2023rankgpt}; spending compute on selecting context rather than adding more of it follows from both, and our rerank result is an instance.
+
+\textbf{Small models as decision layers.} Routers send queries to cheaper models \citep{ong2025routellm,chen2024frugalgpt}, and small classifiers act as guardrails \citep{inan2023llamaguard}. The escalation rule of \S{}3.6 is a router of that kind.
+
+\textbf{Calibration and thresholds.} Temperature scaling \citep{guo2017calibration} and conformal prediction \citep{angelopoulos2021conformal} give principled thresholds for acting on a model's probability. \S{}3.4 depends on the former.
+
+\section{Conclusion}
+With extraction held identical, typed decisions replaced an LLM decision layer at 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower cost and 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower median decision latency, with no measured accuracy loss. On 610\src{bench/results/heldout\_report.json} held-out questions, a cheap listwise rerank gave +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points over mem0 at matched context under a three-memory budget, and the systems tied at k=20. Closing stale facts, the part of the design aimed at correctness, did not change answers on current benchmarks. The base checkpoint of a small open-weights decision model, used zero-shot, did not make the relational decisions.
+
+\textbf{Release.} [REPO URL PLACEHOLDER] contains:
+
+\begin{itemize}
+\item engram's code (MIT license)
+\item mem0's prompts as used (Apache-2.0, with attribution)
+\item the update sets and regression pairs
+\item every per-question result file in \texttt{bench/results/}
+\item the call cache needed to reproduce each table without API spend
+\end{itemize}
+\bibliographystyle{plainnat}
+\bibliography{references}
+\clearpage
+\appendix
+\section{Jev questions, all versions}
+Generated from \texttt{src/engram/decide/questions.py}.
+
+\paragraph{\texttt{durability} (version 1, choice)}
+Instructions: How long will \texttt{new\_\allowbreak{}fact} likely stay true?
+
+\begin{itemize}
+\item \texttt{permanent}: Essentially never changes: birthplace, family ties, allergies.
+\item \texttt{long\_\allowbreak{}term}: Stable for months or years: residence, job, diet, hobbies.
+\item \texttt{short\_\allowbreak{}lived}: True for days or weeks: current mood, this week's plans, a temporary situation.
+\end{itemize}
+\paragraph{\texttt{edge\_\allowbreak{}type} (version 1, choice)}
+Instructions: Which relation best describes how \texttt{new\_\allowbreak{}fact.subject} relates to \texttt{new\_\allowbreak{}fact.object}?
+
+\begin{itemize}
+\item \texttt{lives\_\allowbreak{}in}: Current or past place of residence.
+\item \texttt{born\_\allowbreak{}in}: Place of birth or origin.
+\item \texttt{works\_\allowbreak{}at}: Employer or workplace.
+\item \texttt{has\_\allowbreak{}role}: Job title, profession, or role.
+\item \texttt{studies\_\allowbreak{}at}: School, university, or course of study.
+\item \texttt{member\_\allowbreak{}of}: A club, team, community, or group.
+\item \texttt{married\_\allowbreak{}to}: Spouse.
+\item \texttt{partner\_\allowbreak{}of}: Romantic partner who is not a spouse.
+\item \texttt{family\_\allowbreak{}of}: Parent, child, sibling, or other relative.
+\item \texttt{friend\_\allowbreak{}of}: Friend.
+\item \texttt{colleague\_\allowbreak{}of}: Coworker, manager, or report.
+\item \texttt{owns}: Possesses an object, pet, vehicle, or property.
+\item \texttt{uses}: Uses a tool, product, app, or service.
+\item \texttt{prefers}: Likes or favors something.
+\item \texttt{dislikes}: Dislikes or avoids something.
+\item \texttt{allergic\_\allowbreak{}to}: Allergy or intolerance.
+\item \texttt{has\_\allowbreak{}condition}: Health condition, injury, or medication.
+\item \texttt{follows\_\allowbreak{}diet}: Dietary pattern (vegetarian, keto, halal, ...).
+\item \texttt{hobby}: A leisure activity.
+\item \texttt{habit}: A recurring routine.
+\item \texttt{goal}: Something the subject aims to achieve.
+\item \texttt{plans}: A scheduled or intended future action or event.
+\item \texttt{attended}: A past event, trip, or visit.
+\item \texttt{speaks}: A language.
+\item \texttt{related\_\allowbreak{}to}: Fallback: none of the above fits.
+\end{itemize}
+\paragraph{\texttt{fact\_\allowbreak{}kind} (version 1, choice)}
+Instructions: What kind of personal fact is \texttt{new\_\allowbreak{}fact}?
+
+\begin{itemize}
+\item \texttt{preference}: A like, dislike, or taste (food, music, style, tools).
+\item \texttt{bio}: A stable attribute of a person: where they live, age, origin, job, education, languages.
+\item \texttt{event}: Something that happened or will happen at a specific time.
+\item \texttt{relationship}: A connection between two people or between a person and an organization.
+\item \texttt{task}: Something the user intends or needs to do: a goal, a to-do, a plan.
+\item \texttt{opinion}: A belief or judgment about something, not a personal taste.
+\end{itemize}
+\paragraph{\texttt{plan\_\allowbreak{}fulfilled} (version 1, noul)}
+Instructions: Does the new fact report that the plan in \texttt{existing\_\allowbreak{}fact} has now happened?
+
+\begin{itemize}
+\item true: \texttt{new\_\allowbreak{}fact} says the planned or intended thing in \texttt{existing\_\allowbreak{}fact} actually took place or was achieved.
+\item false: \texttt{new\_\allowbreak{}fact} is about something else, only mentions the plan again, adds detail, or reports progress without the plan itself having happened.
+\end{itemize}
+\paragraph{\texttt{query\_\allowbreak{}relation} (version 1, choice)}
+Instructions: Which relation about a person is \texttt{query} asking about?
+
+\begin{itemize}
+\item \texttt{lives\_\allowbreak{}in}: Current or past place of residence.
+\item \texttt{born\_\allowbreak{}in}: Place of birth or origin.
+\item \texttt{works\_\allowbreak{}at}: Employer or workplace.
+\item \texttt{has\_\allowbreak{}role}: Job title, profession, or role.
+\item \texttt{studies\_\allowbreak{}at}: School, university, or course of study.
+\item \texttt{member\_\allowbreak{}of}: A club, team, community, or group.
+\item \texttt{married\_\allowbreak{}to}: Spouse.
+\item \texttt{partner\_\allowbreak{}of}: Romantic partner who is not a spouse.
+\item \texttt{family\_\allowbreak{}of}: Parent, child, sibling, or other relative.
+\item \texttt{friend\_\allowbreak{}of}: Friend.
+\item \texttt{colleague\_\allowbreak{}of}: Coworker, manager, or report.
+\item \texttt{owns}: Possesses an object, pet, vehicle, or property.
+\item \texttt{uses}: Uses a tool, product, app, or service.
+\item \texttt{prefers}: Likes or favors something.
+\item \texttt{dislikes}: Dislikes or avoids something.
+\item \texttt{allergic\_\allowbreak{}to}: Allergy or intolerance.
+\item \texttt{has\_\allowbreak{}condition}: Health condition, injury, or medication.
+\item \texttt{follows\_\allowbreak{}diet}: Dietary pattern (vegetarian, keto, halal, ...).
+\item \texttt{hobby}: A leisure activity.
+\item \texttt{habit}: A recurring routine.
+\item \texttt{goal}: Something the subject aims to achieve.
+\item \texttt{plans}: A scheduled or intended future action or event.
+\item \texttt{attended}: A past event, trip, or visit.
+\item \texttt{speaks}: A language.
+\item \texttt{none}: The query does not ask about one of these relations of a person (for example general knowledge).
+\end{itemize}
+\paragraph{\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} (version 1, choice)}
+Instructions: How does \texttt{new\_\allowbreak{}fact} relate to \texttt{existing\_\allowbreak{}fact}?
+
+\begin{itemize}
+\item \texttt{new}: They are about different things. Both can be true, and neither changes the other.
+\item \texttt{duplicate}: Same information, maybe worded differently. Storing \texttt{new\_\allowbreak{}fact} adds nothing.
+\item \texttt{update}: Same attribute of the same subject, and \texttt{new\_\allowbreak{}fact} gives the newer value. \texttt{existing\_\allowbreak{}fact} was true before but is no longer current (for example a move, a job change, a new phone).
+\item \texttt{contradiction}: Both cannot be true at the same time, and \texttt{new\_\allowbreak{}fact} does not describe a change over time. It directly conflicts with \texttt{existing\_\allowbreak{}fact} (for example ``is vegetarian'' vs ``favorite food is steak'').
+\item \texttt{refinement}: \texttt{new\_\allowbreak{}fact} adds detail to \texttt{existing\_\allowbreak{}fact} without making it false (for example ``lives in Berlin'' becoming ``lives in Kreuzberg, Berlin'').
+\end{itemize}
+\paragraph{\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} (version 2, choice)}
+Instructions: How does \texttt{new\_\allowbreak{}fact} relate to \texttt{existing\_\allowbreak{}fact}?
+
+\begin{itemize}
+\item \texttt{new}: They are about different things. Both can be true, and neither changes the other.
+\item \texttt{duplicate}: Same information, maybe worded differently. Storing \texttt{new\_\allowbreak{}fact} adds nothing.
+\item \texttt{update}: Same attribute of the same subject, and \texttt{new\_\allowbreak{}fact} gives the newer value. \texttt{existing\_\allowbreak{}fact} was true before but is no longer current (for example a move, a job change, a new phone).
+\item \texttt{contradiction}: Both cannot be true at the same time, and \texttt{new\_\allowbreak{}fact} does not describe a change over time. It directly conflicts with \texttt{existing\_\allowbreak{}fact} (for example ``is vegetarian'' vs ``favorite food is steak'').
+\item \texttt{refinement}: \texttt{new\_\allowbreak{}fact} adds detail to \texttt{existing\_\allowbreak{}fact} without making it false (for example ``lives in Berlin'' becoming ``lives in Kreuzberg, Berlin'').
+\item \texttt{negates}: \texttt{new\_\allowbreak{}fact} says that \texttt{existing\_\allowbreak{}fact} itself no longer holds: the same subject, relation and object, now stopped, ended, lost or undone (for example ``User goes to a support group'' vs ``User doesn't go to the support group anymore'').
+\end{itemize}
+\paragraph{\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck} (version 1, choice)}
+Instructions: Once \texttt{new\_\allowbreak{}fact} is known, what happens to \texttt{existing\_\allowbreak{}fact}?
+
+\begin{itemize}
+\item \texttt{new}: They are about different things. Both can be true, and neither changes the other.
+\item \texttt{duplicate}: Same information, maybe worded differently. Storing \texttt{new\_\allowbreak{}fact} adds nothing.
+\item \texttt{update}: Same attribute of the same subject, and \texttt{new\_\allowbreak{}fact} gives the newer value. \texttt{existing\_\allowbreak{}fact} was true before but is no longer current (for example a move, a job change, a new phone).
+\item \texttt{contradiction}: Both cannot be true at the same time, and \texttt{new\_\allowbreak{}fact} does not describe a change over time. It directly conflicts with \texttt{existing\_\allowbreak{}fact} (for example ``is vegetarian'' vs ``favorite food is steak'').
+\item \texttt{refinement}: \texttt{new\_\allowbreak{}fact} adds detail to \texttt{existing\_\allowbreak{}fact} without making it false (for example ``lives in Berlin'' becoming ``lives in Kreuzberg, Berlin'').
+\end{itemize}
+\paragraph{\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck} (version 2, choice)}
+Instructions: Once \texttt{new\_\allowbreak{}fact} is known, what happens to \texttt{existing\_\allowbreak{}fact}?
+
+\begin{itemize}
+\item \texttt{new}: They are about different things. Both can be true, and neither changes the other.
+\item \texttt{duplicate}: Same information, maybe worded differently. Storing \texttt{new\_\allowbreak{}fact} adds nothing.
+\item \texttt{update}: Same attribute of the same subject, and \texttt{new\_\allowbreak{}fact} gives the newer value. \texttt{existing\_\allowbreak{}fact} was true before but is no longer current (for example a move, a job change, a new phone).
+\item \texttt{contradiction}: Both cannot be true at the same time, and \texttt{new\_\allowbreak{}fact} does not describe a change over time. It directly conflicts with \texttt{existing\_\allowbreak{}fact} (for example ``is vegetarian'' vs ``favorite food is steak'').
+\item \texttt{refinement}: \texttt{new\_\allowbreak{}fact} adds detail to \texttt{existing\_\allowbreak{}fact} without making it false (for example ``lives in Berlin'' becoming ``lives in Kreuzberg, Berlin'').
+\item \texttt{negates}: \texttt{new\_\allowbreak{}fact} says that \texttt{existing\_\allowbreak{}fact} itself no longer holds: the same subject, relation and object, now stopped, ended, lost or undone (for example ``User goes to a support group'' vs ``User doesn't go to the support group anymore'').
+\end{itemize}
+\paragraph{\texttt{relevant\_\allowbreak{}to\_\allowbreak{}query} (version 1, noul)}
+Instructions: Does \texttt{memory} help answer \texttt{query}?
+
+\begin{itemize}
+\item true: It states or directly implies part of the answer.
+\item false: It is off-topic or only shares a keyword.
+\end{itemize}
+\paragraph{\texttt{same\_\allowbreak{}fact} (version 1, noul)}
+Instructions: Do \texttt{fact\_\allowbreak{}a} and \texttt{fact\_\allowbreak{}b} state the same information?
+
+\begin{itemize}
+\item true: Duplicate: one could be deleted without losing information.
+\item false: Distinct: each says something the other does not.
+\end{itemize}
+\paragraph{\texttt{sensitivity} (version 1, choice)}
+Instructions: Which category of sensitive personal information, if any, does \texttt{new\_\allowbreak{}fact} contain?
+
+\begin{itemize}
+\item \texttt{none}: Not sensitive.
+\item \texttt{health}: Physical or mental health, conditions, medication, allergies, disability.
+\item \texttt{financial}: Income, debt, account details, spending, salary.
+\item \texttt{relationship}: Romantic, sexual, or intimate family matters.
+\item \texttt{credentials}: Passwords, API keys, PINs, security answers, ID numbers.
+\end{itemize}
+\paragraph{\texttt{temporal\_\allowbreak{}status} (version 1, choice)}
+Instructions: According to \texttt{source\_\allowbreak{}message}, when is \texttt{new\_\allowbreak{}fact} true?
+
+\begin{itemize}
+\item \texttt{current}: True now. Includes a change that already happened and still holds (moved, graduated, got married, switched jobs).
+\item \texttt{planned}: Expected or intended to happen in the future; not true yet.
+\item \texttt{past}: Only about an earlier time: a finished event or former situation that says nothing about what is true now (a past trip, a former job, childhood).
+\item \texttt{hypothetical}: Possible, conditional, wished for, or uncertain; not stated as actually happening.
+\end{itemize}
+\paragraph{\texttt{temporal\_\allowbreak{}status} (version 2, choice)}
+Instructions: According to \texttt{source\_\allowbreak{}message}, when is \texttt{new\_\allowbreak{}fact} true?
+
+\begin{itemize}
+\item \texttt{current}: True now. Includes a change that already happened and still holds: a report that someone switched to, sold, replaced, stopped, quit, moved to, started or finished something describes the new state, which is current.
+\item \texttt{planned}: Expected or intended to happen in the future; not true yet.
+\item \texttt{past}: Only about an earlier time: a finished event or former situation that says nothing about what is true now (a past trip, a former job, childhood).
+\item \texttt{hypothetical}: Possible, conditional, wished for, or uncertain; not stated as actually happening. A report that a change happened (switched, sold, replaced, stopped, moved) is never hypothetical.
+\end{itemize}
+\paragraph{\texttt{worth\_\allowbreak{}remembering} (version 1, noul)}
+Instructions: Should a personal assistant store \texttt{new\_\allowbreak{}fact} in long-term memory about the user?
+
+\begin{itemize}
+\item true: A stable or useful personal detail: identity, relationships, preferences, plans, commitments, health, work, recurring habits, or a notable life event.
+\item false: Small talk, greetings, filler, a transient remark with no future use, or a statement about the conversation itself.
+\end{itemize}
+\onecolumn
+\section{mem0 prompts used}
+Copied from the installed mem0 2.1.0 package (Apache License 2.0, \textcopyright{} mem0.ai); pinned in \texttt{src/engram/llm/prompts\_\allowbreak{}mem0.py} and checked by \texttt{tests/test\_\allowbreak{}prompts\_\allowbreak{}mem0.py}. The answer and judge prompts are mem0's LoCoMo evaluation prompts, in \texttt{bench/locomo\_\allowbreak{}subset.py}.
+
+\paragraph{ADDITIVE\_EXTRACTION\_PROMPT (extraction, both systems): first 40 lines}
+\begin{lstlisting}
+# ROLE
+
+You are a Memory Extractor — a precise, evidence-bound processor responsible for extracting rich, contextual memories from conversations. Your sole operation is ADD: identify every piece of memorable information and produce self-contained, contextually rich factual statements.
+
+You extract from BOTH user and assistant messages. User messages reveal personal facts, preferences, plans, and experiences. Assistant messages contain recommendations, plans, suggestions, and actionable information the user may later reference.
+
+Accuracy and completeness are critical. Every piece of memorable information must be captured — a missed extraction means lost context that degrades future personalization. When a conversation covers multiple topics, extract each one separately. Do not let a dominant topic cause you to miss secondary information.
+
+# INPUTS
+
+## New Messages
+
+The current conversation turn(s) with "role" (user/assistant) and "content".
+
+Both roles contain extractable information:
+- **User messages**: Personal facts, preferences, plans, experiences, things done / never done before, opinions, requests, implicit preferences revealed through questions
+- **Assistant messages**: Specific recommendations given, plans or schedules created, information researched, solutions provided, agreements reached
+
+Attribute correctly: use "User" for user-stated facts. For assistant-generated content, frame in terms of the user's context (e.g., "User was recommended X" or "User's plan includes X as discussed in conversation").
+
+Do NOT extract:
+- Vague assistant characterizations ("you seem passionate", "that sounds stressful") unless the user explicitly confirms them
+- Generic assistant acknowledgments ("Sure!", "Great question!")
+- Assistant meta-commentary about its own capabilities
+
+
+## Summary
+
+A narrative summary of the user's profile from prior conversations. May be empty for new users. Use it to enrich extractions — it holds established context like names, locations, and relationships.
+
+
+## Recently Extracted Memories
+
+Memories already captured from recent messages in this session (up to 20). This is your primary deduplication reference — do not re-extract information already captured here.
+
+
+## Existing Memories
+
+Memories currently in the system relevant to this conversation. Formatted as:
+[{"id": "uuid-string", "text": "..."}, ...]
+\end{lstlisting}
+The remaining lines are in \texttt{src/engram/llm/prompts\_\allowbreak{}mem0.py} (\texttt{ADDITIVE\_\allowbreak{}EXTRACTION\_\allowbreak{}PROMPT}), verbatim from mem0 2.1.0.
+
+\paragraph{DEFAULT\_UPDATE\_MEMORY\_PROMPT (LLM decision layer and escalations)}
+\begin{lstlisting}
+You are a smart memory manager which controls the memory of a system.
+You can perform four operations: (1) add into the memory, (2) update the memory, (3) delete from the memory, and (4) no change.
+
+Based on the above four operations, the memory will change.
+
+Compare newly retrieved facts with the existing memory. For each new fact, decide whether to:
+- ADD: Add it to the memory as a new element
+- UPDATE: Update an existing memory element
+- DELETE: Delete an existing memory element
+- NONE: Make no change (if the fact is already present or irrelevant)
+
+There are specific guidelines to select which operation to perform:
+
+1. **Add**: If the retrieved facts contain new information not present in the memory, then you have to add it by generating a new ID in the id field.
+- **Example**:
+    - Old Memory:
+        [
+            {
+                "id" : "0",
+                "text" : "User is a software engineer"
+            }
+        ]
+    - Retrieved facts: ["Name is John"]
+    - New Memory:
+        {
+            "memory" : [
+                {
+                    "id" : "0",
+                    "text" : "User is a software engineer",
+                    "event" : "NONE"
+                },
+                {
+                    "id" : "1",
+                    "text" : "Name is John",
+                    "event" : "ADD"
+                }
+            ]
+
+        }
+
+2. **Update**: If the retrieved facts contain information that is already present in the memory but the information is totally different, then you have to update it. 
+If the retrieved fact contains information that conveys the same thing as the elements present in the memory, then you have to keep the fact which has the most information. 
+Example (a) -- if the memory contains "User likes to play cricket" and the retrieved fact is "Loves to play cricket with friends", then update the memory with the retrieved facts.
+Example (b) -- if the memory contains "Likes cheese pizza" and the retrieved fact is "Loves cheese pizza", then you do not need to update it because they convey the same information.
+If the direction is to update the memory, then you have to update it.
+Please keep in mind while updating you have to keep the same ID.
+Please note to return the IDs in the output from the input IDs only and do not generate any new ID.
+- **Example**:
+    - Old Memory:
+        [
+            {
+                "id" : "0",
+                "text" : "I really like cheese pizza"
+            },
+            {
+                "id" : "1",
+                "text" : "User is a software engineer"
+            },
+            {
+                "id" : "2",
+                "text" : "User likes to play cricket"
+            }
+        ]
+    - Retrieved facts: ["Loves chicken pizza", "Loves to play cricket with friends"]
+    - New Memory:
+        {
+        "memory" : [
+                {
+                    "id" : "0",
+                    "text" : "Loves cheese and chicken pizza",
+                    "event" : "UPDATE",
+                    "old_memory" : "I really like cheese pizza"
+                },
+                {
+                    "id" : "1",
+                    "text" : "User is a software engineer",
+                    "event" : "NONE"
+                },
+                {
+                    "id" : "2",
+                    "text" : "Loves to play cricket with friends",
+                    "event" : "UPDATE",
+                    "old_memory" : "User likes to play cricket"
+                }
+            ]
+        }
+
+
+3. **Delete**: If the retrieved facts contain information that contradicts the information present in the memory, then you have to delete it. Or if the direction is to delete the memory, then you have to delete it.
+Please note to return the IDs in the output from the input IDs only and do not generate any new ID.
+- **Example**:
+    - Old Memory:
+        [
+            {
+                "id" : "0",
+                "text" : "Name is John"
+            },
+            {
+                "id" : "1",
+                "text" : "Loves cheese pizza"
+            }
+        ]
+    - Retrieved facts: ["Dislikes cheese pizza"]
+    - New Memory:
+        {
+        "memory" : [
+                {
+                    "id" : "0",
+                    "text" : "Name is John",
+                    "event" : "NONE"
+                },
+                {
+                    "id" : "1",
+                    "text" : "Loves cheese pizza",
+                    "event" : "DELETE"
+                }
+        ]
+        }
+
+4. **No Change**: If the retrieved facts contain information that is already present in the memory, then you do not need to make any changes.
+- **Example**:
+    - Old Memory:
+        [
+            {
+                "id" : "0",
+                "text" : "Name is John"
+            },
+            {
+                "id" : "1",
+                "text" : "Loves cheese pizza"
+            }
+        ]
+    - Retrieved facts: ["Name is John"]
+    - New Memory:
+        {
+        "memory" : [
+                {
+                    "id" : "0",
+                    "text" : "Name is John",
+                    "event" : "NONE"
+                },
+                {
+                    "id" : "1",
+                    "text" : "Loves cheese pizza",
+                    "event" : "NONE"
+                }
+            ]
+        }
+\end{lstlisting}
+\paragraph{ANSWER\_PROMPT (answers)}
+\begin{lstlisting}
+You are an intelligent memory assistant tasked with retrieving accurate information from conversation memories.
+
+    # CONTEXT:
+    You have access to memories from two speakers in a conversation. These memories contain
+    timestamped information that may be relevant to answering the question.
+
+    # INSTRUCTIONS:
+    1. Carefully analyze all provided memories from both speakers
+    2. Pay special attention to the timestamps to determine the answer
+    3. If the question asks about a specific event or fact, look for direct evidence in the memories
+    4. If the memories contain contradictory information, prioritize the most recent memory
+    5. If there is a question about time references (like "last year", "two months ago", etc.),
+       calculate the actual date based on the memory timestamp. For example, if a memory from
+       4 May 2022 mentions "went to India last year," then the trip occurred in 2021.
+    6. Always convert relative time references to specific dates, months, or years. For example,
+       convert "last year" to "2022" or "two months ago" to "March 2023" based on the memory
+       timestamp. Ignore the reference while answering the question.
+    7. Focus only on the content of the memories from both speakers. Do not confuse character
+       names mentioned in memories with the actual users who created those memories.
+    8. The answer should be less than 5-6 words.
+
+    # APPROACH (Think step by step):
+    1. First, examine all memories that contain information related to the question
+    2. Examine the timestamps and content of these memories carefully
+    3. Look for explicit mentions of dates, times, locations, or events that answer the question
+    4. If the answer requires calculation (e.g., converting relative time references), show your work
+    5. Formulate a precise, concise answer based solely on the evidence in the memories
+    6. Double-check that your answer directly addresses the question asked
+    7. Ensure your final answer is specific and avoids vague time references
+
+    Memories for {speakers}:
+
+    {memories}
+
+    Question: {question}
+
+    Answer:
+\end{lstlisting}
+\paragraph{ACCURACY\_PROMPT (judge)}
+\begin{lstlisting}
+Your task is to label an answer to a question as ’CORRECT’ or ’WRONG’. You will be given the following data:
+    (1) a question (posed by one user to another user),
+    (2) a ’gold’ (ground truth) answer,
+    (3) a generated answer
+which you will score as CORRECT/WRONG.
+
+The point of the question is to ask about something one user should know about the other user based on their prior conversations.
+The gold answer will usually be a concise and short answer that includes the referenced topic, for example:
+Question: Do you remember what I got the last time I went to Hawaii?
+Gold answer: A shell necklace
+The generated answer might be much longer, but you should be generous with your grading - as long as it touches on the same topic as the gold answer, it should be counted as CORRECT.
+
+For time related questions, the gold answer will be a specific date, month, year, etc. The generated answer might be much longer or use relative time references (like "last Tuesday" or "next month"), but you should be generous with your grading - as long as it refers to the same date or time period as the gold answer, it should be counted as CORRECT. Even if the format differs (e.g., "May 7th" vs "7 May"), consider it CORRECT if it's the same date.
+
+Now it's time for the real question:
+Question: {question}
+Gold answer: {gold_answer}
+Generated answer: {generated_answer}
+
+First, provide a short (one sentence) explanation of your reasoning, then finish with CORRECT or WRONG.
+Do NOT include both CORRECT and WRONG in your response, or it will break the evaluation script.
+
+Just return the label CORRECT or WRONG in a json format with the key as "label".
+\end{lstlisting}
+\section{Update sets}
+\textbf{Set 1} (\texttt{bench/updates\_\allowbreak{}conv26.json}, 30 items). Columns: id, tier, label, the original fact (and its message), the update message, the question and the gold answer.
+
+\begingroup\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.040\linewidth}>{\raggedright\arraybackslash}p{0.040\linewidth}>{\raggedright\arraybackslash}p{0.043\linewidth}>{\raggedright\arraybackslash}p{0.171\linewidth}>{\raggedright\arraybackslash}p{0.171\linewidth}>{\raggedright\arraybackslash}p{0.171\linewidth}>{\raggedright\arraybackslash}p{0.171\linewidth}}
+\toprule
+\textbf{id} & \textbf{tier} & \textbf{label} & \textbf{original} & \textbf{update} & \textbf{question} & \textbf{gold} \\
+\midrule
+\endhead
+E01 & easy & close & Melanie's main creative outlet is painting, which relaxes her after a long day. (D1:16) & I haven't painted in weeks, honestly. Pottery is my main creative outlet now - I go to the studio three evenings a week. & What is Melanie's main creative outlet now? & Pottery (she has stopped painting) \\
+E02 & easy & close & Melanie's favorite painting is the lake sunrise she painted, which is special to her. (D1:14) & Funny thing - the lake sunrise isn't my favorite anymore. The forest-at-dusk piece I finished last week is my favorite now. & Which of her own paintings does Melanie consider her favorite now? & The forest-at-dusk painting \\
+E03 & easy & close & Melanie has a job and is swamped with work and the kids. (D1:2) & Big change: I quit my job last Friday so I can be home with the kids full-time. & Does Melanie still have a job? & No, she quit to stay home with the kids \\
+E04 & easy & close & Caroline has the necklace her grandma gave her. (D4:3) & I'm heartbroken - I lost my grandma's necklace at the beach on Saturday. We searched for hours but it's gone. & Does Caroline still have her grandmother's necklace? & No, she lost it at the beach \\
+E05 & easy & close & Caroline has a hand-painted bowl a friend made for her 18th birthday. (D4:5) & My hand-painted bowl from my 18th birthday fell off the shelf and shattered. I kept a shard but the bowl is gone. & Does Caroline still have the hand-painted bowl from her 18th birthday? & No, it broke \\
+E06 & easy & close & Caroline goes to an LGBTQ support group that makes her feel accepted. (D1:7) & I don't go to the LGBTQ support group anymore - it disbanded after the organizer moved away. & Does Caroline still go to the LGBTQ support group? & No, the group disbanded \\
+E07 & easy & close & Melanie goes swimming with her kids. (D1:18) & The pool near us closed for good, so the kids and I don't swim anymore. We do bike rides together instead. & Does Melanie still go swimming with her kids? & No, the pool closed; they go on bike rides instead \\
+E08 & easy & close & Melanie's two younger kids love nature. (D4:8) & The two younger ones have moved on from nature stuff - now they're completely obsessed with dinosaurs. & What are Melanie's two younger kids into now? & Dinosaurs \\
+E09 & easy & close & Melanie plays the violin during her me-time. (D2:5) & I sold my violin last month. I'm learning guitar now instead - it's more fun to play with the kids. & What instrument does Melanie play now? & Guitar (she sold her violin) \\
+E10 & easy & close & Melanie runs during her me-time. (D2:5) & My knee has been bad, so I stopped running completely. I swim laps at the gym now. & What exercise does Melanie do now instead of running? & Swimming laps \\
+E11 & easy & close & Melanie reads during her me-time. (D2:5) & I've swapped reading for meditation in my me-time - twenty minutes every morning. & What does Melanie do in her me-time now instead of reading? & Meditation \\
+E12 & easy & close & Caroline chose an adoption agency because it supports LGBTQ+ people. (D2:12) & Update on adoption: I switched agencies. I'm with Rainbow Families now - they're closer to home and move faster. & Which adoption agency is Caroline working with now? & Rainbow Families \\
+E13 & easy & close & Caroline's plan is to adopt kids and give them a loving home. (D2:10) & I've changed my plan a bit - I'm going to foster first instead of adopting right away, to learn the ropes. & Is Caroline adopting right away or fostering first? & Fostering first \\
+E14 & easy & close & Melanie's self-care is still a work in progress. (D2:7) & Remember how self-care was a work in progress for me? Not anymore - I finally have a routine that sticks. & Is self-care still a work in progress for Melanie? & No, she now has a routine that sticks \\
+E15 & easy & close & Caroline's grandma lives in Sweden. (D4:3) & My grandma moved out of Sweden - she lives in Norway with my aunt now. & Where does Caroline's grandma live now? & Norway \\
+S01 & subtle & no\_\allowbreak{}close & Melanie has been married to her husband for 5 years. (D3:16) & Our first apartment after the wedding was so tiny - we still laugh about it. & Is Melanie still married? & Yes, married for 5 years \\
+S02 & subtle & no\_\allowbreak{}close & Caroline is pursuing a career in counseling and mental health. (D4:11) & Back in high school I actually wanted to be a nurse. Funny how things turn out. & What career is Caroline pursuing? & Counseling / mental health, working with trans people \\
+S03 & subtle & no\_\allowbreak{}close & Caroline has known her current friends for 4 years, since she moved from her home country. (D3:13) & My first year here I was pretty lonely, before I met my friends. & How long has Caroline had her current group of friends? & 4 years \\
+S04 & subtle & no\_\allowbreak{}close & Caroline moved away from Sweden, her home country. (D3:13) & Someday I might move back to Sweden, but not anytime soon. & Has Caroline moved back to Sweden? & No, it's only a someday idea \\
+S05 & subtle & no\_\allowbreak{}close & Melanie ran a charity race for mental health. (D2:1) & I want to run another charity race in the fall - maybe a half marathon this time. & Has Melanie run a second charity race yet? & No, she plans one for the fall \\
+S06 & subtle & no\_\allowbreak{}close & Melanie took her family camping in the mountains. (D4:6) & Next summer we hope to camp at the Grand Canyon, if we can save up. & Where did Melanie most recently go camping with her family? & The mountains \\
+S07 & subtle & no\_\allowbreak{}close & Caroline attended an LGBTQ+ counseling workshop. (D4:13) & That counseling workshop was the first one I'd ever been to. & Has Caroline attended an LGBTQ+ counseling workshop? & Yes \\
+S08 & subtle & no\_\allowbreak{}close & Caroline is an openly transgender woman who shares her journey. (D1:5) & Before I came out, I was too scared to tell anyone about myself. & Is Caroline open about being transgender? & Yes \\
+S09 & subtle & no\_\allowbreak{}close & Caroline plans to adopt as a single parent. (D2:14) & I used to think I'd only adopt with a partner someday. & Is Caroline planning to raise kids as a single parent? & Yes \\
+S10 & subtle & no\_\allowbreak{}close & Melanie wants to be courageous for her family. (D3:10) & I used to be really shy, even as a teenager. & Does Melanie want to be courageous for her family? & Yes \\
+F01 & fulfilled & close\_\allowbreak{}fulfilled & Caroline plans to continue her education. (D1:9) & I did it - I enrolled in a psychology certificate program at the community college. Classes start next week! & Has Caroline enrolled in a program to continue her education? & Yes, a psychology certificate program at the community college \\
+F02 & fulfilled & close\_\allowbreak{}fulfilled & Melanie's kids are looking forward to summer break. (D2:7) & The kids' summer break finally started and they are loving every minute of it. & Has Melanie's kids' summer break started? & Yes \\
+F03 & fulfilled & close\_\allowbreak{}fulfilled & Caroline is thinking of working with trans people. (D4:13) & I started volunteering as a peer counselor for trans youth at the community center this week. & Has Caroline started working with trans people? & Yes, she volunteers as a peer counselor for trans youth \\
+F04 & fulfilled & close\_\allowbreak{}fulfilled & Caroline is researching adoption agencies. (D2:8) & I finished my research and submitted my application to Rainbow Families on Monday. & Has Caroline submitted an adoption application? & Yes, to Rainbow Families \\
+F05 & fulfilled & close\_\allowbreak{}fulfilled & Caroline plans to keep using her voice to share her story. (D3:7) & I gave another talk about my journey, this time at a high school in the next town. & Has Caroline given another talk about her journey? & Yes, at a high school in the next town \\
+\bottomrule
+\end{longtable}
+\endgroup
+\textbf{Set 2} (\texttt{bench/updates2\_\allowbreak{}conv26.json}). Messages and questions as stored:
+
+\begingroup\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.105\linewidth}>{\raggedright\arraybackslash}p{0.105\linewidth}>{\raggedright\arraybackslash}p{0.225\linewidth}>{\raggedright\arraybackslash}p{0.449\linewidth}}
+\toprule
+\textbf{message} & \textbf{speaker} & \textbf{date} & \textbf{text} \\
+\midrule
+\endhead
+U2:C01.1 & Caroline & 11:00 am on 3 September, 2023 & I just moved into a studio apartment downtown. \\
+U2:C01.2 & Caroline & 11:00 am on 1 October, 2023 & Moved again! I'm in a two-bedroom in Oak Park now, so there's room for a foster kid. \\
+U2:C01.3 & Caroline & 11:00 am on 12 November, 2023 & We finally found a house - I live in Evanston now. \\
+U2:C02.1 & Melanie & 11:00 am on 5 September, 2023 & My guitar teacher is Ben, he's really patient with me. \\
+U2:C02.2 & Melanie & 11:00 am on 28 September, 2023 & I switched guitar teachers - Priya teaches me now. \\
+U2:C02.3 & Melanie & 11:00 am on 20 October, 2023 & Priya moved away, so I'm learning guitar from YouTube videos for now. \\
+U2:C02.4 & Melanie & 11:00 am on 20 November, 2023 & I joined a group guitar class at the community center instead of YouTube. \\
+U2:C03.1 & Caroline & 11:00 am on 10 September, 2023 & I passed my foster home study! \\
+U2:C03.2 & Caroline & 11:00 am on 8 October, 2023 & I've been matched with a 7-year-old named Leo. \\
+U2:C03.3 & Caroline & 11:00 am on 5 November, 2023 & Leo went back to live with his grandmother, which is the best thing for him. \\
+U2:C03.4 & Caroline & 11:00 am on 3 December, 2023 & Big news: I've been matched with two siblings, Maya and Sam. \\
+U2:C04.1 & Melanie & 11:00 am on 7 September, 2023 & My oldest started at Lincoln Middle School this week. \\
+U2:C04.2 & Melanie & 11:00 am on 15 October, 2023 & We moved our oldest to Riverside Academy - Lincoln wasn't a good fit. \\
+U2:C04.3 & Melanie & 11:00 am on 25 November, 2023 & Our oldest is back at Lincoln Middle, Riverside was too far. \\
+U2:C05.1 & Caroline & 11:00 am on 12 September, 2023 & I volunteer at the community center on Tuesdays. \\
+U2:C05.2 & Caroline & 11:00 am on 3 October, 2023 & I switched my volunteer shift to Thursdays. \\
+U2:C05.3 & Caroline & 11:00 am on 1 November, 2023 & My volunteer shift moved to Saturday mornings. \\
+U2:C05.4 & Caroline & 11:00 am on 6 December, 2023 & I cut back my volunteering to every other Saturday morning. \\
+U2:N01.1 & Caroline & 11:00 am on 4 September, 2023 & My favorite coffee spot is Blue Door Caf\'{e}. \\
+U2:N01.2 & Caroline & 11:00 am on 30 October, 2023 & My favorite coffee spot is Grind House. \\
+U2:N02.1 & Melanie & 11:00 am on 6 September, 2023 & We drive a blue minivan. \\
+U2:N02.2 & Melanie & 11:00 am on 2 November, 2023 & We drive a silver SUV. \\
+U2:N03.1 & Caroline & 11:00 am on 9 September, 2023 & My therapist is Dr. Alvarez. \\
+U2:N03.2 & Caroline & 11:00 am on 6 November, 2023 & My therapist is Dr. Kim. \\
+U2:N04.1 & Melanie & 11:00 am on 11 September, 2023 & Our book club meets at Anna's house. \\
+U2:N04.2 & Melanie & 11:00 am on 9 November, 2023 & Our book club meets at the public library. \\
+U2:N05.1 & Caroline & 11:00 am on 14 September, 2023 & My phone is an iPhone 12. \\
+U2:N05.2 & Caroline & 11:00 am on 14 November, 2023 & My phone is a Pixel 8. \\
+\bottomrule
+\end{longtable}
+\endgroup
+\begingroup\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.061\linewidth}>{\raggedright\arraybackslash}p{0.083\linewidth}>{\raggedright\arraybackslash}p{0.262\linewidth}>{\raggedright\arraybackslash}p{0.262\linewidth}>{\raggedright\arraybackslash}p{0.188\linewidth}}
+\toprule
+\textbf{id} & \textbf{type} & \textbf{question} & \textbf{gold} & \textbf{evidence} \\
+\midrule
+\endhead
+P01 & point\_\allowbreak{}in\_\allowbreak{}time & What instrument did Melanie play in June 2023? & Violin & E09: violin until 19 July 2023, then guitar \\
+P02 & point\_\allowbreak{}in\_\allowbreak{}time & Where did Caroline's grandma live in May 2023? & Sweden & E15: Sweden until 31 July 2023, then Norway \\
+P03 & point\_\allowbreak{}in\_\allowbreak{}time & Which adoption agency was Caroline working with in early July 2023? & The agency she chose for its LGBTQ+ inclusivity (before switching to Rainbow Families) & E12: switched 25 July 2023 \\
+P04 & point\_\allowbreak{}in\_\allowbreak{}time & Did Melanie have a job in June 2023? & Yes & E03: quit around 6 July 2023 \\
+P05 & point\_\allowbreak{}in\_\allowbreak{}time & What was Melanie's main creative outlet in May 2023? & Painting & E01: pottery from 2 July 2023 \\
+C01q1 & chain\_\allowbreak{}current & Where does Caroline live now? & A house in Evanston &  \\
+C01q2 & chain\_\allowbreak{}point\_\allowbreak{}in\_\allowbreak{}time & Where was Caroline living in October 2023? & A two-bedroom in Oak Park &  \\
+C02q1 & chain\_\allowbreak{}current & How is Melanie learning guitar now? & A group class at the community center &  \\
+C02q2 & chain\_\allowbreak{}point\_\allowbreak{}in\_\allowbreak{}time & Who was teaching Melanie guitar in early October 2023? & Priya &  \\
+C03q1 & chain\_\allowbreak{}current & Which children is Caroline currently matched with? & Maya and Sam (siblings) &  \\
+C03q2 & chain\_\allowbreak{}point\_\allowbreak{}in\_\allowbreak{}time & Who was Caroline matched with in October 2023? & Leo, a 7-year-old &  \\
+C04q1 & chain\_\allowbreak{}current & Which school does Melanie's oldest child attend now? & Lincoln Middle School &  \\
+C04q2 & chain\_\allowbreak{}point\_\allowbreak{}in\_\allowbreak{}time & Which school was Melanie's oldest at in late October 2023? & Riverside Academy &  \\
+C05q1 & chain\_\allowbreak{}current & When does Caroline volunteer at the community center now? & Every other Saturday morning &  \\
+C05q2 & chain\_\allowbreak{}point\_\allowbreak{}in\_\allowbreak{}time & What day did Caroline volunteer in mid-October 2023? & Thursdays &  \\
+N01 & no\_\allowbreak{}temporal\_\allowbreak{}cue & What is Caroline's favorite coffee spot? & Grind House &  \\
+N02 & no\_\allowbreak{}temporal\_\allowbreak{}cue & What car does Melanie's family drive? & A silver SUV &  \\
+N03 & no\_\allowbreak{}temporal\_\allowbreak{}cue & Who is Caroline's therapist? & Dr. Kim &  \\
+N04 & no\_\allowbreak{}temporal\_\allowbreak{}cue & Where does Melanie's book club meet? & The public library &  \\
+N05 & no\_\allowbreak{}temporal\_\allowbreak{}cue & What phone does Caroline have? & A Pixel 8 &  \\
+\bottomrule
+\end{longtable}
+\endgroup
+\section{Per-conversation held-out tables}
+\begin{table}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{D.1 k=3. Models as in Table~\ref{tab:3}.}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{conv.} & \textbf{Q} & \textbf{engram} & \textbf{mem0} & \textbf{$\Delta$ (questions)} & \textbf{engram tokens / q} & \textbf{mem0 tokens / q} \\
+\midrule
+conv-30 & 81\src{bench/results/heldout\_report.json} & 59/81\src{bench/results/heldout\_report.json} & 55/81\src{bench/results/heldout\_report.json} & 4\src{bench/results/heldout\_report.json} & 285\src{bench/results/heldout\_report.json} & 154\src{bench/results/heldout\_report.json} \\
+conv-41 & 152\src{bench/results/heldout\_report.json} & 113/152\src{bench/results/heldout\_report.json} & 89/152\src{bench/results/heldout\_report.json} & 24\src{bench/results/heldout\_report.json} & 297\src{bench/results/heldout\_report.json} & 161\src{bench/results/heldout\_report.json} \\
+conv-42 & 199\src{bench/results/heldout\_report.json} & 150/199\src{bench/results/heldout\_report.json} & 111/199\src{bench/results/heldout\_report.json} & 39\src{bench/results/heldout\_report.json} & 292\src{bench/results/heldout\_report.json} & 163\src{bench/results/heldout\_report.json} \\
+conv-43 & 178\src{bench/results/heldout\_report.json} & 125/178\src{bench/results/heldout\_report.json} & 101/178\src{bench/results/heldout\_report.json} & 24\src{bench/results/heldout\_report.json} & 283\src{bench/results/heldout\_report.json} & 153\src{bench/results/heldout\_report.json} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\begin{table}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{D.2 engram k=3 against token-matched mem0 (k=6).}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{conv.} & \textbf{Q} & \textbf{engram k=3} & \textbf{mem0 k=6} & \textbf{$\Delta$ (questions)} \\
+\midrule
+conv-30 & 81\src{bench/results/heldout\_report.json} & 59/81\src{bench/results/heldout\_report.json} & 54/81\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 5\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} \\
+conv-41 & 152\src{bench/results/heldout\_report.json} & 113/152\src{bench/results/heldout\_report.json} & 109/152\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 4\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} \\
+conv-42 & 199\src{bench/results/heldout\_report.json} & 150/199\src{bench/results/heldout\_report.json} & 119/199\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 31\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} \\
+conv-43 & 178\src{bench/results/heldout\_report.json} & 125/178\src{bench/results/heldout\_report.json} & 112/178\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 13\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\begin{table}[tbp]
+\centering
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\caption{D.3 k=20.}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+\textbf{conv.} & \textbf{Q} & \textbf{engram} & \textbf{mem0} & \textbf{$\Delta$ (questions)} & \textbf{engram tokens / q} & \textbf{mem0 tokens / q} \\
+\midrule
+conv-30 & 81\src{bench/results/heldout\_report.json} & 62/81\src{bench/results/heldout\_report.json} & 63/81\src{bench/results/heldout\_report.json} & -1\src{bench/results/heldout\_report.json} & 1,434\src{bench/results/heldout\_report.json} & 996\src{bench/results/heldout\_report.json} \\
+conv-41 & 152\src{bench/results/heldout\_report.json} & 128/152\src{bench/results/heldout\_report.json} & 135/152\src{bench/results/heldout\_report.json} & -7\src{bench/results/heldout\_report.json} & 1,521\src{bench/results/heldout\_report.json} & 1,049\src{bench/results/heldout\_report.json} \\
+conv-42 & 199\src{bench/results/heldout\_report.json} & 156/199\src{bench/results/heldout\_report.json} & 146/199\src{bench/results/heldout\_report.json} & 10\src{bench/results/heldout\_report.json} & 1,491\src{bench/results/heldout\_report.json} & 1,043\src{bench/results/heldout\_report.json} \\
+conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/results/heldout\_report.json} & 133/178\src{bench/results/heldout\_report.json} & 3\src{bench/results/heldout\_report.json} & 1,389\src{bench/results/heldout\_report.json} & 995\src{bench/results/heldout\_report.json} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\section{Reproduction}
+All commands run from the repository root. With the call cache (\texttt{bench/.cache/calls.sqlite}) in place, every command below replays at no API cost.
+
+\begingroup\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.225\linewidth}>{\raggedright\arraybackslash}p{0.712\linewidth}}
+\toprule
+\textbf{table / figure} & \textbf{command} \\
+\midrule
+\endhead
+Table~\ref{tab:2} & \texttt{python -m bench.run --arm \{e2\_\allowbreak{}\allowbreak{}jev,e2\_\allowbreak{}\allowbreak{}llm,mem0\} --slice dev} \\
+Tables~\ref{tab:3}--\ref{tab:5}, D & \texttt{python -m bench.run --arm \{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2,mem0\} --slice heldout:\textless{}conv\textgreater{} --top-k 3 --also-top-k 20}, then \texttt{python -m bench.heldout\_\allowbreak{}\allowbreak{}report} and \texttt{python -m bench.token\_\allowbreak{}\allowbreak{}match} \\
+Table~\ref{tab:6}, \ref{tab:8} & \texttt{python -m bench.run --arm \textless{}arm\textgreater{} --slice dev\_\allowbreak{}\allowbreak{}updates[2] [--top-k 3] [--no-dates]} \\
+Tables~\ref{tab:7}, \ref{tab:9}; Fig.~\ref{fig:3} & \texttt{python bench/test\_\allowbreak{}\allowbreak{}contradictions.py --backend laya [--native] --save \ldots{}}, \texttt{python -m bench.calibration}, \texttt{python -m bench.jev\_\allowbreak{}\allowbreak{}regression} (the Laya rows need \texttt{bench/laya\_\allowbreak{}\allowbreak{}server.py} running) \\
+Fig.~\ref{fig:4} & \texttt{python -m bench.tradeoff} \\
+Tables~\ref{tab:10}--\ref{tab:11} & \texttt{python -m bench.laya\_\allowbreak{}\allowbreak{}report}, \texttt{python -m bench.hybrid\_\allowbreak{}\allowbreak{}report} \\
+Table~\ref{tab:12}, Fig.~\ref{fig:5} & \texttt{python -m bench.jev\_\allowbreak{}\allowbreak{}latency} \\
+this paper & \texttt{python paper/build.py}, \texttt{python paper/figures.py} \\
+\bottomrule
+\end{longtable}
+\endgroup
+The spend ledger records cost per run, not per table. Per-arm totals:
+
+\begingroup\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.295\linewidth}>{\raggedright\arraybackslash}p{0.196\linewidth}>{\raggedright\arraybackslash}p{0.196\linewidth}>{\raggedright\arraybackslash}p{0.196\linewidth}}
+\toprule
+\textbf{arm} & \textbf{runs} & \textbf{Jev} & \textbf{Claude} \\
+\midrule
+\endhead
+\texttt{mem0} & 15\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$35.94\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2} & 17\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.0917\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$31.80\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e2\_\allowbreak{}\allowbreak{}jev} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0636\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$3.51\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e2\_\allowbreak{}\allowbreak{}llm} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0134\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$3.21\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{mem0\_\allowbreak{}\allowbreak{}token\_\allowbreak{}\allowbreak{}matched} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$2.52\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}laya} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0405\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$2.40\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e2\_\allowbreak{}\allowbreak{}jev\_\allowbreak{}\allowbreak{}v2} & 4\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0362\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$2.35\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e1\_\allowbreak{}\allowbreak{}recall} & 4\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0653\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$2.05\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief} & 6\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0316\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.69\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e3\_\allowbreak{}\allowbreak{}structural\_\allowbreak{}\allowbreak{}v2} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0278\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.44\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e0\_\allowbreak{}\allowbreak{}baseline} & 8\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0736\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.36\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{mem0\_\allowbreak{}\allowbreak{}dated} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.96\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e3\_\allowbreak{}\allowbreak{}structural\_\allowbreak{}\allowbreak{}v3} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0272\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.76\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}hybrid} & 4\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.73\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}compact} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.59\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}norerank} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.25\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}shadow} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.18\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e3\_\allowbreak{}\allowbreak{}structural} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0008\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.04\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}nohist} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.01\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v3} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0004\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.00\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\bottomrule
+\end{longtable}
+\endgroup
+\end{document}

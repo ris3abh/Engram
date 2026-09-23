@@ -1073,8 +1073,13 @@ def a_prompts() -> str:
         "`src/engram/llm/prompts_mem0.py` and checked by `tests/test_prompts_mem0.py`. The answer and judge prompts "
         "are mem0's LoCoMo evaluation prompts, in `bench/locomo_subset.py`.\n",
     ]
+    head = "\n".join(P.ADDITIVE_EXTRACTION_PROMPT.strip().splitlines()[:40])
+    parts.append(
+        "#### ADDITIVE_EXTRACTION_PROMPT (extraction, both systems): first 40 lines\n\n"
+        f"````text\n{head}\n````\n\nThe remaining lines are in `src/engram/llm/prompts_mem0.py` "
+        "(`ADDITIVE_EXTRACTION_PROMPT`), verbatim from mem0 2.1.0.\n"
+    )
     for label, text in (
-        ("ADDITIVE_EXTRACTION_PROMPT (extraction, both systems)", P.ADDITIVE_EXTRACTION_PROMPT),
         ("DEFAULT_UPDATE_MEMORY_PROMPT (LLM decision layer and escalations)", P.DEFAULT_UPDATE_MEMORY_PROMPT),
         ("ANSWER_PROMPT (answers)", LS.ANSWER_PROMPT),
         ("ACCURACY_PROMPT (judge)", LS.ACCURACY_PROMPT),
