@@ -51,7 +51,8 @@ The existing fact is carried in `instructions`, not in the state:
 ```json
 {"type": "choice",
  "instructions": {
-   "existing_fact": {"text": "‹User lives in Paris›", "valid_from": "‹2025-03-01›", "temporal_status": "‹current›"},
+   "existing_fact": {"text": "‹User lives in Paris›", "subject": "‹user›", "object": "‹paris›",
+                     "valid_from": "‹2025-03-01›", "temporal_status": "‹current›"},
    "question": "How does `new_fact` relate to `existing_fact`?"},
  "criteria": {‹table below›}}
 ```

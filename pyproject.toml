@@ -1,0 +1,33 @@
+[project]
+name = "engram"
+version = "0.1.0"
+description = "A long-term memory graph for AI agents where every decision is a typed Jev choice."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx[http2]>=0.28,<1",
+    "networkx>=3.3",
+    "numpy>=1.26",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/engram"]
+
+[dependency-groups]
+dev = ["pytest>=8.4,<9", "pytest-asyncio>=0.24", "ruff>=0.14,<1"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = ["live: hits a paid external API; skipped unless the key is set"]
