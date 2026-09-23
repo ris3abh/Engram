@@ -68,7 +68,7 @@ CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
-RUN_LIMIT, PHASE_LIMIT = 3.0, 30.0  # phase cap: $12, raised to $20 (option A), then to $30 by the user before E3
+RUN_LIMIT, PHASE_LIMIT = 3.0, 45.0  # phase cap: $12 -> $20 (option A) -> $30 (before E3) -> $45 (before held-out)
 FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy from step 8, for the E0 check
 PINNED_DATE = "2026-09-23"  # mem0's and engram's "Current Date", pinned so cached runs are reproducible
 
@@ -76,6 +76,18 @@ E1_FLAGS = dict(
     extract_prompt="v2", store_source_text=True, worth_filter=False, retrieval_floor=10, merge_policy="union"
 )
 E2_FLAGS = {**E1_FLAGS, "extract_prompt": "mem0", "escalation_prompt": "mem0_update"}
+
+E4_V2 = dict(
+    **{**E2_FLAGS, "merge_policy": "same_as"},
+    cardinality_rule=True,
+    close_agreement=True,
+    candidate_source="cosine+graph",
+    relation_version=2,
+    fulfills_rule="question",
+    belief=True,
+    temporal_gate="not_planned",
+    update_multi_sibling=True,
+)
 
 ARMS: dict[str, dict] = {
     "e0_baseline": {"system": "engram", "flags": Flags()},
@@ -132,6 +144,20 @@ ARMS: dict[str, dict] = {
             fulfills_rule="question",
             belief=True,
         ),
+    },
+    # E4 v2: gate fixes. The temporal gate blocks only planned/hypothetical; update may close a sibling on a
+    # multi-valued relation (two-phrasing agreement every time); contradiction stays single-valued only.
+    "e4_belief_v2": {"system": "engram", "hygiene": True, "flags": Flags(**E4_V2)},
+    # Attribution of the top-k=3 gain (read path only; ingestion identical and cached).
+    "e4_belief_v2_nohist": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_V2, "retrieval_history": False}),
+    },
+    "e4_belief_v2_norerank": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_V2, "retrieval_rerank": False}),
     },
     # mem0 with the session date passed as its Observation Date (mem0 2.1.0's OSS add() cannot pass one, so the
     # default arm resolves "yesterday" against the current date). Not mem0's default config; reported alongside.
@@ -465,6 +491,16 @@ async def claude(client, cache: CallCache, purpose: str, sem: asyncio.Semaphore,
     return out, out["cost"]
 
 
+async def count_tokens(client, cache: CallCache, text: str) -> int:
+    """Tokens the answer model reads for a memory block (Anthropic's free count endpoint, cached)."""
+    key = call_key("bench", "count_tokens", ANSWER_MODEL, text)
+    if hit := cache.get(key):
+        return hit["tokens"]
+    r = await client.messages.count_tokens(model=ANSWER_MODEL, messages=[{"role": "user", "content": text}])
+    cache.put(key, {"tokens": r.input_tokens})
+    return r.input_tokens
+
+
 # ---------------------------------------------------------------- run
 
 
@@ -484,10 +520,13 @@ async def run_arm(name: str, slice_name: str, budget: Budget, top_k: int | None 
     client = anthropic.AsyncAnthropic(max_retries=5, timeout=120)
     sem = asyncio.Semaphore(6)
     speakers = " and ".join(sl["speakers"])
+    empty_block = await count_tokens(client, cache, json.dumps([], indent=4))
 
     async def one(q: dict) -> dict:
         lines, retrieve_cost = await system.memories(q["question"], top_k=top_k, no_dates=no_dates)
-        prompt = ANSWER_PROMPT.format(speakers=speakers, memories=json.dumps(lines, indent=4), question=q["question"])
+        block = json.dumps(lines, indent=4)
+        retrieved_tokens = await count_tokens(client, cache, block) - empty_block
+        prompt = ANSWER_PROMPT.format(speakers=speakers, memories=block, question=q["question"])
         ans, _ = await claude(
             client,
             cache,
@@ -522,6 +561,7 @@ async def run_arm(name: str, slice_name: str, budget: Budget, top_k: int | None 
             "memories": len(lines),
             "label": grade["label"],
             "query_cost": retrieve_cost + ans["cost"],
+            "retrieved_tokens": retrieved_tokens,
         }
 
     writes, asked = [], []
@@ -615,6 +655,9 @@ async def run_arm(name: str, slice_name: str, budget: Budget, top_k: int | None 
         "write_latency_p50_ms": statistics.median(w["latency_ms"] for w in writes),
         "decision_latency_p50_ms": statistics.median(decision_ms) if decision_ms else None,
         "no_memory_questions": sum(a["memories"] == 0 for a in answers),
+        "retrieved_tokens_mean": statistics.fmean(a["retrieved_tokens"] for a in answers) if answers else None,
+        "retrieved_tokens_median": statistics.median(a["retrieved_tokens"] for a in answers) if answers else None,
+        "memories_mean": statistics.fmean(a["memories"] for a in answers) if answers else None,
         "stale_fact_rate": stale["rate"],
         "stale": stale,
         "spend": dict(budget.spent),
@@ -767,6 +810,8 @@ def fmt(r: dict | None, key: str) -> str:
         return f"{v:.1%} (Q={r.get('locomo_q', r['slice']['questions'])})"
     if key.endswith("_ms"):
         return f"{v / 1000:.2f} s" if v >= 1000 else f"{v:.0f} ms"
+    if key in ("retrieved_tokens_mean", "memories_mean"):
+        return f"{v:,.0f}" if key.startswith("retrieved") else f"{v:.1f}"
     if key.endswith("per_1k"):
         return f"${v:.3f}"
     return str(v)
@@ -786,6 +831,8 @@ def table(results: list[dict]) -> str:
         ("escalations", "escalations"),
         ("LLM relation decisions", "llm_decisions"),
         ("questions with no memories", "no_memory_questions"),
+        ("retrieved tokens / question (mean)", "retrieved_tokens_mean"),
+        ("memories / question (mean)", "memories_mean"),
         ("stale-fact rate", "stale_fact_rate"),
         ("decision-layer cost / 1k msgs", "decision_cost_per_1k"),
         ("end-to-end cost / 1k msgs", "cost_per_1k"),

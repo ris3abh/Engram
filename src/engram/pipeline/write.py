@@ -322,8 +322,9 @@ class WritePipeline:
             self.stats["decisions_on_graph_candidates"] += 1
             self.stats[f"graph_candidate_{relation.label}"] += 1
         temporal = d["temporal_status"]
+        counts_now = ("current", "past") if self.flags.temporal_gate == "not_planned" else ("current",)
         is_current = (
-            temporal.backend != "fallback" and temporal.chosen == "current" and temporal.p >= config.ACT_THRESHOLD
+            temporal.backend != "fallback" and temporal.chosen in counts_now and temporal.p >= config.ACT_THRESHOLD
         )
         confident = escalated or relation.p >= config.ACT_THRESHOLD
         fact = self._build_fact(message, draft, d, decisions, temporal.chosen, min(p_worth, relation.p))
@@ -463,7 +464,11 @@ class WritePipeline:
         fact.belief = B.initial_belief(relation.p, fact.tentative)
         if relation.label == "refinement" and target:
             fact.refines = target.id
-        disputed = relation.label == "contradiction" and target and not B.against_allowed("contradiction", target, fact)
+        disputed = (
+            relation.label == "contradiction"
+            and target
+            and not B.against_allowed("contradiction", target, fact, self.flags.update_multi_sibling)
+        )
         if disputed:
             fact.disputed = True
             self.store.update_fact(target.id, disputed=True)
@@ -488,11 +493,19 @@ class WritePipeline:
             if label in B.SUPPORT:
                 delta, pieces = w * B.logit(p), 0
             elif label in B.AGAINST:
-                if not (is_current and B.against_allowed(label, c, fact)):
+                ums = self.flags.update_multi_sibling
+                if not is_current:
+                    self.stats["against_blocked_temporal"] += 1
+                    self.stats["against_blocked"] += 1
+                    continue
+                if not B.against_allowed(label, c, fact, ums):
+                    self.stats["against_blocked_structure"] += 1
                     self.stats["against_blocked"] += 1
                     continue
                 ps = [p]
-                if c.against_count == 0 and self.flags.close_agreement and dec.backend != "llm_escalation":
+                multi_update = label == "update" and not B.is_single(c)  # always needs the second phrasing
+                first = c.against_count == 0
+                if (first or multi_update) and self.flags.close_agreement and dec.backend != "llm_escalation":
                     ok, p2 = await self._recheck(state, c, decisions)
                     if not ok:
                         self.stats["against_unconfirmed"] += 1

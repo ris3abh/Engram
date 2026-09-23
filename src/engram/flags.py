@@ -33,6 +33,15 @@ class Flags:
     # E4 belief-state policy (pipeline/belief.py): closes happen when belief < 0.25, reopens when > 0.6
     belief: bool = False
     belief_w: float = 1.0
+    # E4 v2 gate fixes. temporal_gate: "current" = only a current new fact may count against an edge (E3/E4 v1);
+    # "not_planned" = past and current both count, planned and hypothetical never do.
+    temporal_gate: str = "current"
+    # update may close a sibling (same subject and relation) on a multi-valued relation, with the two-phrasing
+    # agreement required every time. contradiction stays single-valued (and sibling) only.
+    update_multi_sibling: bool = False
+    # Read-path switches for attribution (E4 k=3 ablations): history expansion and Jev reranking/query_relation.
+    retrieval_history: bool = True
+    retrieval_rerank: bool = True
     relation_version: int = 1  # relation_to_candidate version: 1 (E0-E3) | 2 (adds `negates`, E5 on)
 
     def describe(self) -> dict:

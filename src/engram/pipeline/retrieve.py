@@ -48,11 +48,21 @@ class Retrieval:
 
 
 class Retriever:
-    def __init__(self, store: Store, backend: DecisionBackend, embedder: Embedder, cosine_floor: int = 0):
+    def __init__(
+        self,
+        store: Store,
+        backend: DecisionBackend,
+        embedder: Embedder,
+        cosine_floor: int = 0,
+        history: bool = True,
+        rerank: bool = True,
+    ):
         self.store = store
         self.backend = backend
         self.embedder = embedder
         self.cosine_floor = cosine_floor  # always keep this many top-cosine facts, even if Jev scores them low
+        self.history = history  # add the chain of facts each kept fact superseded
+        self.rerank = rerank  # False: no Jev on the read path at all; cosine order, no query_relation pull
 
     async def retrieve(self, query: str, k: int = config.RETRIEVE_K) -> Retrieval:
         started = time.perf_counter()
@@ -69,6 +79,11 @@ class Retriever:
         ]
         asks.append(Ask("query_relation", QUERY_RELATION))
         degraded, relation = None, None
+        if not self.rerank:
+            results = [RetrievedFact(f, None, "cosine") for f in shortlist]
+            if self.history:
+                results += self._history([r.fact for r in results])
+            return self._finish(query, results, [], started, len(shortlist), None, None)
         try:
             d = await self.backend.ask({"query": query}, asks)
             decisions = list(d.values())
@@ -99,8 +114,12 @@ class Retriever:
             ]
         if relation:
             results += self._pull(relation, {r.fact.id for r in results}, rank)
-        results += self._history([r.fact for r in results])
+        if self.history:
+            results += self._history([r.fact for r in results])
         results += self._expand([f for f, _ in kept], {r.fact.id for r in results})
+        return self._finish(query, results, decisions, started, len(shortlist), degraded, relation)
+
+    def _finish(self, query, results, decisions, started, shortlist, degraded, relation) -> Retrieval:
         results = self._collapse_same_as(results)
         self.store.mark_retrieved(r.fact.id for r in results if r.source != "neighbor")
         said: dict[str, datetime | None] = {}
@@ -111,13 +130,7 @@ class Retriever:
                 said[mid] = message.created_at if message else None
             r.said_at = said[mid]
         return Retrieval(
-            query,
-            results,
-            decisions,
-            (time.perf_counter() - started) * 1000,
-            len(shortlist),
-            degraded,
-            relation,
+            query, results, decisions, (time.perf_counter() - started) * 1000, shortlist, degraded, relation
         )
 
     def _collapse_same_as(self, results: list[RetrievedFact]) -> list[RetrievedFact]:

@@ -51,14 +51,20 @@ def initial_belief(p_relation: float, tentative: bool) -> float:
     return 0.5 if tentative else clamp(p_relation)
 
 
-def against_allowed(label: str, existing: Fact, new: Fact) -> bool:
+def is_sibling(existing: Fact, new: Fact) -> bool:
+    return existing.subject == normalize_entity(new.subject) and existing.predicate == new.predicate
+
+
+def is_single(existing: Fact) -> bool:
+    return EDGE_CARDINALITY.get(existing.predicate, "many") == "one"
+
+
+def against_allowed(label: str, existing: Fact, new: Fact, update_multi_sibling: bool = False) -> bool:
     if label == "negates":
         return True
-    single = EDGE_CARDINALITY.get(existing.predicate, "many") == "one"
     if label == "update":
-        return single
-    sibling = existing.subject == normalize_entity(new.subject) and existing.predicate == new.predicate
-    return single and sibling
+        return is_single(existing) or (update_multi_sibling and is_sibling(existing, new))
+    return is_single(existing) and is_sibling(existing, new)
 
 
 @dataclass
