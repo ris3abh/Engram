@@ -48,3 +48,18 @@ async def test_write_side_questions_go_in_one_call():
     asks = [Ask(f"worth_remembering__{i}", WORTH_REMEMBERING) for i in range(20)]
     await laya.ask({"new_fact": {"text": "x"}}, asks)
     assert [len(c) for c in calls] == [20]
+
+
+async def test_shadow_returns_primary_and_records_pairs(tmp_path):
+    from engram.decide.mock import MockBackend
+    from engram.decide.shadow import ShadowBackend
+
+    calls: list[list[str]] = []
+    shadow = ShadowBackend(MockBackend(), backend(calls), tmp_path / "shadow.jsonl")
+    asks = [Ask("worth_remembering", WORTH_REMEMBERING)]
+    out = await shadow.ask({"new_fact": {"text": "User lives in Berlin"}}, asks)
+    await shadow.drain()
+    assert out["worth_remembering"].backend == "mock"
+    pair = json.loads((tmp_path / "shadow.jsonl").read_text())
+    assert pair["primary"]["backend"] == "mock" and pair["shadow"]["backend"] == "laya"
+    assert shadow.name == "mock" and len(calls) == 1
