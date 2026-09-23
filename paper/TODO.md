@@ -53,7 +53,7 @@ references or citations, 0 "??", largest overfull box 2.9pt.
 
 - Figure 9 (calibration, three panels) is a `figure*` like Figure 1. The brief puts figures with fewer than four
   panels in one column; three square panels at column width would be about 1 in each.
-- Tables 12 (latency by size) and 13 (held-out write side) moved to Appendix D to bring the PDF to 24 pages;
+- Tables 12 (latency by size) and 13 (held-out write side) moved to Appendix D to shorten the body (the PDF is now 23 pages);
   Figures 12 and 4 carry them in the body.
 - TeX build: with no local pdflatex, `make paper` uses the Docker image `engram-paper-tex` (`paper/docker/Dockerfile`:
   TeX Live medium plus placeins, inconsolata, upquote, cleveref, xurl; `make image` builds it). arXiv's full TeX
