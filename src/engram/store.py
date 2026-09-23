@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS facts (
     valid_from_stated INTEGER NOT NULL DEFAULT 0,
     source_text TEXT,
     disputed INTEGER NOT NULL DEFAULT 0,
+    closed_reason TEXT,
+    closed_by TEXT,
     created_at TEXT NOT NULL,
     last_retrieved_at TEXT,
     embedding BLOB
@@ -81,7 +83,8 @@ CREATE TABLE IF NOT EXISTS same_as (
 
 _FACT_COLUMNS = (
     "id, text, subject, predicate, object, kind, durability, sensitivity, confidence, valid_from, valid_until, "
-    "source_message_id, tentative, temporal_status, refines, valid_from_stated, source_text, disputed, created_at, "
+    "source_message_id, tentative, temporal_status, refines, valid_from_stated, source_text, disputed, closed_reason, "
+    "closed_by, created_at, "
     "last_retrieved_at"
 )
 
@@ -113,6 +116,8 @@ class Store:
             "valid_from_stated": "INTEGER NOT NULL DEFAULT 0",
             "source_text": "TEXT",
             "disputed": "INTEGER NOT NULL DEFAULT 0",
+            "closed_reason": "TEXT",
+            "closed_by": "TEXT",
         }
         for name, ddl in added.items():
             if name not in columns:
@@ -168,7 +173,7 @@ class Store:
                 self._db.execute("INSERT OR IGNORE INTO entities VALUES (?, ?)", (normalize_entity(label), label))
             fact.subject, fact.object = normalize_entity(fact.subject), normalize_entity(fact.object)
             self._db.execute(
-                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 21)})",
+                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 23)})",
                 (
                     fact.id,
                     fact.text,
@@ -188,6 +193,8 @@ class Store:
                     int(fact.valid_from_stated),
                     fact.source_text,
                     int(fact.disputed),
+                    fact.closed_reason,
+                    fact.closed_by,
                     _ts(fact.created_at),
                     _ts(fact.last_retrieved_at),
                     _blob(embedding),
@@ -245,11 +252,14 @@ class Store:
             chain.append(current)
         return chain
 
-    def expire_fact(self, fact_id: str, when: datetime | None = None) -> None:
+    def expire_fact(
+        self, fact_id: str, when: datetime | None = None, reason: str = "superseded", by: str | None = None
+    ) -> None:
         with self._lock, self._db:
             self._db.execute(
-                "UPDATE facts SET valid_until = ? WHERE id = ? AND valid_until IS NULL",
-                (_ts(when or now()), fact_id),
+                "UPDATE facts SET valid_until = ?, closed_reason = ?, closed_by = ? "
+                "WHERE id = ? AND valid_until IS NULL",
+                (_ts(when or now()), reason, by, fact_id),
             )
 
     def update_fact(self, fact_id: str, **fields: object) -> None:
@@ -440,6 +450,8 @@ def _fact(row: sqlite3.Row) -> Fact:
         valid_from_stated=bool(row["valid_from_stated"]),
         source_text=row["source_text"],
         disputed=bool(row["disputed"]),
+        closed_reason=row["closed_reason"],
+        closed_by=row["closed_by"],
         created_at=_dt(row["created_at"]),
         last_retrieved_at=_dt(row["last_retrieved_at"]),
     )

@@ -61,6 +61,7 @@ class WriteOutcome:
     escalated: bool = False
     redacted: bool = False
     decisions: list[Decision] = field(default_factory=list)
+    fulfilled: list[str] = field(default_factory=list)  # planned facts this fact closed as fulfilled
 
 
 @dataclass
@@ -324,6 +325,9 @@ class WritePipeline:
             vector = (await asyncio.to_thread(self.embedder.embed, [fact.text]))[0]
 
         def outcome(action: str, fact_id: str | None, target_id: str | None, closed: bool, tent: bool):
+            fulfilled = []
+            if action in {"inserted", "refined", "updated", "contradicted", "disputed", "same_as"} and fact_id:
+                fulfilled = self._apply_fulfills(fact, d, candidates, temporal, decisions)
             return WriteOutcome(
                 draft.text if not redacted else fact.text,
                 action,
@@ -334,6 +338,7 @@ class WritePipeline:
                 escalated,
                 redacted,
                 decisions,
+                fulfilled,
             ), usages
 
         target = relation.target
@@ -389,7 +394,7 @@ class WritePipeline:
             fact.tentative = not close
             self.store.add_fact(fact, vector)
             if close:
-                self.store.expire_fact(target.id, max(fact.valid_from, target.valid_from))
+                self.store.expire_fact(target.id, max(fact.valid_from, target.valid_from), by=fact.id)
             action = "updated" if relation.label == "update" else "contradicted"
             return outcome(action, fact.id, target.id, close, fact.tentative)
 
@@ -397,6 +402,40 @@ class WritePipeline:
         fact.tentative = True
         self.store.add_fact(fact, vector)
         return outcome("inserted", fact.id, target.id, False, True)
+
+    # E5: fulfilled plans
+
+    def _apply_fulfills(
+        self, fact: Fact, d: dict[str, Decision], candidates: list[Fact], temporal: Decision, decisions: list[Decision]
+    ) -> list[str]:
+        """Close planned facts that `fact` fulfills: same subject and predicate, and Jev did not call the pair "new"."""
+        if not self.flags.fulfills_rule:
+            return []
+        if (
+            temporal.backend == "fallback"
+            or temporal.chosen not in ("past", "current")
+            or temporal.p < config.ACT_THRESHOLD
+        ):
+            return []
+        closed = []
+        for i, c in enumerate(candidates):
+            relation = d.get(f"relation_to_candidate__{i}")
+            if (
+                c.is_valid
+                and c.temporal_status == "planned"
+                and c.subject == normalize_entity(fact.subject)
+                and c.predicate == fact.predicate
+                and relation is not None
+                and relation.backend != "fallback"
+                and relation.chosen != "new"
+            ):
+                self.store.expire_fact(c.id, max(fact.valid_from, c.valid_from), reason="fulfilled", by=fact.id)
+                rule = self._rule("fulfills", "closed", f"plan fulfilled by {fact.id}", c.id)
+                decisions.append(rule)
+                self.store.add_decisions(fact.id, [rule])
+                closed.append(c.id)
+                self.stats["fulfilled"] += 1
+        return closed
 
     # E3 helpers
 
