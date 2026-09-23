@@ -160,20 +160,20 @@ bumped and old arms keep the old version.
 *Table 1. Jev questions (`src/engram/decide/questions.py`, `docs/DECISIONS.md`); design, not a measurement (no slice, Q, k or model). `edge_type` and `query_relation`
 choose among 25<!-- src: src/engram/decide/questions.py (EDGE_TYPES) --> relation types.*
 
-| question | type | version | options |
-|---|---|---|---|
-| `worth_remembering` | noul | 1 | yes / no |
-| `fact_kind` | choice | 1 | `preference`, `bio`, `event`, `relationship`, `task`, `opinion` |
-| `temporal_status` | choice | 2 | `current`, `planned`, `past`, `hypothetical` |
-| `relation_to_candidate` | choice | 2 | `new`, `duplicate`, `update`, `contradiction`, `refinement`, `negates` |
-| `relation_to_candidate_recheck` | choice | 2 | `new`, `duplicate`, `update`, `contradiction`, `refinement`, `negates` |
-| `edge_type` | choice | 1 | 25<!-- src: src/engram/decide/questions.py --> relation types |
-| `durability` | choice | 1 | `permanent`, `long_term`, `short_lived` |
-| `sensitivity` | choice | 1 | `none`, `health`, `financial`, `relationship`, `credentials` |
-| `plan_fulfilled` | noul | 1 | yes / no |
-| `relevant_to_query` | noul | 1 | yes / no |
-| `query_relation` | choice | 1 | 25<!-- src: src/engram/decide/questions.py --> relation types |
-| `same_fact` | noul | 1 | yes / no |
+| question | type | options |
+|---|---|---|
+| `worth_remembering` | noul v1 | yes / no |
+| `fact_kind` | choice v1 | `preference`, `bio`, `event`, `relationship`, `task`, `opinion` |
+| `temporal_status` | choice v2 | `current`, `planned`, `past`, `hypothetical` |
+| `relation_to_candidate` | choice v2 | `new`, `duplicate`, `update`, `contradiction`, `refinement`, `negates` |
+| `relation_to_candidate_recheck` | choice v2 | `new`, `duplicate`, `update`, `contradiction`, `refinement`, `negates` |
+| `edge_type` | choice v1 | 25<!-- src: src/engram/decide/questions.py --> relation types |
+| `durability` | choice v1 | `permanent`, `long_term`, `short_lived` |
+| `sensitivity` | choice v1 | `none`, `health`, `financial`, `relationship`, `credentials` |
+| `plan_fulfilled` | noul v1 | yes / no |
+| `relevant_to_query` | noul v1 | yes / no |
+| `query_relation` | choice v1 | 25<!-- src: src/engram/decide/questions.py --> relation types |
+| `same_fact` | noul v1 | yes / no |
 
 ### 3.3 Policy layer
 

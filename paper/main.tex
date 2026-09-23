@@ -35,7 +35,7 @@
   literate={→}{{$\rightarrow$}}2 {—}{{---}}1 {–}{{--}}1 {’}{{'}}1 {©}{{\textcopyright}}1 {é}{{\'e}}1 {…}{{\ldots}}1}
 \setlength{\emergencystretch}{2em}
 \renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.8}\renewcommand{\textfraction}{0.1}
-\renewcommand{\floatpagefraction}{0.75}\renewcommand{\dbltopfraction}{0.9}\renewcommand{\dblfloatpagefraction}{0.75}
+\renewcommand{\floatpagefraction}{0.85}\renewcommand{\dbltopfraction}{0.9}\renewcommand{\dblfloatpagefraction}{0.85}
 \setcounter{topnumber}{3}\setcounter{totalnumber}{5}\setcounter{dbltopnumber}{2}
 % Every number is written as value\src{source file}; \src prints nothing. See paper/numbers.json.
 \newcommand{\src}[1]{}
@@ -142,29 +142,29 @@ Figure~\ref{fig:2} walks through these stages on a question from the retrieval r
 \subsection{The decision chain}\label{sec:3.2}
 Table~\ref{tab:1} lists the 12\src{src/engram/decide/questions.py (ALL\_QUESTIONS)} questions in the current chain; \hyperref[app:A]{Appendix~A} gives the full option text of every version. Choice questions carry a rubric per option. When a question's wording changes, its version number is bumped and old arms keep the old version.
 
-\begin{table*}[tbp]
+\begin{table}[tbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\small\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Jev questions (\texttt{src/engram/decide/questions.py}, \texttt{docs/DECISIONS.md}); design, not a measurement (no slice, Q, k or model). \texttt{edge\_\allowbreak{}type} and \texttt{query\_\allowbreak{}relation} choose among 25\src{src/engram/decide/questions.py (EDGE\_TYPES)} relation types.}\label{tab:1}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
 \toprule
-\textbf{question} & \textbf{type} & \textbf{version} & \textbf{options} \\
+\textbf{question} & \textbf{type} & \textbf{options} \\
 \midrule
-\texttt{worth\_\allowbreak{}remembering} & noul & 1 & yes / no \\
-\texttt{fact\_\allowbreak{}kind} & choice & 1 & \texttt{preference}, \texttt{bio}, \texttt{event}, \texttt{relationship}, \texttt{task}, \texttt{opinion} \\
-\texttt{temporal\_\allowbreak{}status} & choice & 2 & \texttt{current}, \texttt{planned}, \texttt{past}, \texttt{hypothetical} \\
-\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} & choice & 2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
-\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck} & choice & 2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
-\texttt{edge\_\allowbreak{}type} & choice & 1 & 25\src{src/engram/decide/questions.py} relation types \\
-\texttt{durability} & choice & 1 & \texttt{permanent}, \texttt{long\_\allowbreak{}term}, \texttt{short\_\allowbreak{}lived} \\
-\texttt{sensitivity} & choice & 1 & \texttt{none}, \texttt{health}, \texttt{financial}, \texttt{relationship}, \texttt{credentials} \\
-\texttt{plan\_\allowbreak{}fulfilled} & noul & 1 & yes / no \\
-\texttt{relevant\_\allowbreak{}to\_\allowbreak{}query} & noul & 1 & yes / no \\
-\texttt{query\_\allowbreak{}relation} & choice & 1 & 25\src{src/engram/decide/questions.py} relation types \\
-\texttt{same\_\allowbreak{}fact} & noul & 1 & yes / no \\
+\texttt{worth\_\allowbreak{}remembering} & noul v1 & yes / no \\
+\texttt{fact\_\allowbreak{}kind} & choice v1 & \texttt{preference}, \texttt{bio}, \texttt{event}, \texttt{relationship}, \texttt{task}, \texttt{opinion} \\
+\texttt{temporal\_\allowbreak{}status} & choice v2 & \texttt{current}, \texttt{planned}, \texttt{past}, \texttt{hypothetical} \\
+\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} & choice v2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
+\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck} & choice v2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
+\texttt{edge\_\allowbreak{}type} & choice v1 & 25\src{src/engram/decide/questions.py} relation types \\
+\texttt{durability} & choice v1 & \texttt{permanent}, \texttt{long\_\allowbreak{}term}, \texttt{short\_\allowbreak{}lived} \\
+\texttt{sensitivity} & choice v1 & \texttt{none}, \texttt{health}, \texttt{financial}, \texttt{relationship}, \texttt{credentials} \\
+\texttt{plan\_\allowbreak{}fulfilled} & noul v1 & yes / no \\
+\texttt{relevant\_\allowbreak{}to\_\allowbreak{}query} & noul v1 & yes / no \\
+\texttt{query\_\allowbreak{}relation} & choice v1 & 25\src{src/engram/decide/questions.py} relation types \\
+\texttt{same\_\allowbreak{}fact} & noul v1 & yes / no \\
 \bottomrule
 \end{tabularx}
-\end{table*}
+\end{table}
 \subsection{Policy layer}\label{sec:3.3}
 Decisions act only through explicit rules (\texttt{src/engram/pipeline/write.py}):
 
@@ -1188,7 +1188,7 @@ N05 & no\_\allowbreak{}temporal\_\allowbreak{}cue & What phone does Caroline hav
 \endgroup
 \FloatBarrier
 \section{Per-conversation held-out tables}\label{app:D}
-\begin{table}[tbp]
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{D.1 Held-out, per conversation, k=3. Q per row; models as in Table~\ref{tab:3}.}
@@ -1203,7 +1203,7 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 125/178\src{bench/result
 \bottomrule
 \end{tabularx}
 \end{table}
-\begin{table}[tbp]
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{D.2 Held-out, per conversation: engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table~\ref{tab:3}.}
@@ -1218,7 +1218,7 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 125/178\src{bench/result
 \bottomrule
 \end{tabularx}
 \end{table}
-\begin{table}[tbp]
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{D.3 Held-out, per conversation, k=20. Q per row; models as in Table~\ref{tab:3}.}
@@ -1233,7 +1233,7 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/result
 \bottomrule
 \end{tabularx}
 \end{table}
-\begin{table}[tbp]
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices; no questions answered), from the decision logs (\texttt{bench/results/jev\_\allowbreak{}latency.json}). Client-measured, after the rate limiter, retries included.}\label{tab:12}
@@ -1253,7 +1253,7 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/result
 \bottomrule
 \end{tabularx}
 \end{table}
-\begin{table}[tbp]
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Held-out write side (conv-30, 41, 42, 43; writes only, so Q and k do not apply). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus escalations.}\label{tab:13}
@@ -1278,10 +1278,10 @@ All commands run from the repository root. With the call cache (\texttt{bench/.c
 \textbf{table / figure} & \textbf{command} \\
 \midrule
 \endhead
-Table~\ref{tab:2}; Fig.~\ref{fig:4} & \texttt{python -m bench.run --arm \{e2\_\allowbreak{}\allowbreak{}jev,e2\_\allowbreak{}\allowbreak{}llm,mem0\} --slice dev} \\
-Tables~\ref{tab:3}--\ref{tab:5}, D; Figs.~\ref{fig:5}--\ref{fig:7} & \texttt{python -m bench.run --arm \{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2,mem0\} --slice heldout:\textless{}conv\textgreater{} --top-k 3 --also-top-k 20}, then \texttt{python -m bench.heldout\_\allowbreak{}\allowbreak{}report} and \texttt{python -m bench.token\_\allowbreak{}\allowbreak{}match} \\
-Tables~\ref{tab:6}, \ref{tab:8}; Figs.~\ref{fig:3}, \ref{fig:8} & \texttt{python -m bench.run --arm \textless{}arm\textgreater{} --slice dev\_\allowbreak{}\allowbreak{}updates[2] [--top-k 3] [--no-dates]} \\
-Tables~\ref{tab:7}, \ref{tab:9}; Figs.~\ref{fig:9}, \ref{fig:11} & \texttt{python bench/test\_\allowbreak{}\allowbreak{}contradictions.py --backend laya [--native] --save \ldots{}}, \texttt{python -m bench.calibration}, \texttt{python -m bench.jev\_\allowbreak{}\allowbreak{}regression} (the Laya rows need \texttt{bench/laya\_\allowbreak{}\allowbreak{}server.py} running) \\
+Table~\ref{tab:2}; Fig.~\ref{fig:4} & \texttt{python -m bench.run -{}-arm \{e2\_\allowbreak{}\allowbreak{}jev,e2\_\allowbreak{}\allowbreak{}llm,mem0\} -{}-slice dev} \\
+Tables~\ref{tab:3}--\ref{tab:5}, D; Figs.~\ref{fig:5}--\ref{fig:7} & \texttt{python -m bench.run -{}-arm \{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2,mem0\} -{}-slice heldout:\textless{}conv\textgreater{} -{}-top-k 3 -{}-also-top-k 20}, then \texttt{python -m bench.heldout\_\allowbreak{}\allowbreak{}report} and \texttt{python -m bench.token\_\allowbreak{}\allowbreak{}match} \\
+Tables~\ref{tab:6}, \ref{tab:8}; Figs.~\ref{fig:3}, \ref{fig:8} & \texttt{python -m bench.run -{}-arm \textless{}arm\textgreater{} -{}-slice dev\_\allowbreak{}\allowbreak{}updates[2] [-{}-top-k 3] [-{}-no-dates]} \\
+Tables~\ref{tab:7}, \ref{tab:9}; Figs.~\ref{fig:9}, \ref{fig:11} & \texttt{python bench/test\_\allowbreak{}\allowbreak{}contradictions.py -{}-backend laya [-{}-native] -{}-save \ldots{}}, \texttt{python -m bench.calibration}, \texttt{python -m bench.jev\_\allowbreak{}\allowbreak{}regression} (the Laya rows need \texttt{bench/laya\_\allowbreak{}\allowbreak{}server.py} running) \\
 Fig.~\ref{fig:10} & \texttt{python -m bench.tradeoff} \\
 Tables~\ref{tab:10}--\ref{tab:11} & \texttt{python -m bench.laya\_\allowbreak{}\allowbreak{}report}, \texttt{python -m bench.hybrid\_\allowbreak{}\allowbreak{}report} \\
 Table~\ref{tab:12}, Fig.~\ref{fig:12} & \texttt{python -m bench.jev\_\allowbreak{}\allowbreak{}latency} \\
@@ -1320,4 +1320,5 @@ The spend ledger records cost per run, not per table. Per-arm totals:
 \bottomrule
 \end{longtable}
 \endgroup
+\FloatBarrier
 \end{document}

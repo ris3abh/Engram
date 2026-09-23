@@ -854,8 +854,8 @@ def t_questions() -> str:
                 else "yes / no"
             )
         )
-        rows.append([f"`{q.id}`", q.type, str(getattr(q, "version", 1)), opts])
-    return table(["question", "type", "version", "options"], rows)
+        rows.append([f"`{q.id}`", f"{q.type} v{getattr(q, 'version', 1)}", opts])
+    return table(["question", "type", "options"], rows)
 
 
 def t_agreement() -> str:

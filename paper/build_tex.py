@@ -25,6 +25,7 @@ WIDE_FIGS = {"pipeline", "calibration"}  # figure*: the pipeline, and the three-
 COLUMN_PT = 243.0  # one column at 0.75in margins, 0.25in column sep, letter paper
 CHAR_PT = 4.4  # average character width at \footnotesize
 ONECOLUMN_FROM = "Appendix B"
+FORCE_COLUMN = {"tab:1"}  # tables kept in one column (\small, wrapped) even though their natural width is larger
 
 
 def marker_cite(key: str) -> str:
@@ -89,7 +90,7 @@ def esc(text: str) -> str:
 
 
 def esc_tt(text: str) -> str:
-    return r"\texttt{" + esc(text).replace(r"\_", r"\_\allowbreak{}") + "}"
+    return r"\texttt{" + esc(text).replace(r"\_", r"\_\allowbreak{}").replace("--", "-{}-") + "}"
 
 
 def number(display: str, source: str) -> str:
@@ -206,9 +207,12 @@ def table_tex(rows: list[list[str]], caption: str | None, label: str | None, one
         lines += [" & ".join(inline(c).replace(r"\_", r"\_\allowbreak{}") for c in r) + r" \\" for r in body]
         lines += [r"\bottomrule", r"\end{longtable}", r"\endgroup"]
         return "\n".join(lines)
-    wide = not onecolumn and natural_width(header, body) > COLUMN_PT
+    forced = label in FORCE_COLUMN
+    wide = not onecolumn and not forced and natural_width(header, body) > COLUMN_PT
     first = max(len(plain(r[0])) for r in [header, *body])
     share = min(0.34, max(0.14, first * CHAR_PT / (COLUMN_PT * (2.05 if wide or onecolumn else 1))))
+    if forced:
+        share = 0.40
     spec = rf">{{\raggedright\arraybackslash}}p{{{share:.2f}\linewidth}}" + "".join(
         r">{\raggedleft\arraybackslash}X" if numeric_col(body, j) else r">{\raggedright\arraybackslash}X"
         for j in range(1, ncol)
@@ -219,9 +223,9 @@ def table_tex(rows: list[list[str]], caption: str | None, label: str | None, one
     env = "table*" if wide else "table"
     return "\n".join(
         [
-            rf"\begin{{{env}}}[tbp]",
+            rf"\begin{{{env}}}[{'!htbp' if onecolumn else 'tbp'}]",
             r"\centering",
-            r"\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000",
+            (r"\small" if forced else r"\footnotesize") + r"\hyphenpenalty=10000\exhyphenpenalty=10000",
             cap,
             rf"\begin{{tabularx}}{{\linewidth}}{{{spec}}}",
             r"\toprule",
@@ -453,7 +457,7 @@ PREAMBLE = r"""\documentclass[10pt,twocolumn]{article}
   literate={→}{{$\rightarrow$}}2 {—}{{---}}1 {–}{{--}}1 {’}{{'}}1 {©}{{\textcopyright}}1 {é}{{\'e}}1 {…}{{\ldots}}1}
 \setlength{\emergencystretch}{2em}
 \renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.8}\renewcommand{\textfraction}{0.1}
-\renewcommand{\floatpagefraction}{0.75}\renewcommand{\dbltopfraction}{0.9}\renewcommand{\dblfloatpagefraction}{0.75}
+\renewcommand{\floatpagefraction}{0.85}\renewcommand{\dbltopfraction}{0.9}\renewcommand{\dblfloatpagefraction}{0.85}
 \setcounter{topnumber}{3}\setcounter{totalnumber}{5}\setcounter{dbltopnumber}{2}
 % Every number is written as value\src{source file}; \src prints nothing. See paper/numbers.json.
 \newcommand{\src}[1]{}
@@ -479,6 +483,7 @@ def main() -> None:
             body,
             r"\appendix",
             appendix,
+            r"\FloatBarrier",
             r"\end{document}",
         ]
     )
