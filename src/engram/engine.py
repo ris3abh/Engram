@@ -1,5 +1,6 @@
 """Wires store, decision backend, LLM and embedder together. Used by the CLI, server and benchmark."""
 
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -8,6 +9,8 @@ from .decide.base import DecisionBackend
 from .decide.log import DecisionLog
 from .embed import Embedder, HashEmbedder, SentenceEmbedder
 from .llm.base import LLMBackend, UsageLog
+from .pipeline.answer import Answer, answer
+from .pipeline.retrieve import Retriever
 from .pipeline.write import WritePipeline
 from .store import Store
 
@@ -23,9 +26,15 @@ class Engram:
 
     def __post_init__(self) -> None:
         self.writer = WritePipeline(self.store, self.backend, self.llm, self.embedder, self.log)
+        self.retriever = Retriever(self.store, self.backend, self.embedder)
 
     async def ingest(self, text: str, **kw):
         return await self.writer.ingest(text, **kw)
+
+    async def ask(self, question: str) -> Answer:
+        started = time.perf_counter()
+        retrieval = await self.retriever.retrieve(question)
+        return await answer(self.llm, retrieval, started)
 
 
 def build(

@@ -1,4 +1,4 @@
-"""engram ingest | graph | stats  (ask, hygiene and bench arrive in later build steps)."""
+"""engram ingest | ask | graph | stats  (hygiene and bench arrive in later build steps)."""
 
 import asyncio
 from pathlib import Path
@@ -70,6 +70,28 @@ def ingest(
                 typer.echo(f"  {o.action:12} {o.text}{flags}  [{explain(o.decisions)}]")
 
     asyncio.run(run())
+
+
+@app.command()
+def ask(
+    question: str,
+    backend: str = typer.Option("jev", help="jev | mock"),
+    db: Path = typer.Option(config.DB_PATH),
+    show: bool = typer.Option(True, help="print the memories the answer was built from"),
+) -> None:
+    """Answer a question from memory, showing the supporting facts with confidence and validity."""
+    engine = build(db, backend)
+    result = asyncio.run(engine.ask(question))
+    typer.echo(result.text)
+    if show:
+        r = result.retrieval
+        answer_ms = result.latency_ms - r.latency_ms
+        typer.echo(
+            f"\n{len(r.facts)} memories from a shortlist of {r.shortlist}; "
+            f"retrieve {r.latency_ms:.0f} ms (${r.cost_usd:.5f}) + answer {answer_ms:.0f} ms"
+            + (f"  [DEGRADED: {r.degraded}]" if r.degraded else "")
+        )
+        typer.echo(result.memories)
 
 
 @app.command()

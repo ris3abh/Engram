@@ -172,12 +172,15 @@ attached to the kept fact's audit trail. If this request fails, every fact is wr
 ```json
 {"type": "noul",
  "instructions": {"memory": {"text": "‹…›", "valid_from": "‹…›", "valid_until": "‹…|null›"},
-                  "question": "Does `memory` help answer `query`?"},
- "criteria": {"true": "It states or directly implies part of the answer.",
-              "false": "It is off-topic or only shares a keyword."}}
+                  "question": "Would `memory` help someone answer `query`?"},
+ "criteria": {"true": "It is about what the query asks (the same person, attribute or topic), even if it gives only part of the answer, an older value, or a value that is hidden or incomplete.",
+              "false": "It is about something else, or only shares a word with the query."}}
 ```
 
-Keep a fact if its noul is above 0.5. Sort the kept facts by noul.
+Keep a fact if its noul is above 0.5. Sort the kept facts by noul. The rubric favors recall: the first
+wording ("states or directly implies part of the answer") scored "User lives in Paris" at 0.32 for "where did
+the user live before Berlin". Answering that requires comparing validity dates, which Jev is weak at. The
+answer LLM gets each fact's validity window and resolves the time question itself.
 
 ## Hygiene pass
 
