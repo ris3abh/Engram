@@ -152,6 +152,15 @@ systems under one protocol.
 4. Render compact lines for the answer model: the date the fact was said, the fact, and the verbatim source
    quote.
 
+Figure 2 walks through these stages on a question from the retrieval regression test.
+
+![Figure 2: The read path on the "before Berlin" fixture.](figures/retrieval.svg)
+
+*Figure 2. The read path on "where did the user live before Berlin" (fixture in
+`tests/test_retrieval_regression.py`). Cosine recall searches closed facts too, so Paris can enter at stage 1 or
+through Berlin's superseded chain at stage 4; the test asserts that Paris is retrieved and that Acme, another closed
+chain, is not, but no stored run records which stage added Paris.*
+
 ### 3.2 The decision chain
 
 Table 1 lists the {{k.nq}} questions in the current chain; Appendix A gives the full option text of every
@@ -201,7 +210,15 @@ hysteresis.
 
 **Belief v3.** The v2 rule used in the held-out runs lets any answer count. A `duplicate` at $q < 0.5$ therefore
 has $\operatorname{logit} q < 0$ and *lowers* belief, and a weak against-answer raises it. v3 counts an answer only
-when its label is the argmax and $q > 0.5$ (§5.3).
+when its label is the argmax and $q > 0.5$ (§5.3). Figure 3 traces one fact from the dev run under both rules.
+
+![Figure 3: Belief trace of one fact under v2 and v3.](figures/belief_trace.svg)
+
+*Figure 3. Belief in the fact "Melanie carves out daily me-time through running, reading, or playing violin"
+(message D2:5), dev + update set 1, under v2 and v3. Under v2 a weak refinement answer at D2:7 (p = {{bt.p_weak}})
+lowers belief slightly, so the update at U:E11 takes it below the close line; v3 ignores that answer (×) and the
+fact closes one message later, at U:S01. Source: the belief trace in
+`bench/results/e4_belief_v2__dev_updates__k3__noanswer.json` and its v3 counterpart.*
 
 **What this assumes.** The log-odds rule treats $q$ as a calibrated likelihood. Where the model is miscalibrated,
 belief moves by the wrong amount. This is why §5.4 measures calibration and why a per-question temperature is
@@ -322,6 +339,14 @@ The two latency columns are medians over different messages. In the E2 LLM arm o
 (median extraction {{e2lat.extract_p50}}); on the messages with decisions, the logged median of the slowest
 decision call is {{e2lat.decide_max_p50}} (`bench/e2_latency.py`).
 
+Figure 4 shows where each system's write cost goes: extraction dominates, and the decision layer is
+{{e2.jev_dshare}} of the Jev arm's cost against {{e2.llm_dshare}} of the LLM arm's.
+
+![Figure 4: Write cost split into extraction and decision layer.](figures/cost_breakdown.svg)
+
+*Figure 4. Write cost per thousand messages on the dev slice ({{dev.msgs}} messages), split into extraction and
+decision layer. mem0 makes one call per message that extracts and deduplicates.*
+
 These ratios compare Jev against `claude-sonnet-4-6` as the decider. We have no measurement with a smaller LLM
 decider. On the stress slice the Jev arm scored {{e2_jev__stress.acc}} and mem0 {{mem0__stress.acc}}; the LLM
 arm was not run there.
@@ -357,13 +382,29 @@ At k=3 engram is ahead of mem0 by {{ho.k3.diff}} points (95% CI {{ho.k3.ci.lo}} 
 token-matched mem0 the difference is {{tm.diff}} points (95% CI {{tm.ci.lo}} to {{tm.ci.hi}}; McNemar
 $p$ = {{tm.p}}; {{tm.eng_only}} questions only engram answered against {{tm.m0_only}} only mem0 answered).
 
-engram is ahead in every conversation (Appendix D) and in every category at matched context (Table 5, Figure 2).
+Figure 5 places the three measured mem0 settings and the two engram settings on one axis of retrieved tokens.
+engram at k=3 sits above the line through mem0's points, and the two systems meet at k=20.
+
+![Figure 5: Accuracy against retrieved tokens.](figures/acc_vs_tokens.svg)
+
+*Figure 5. Pooled held-out accuracy ({{ho.q}} questions) against mean retrieved tokens per question. mem0
+accuracy was measured at three settings, k = {{tm.k.3}}, {{tm.k}} and {{tm.k.20}}; the token-matching sweep counted
+tokens at the other k without answering. Models as in Table 3.*
+
+engram's point estimate is ahead in every conversation and in every category at matched context (Figure 6,
+Table 5, Figure 7). Per conversation, the matched-context interval excludes zero in {{pc.k6.sig}} of four
+conversations (conv-42 and conv-43); conv-30 and conv-41 are within noise on their own.
+
+![Figure 6: Per-conversation paired differences.](figures/perconv_diffs.svg)
+
+*Figure 6. engram minus mem0 accuracy per held-out conversation, with per-question 95% intervals: engram k=3
+against mem0 k=3, against token-matched mem0 k=6, and both at k=20. Source: `bench/results/perconv_diffs.json`.*
 
 *Table 5. Held-out accuracy by LoCoMo category, {{ho.q}} questions. Models as in Table 3.*
 
 {{table:category}}
 
-![Figure 2: held-out accuracy by category at k=3, for engram, token-matched mem0 (k=6) and mem0 (k=3).](figures/per_category_k3.svg)
+![Figure 7: held-out accuracy by category at k=3, for engram, token-matched mem0 (k=6) and mem0 (k=3).](figures/per_category_k3.svg)
 
 **Attribution.** Matching context removes {{tm.ctx_share}} of the k=3 difference. The other {{tm.rest_share}} is
 what remains once context is matched.
@@ -384,6 +425,13 @@ a labeled pair and those not.*
 - The set-2 keep set has one item.
 
 {{table:safety}}
+
+Figure 8 shows the same outcomes per arm.
+
+![Figure 8: Store outcomes per arm.](figures/store_outcomes.svg)
+
+*Figure 8. Store outcomes on the update sets: set-1 close items left stale, set-2 stale values, closes on
+dev + set 1 split by whether they match a labeled pair, and no_close items over-closed. E3 was not run on set 2.*
 
 **Over-closes.** No labeled keep item was over-closed by any arm.
 
@@ -439,9 +487,9 @@ predate `negates`.*
 
 {{table:calibration}}
 
-![Figure 3: reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.](figures/calibration.svg)
+![Figure 9: reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.](figures/calibration.svg)
 
-**Cost/error tradeoff.** The {{cal.esc.rel.jev.n}} escalation labels are too few for a curve, so Figure 4 uses the {{tr.n}} gold pairs.
+**Cost/error tradeoff.** The {{cal.esc.rel.jev.n}} escalation labels are too few for a curve, so Figure 10 uses the {{tr.n}} gold pairs.
 - $c_J$ = {{tr.cJ}} is the mean Jev cost of one relation decision over {{tr.cJ_n}} held-out decisions.
 - $c_L$ = {{tr.cL}} is the mean cost of one escalation over {{tr.cL_n}} logged escalations.
 - No LLM run on the gold pairs is saved, so $\varepsilon_L$ is an assumption, plotted at 0 and 0.1.
@@ -450,9 +498,9 @@ With Jev alone the error is {{tr.jev_err}}. At $\theta$ = 0.85, {{tr.0.85.pesc}}
 {{tr.0.85.C}} per decision, and $E$ is {{tr.0.85.E0}} ($\varepsilon_L$ = 0) or {{tr.0.85.E1}} ($\varepsilon_L$ =
 0.1). At the production threshold of {{k.esc}}, {{tr.0.6.pesc}} escalate and $E$ is {{tr.0.6.E0}} or {{tr.0.6.E1}}.
 
-![Figure 4: C(θ) and E(θ) on the gold contradiction pairs.](figures/tradeoff.svg)
+![Figure 10: C(θ) and E(θ) on the gold contradiction pairs.](figures/tradeoff.svg)
 
-*Figure 4. $C(\theta)$ and $E(\theta)$ on the {{tr.n}} gold pairs. $\varepsilon_L$ is assumed, not measured; the {{cal.esc.rel.jev.n}} escalation labels were too few for a curve.*
+*Figure 10. $C(\theta)$ and $E(\theta)$ on the {{tr.n}} gold pairs. $\varepsilon_L$ is assumed, not measured; the {{cal.esc.rel.jev.n}} escalation labels were too few for a curve.*
 
 ### 5.5 Negative result: closing stale facts does not change answers
 
@@ -494,7 +542,12 @@ ECE but not its accuracy.
 
 **Agreement with Jev.** With the frozen Jev arm replayed from cache and Laya answering every request on the side,
 the two gave the same answer on {{agree.all}} of {{agree.n}} decisions and the same action at the {{k.act}} threshold on
-{{agree.act}}. On `relation_to_candidate` they agreed on {{agree.rel}} (Table 10).
+{{agree.act}}. On `relation_to_candidate` they agreed on {{agree.rel}} (Table 10, Figure 11).
+
+![Figure 11: Laya against Jev agreement per question.](figures/laya_agreement.svg)
+
+*Figure 11. Agreement between the Laya base checkpoint (zero-shot) and Jev on identical requests, per
+question, sorted by same answer. Dev + update sets 1 and 2, frozen arm's trajectory.*
 
 *Table 10. Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory. Same action:
 both choose the same label at p ≥ {{k.act}}, or neither reaches it. Acts: share of decisions at p ≥ {{k.act}}.*
@@ -523,7 +576,7 @@ claude-sonnet-4-6.*
 
 **Jev latency is flat in request size.** Across {{lat.n}} live Jev requests from {{lat.runs}} runs, median latency
 is between {{lat.p50.min50}} and {{lat.p50.max50}} for requests of 1 to 50 questions, and {{lat.p50.51_80}} for
-51–80. A least-squares fit gives {{lat.fit.a}} plus {{lat.fit.b}} ms per question.
+51–80. A least-squares fit gives {{lat.fit.a}} plus {{lat.fit.b}} ms per question (Figure 12).
 
 Variation over time is larger than variation over size. For requests of 16–20 questions, the per-run median was
 between {{lat.run.min}} and {{lat.run.max}} in {{lat.run.n}} runs, and {{lat.conv30}} and {{lat.conv41}} in the two
@@ -534,7 +587,7 @@ after the rate limiter, retries included.*
 
 {{table:latency}}
 
-![Figure 5: Jev request latency: distribution over all logged requests, and median and p90 by request size.](figures/latency.svg)
+![Figure 12: Jev request latency: distribution over all logged requests, and median and p90 by request size.](figures/latency.svg)
 
 **Extraction dominates write cost.** On the held-out set, engram's write cost is {{ho.eng.w1k.min}} to
 {{ho.eng.w1k.max}} per 1,000 messages and mem0's is {{ho.m0.w1k.min}} to {{ho.m0.w1k.max}}. The decision layer is

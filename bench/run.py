@@ -804,6 +804,16 @@ async def run_arm(
         result.update(update_report(sl, answers, system, SentenceEmbedder()))
         if spec["system"] == "engram":
             result["fulfills_log"] = system.engine.writer.fulfills_log
+    if spec["system"] == "engram" and system.engine.writer.belief_trace:
+        facts = {f.id: f for f in system.engine.store.list_facts()}
+        result["belief_trace"] = [
+            {
+                **e,
+                "fact_text": facts[e["fact"]].text if e["fact"] in facts else None,
+                "fact_source": facts[e["fact"]].source_message_id if e["fact"] in facts else None,
+            }
+            for e in system.engine.writer.belief_trace
+        ]
     RESULTS.mkdir(parents=True, exist_ok=True)
     out_name = slice_name.replace(":", "_")
     (RESULTS / f"{name}__{out_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))

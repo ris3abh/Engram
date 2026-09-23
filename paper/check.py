@@ -17,7 +17,9 @@ numbers = json.loads((ROOT / "paper" / "numbers.json").read_text())
 body = text.split("## Appendix A.")[0]
 
 # every src comment must follow exactly a display + source pair from numbers.json
-pairs = sorted({f"{v['display']}<!-- src: {v['source']} -->" for v in numbers.values()}, key=len, reverse=True)
+pairs = sorted(
+    {f"{v['display']}<!-- src: {v['source']} -->" for k, v in numbers.items() if k != "figures"}, key=len, reverse=True
+)
 stripped = body
 count = 0
 for pair in pairs:

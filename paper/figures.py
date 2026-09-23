@@ -1,9 +1,17 @@
-"""Paper figures from bench/results/ (no API calls), in one visual style. The pipeline diagram is generated as SVG.
+"""Paper figures, regenerated from files in bench/results/ (no API calls). Two diagrams are generated as SVG.
 
-uv run --with matplotlib python paper/figures.py
+Every figure is saved as SVG (for main.md) and PDF (for main.tex) in paper/figures/, at print size: 3.4 in wide
+for one column, 7 in for figure*. The values each figure plots, with their source files, are written to
+paper/figures/manifest.json; paper/build.py folds that manifest into paper/numbers.json.
+
+Palette, shared with Figure 1: blue = Jev decisions / engram, orange = LLM calls / mem0, green = store,
+purple = Laya, slate = reference lines.
+
+    uv run --with matplotlib python paper/figures.py
 """
 
 import json
+import statistics
 import sys
 from html import escape
 from pathlib import Path
@@ -21,11 +29,14 @@ from engram.decide.calibrate import ece, reliability  # noqa: E402
 RES = ROOT / "bench" / "results"
 OUT = ROOT / "paper" / "figures"
 OUT.mkdir(parents=True, exist_ok=True)
+TEX_FIGS = OUT
+COL, WIDE = 3.4, 7.0  # inches
 
-# One palette for the whole paper: engram/Jev indigo, mem0 coral, Laya amber, reference slate.
-INDIGO, INDIGO_L = "#4453C4", "#AEB6EC"
-CORAL, CORAL_L = "#E4604E", "#F4B3A9"
-AMBER = "#E3A21A"
+BLUE, BLUE_L, BLUE_D = "#4453C4", "#AEB6EC", "#2F3A99"
+ORANGE, ORANGE_L = "#E8762C", "#F6C29B"
+GREEN, GREEN_L = "#2E9E6B", "#A9DCC3"
+PURPLE = "#8E6AC8"
+RED = "#C8413A"
 SLATE, SLATE_L, GRID = "#5B6577", "#AAB2BF", "#E7EAF0"
 INK = "#1F2430"
 
@@ -33,48 +44,53 @@ plt.rcParams.update(
     {
         "font.family": "sans-serif",
         "font.sans-serif": ["Helvetica Neue", "Helvetica", "Arial", "DejaVu Sans"],
-        "font.size": 10,
-        "axes.titlesize": 11,
+        "font.size": 7.5,
+        "axes.titlesize": 8,
         "axes.titleweight": "bold",
-        "axes.titlepad": 12,
-        "axes.labelsize": 10,
+        "axes.titlepad": 6,
+        "axes.labelsize": 7.5,
         "axes.labelcolor": INK,
         "axes.edgecolor": SLATE_L,
-        "axes.linewidth": 0.8,
+        "axes.linewidth": 0.6,
         "axes.spines.top": False,
         "axes.spines.right": False,
         "axes.grid": True,
         "grid.color": GRID,
-        "grid.linewidth": 0.8,
+        "grid.linewidth": 0.6,
         "axes.axisbelow": True,
         "xtick.color": SLATE,
         "ytick.color": SLATE,
+        "xtick.labelsize": 7,
+        "ytick.labelsize": 7,
         "xtick.major.size": 0,
         "ytick.major.size": 0,
         "legend.frameon": False,
-        "legend.fontsize": 9,
+        "legend.fontsize": 6.8,
         "svg.fonttype": "none",
+        "pdf.fonttype": 42,
         "figure.dpi": 150,
     }
 )
+
+MANIFEST: dict[str, dict] = {}
 
 
 def load(name: str) -> dict:
     return json.loads((RES / name).read_text())
 
 
-TEX_FIGS = OUT  # PDFs for main.tex sit next to the SVGs
-TEX_FIGS.mkdir(parents=True, exist_ok=True)
+def record(fig: str, sources: list[str], values: dict) -> None:
+    MANIFEST[fig] = {"sources": sources, "values": values}
 
 
 def save(fig, name: str) -> None:
-    fig.savefig(OUT / name, bbox_inches="tight", pad_inches=0.25, facecolor="white")
-    fig.savefig(TEX_FIGS / Path(name).with_suffix(".pdf"), bbox_inches="tight", pad_inches=0.1, facecolor="white")
+    fig.savefig(OUT / name, bbox_inches="tight", pad_inches=0.04, facecolor="white")
+    fig.savefig(TEX_FIGS / Path(name).with_suffix(".pdf"), bbox_inches="tight", pad_inches=0.04, facecolor="white")
     plt.close(fig)
 
 
 def svg_to_pdf(svg: Path, pdf: Path, width: int, height: int) -> None:
-    """Print a hand-built SVG to a one-page PDF with headless Chrome (no other converter is installed)."""
+    """Print a generated SVG to a one-page PDF with headless Chrome (no other converter is installed)."""
     import subprocess
     import tempfile
 
@@ -100,7 +116,196 @@ def svg_to_pdf(svg: Path, pdf: Path, width: int, height: int) -> None:
     )
 
 
-# ---------------------------------------------------------------- per-category accuracy (Figure 2)
+def pct(ax) -> None:
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
+
+
+# ---------------------------------------------------------------- belief trace (§3.4)
+
+
+def belief_trace() -> None:
+    src = {v: f"e4_belief_{v}__dev_updates__k3__noanswer.json" for v in ("v2", "v3")}
+    traces = {}
+    for v, name in src.items():
+        ev = [e for e in load(name)["belief_trace"] if e.get("fact_source") == "D2:5"]
+        traces[v] = ev
+    order = []
+    for e in traces["v2"]:
+        if e["message"] not in order:
+            order.append(e["message"])
+    x = {m: i for i, m in enumerate(order)}
+    fig, ax = plt.subplots(figsize=(COL, 2.35))
+    ax.axhspan(0, 0.25, color=RED, alpha=0.06, lw=0)
+    ax.axhline(0.25, color=RED, lw=0.9, ls=(0, (3, 2)))
+    ax.axhline(0.60, color=SLATE_L, lw=0.9, ls=(0, (3, 2)))
+    ax.text(-0.35, 0.225, "close < 0.25", ha="left", va="top", fontsize=6.5, color=RED)
+    ax.text(-0.35, 0.615, "reopen > 0.60", ha="left", va="bottom", fontsize=6.5, color=SLATE)
+    values = {}
+    for v, color, ls, off in (("v2", SLATE, "--", -0.06), ("v3", BLUE, "-", 0.06)):
+        pts = []
+        for e in traces[v]:
+            if e["event"] in ("insert", "applied"):
+                pts.append((x[e["message"]], e["after"]))
+        xs, ys = [p[0] + off for p in pts], [p[1] for p in pts]
+        ax.step(xs, ys, where="post", color=color, lw=1.6, ls=ls, label=f"belief {v}")
+        ax.plot(xs, ys, "o", color=color, ms=3.2, mfc="white", mew=1.1)
+        for e in traces[v]:
+            if e["event"] in ("ignored_weak",):
+                ax.plot(x[e["message"]] + off, e["before"], "x", color=color, ms=4, mew=1.1)
+            if e.get("closed"):
+                ax.annotate(
+                    f"{v} closes at {e['message']}",
+                    (x[e["message"]] + off, e["after"]),
+                    xytext=(8 if v == "v2" else -8, 16 if v == "v2" else -2),
+                    textcoords="offset points",
+                    ha="left" if v == "v2" else "right",
+                    fontsize=6.5,
+                    color=color,
+                    arrowprops={"arrowstyle": "-", "color": color, "lw": 0.7},
+                )
+        values[v] = [
+            [e["message"], e["event"], e.get("label"), e.get("p"), e.get("before"), e.get("after")] for e in traces[v]
+        ]
+    ax.set_xticks(range(len(order)))
+    ax.set_xticklabels(order, rotation=35, ha="right", fontsize=6.5)
+    ax.set_ylim(0, 1.05)
+    ax.set_ylabel("belief the fact is still true")
+    ax.set_xlabel("message (dev + update set 1)")
+    ax.legend(loc="center left", bbox_to_anchor=(0.0, 0.45), handlelength=2.2)
+    ax.set_xlim(-0.45, len(order) - 0.4)
+    ax.grid(axis="x", visible=False)
+    save(fig, "belief_trace.svg")
+    record("belief_trace", [f"bench/results/{n}" for n in src.values()], values)
+
+
+# ---------------------------------------------------------------- write-cost breakdown (§5.1)
+
+
+def cost_breakdown() -> None:
+    names = {"mem0": "mem0__dev.json", "E2 LLM": "e2_llm__dev.json", "E2 Jev": "e2_jev__dev.json"}
+    rows = {}
+    for label, fn in names.items():
+        r = load(fn)
+        dec = r["decision_cost_per_1k"] or 0.0
+        rows[label] = (r["cost_per_1k"] - dec, dec, r["cost_per_1k"])
+    fig, ax = plt.subplots(figsize=(COL, 1.55))
+    labels = list(rows)
+    for i, lab in enumerate(labels):
+        ext, dec, total = rows[lab]
+        ax.barh(i, ext, color=ORANGE_L, edgecolor="white", height=0.56, label="extraction (LLM)" if i == 0 else None)
+        dcolor = BLUE if lab == "E2 Jev" else ORANGE
+        ax.barh(i, dec, left=ext, color=dcolor, edgecolor="white", height=0.56)
+        if dec:
+            share = dec / total
+            txt = (
+                f"decisions ${dec:.3f} ({100 * share:.1f}%)"
+                if dec < 1
+                else f"decisions ${dec:.2f} ({100 * share:.0f}%)"
+            )
+            ax.text(total + 0.25, i, txt, va="center", fontsize=6.5, color=dcolor)
+        else:
+            ax.text(total + 0.25, i, "one call: extract + dedupe", va="center", fontsize=6.5, color=SLATE)
+    ax.set_yticks(range(len(labels)))
+    ax.set_yticklabels(labels)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 30)
+    ax.set_xlabel("write cost, USD per 1,000 messages (dev slice)")
+    ax.grid(axis="y", visible=False)
+    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), fontsize=6.5, handlelength=1.2)
+    save(fig, "cost_breakdown.svg")
+    record(
+        "cost_breakdown",
+        [f"bench/results/{f}" for f in names.values()],
+        {k: {"extraction": v[0], "decision": v[1], "total": v[2]} for k, v in rows.items()},
+    )
+
+
+# ---------------------------------------------------------------- accuracy vs retrieved tokens (§5.2)
+
+
+def acc_vs_tokens() -> None:
+    h = load("heldout_report.json")
+    t = load("mem0_token_matched__heldout_pooled__k6.json")
+    n = h["k3"]["pooled"]["q"]
+
+    def tok(k: str, key: str) -> float:
+        rows = h[k]["rows"]
+        return sum(r[key] * r["q"] for r in rows) / n
+
+    mem0 = [
+        (3, tok("k3", "mem0_tokens"), h["k3"]["pooled"]["mem0_correct"] / n),
+        (6, t["mem0_tokens"], t["mem0_correct"] / t["q"]),
+        (20, tok("k20", "mem0_tokens"), h["k20"]["pooled"]["mem0_correct"] / n),
+    ]
+    engram = [
+        (3, tok("k3", "e4_belief_v2_tokens"), h["k3"]["pooled"]["e4_belief_v2_correct"] / n),
+        (20, tok("k20", "e4_belief_v2_tokens"), h["k20"]["pooled"]["e4_belief_v2_correct"] / n),
+    ]
+    fig, ax = plt.subplots(figsize=(COL, 2.3))
+    ax.plot([p[1] for p in mem0], [100 * p[2] for p in mem0], "--", color=ORANGE, lw=1.3, zorder=2)
+    ax.plot([p[1] for p in mem0], [100 * p[2] for p in mem0], "o", color=ORANGE, ms=5, label="mem0", zorder=3)
+    ax.plot([p[1] for p in engram], [100 * p[2] for p in engram], "D", color=BLUE, ms=5.5, label="engram", zorder=4)
+    for k, x, y in mem0:
+        ax.annotate(f"k={k}", (x, 100 * y), xytext=(5, -9), textcoords="offset points", fontsize=6.5, color=ORANGE)
+    for k, x, y in engram:
+        ax.annotate(
+            f"k={k}", (x, 100 * y), xytext=(-6, 6), textcoords="offset points", fontsize=6.5, color=BLUE, ha="right"
+        )
+    ax.set_xscale("log")
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
+    ax.set_xticks([150, 300, 600, 1200])
+    ax.xaxis.set_minor_formatter(FuncFormatter(lambda v, _: ""))
+    ax.set_xlabel("mean retrieved tokens per question (log scale)")
+    ax.set_ylabel("pooled accuracy (610 questions)")
+    pct(ax)
+    ax.set_ylim(55, 82)
+    ax.legend(loc="lower right")
+    save(fig, "acc_vs_tokens.svg")
+    record(
+        "acc_vs_tokens",
+        ["bench/results/heldout_report.json", "bench/results/mem0_token_matched__heldout_pooled__k6.json"],
+        {"mem0": mem0, "engram": engram},
+    )
+
+
+# ---------------------------------------------------------------- per-conversation paired differences (§5.2)
+
+
+def perconv_diffs() -> None:
+    d = load("perconv_diffs.json")
+    convs = list(d)
+    series = [
+        ("k3", "vs mem0 k=3", BLUE, "o"),
+        ("k3_vs_k6", "vs mem0 k=6 (matched)", BLUE_D, "s"),
+        ("k20", "k=20 vs k=20", SLATE, "^"),
+    ]
+    fig, ax = plt.subplots(figsize=(COL, 2.2))
+    ax.axvline(0, color=INK, lw=0.8)
+    for j, (key, lab, color, marker) in enumerate(series):
+        for i, conv in enumerate(convs):
+            r = d[conv][key]
+            y = i + (j - 1) * 0.22
+            ax.plot([100 * r["lo"], 100 * r["hi"]], [y, y], color=color, lw=1.3)
+            ax.plot(
+                100 * r["diff"],
+                y,
+                marker,
+                color=color,
+                ms=4.2,
+                mfc=color if key != "k20" else "white",
+                label=lab if i == 0 else None,
+            )
+    ax.set_yticks(range(len(convs)))
+    ax.set_yticklabels([f"{c}\nQ={d[c]['k3']['n']}" for c in convs], fontsize=6.8)
+    ax.invert_yaxis()
+    ax.set_xlabel("engram − mem0 accuracy (points), 95% CI per question")
+    ax.grid(axis="y", visible=False)
+    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=3, fontsize=6.3, handletextpad=0.3, columnspacing=1.0)
+    save(fig, "perconv_diffs.svg")
+    record("perconv_diffs", ["bench/results/perconv_diffs.json"], d)
+
+
+# ---------------------------------------------------------------- per-category accuracy (§5.2)
 
 
 def per_category() -> None:
@@ -109,129 +314,105 @@ def per_category() -> None:
     cats = list(h["k3"]["per_category"])
     q = {c: h["k3"]["per_category"][c]["q"] for c in cats}
     series = [
-        ("engram, k=3", INDIGO, [h["k3"]["per_category"][c]["e4_belief_v2"] / q[c] for c in cats]),
-        ("mem0, k=6 (token-matched)", CORAL, [t["per_category"][c]["mem0"] / q[c] for c in cats]),
-        ("mem0, k=3", CORAL_L, [h["k3"]["per_category"][c]["mem0"] / q[c] for c in cats]),
+        ("engram k=3", BLUE, [h["k3"]["per_category"][c]["e4_belief_v2"] / q[c] for c in cats]),
+        ("mem0 k=6 (matched)", ORANGE, [t["per_category"][c]["mem0"] / q[c] for c in cats]),
+        ("mem0 k=3", ORANGE_L, [h["k3"]["per_category"][c]["mem0"] / q[c] for c in cats]),
     ]
-    fig, ax = plt.subplots(figsize=(9.5, 4.4))
-    w, gap = 0.24, 0.04
+    fig, ax = plt.subplots(figsize=(COL, 2.2))
+    w = 0.26
     for i, (name, color, vals) in enumerate(series):
-        xs = [j + (i - 1) * (w + gap) for j in range(len(cats))]
+        xs = [j + (i - 1) * (w + 0.02) for j in range(len(cats))]
         bars = ax.bar(xs, [100 * v for v in vals], w, color=color, label=name, zorder=3)
         for b, v in zip(bars, vals, strict=True):
             ax.text(
                 b.get_x() + b.get_width() / 2,
-                b.get_height() + 1.6,
+                b.get_height() + 1.2,
                 f"{100 * v:.0f}",
                 ha="center",
                 va="bottom",
-                fontsize=8.5,
-                color=INK if color != CORAL_L else SLATE,
+                fontsize=5.8,
+                color=INK,
             )
     ax.set_xticks(range(len(cats)))
-    ax.set_xticklabels([f"{c}\nQ = {q[c]}" for c in cats], fontsize=10, color=INK)
+    ax.set_xticklabels([f"{c}\nQ={q[c]}" for c in cats], fontsize=6.8)
     ax.set_ylim(0, 100)
-    ax.set_ylabel("accuracy (%)")
+    ax.set_ylabel("accuracy")
+    pct(ax)
     ax.grid(axis="x", visible=False)
-    ax.legend(ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.02), handlelength=1.2, columnspacing=2.2)
+    ax.legend(ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.0), handlelength=1.0, columnspacing=1.2)
     save(fig, "per_category_k3.svg")
-
-
-# ---------------------------------------------------------------- tradeoff (Figure 4)
-
-
-def tradeoff() -> None:
-    t = load("tradeoff.json")
-    th = [p["theta"] for p in t["curve"]]
-    fig, (a, b) = plt.subplots(1, 2, figsize=(10.5, 4.0), gridspec_kw={"wspace": 0.32})
-    cost = [1e3 * p["C"] for p in t["curve"]]
-    a.fill_between(th, cost, color=INDIGO, alpha=0.10, lw=0)
-    a.plot(th, cost, color=INDIGO, lw=2.2, marker="o", ms=4.5, mfc="white", mew=1.6)
-    a.set_title("Cost per decision  C(θ)", loc="left")
-    a.set_xlabel("escalation threshold θ")
-    a.set_ylabel("USD × 10⁻³ per decision")
-    lines = [
-        ("E(θ), ε_L = 0 (assumed)", INDIGO, "-", [100 * p["E"]["0.0"] for p in t["curve"]]),
-        ("E(θ), ε_L = 0.1 (assumed)", CORAL, "--", [100 * p["E"]["0.1"] for p in t["curve"]]),
-        ("ε_J(θ): error on the decisions Jev keeps", SLATE_L, ":", [100 * p["eps_J"] for p in t["curve"]]),
-    ]
-    for name, color, ls, ys in lines:
-        b.plot(
-            th,
-            ys,
-            color=color,
-            ls=ls,
-            lw=2.2,
-            marker="o" if ls != ":" else None,
-            ms=4.5,
-            mfc="white",
-            mew=1.6,
-            label=name,
-        )
-    b.set_title("Error rate  E(θ)", loc="left")
-    b.set_xlabel("escalation threshold θ")
-    b.set_ylabel("error (%)")
-    b.set_ylim(0, 13)
-    for ax in (a, b):
-        for x, lab in ((0.6, "production θ"), (0.85, "act threshold")):
-            ax.axvline(x, color=SLATE_L, lw=1, ls=(0, (2, 3)), zorder=1)
-            ax.text(x, 1.0, lab, transform=ax.get_xaxis_transform(), ha="center", va="bottom", fontsize=8, color=SLATE)
-        ax.set_xlim(0.28, 0.97)
-    b.legend(loc="upper center", bbox_to_anchor=(-0.18, -0.2), ncol=3, handlelength=2.6, columnspacing=2)
-    save(fig, "tradeoff.svg")
-
-
-# ---------------------------------------------------------------- latency (Figure 5)
-
-
-def latency() -> None:
-    L = load("jev_latency.json")
-    lat = [r[1] for r in L["requests"]]
-    fig, (a, b) = plt.subplots(1, 2, figsize=(10.5, 4.0), gridspec_kw={"wspace": 0.3, "width_ratios": [1, 1.15]})
-    lo, hi = 100, 10_000
-    edges = [lo * (hi / lo) ** (i / 48) for i in range(49)]
-    counts, _, _ = a.hist([min(max(x, lo), hi * 0.999) for x in lat], bins=edges, color=INDIGO, alpha=0.9, zorder=3)
-    a.set_ylim(0, max(counts) * 1.22)
-    a.set_xscale("log")
-    a.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
-    a.set_xticks([100, 300, 1000, 3000, 10000])
-    med = sorted(lat)[len(lat) // 2]
-    a.axvline(med, color=CORAL, lw=1.8, zorder=4)
-    a.text(
-        med * 1.1, a.get_ylim()[1] * 0.97, f"median {med:,.0f} ms", color=CORAL, fontsize=9, va="top", fontweight="bold"
+    record(
+        "per_category_k3",
+        ["bench/results/heldout_report.json", "bench/results/mem0_token_matched__heldout_pooled__k6.json"],
+        {name: dict(zip(cats, vals, strict=True)) for name, _, vals in series},
     )
-    a.set_title(f"All {L['n_requests']:,} live Jev requests", loc="left")
-    a.set_xlabel("request latency (ms, log scale)")
-    a.set_ylabel("requests")
-    a.grid(axis="x", visible=False)
-
-    rows = [x for x in L["table"] if x["requests"]]
-    labels = [f"{x['lo']}" if x["lo"] == x["hi"] else f"{x['lo']}–{x['hi']}" for x in rows]
-    xs = range(len(rows))
-    b.bar(xs, [x["p90"] for x in rows], 0.62, color=INDIGO_L, alpha=0.55, label="p90", zorder=2)
-    b.bar(xs, [x["p50"] for x in rows], 0.62, color=INDIGO, label="median", zorder=3)
-    for i, x in enumerate(rows):
-        b.text(
-            i,
-            x["p50"] + 35,
-            f"{x['p50']:.0f}",
-            ha="center",
-            va="bottom",
-            fontsize=8,
-            color="white" if x["p50"] > 400 else INK,
-            zorder=4,
-        )
-    b.set_xticks(list(xs))
-    b.set_xticklabels(labels, fontsize=9)
-    b.set_title("Latency by request size", loc="left")
-    b.set_xlabel("questions per request")
-    b.set_ylabel("latency (ms)")
-    b.grid(axis="x", visible=False)
-    b.legend(loc="upper left", ncol=2)
-    save(fig, "latency.svg")
 
 
-# ---------------------------------------------------------------- calibration (Figure 3)
+# ---------------------------------------------------------------- store outcomes (§5.3)
+
+
+def store_outcomes() -> None:
+    arms = {
+        "mem0": ("mem0__dev_updates.json", "mem0__dev_updates2.json"),
+        "E2": ("e2_jev_v2__dev_updates__k3.json", "e2_jev_v2__dev_updates2.json"),
+        "E3": ("e3_structural_v3__dev_updates.json", None),
+        "E4 v2": ("e4_belief_v2__dev_updates__k3.json", "e4_belief_v2_shadow__dev_updates2__k3.json"),
+        "E4 v3": ("e4_belief_v3__dev_updates__k3__noanswer.json", "e4_belief_v3__dev_updates2__k3__noanswer.json"),
+    }
+    vals = {}
+    for arm, (f1, f2) in arms.items():
+        a = load(f1)
+        b = load(f2) if f2 else None
+        st = a.get("storage") or {}
+        vals[arm] = {
+            "stale1": a["stale_on_close_items"],
+            "stale2": b["set2_stale_values"] if b else None,
+            "labeled": st.get("closes_correct", 0),
+            "unlabeled": st.get("closes_wrong", 0),
+            "over": a["over_close_on_no_close_items"],
+        }
+    names = list(vals)
+    fig, axes = plt.subplots(2, 2, figsize=(COL, 3.1), gridspec_kw={"hspace": 0.75, "wspace": 0.35})
+    colors = [ORANGE, BLUE_L, BLUE_L, BLUE, BLUE]
+    for ax, key, title in (
+        (axes[0][0], "stale1", "set 1: close items left stale"),
+        (axes[0][1], "stale2", "set 2: stale values"),
+    ):
+        for i, n in enumerate(names):
+            v = vals[n][key]
+            if v is None:
+                ax.text(i, 3, "not run", ha="center", fontsize=6, color=SLATE, rotation=90)
+                continue
+            ax.bar(i, 100 * v[0] / v[1], 0.62, color=colors[i], zorder=3)
+            ax.text(i, 100 * v[0] / v[1] + 3, f"{v[0]}/{v[1]}", ha="center", fontsize=5.2)
+        ax.set_ylim(0, 118)
+        ax.set_title(title, fontsize=7, loc="left")
+        pct(ax)
+    ax = axes[1][0]
+    for i, n in enumerate(names):
+        lab, unl = vals[n]["labeled"], vals[n]["unlabeled"]
+        ax.bar(i, lab, 0.62, color=GREEN, zorder=3, label="match a labeled pair" if i == 0 else None)
+        ax.bar(i, unl, 0.62, bottom=lab, color=RED, zorder=3, label="match no labeled pair" if i == 0 else None)
+    ax.set_title("closes on dev + set 1", fontsize=7, loc="left")
+    ax.set_ylim(0, 16)
+    ax.legend(fontsize=5.6, loc="upper right", handlelength=0.9, borderaxespad=0.1)
+    ax = axes[1][1]
+    for i, n in enumerate(names):
+        o = vals[n]["over"]
+        ax.bar(i, o[0], 0.62, color=RED, zorder=3)
+        ax.text(i, 0.08, f"{o[0]}/{o[1]}", ha="center", fontsize=5.8)
+    ax.set_ylim(0, 1)
+    ax.set_title("no_close items over-closed", fontsize=7, loc="left")
+    for row in axes:
+        for ax in row:
+            ax.set_xticks(range(len(names)))
+            ax.set_xticklabels(names, fontsize=6.2, rotation=30, ha="right")
+            ax.grid(axis="x", visible=False)
+    save(fig, "store_outcomes.svg")
+    record("store_outcomes", sorted({f"bench/results/{f}" for p in arms.values() for f in p if f}), vals)
+
+
+# ---------------------------------------------------------------- calibration (§5.4, figure*)
 
 
 def calibration() -> None:
@@ -241,53 +422,221 @@ def calibration() -> None:
         ("relation, gold pairs", cal["B: contradiction pairs (gold)"]["relation_to_candidate"]),
         ("temporal status, gold pairs", cal["B: contradiction pairs (gold)"]["temporal_status"]),
     ]
-    fig, axes = plt.subplots(1, 3, figsize=(11.5, 4.3), gridspec_kw={"wspace": 0.28})
+    fig, axes = plt.subplots(1, 3, figsize=(WIDE, 2.55), gridspec_kw={"wspace": 0.28})
+    values = {}
     for ax, (title, res) in zip(axes, panels, strict=True):
         n = len(res["items"])
-        eces: dict[str, float] = {}
-        ax.plot([0, 1], [0, 1], color=SLATE_L, lw=1, ls=(0, (3, 3)), zorder=1)
-        for key, color, name in (("jev", INDIGO, "Jev"), ("laya", AMBER, "Laya")):
+        eces = {}
+        ax.plot([0, 1], [0, 1], color=SLATE_L, lw=0.8, ls=(0, (3, 3)), zorder=1)
+        for key, color, name in (("jev", BLUE, "Jev"), ("laya", PURPLE, "Laya (base, zero-shot)")):
             items = [(i[key], i["label"]) for i in res["items"]]
             bins = [x for x in reliability(items) if x.n]
             xs, ys = [x.confidence for x in bins], [x.accuracy for x in bins]
-            ax.plot(xs, ys, color=color, lw=1.8, alpha=0.85, zorder=2)
+            ax.plot(xs, ys, color=color, lw=1.3, alpha=0.85, zorder=2)
             ax.scatter(
-                xs, ys, s=[18 + 14 * x.n for x in bins], color=color, edgecolor="white", lw=1.2, zorder=3, label=name
+                xs, ys, s=[8 + 7 * x.n for x in bins], color=color, edgecolor="white", lw=0.8, zorder=3, label=name
             )
             eces[name] = ece(items)
+        values[title] = {"n": n, "ece": eces}
         ax.set_xlim(-0.04, 1.08)
         ax.set_ylim(-0.04, 1.1)
         ax.set_aspect("equal")
-        ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
-        ax.set_yticks([0, 0.25, 0.5, 0.75, 1])
-        ax.set_title(f"{title}  ·  n = {n}", loc="left", fontsize=10.5, pad=26)
+        ax.set_xticks([0, 0.5, 1])
+        ax.set_yticks([0, 0.5, 1])
+        ax.set_title(f"{title} (n = {n})", loc="left", fontsize=7.5, pad=14)
         ax.text(
-            0.0,
-            1.02,
-            f"ECE  Jev {eces['Jev']:.2f}  ·  Laya {eces['Laya']:.2f}",
+            0,
+            1.03,
+            "ECE  Jev {:.2f}  ·  Laya {:.2f}".format(*eces.values()),
             transform=ax.transAxes,
-            fontsize=9,
+            fontsize=6.5,
             color=SLATE,
             va="bottom",
         )
         ax.set_xlabel("confidence")
     axes[0].set_ylabel("accuracy")
-    handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(
-        handles, labels, loc="upper center", bbox_to_anchor=(0.5, 1.03), ncol=2, markerscale=0.6, columnspacing=2.5
-    )
-    fig.text(
-        0.5,
-        -0.04,
-        "Dot size grows with the number of questions in the confidence bin; dashed line = perfect calibration.",
-        ha="center",
-        fontsize=8.5,
-        color=SLATE,
-    )
+    h_, l_ = axes[0].get_legend_handles_labels()
+    fig.legend(h_, l_, loc="upper center", bbox_to_anchor=(0.5, 1.07), ncol=2, markerscale=0.8)
     save(fig, "calibration.svg")
+    record("calibration", ["bench/results/calibration.json"], values)
 
 
-# ---------------------------------------------------------------- pipeline (Figure 1)
+# ---------------------------------------------------------------- tradeoff (§5.4)
+
+
+def tradeoff() -> None:
+    t = load("tradeoff.json")
+    th = [p["theta"] for p in t["curve"]]
+    fig, (a, b) = plt.subplots(2, 1, figsize=(COL, 3.5), gridspec_kw={"hspace": 0.55}, sharex=True)
+    cost = [1e3 * p["C"] for p in t["curve"]]
+    a.fill_between(th, cost, color=ORANGE, alpha=0.10, lw=0)
+    a.plot(th, cost, color=ORANGE, lw=1.5, marker="o", ms=3, mfc="white", mew=1.1)
+    a.set_title("cost per decision C(θ)", loc="left")
+    a.set_ylabel("USD × 10⁻³")
+    for name, color, ls, key in (
+        (r"E(θ), $\varepsilon_L$ = 0 (assumed)", BLUE, "-", "0.0"),
+        (r"E(θ), $\varepsilon_L$ = 0.1 (assumed)", ORANGE, "--", "0.1"),
+    ):
+        b.plot(
+            th,
+            [100 * p["E"][key] for p in t["curve"]],
+            color=color,
+            ls=ls,
+            lw=1.5,
+            marker="o",
+            ms=3,
+            mfc="white",
+            mew=1.1,
+            label=name,
+        )
+    b.plot(
+        th, [100 * p["eps_J"] for p in t["curve"]], ":", color=SLATE, lw=1.3, label=r"$\varepsilon_J$(θ): error on kept"
+    )
+    b.set_title("error rate E(θ)", loc="left")
+    b.set_ylabel("error")
+    pct(b)
+    b.set_ylim(0, 13)
+    b.set_xlabel("escalation threshold θ")
+    for ax in (a, b):
+        for x, lab in ((0.6, "production"), (0.85, "act")):
+            ax.axvline(x, color=SLATE_L, lw=0.8, ls=(0, (2, 3)), zorder=1)
+            ax.text(x, 1.0, lab, transform=ax.get_xaxis_transform(), ha="center", va="bottom", fontsize=6, color=SLATE)
+    b.legend(loc="lower left", fontsize=6.2)
+    save(fig, "tradeoff.svg")
+    record("tradeoff", ["bench/results/tradeoff.json"], {"curve": t["curve"]})
+
+
+# ---------------------------------------------------------------- Laya agreement (§5.6)
+
+
+def laya_agreement() -> None:
+    ag = load("laya_agreement.json")["Jev decides, Laya shadows"]["by_question"]
+    qs = sorted(ag, key=lambda q: ag[q]["agree"])
+    fig, ax = plt.subplots(figsize=(COL, 2.9))
+    ys = range(len(qs))
+    ax.barh([y + 0.19 for y in ys], [100 * ag[q]["agree"] for q in qs], 0.36, color=PURPLE, label="same answer")
+    ax.barh(
+        [y - 0.19 for y in ys],
+        [100 * ag[q]["act_agree"] for q in qs],
+        0.36,
+        color="#CDBDE8",
+        label="same action at 0.85",
+    )
+    for y, q in zip(ys, qs, strict=True):
+        ax.text(100 * ag[q]["agree"] + 1, y + 0.19, f"{100 * ag[q]['agree']:.1f}%", va="center", fontsize=5.8)
+    ax.set_yticks(list(ys))
+    ax.set_yticklabels([f"{q}  (n={ag[q]['n']:,})" for q in qs], fontsize=6.2)
+    ax.set_xlim(0, 110)
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
+    ax.set_xlabel("agreement with Jev on identical requests")
+    ax.grid(axis="y", visible=False)
+    ax.legend(loc="lower right", fontsize=6.3)
+    save(fig, "laya_agreement.svg")
+    record(
+        "laya_agreement",
+        ["bench/results/laya_agreement.json"],
+        {q: {"agree": ag[q]["agree"], "act_agree": ag[q]["act_agree"], "n": ag[q]["n"]} for q in qs},
+    )
+
+
+# ---------------------------------------------------------------- latency (§5.7)
+
+
+def latency() -> None:
+    L = load("jev_latency.json")
+    lat = [r[1] for r in L["requests"]]
+    fig, (a, b) = plt.subplots(2, 1, figsize=(COL, 3.5), gridspec_kw={"hspace": 0.62})
+    lo, hi = 100, 10_000
+    edges = [lo * (hi / lo) ** (i / 44) for i in range(45)]
+    counts, _, _ = a.hist([min(max(x, lo), hi * 0.999) for x in lat], bins=edges, color=BLUE, zorder=3)
+    a.set_ylim(0, max(counts) * 1.25)
+    a.set_xscale("log")
+    a.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
+    a.set_xticks([100, 300, 1000, 3000, 10000])
+    med = statistics.median(lat)
+    a.axvline(med, color=ORANGE, lw=1.3, zorder=4)
+    a.text(med * 1.1, max(counts) * 1.18, f"median {med:,.0f} ms", color=ORANGE, fontsize=6.5, va="top")
+    a.set_title(f"all {L['n_requests']:,} live Jev requests", loc="left")
+    a.set_xlabel("request latency (ms, log scale)")
+    a.set_ylabel("requests")
+    a.grid(axis="x", visible=False)
+    rows = [x for x in L["table"] if x["requests"]]
+    labels = [f"{x['lo']}" if x["lo"] == x["hi"] else f"{x['lo']}–{x['hi']}" for x in rows]
+    xs = range(len(rows))
+    b.bar(xs, [x["p90"] for x in rows], 0.62, color=BLUE_L, label="p90", zorder=2)
+    b.bar(xs, [x["p50"] for x in rows], 0.62, color=BLUE, label="median", zorder=3)
+    b.set_xticks(list(xs))
+    b.set_xticklabels(labels, fontsize=6.2, rotation=30, ha="right")
+    b.set_title("latency by request size", loc="left")
+    b.set_xlabel("questions per request")
+    b.set_ylabel("latency (ms)")
+    b.grid(axis="x", visible=False)
+    b.legend(loc="upper left", ncol=2)
+    save(fig, "latency.svg")
+    record(
+        "latency",
+        ["bench/results/jev_latency.json"],
+        {"median_all": med, "table": [[x["lo"], x["hi"], x["p50"], x["p90"]] for x in rows]},
+    )
+
+
+# ---------------------------------------------------------------- retrieval mechanics diagram (§3.1)
+
+
+def retrieval_diagram() -> None:
+    """Stages of the read path with the "before Berlin" fixture from tests/test_retrieval_regression.py."""
+    W, H = 420, 560
+    stages = [
+        ("code", "1  Cosine recall", "top-k by embedding, over all facts", "closed facts such as Paris can enter here"),
+        ("jev", "2  Listwise relevance (Jev)", "one yes/no relevance question per candidate", "ranks the candidates"),
+        (
+            "jev",
+            "3  Query-relation pull (Jev)",
+            "query_relation at p ≥ 0.85 adds same-relation facts",
+            "query_relation = lives_in (asserted by the test)",
+        ),
+        ("store", "4  History expansion", "adds each hit's superseded chain", "Berlin's chain adds Paris"),
+        ("llm", "5  Compact rendering → answer", "date said · fact · source quote", "Paris shown as no longer true"),
+    ]
+    fills = {
+        "code": ("#F5F7FA", "#8A94A6", "#4B5566"),
+        "jev": ("#EEF0FF", BLUE, BLUE_D),
+        "store": ("#E9F7F0", GREEN, "#1D7350"),
+        "llm": ("#FFF3EA", ORANGE, "#B8561A"),
+    }
+    s = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
+        '<defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" '
+        'orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7A8496"/></marker></defs>',
+        "<style>text{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}.t{font-size:14px;font-weight:700}"
+        ".b{font-size:12px}.e{font-size:12px;font-style:italic}.q{font-size:13px;font-weight:700}</style>",
+        f'<rect width="{W}" height="{H}" fill="white"/>',
+        '<rect x="10" y="8" width="400" height="40" rx="10" fill="#FAFBFE" stroke="#D5DAE3"/>',
+        '<text x="22" y="33" class="q" fill="#1F2430">Query: "where did the user live before Berlin"</text>',
+    ]
+    y = 64
+    for kind, title, what, example in stages:
+        fill, stroke, accent = fills[kind]
+        s.append(
+            f'<rect x="10" y="{y}" width="400" height="82" rx="12" fill="{fill}" stroke="{stroke}" stroke-width="1.6"/>'
+        )
+        s.append(f'<text x="24" y="{y + 24}" class="t" fill="#1F2430">{escape(title)}</text>')
+        s.append(f'<text x="24" y="{y + 45}" class="b" fill="{accent}">{escape(what)}</text>')
+        s.append(f'<text x="24" y="{y + 67}" class="e" fill="#4B5566">e.g. {escape(example)}</text>')
+        if y + 82 < H - 40:
+            s.append(
+                f'<path d="M210,{y + 82} L210,{y + 96}" stroke="#7A8496" stroke-width="1.8" marker-end="url(#a)"/>'
+            )
+        y += 98
+    s.append("</svg>")
+    (OUT / "retrieval.svg").write_text("\n".join(s))
+    svg_to_pdf(OUT / "retrieval.svg", TEX_FIGS / "retrieval.pdf", W, H)
+    record(
+        "retrieval",
+        ["tests/test_retrieval_regression.py", "src/engram/pipeline/retrieve.py"],
+        {"note": "illustrative; the test asserts Paris is retrieved and Acme is not, not which stage adds Paris"},
+    )
+
 
 C = {  # fill, stroke, accent text
     "llm": ("#FFF3EA", "#E8762C", "#B8561A"),
@@ -566,8 +915,17 @@ def pipeline() -> None:
 
 if __name__ == "__main__":
     pipeline()
+    retrieval_diagram()
+    belief_trace()
+    cost_breakdown()
+    acc_vs_tokens()
+    perconv_diffs()
     per_category()
-    tradeoff()
-    latency()
+    store_outcomes()
     calibration()
-    print(sorted(p.name for p in OUT.iterdir()))
+    tradeoff()
+    laya_agreement()
+    latency()
+    MANIFEST["pipeline"] = {"sources": ["paper/figures.py (drawn)"], "values": {}}
+    (OUT / "manifest.json").write_text(json.dumps(MANIFEST, indent=1, default=str))
+    print(sorted(p.name for p in OUT.glob("*.pdf")))

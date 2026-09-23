@@ -436,6 +436,35 @@ def numbers() -> None:
     md = load("mem0_dated__dev.json")
     N("mem0_dated__dev.acc", correct(md, "1234"), "bench/results/mem0_dated__dev.json", "frac")
 
+    # --- figure-text numbers
+    N(
+        "e2.jev_dshare",
+        r["e2_jev__dev"]["decision_cost_per_1k"] / r["e2_jev__dev"]["cost_per_1k"],
+        f"{f['e2_jev__dev']}: decision $/1k ÷ total $/1k",
+        "pct",
+    )
+    N(
+        "e2.llm_dshare",
+        r["e2_llm__dev"]["decision_cost_per_1k"] / r["e2_llm__dev"]["cost_per_1k"],
+        f"{f['e2_llm__dev']}: decision $/1k ÷ total $/1k",
+        "pct",
+    )
+    pc = load("perconv_diffs.json")
+    N(
+        "pc.k6.sig",
+        sum(v["k3_vs_k6"]["lo"] > 0 for v in pc.values()),
+        "bench/results/perconv_diffs.json: conversations whose matched-context interval excludes zero",
+        "int",
+    )
+    bt = [
+        e
+        for e in load("e4_belief_v2__dev_updates__k3__noanswer.json")["belief_trace"]
+        if e.get("fact_source") == "D2:5" and e["message"] == "D2:7"
+    ]
+    N("bt.p_weak", bt[0]["p"], "bench/results/e4_belief_v2__dev_updates__k3__noanswer.json (belief_trace, D2:7)", "f2")
+    N("tm.k.3", 3, "bench/results/heldout_report.json (k=3 run)", "int")
+    N("tm.k.20", 20, "bench/results/heldout_report.json (k=20 run)", "int")
+
     # --- Table 2 latency reconciliation (bench/e2_latency.py)
     ef = "bench/results/e2_latency.json"
     el = load("e2_latency.json")
@@ -1188,6 +1217,9 @@ def main() -> None:
     out = md_cites(render(src))
     (ROOT / "paper" / "main.md").write_text(out)
     used = {k: NUM[k] for k in sorted(USED)}
+    manifest = ROOT / "paper" / "figures" / "manifest.json"
+    if manifest.exists():
+        used["figures"] = json.loads(manifest.read_text())
     (ROOT / "paper" / "numbers.json").write_text(json.dumps(used, indent=1, default=list, ensure_ascii=False))
     unused = sorted(set(NUM) - USED)
     print(f"{len(USED)} numbers cited; {len(unused)} computed but unused")

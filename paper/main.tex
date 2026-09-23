@@ -134,6 +134,15 @@ LoCoMo \citep{maharana2024locomo} contains long multi-session conversations with
 \item Add history: the facts each retrieved fact superseded.
 \item Render compact lines for the answer model: the date the fact was said, the fact, and the verbatim source quote.
 \end{enumerate}
+Figure~\ref{fig:2} walks through these stages on a question from the retrieval regression test.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/retrieval.pdf}
+\caption{The read path on ``where did the user live before Berlin'' (fixture in}\label{fig:2}
+\end{figure}
+\texttt{tests/test\_\allowbreak{}retrieval\_\allowbreak{}regression.py}). Cosine recall searches closed facts too, so Paris can enter at stage 1 or through Berlin's superseded chain at stage 4; the test asserts that Paris is retrieved and that Acme, another closed chain, is not, but no stored run records which stage added Paris.*
+
 \subsection{The decision chain}
 Table~\ref{tab:1} lists the 12\src{src/engram/decide/questions.py (ALL\_QUESTIONS)} questions in the current chain; Appendix A gives the full option text of every version. Choice questions carry a rubric per option. When a question's wording changes, its version number is bumped and old arms keep the old version.
 
@@ -186,7 +195,14 @@ With a per-question temperature $T$ (\S{}5.4), $\operatorname{logit} q$ is repla
 \end{itemize}
 An open edge closes when $b_i <$ 0.25\src{src/engram/pipeline/belief.py} and reopens when $b_i >$ 0.60\src{src/engram/pipeline/belief.py}. The gap between the two gives hysteresis.
 
-\textbf{Belief v3.} The v2 rule used in the held-out runs lets any answer count. A \texttt{duplicate} at $q < 0.5$ therefore has $\operatorname{logit} q < 0$ and \emph{lowers} belief, and a weak against-answer raises it. v3 counts an answer only when its label is the argmax and $q > 0.5$ (\S{}5.3).
+\textbf{Belief v3.} The v2 rule used in the held-out runs lets any answer count. A \texttt{duplicate} at $q < 0.5$ therefore has $\operatorname{logit} q < 0$ and \emph{lowers} belief, and a weak against-answer raises it. v3 counts an answer only when its label is the argmax and $q > 0.5$ (\S{}5.3). Figure~\ref{fig:3} traces one fact from the dev run under both rules.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/belief_trace.pdf}
+\caption{Belief in the fact ``Melanie carves out daily me-time through running, reading, or playing violin''}\label{fig:3}
+\end{figure}
+(message D2:5), dev + update set 1, under v2 and v3. Under v2 a weak refinement answer at D2:7 (p = 0.45\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3\_\_noanswer.json (belief\_trace, D2:7)}) lowers belief slightly, so the update at U:E11 takes it below the close line; v3 ignores that answer ($\times$) and the fact closes one message later, at U:S01. Source: the belief trace in \texttt{bench/results/e4\_\allowbreak{}belief\_\allowbreak{}v2\_\allowbreak{}\_\allowbreak{}dev\_\allowbreak{}updates\_\allowbreak{}\_\allowbreak{}k3\_\allowbreak{}\_\allowbreak{}noanswer.json} and its v3 counterpart.*
 
 \textbf{What this assumes.} The log-odds rule treats $q$ as a calibrated likelihood. Where the model is miscalibrated, belief moves by the wrong amount. This is why \S{}5.4 measures calibration and why a per-question temperature is part of the rule.
 
@@ -221,7 +237,7 @@ where $\varepsilon_J(\theta)$ is Jev's error rate on the decisions it keeps and 
 \end{itemize}
 LoCoMo's adversarial category is excluded throughout. Each held-out conversation is ingested once per system, and k=3 and k=20 are answered from the same store.
 
-\textbf{Caching and budget.} Every LLM and Jev call is cached by its full request, and budget guards stop any run past a spending limit. Phase 2 (all experiments reported here) spent \$93.26\src{bench/results/phase2\_spend.jsonl} over 78\src{bench/results/phase2\_spend.jsonl} ledgered runs. Jev accounts for \$1.47\src{bench/results/phase2\_spend.jsonl} of it (\texttt{bench/results/phase2\_\allowbreak{}spend.jsonl}; per-arm totals in Appendix E). The build phase before it was not ledgered; the author's estimate for it is about \$10 [no file].
+\textbf{Caching and budget.} Every LLM and Jev call is cached by its full request, and budget guards stop any run past a spending limit. Phase 2 (all experiments reported here) spent \$93.26\src{bench/results/phase2\_spend.jsonl} over 80\src{bench/results/phase2\_spend.jsonl} ledgered runs. Jev accounts for \$1.47\src{bench/results/phase2\_spend.jsonl} of it (\texttt{bench/results/phase2\_\allowbreak{}spend.jsonl}; per-arm totals in Appendix E). The build phase before it was not ledgered; the author's estimate for it is about \$10 [no file].
 
 \subsection{The identical-extraction protocol}
 For each message, mem0 2.1.0's \texttt{add()} builds its extraction prompt from:
@@ -292,6 +308,15 @@ The two decision layers answer the same number of questions and mem0 one fewer, 
 
 The two latency columns are medians over different messages. In the E2 LLM arm only 30\src{bench/results/e2\_latency.json} of 76\src{bench/results/e2\_latency.json} messages made an LLM decision call, so the write median falls on an extraction-only message (median extraction 869 ms\src{bench/results/e2\_latency.json}); on the messages with decisions, the logged median of the slowest decision call is 7,892 ms\src{bench/results/e2\_latency.json} (\texttt{bench/e2\_\allowbreak{}latency.py}).
 
+Figure~\ref{fig:4} shows where each system's write cost goes: extraction dominates, and the decision layer is 1.3\%\src{bench/results/e2\_jev\_\_dev.json: decision $/1k ÷ total $/1k} of the Jev arm's cost against 47.0\%\src{bench/results/e2\_llm\_\_dev.json: decision $/1k ÷ total $/1k} of the LLM arm's.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/cost_breakdown.pdf}
+\caption{Write cost per thousand messages on the dev slice (76\src{bench/results/e2\_jev\_\_dev.json} messages), split into extraction and}\label{fig:4}
+\end{figure}
+decision layer. mem0 makes one call per message that extracts and deduplicates.*
+
 These ratios compare Jev against \texttt{claude-sonnet-4-6} as the decider. We have no measurement with a smaller LLM decider. On the stress slice the Jev arm scored 67/80\src{bench/results/e2\_jev\_\_stress.json} and mem0 64/80\src{bench/results/mem0\_\_stress.json}; the LLM arm was not run there.
 
 \textbf{Held-out parity at default k.} The held-out runs compare the frozen full system (E4 belief v2, \S{}3.4) with mem0, not the E2 arms. At k=20 engram answers 482/610\src{bench/results/heldout\_report.json} and mem0 477/610\src{bench/results/heldout\_report.json}. The difference is +0.8\src{bench/results/heldout\_report.json} points (95\% CI -2.3\src{bench/results/heldout\_report.json} to +3.9\src{bench/results/heldout\_report.json}; conversation bootstrap -4.5\src{bench/results/heldout\_report.json} to +5.4\src{bench/results/heldout\_report.json}; McNemar $p$ = 0.679\src{bench/results/heldout\_report.json}), within noise.
@@ -334,7 +359,23 @@ engram k=20 $-$ mem0 k=20 & +0.8\src{bench/results/heldout\_report.json} & [-2.3
 \end{table*}
 At k=3 engram is ahead of mem0 by +14.9\src{bench/results/heldout\_report.json} points (95\% CI +11.2\src{bench/results/heldout\_report.json} to +18.7\src{bench/results/heldout\_report.json}). Against token-matched mem0 the difference is +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points (95\% CI +5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} to +12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}; McNemar $p$ = 1.3e-06\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}; 86\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} questions only engram answered against 33\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} only mem0 answered).
 
-engram is ahead in every conversation (Appendix D) and in every category at matched context (Table~\ref{tab:5}, Figure~\ref{fig:2}).
+Figure~\ref{fig:5} places the three measured mem0 settings and the two engram settings on one axis of retrieved tokens. engram at k=3 sits above the line through mem0's points, and the two systems meet at k=20.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/acc_vs_tokens.pdf}
+\caption{Pooled held-out accuracy (610\src{bench/results/heldout\_report.json} questions) against mean retrieved tokens per question. mem0}\label{fig:5}
+\end{figure}
+accuracy was measured at three settings, k = 3\src{bench/results/heldout\_report.json (k=3 run)}, 6\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} and 20\src{bench/results/heldout\_report.json (k=20 run)}; the token-matching sweep counted tokens at the other k without answering. Models as in Table~\ref{tab:3}.*
+
+engram's point estimate is ahead in every conversation and in every category at matched context (Figure~\ref{fig:6}, Table~\ref{tab:5}, Figure~\ref{fig:7}). Per conversation, the matched-context interval excludes zero in 2\src{bench/results/perconv\_diffs.json: conversations whose matched-context interval excludes zero} of four conversations (conv-42 and conv-43); conv-30 and conv-41 are within noise on their own.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/perconv_diffs.pdf}
+\caption{engram minus mem0 accuracy per held-out conversation, with per-question 95\% intervals: engram k=3}\label{fig:6}
+\end{figure}
+against mem0 k=3, against token-matched mem0 k=6, and both at k=20. Source: \texttt{bench/results/perconv\_\allowbreak{}diffs.json}.*
 
 \begin{table*}[tbp]
 \centering
@@ -354,7 +395,7 @@ single-hop & 348\src{bench/results/heldout\_report.json} & 79.3\%\src{bench/resu
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=\columnwidth]{figures/per_category_k3.pdf}
-\caption{held-out accuracy by category at k=3, for engram, token-matched mem0 (k=6) and mem0 (k=3).}\label{fig:2}
+\caption{held-out accuracy by category at k=3, for engram, token-matched mem0 (k=6) and mem0 (k=3).}\label{fig:7}
 \end{figure}
 \textbf{Attribution.} Matching context removes 41.8\%\src{bench/results/heldout\_report.json and bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json: (Δk3 − Δtoken-matched) / Δk3} of the k=3 difference. The other 58.2\%\src{bench/results/heldout\_report.json and bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json: 1 − context share} is what remains once context is matched.
 
@@ -378,6 +419,15 @@ E4: belief v3 & 0/8\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_no
 \bottomrule
 \end{tabularx}
 \end{table*}
+Figure~\ref{fig:8} shows the same outcomes per arm.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/store_outcomes.pdf}
+\caption{Store outcomes on the update sets: set-1 close items left stale, set-2 stale values, closes on}\label{fig:8}
+\end{figure}
+dev + set 1 split by whether they match a labeled pair, and no\_close items over-closed. E3 was not run on set 2.*
+
 \textbf{Over-closes.} No labeled keep item was over-closed by any arm.
 
 \textbf{Closes outside the labels.} They separate the policies:
@@ -432,9 +482,9 @@ gold pairs & temporal status & laya & 50\src{bench/results/calibration.json} & 7
 \begin{figure*}[tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/calibration.pdf}
-\caption{reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.}\label{fig:3}
+\caption{reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.}\label{fig:9}
 \end{figure*}
-\textbf{Cost/error tradeoff.} The 29\src{bench/results/calibration.json} escalation labels are too few for a curve, so Figure~\ref{fig:4} uses the 50\src{bench/results/tradeoff.json} gold pairs.
+\textbf{Cost/error tradeoff.} The 29\src{bench/results/calibration.json} escalation labels are too few for a curve, so Figure~\ref{fig:10} uses the 50\src{bench/results/tradeoff.json} gold pairs.
 
 \begin{itemize}
 \item $c_J$ = \$0.000016\src{bench/results/tradeoff.json} is the mean Jev cost of one relation decision over 36,429\src{bench/results/tradeoff.json} held-out decisions.
@@ -446,7 +496,7 @@ With Jev alone the error is 10.0\%\src{bench/results/tradeoff.json}. At $\theta$
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=\columnwidth]{figures/tradeoff.pdf}
-\caption{$C(\theta)$ and $E(\theta)$ on the 50\src{bench/results/tradeoff.json} gold pairs. $\varepsilon_L$ is assumed, not measured; the 29\src{bench/results/calibration.json} escalation labels were too few for a curve.}\label{fig:4}
+\caption{$C(\theta)$ and $E(\theta)$ on the 50\src{bench/results/tradeoff.json} gold pairs. $\varepsilon_L$ is assumed, not measured; the 29\src{bench/results/calibration.json} escalation labels were too few for a curve.}\label{fig:10}
 \end{figure}
 \subsection{Negative result: closing stale facts does not change answers}
 \begin{table*}[tbp]
@@ -489,7 +539,14 @@ Laya, native wording (fits) & 38.0\%\src{bench/results/laya\_regression\_native.
 \bottomrule
 \end{tabularx}
 \end{table*}
-\textbf{Agreement with Jev.} With the frozen Jev arm replayed from cache and Laya answering every request on the side, the two gave the same answer on 44.8\%\src{bench/results/laya\_agreement.json} of 6,764\src{bench/results/laya\_agreement.json} decisions and the same action at the 0.85\src{src/engram/config.py} threshold on 31.2\%\src{bench/results/laya\_agreement.json}. On \texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} they agreed on 5.9\%\src{bench/results/laya\_agreement.json} (Table~\ref{tab:10}).
+\textbf{Agreement with Jev.} With the frozen Jev arm replayed from cache and Laya answering every request on the side, the two gave the same answer on 44.8\%\src{bench/results/laya\_agreement.json} of 6,764\src{bench/results/laya\_agreement.json} decisions and the same action at the 0.85\src{src/engram/config.py} threshold on 31.2\%\src{bench/results/laya\_agreement.json}. On \texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} they agreed on 5.9\%\src{bench/results/laya\_agreement.json} (Table~\ref{tab:10}, Figure~\ref{fig:11}).
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/laya_agreement.pdf}
+\caption{Agreement between the Laya base checkpoint (zero-shot) and Jev on identical requests, per}\label{fig:11}
+\end{figure}
+question, sorted by same answer. Dev + update sets 1 and 2, frozen arm's trajectory.*
 
 \begin{table*}[tbp]
 \centering
@@ -539,7 +596,7 @@ update set 2 & 19/20\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_
 \end{tabularx}
 \end{table}
 \subsection{Systems notes}
-\textbf{Jev latency is flat in request size.} Across 9,446\src{bench/results/jev\_latency.json} live Jev requests from 25\src{bench/results/jev\_latency.json} runs, median latency is between 222 ms\src{bench/results/jev\_latency.json} and 269 ms\src{bench/results/jev\_latency.json} for requests of 1 to 50 questions, and 371 ms\src{bench/results/jev\_latency.json} for 51--80. A least-squares fit gives 380 ms\src{bench/results/jev\_latency.json} plus 7.19\src{bench/results/jev\_latency.json} ms per question.
+\textbf{Jev latency is flat in request size.} Across 9,446\src{bench/results/jev\_latency.json} live Jev requests from 25\src{bench/results/jev\_latency.json} runs, median latency is between 222 ms\src{bench/results/jev\_latency.json} and 269 ms\src{bench/results/jev\_latency.json} for requests of 1 to 50 questions, and 371 ms\src{bench/results/jev\_latency.json} for 51--80. A least-squares fit gives 380 ms\src{bench/results/jev\_latency.json} plus 7.19\src{bench/results/jev\_latency.json} ms per question (Figure~\ref{fig:12}).
 
 Variation over time is larger than variation over size. For requests of 16--20 questions, the per-run median was between 212 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests} and 267 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests} in 12\src{bench/results/jev\_latency.json: runs with ≥30 16–20-question requests, excluding conv-30 and conv-41} runs, and 793 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests} and 607 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests} in the two held-out runs made during one slower period.
 
@@ -566,7 +623,7 @@ Variation over time is larger than variation over size. For requests of 16--20 q
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=\columnwidth]{figures/latency.pdf}
-\caption{Jev request latency: distribution over all logged requests, and median and p90 by request size.}\label{fig:5}
+\caption{Jev request latency: distribution over all logged requests, and median and p90 by request size.}\label{fig:12}
 \end{figure}
 \textbf{Extraction dominates write cost.} On the held-out set, engram's write cost is \$10.22\src{bench/results/heldout\_report.json} to \$10.55\src{bench/results/heldout\_report.json} per 1,000 messages and mem0's is \$9.92\src{bench/results/heldout\_report.json} to \$10.16\src{bench/results/heldout\_report.json}. The decision layer is 3.3\%\src{bench/results/heldout\_report.json: decision $/1k ÷ write $/1k} to 4.8\%\src{bench/results/heldout\_report.json: decision $/1k ÷ write $/1k} of engram's (Table~\ref{tab:13}).
 
@@ -1282,7 +1339,7 @@ The spend ledger records cost per run, not per table. Per-arm totals:
 \midrule
 \endhead
 \texttt{mem0} & 15\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$35.94\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
-\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2} & 17\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.0917\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$31.80\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2} & 18\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.0917\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$31.80\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
 \texttt{e2\_\allowbreak{}\allowbreak{}jev} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0636\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$3.51\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
 \texttt{e2\_\allowbreak{}\allowbreak{}llm} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0134\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$3.21\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
 \texttt{mem0\_\allowbreak{}\allowbreak{}token\_\allowbreak{}\allowbreak{}matched} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$2.52\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
@@ -1300,7 +1357,7 @@ The spend ledger records cost per run, not per table. Per-arm totals:
 \texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}shadow} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.18\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
 \texttt{e3\_\allowbreak{}\allowbreak{}structural} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0008\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.04\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
 \texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}nohist} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.01\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
-\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v3} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0004\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.00\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v3} & 3\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0004\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.00\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
 \bottomrule
 \end{longtable}
 \endgroup

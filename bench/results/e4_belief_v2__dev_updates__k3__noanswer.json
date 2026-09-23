@@ -1,5 +1,5 @@
 {
- "arm": "e4_belief_v3",
+ "arm": "e4_belief_v2",
  "system": "engram",
  "flags": {
   "retrieval_floor": 10,
@@ -19,7 +19,7 @@
   "fulfills_rule": "question",
   "belief": true,
   "belief_w": 1.0,
-  "belief_evidence": "argmax_gt_half",
+  "belief_evidence": "all",
   "temporal_gate": "not_planned_mass",
   "update_multi_sibling": true,
   "retrieval_history": true,
@@ -64,26 +64,33 @@
  "pipeline_stats": {
   "facts_checked": 99,
   "plan_fulfilled_asks": 234,
-  "evidence_ignored_weak": 36,
   "facts_with_graph_candidates": 39,
   "graph_candidates": 114,
+  "against_blocked_structure": 16,
+  "against_blocked": 23,
   "fulfilled": 3,
-  "against_blocked_structure": 12,
-  "against_blocked": 15,
-  "agreement_checks": 10,
-  "disagreements": 8,
-  "against_unconfirmed": 8,
+  "against_blocked_temporal": 7,
+  "agreement_checks": 11,
+  "disagreements": 9,
+  "against_unconfirmed": 9,
   "agreements": 2,
   "against_applied": 4,
-  "belief_closes": 1,
-  "against_blocked_temporal": 3
+  "belief_closes": 1
  },
  "facts_extracted": 99,
  "facts_dropped": 0,
  "merges": 0,
- "closes": 0,
- "closes_detail": [],
- "wrong_closes": 0,
+ "closes": 1,
+ "closes_detail": [
+  {
+   "closed": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
+   "closed_source": "D2:5",
+   "by": "Melanie replaced reading with meditation in her daily me-time routine, now practicing twenty minutes of meditation every morning as of late July 2023",
+   "by_source": "U:E11",
+   "labeled": false
+  }
+ ],
+ "wrong_closes": 1,
  "escalations": 2,
  "llm_decisions": 0,
  "actions": {
@@ -93,12 +100,12 @@
   "negated": 4,
   "rewritten": 2
  },
- "decision_cost_per_1k": 0.45290607500769675,
- "cost_per_1k": 10.335396641045435,
- "write_latency_p50_ms": 1677.6022914855275,
- "decision_latency_p50_ms": 676.8225419800729,
+ "decision_cost_per_1k": 0.4532020561397722,
+ "cost_per_1k": 10.335692622177508,
+ "write_latency_p50_ms": 1724.508124490967,
+ "decision_latency_p50_ms": 683.296125032939,
  "no_memory_questions": 0,
- "retrieved_tokens_mean": 313.5230769230769,
+ "retrieved_tokens_mean": 313.55384615384617,
  "retrieved_tokens_median": 294,
  "memories_mean": 3.0,
  "stale_fact_rate": 0.0,
@@ -114,8 +121,8 @@
   "claude": 0.0
  },
  "cache": {
-  "hits": 4445,
-  "misses": 2
+  "hits": 4448,
+  "misses": 0
  },
  "answers": [
   {
@@ -246,7 +253,7 @@
     "[said 2023-08-03] Melanie stopped running due to knee problems around July 21, 2023 and now swims laps at the gym instead \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
    ],
    "label": null,
-   "query_cost": 0.00019500499516129035,
+   "query_cost": 0.00018406924516129036,
    "retrieved_tokens": 259,
    "checkpoint": 34,
    "store_size": 97
@@ -467,11 +474,11 @@
    "lines": [
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 and describes it as a really nice time together \u2014 source: \"That sounds great, Caroline! It's awesome having stuff around that make us think of good connections and times. Actually, I just took my fam camping in the mountains last week - it was a really nice time together!\"",
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 where they explored nature, roasted marshmallows around a campfire, went on a hike with amazing views, and spent quality time together as a family \u2014 source: \"I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
+    "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience. \u2014 source: \"Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\""
    ],
    "label": null,
    "query_cost": 0.00019617264712482472,
-   "retrieved_tokens": 411,
+   "retrieved_tokens": 412,
    "checkpoint": 34,
    "store_size": 97
   },
@@ -514,7 +521,7 @@
     "[said 2023-08-13] Melanie plans to run another charity race in the fall of 2023, possibly a half marathon \u2014 source: \"I want to run another charity race in the fall - maybe a half marathon this time. \u2026 Next summer we hope to camp at the Grand Canyon, if we can save up.\""
    ],
    "label": null,
-   "query_cost": 0.00019490901999834998,
+   "query_cost": 0.0001838654905865853,
    "retrieved_tokens": 275,
    "checkpoint": 34,
    "store_size": 97
@@ -536,7 +543,7 @@
     "[said 2023-05-08] Melanie goes swimming with kids and considers taking care of oneself vital \u2014 source: \"Yep, Caroline. Taking care of ourselves is vital. I'm off to go swimming with the kids. Talk to you soon!\""
    ],
    "label": null,
-   "query_cost": 0.0002062257702233251,
+   "query_cost": 0.0001953589702233251,
    "retrieved_tokens": 254,
    "checkpoint": 34,
    "store_size": 97
@@ -686,8 +693,8 @@
    "memories": 3,
    "lines": [
     "[said 2023-06-27] Caroline received a necklace from her grandmother in Sweden when she was young as a gift symbolizing love, faith, and strength. The necklace serves as a reminder of her roots and the love and support from her family.; Caroline has a necklace from her grandmother in Sweden that was given to her when she was young, symbolizing love, faith, and strength, and serves as a reminder of her roots and family support \u2014 source: \"Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. She gave it to me when I was young, and it stands for love, faith and strength. It's like a reminder of my roots and all the love and support I get from my family. \u2026 I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\"",
-    "[said 2023-07-09] Caroline lost her grandmother's necklace at the beach on Saturday, July 8, 2023, after searching for hours. The necklace was a cherished gift from her grandmother in Sweden symbolizing love, faith, and strength. \u2014 source: \"I'm heartbroken - I lost my grandma's necklace at the beach on Saturday. We searched for hours but it's gone.\""
+    "[said 2023-07-09] Caroline lost her grandmother's necklace at the beach on Saturday, July 8, 2023, after searching for hours. The necklace was a cherished gift from her grandmother in Sweden symbolizing love, faith, and strength. \u2014 source: \"I'm heartbroken - I lost my grandma's necklace at the beach on Saturday. We searched for hours but it's gone.\"",
+    "[said 2023-06-27] Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
    ],
    "label": null,
    "query_cost": 0.00020058038691630952,
@@ -730,8 +737,8 @@
    "memories": 3,
    "lines": [
     "[said 2023-06-27] Caroline received a necklace from her grandmother in Sweden when she was young as a gift symbolizing love, faith, and strength. The necklace serves as a reminder of her roots and the love and support from her family.; Caroline has a necklace from her grandmother in Sweden that was given to her when she was young, symbolizing love, faith, and strength, and serves as a reminder of her roots and family support \u2014 source: \"Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. She gave it to me when I was young, and it stands for love, faith and strength. It's like a reminder of my roots and all the love and support I get from my family. \u2026 I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\"",
-    "[said 2023-07-09] Caroline lost her grandmother's necklace at the beach on Saturday, July 8, 2023, after searching for hours. The necklace was a cherished gift from her grandmother in Sweden symbolizing love, faith, and strength. \u2014 source: \"I'm heartbroken - I lost my grandma's necklace at the beach on Saturday. We searched for hours but it's gone.\""
+    "[said 2023-07-09] Caroline lost her grandmother's necklace at the beach on Saturday, July 8, 2023, after searching for hours. The necklace was a cherished gift from her grandmother in Sweden symbolizing love, faith, and strength. \u2014 source: \"I'm heartbroken - I lost my grandma's necklace at the beach on Saturday. We searched for hours but it's gone.\"",
+    "[said 2023-06-27] Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
    ],
    "label": null,
    "query_cost": 0.00020095119225806455,
@@ -756,7 +763,7 @@
     "[said 2023-06-27] Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday ten years ago (around 2013). The pattern and colors remind her of art and self-expression, and she treasures it for its sentimental value. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
    ],
    "label": null,
-   "query_cost": 0.00021327197303646565,
+   "query_cost": 0.00020251209803646565,
    "retrieved_tokens": 593,
    "checkpoint": 34,
    "store_size": 97
@@ -774,11 +781,11 @@
    "memories": 3,
    "lines": [
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 where they explored nature, roasted marshmallows around a campfire, went on a hike with amazing views, and spent quality time together as a family \u2014 source: \"I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\"",
-    "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience. \u2014 source: \"Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\""
+    "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience. \u2014 source: \"Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\"",
+    "[said 2023-06-27] Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
    ],
    "label": null,
-   "query_cost": 0.0002066341643758766,
+   "query_cost": 0.0001956721643758766,
    "retrieved_tokens": 473,
    "checkpoint": 34,
    "store_size": 97
@@ -912,7 +919,7 @@
     "[said 2023-05-08] Caroline appreciates Melanie's lake sunrise painting, noting how the colors blend nicely and recognizing painting as a meaningful outlet for self-expression \u2014 source: \"Wow, Melanie! The colors really blend nicely. Painting looks like a great outlet for expressing yourself.\""
    ],
    "label": null,
-   "query_cost": 0.0002096197716468591,
+   "query_cost": 0.0001986656466468591,
    "retrieved_tokens": 308,
    "checkpoint": 34,
    "store_size": 97
@@ -936,7 +943,7 @@
     "[said 2023-05-08] Melanie uses painting as a creative outlet to express her feelings and relax after long days \u2014 source: \"Thanks, Caroline! Painting's a fun way to express my feelings and get creative. It's a great way to relax after a long day.\""
    ],
    "label": null,
-   "query_cost": 0.00020949983118279572,
+   "query_cost": 0.0001984374978494624,
    "retrieved_tokens": 213,
    "checkpoint": 34,
    "store_size": 97
@@ -960,7 +967,7 @@
     "[said 2023-08-03] Melanie and her spouse lived in a very small apartment immediately after their wedding around June 2018, which they still find amusing to recall \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
    ],
    "label": null,
-   "query_cost": 0.0002082561631878558,
+   "query_cost": 0.0001973336925996205,
    "retrieved_tokens": 200,
    "checkpoint": 34,
    "store_size": 97
@@ -1056,7 +1063,7 @@
     "[said 2023-08-03] Melanie and her children stopped swimming at their local pool around July 15, 2023 when it closed permanently, and now do bike rides together instead \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
    ],
    "label": null,
-   "query_cost": 0.00019792332427843805,
+   "query_cost": 0.00018681100848896436,
    "retrieved_tokens": 212,
    "checkpoint": 34,
    "store_size": 97
@@ -1080,7 +1087,7 @@
     "[said 2023-07-15] Melanie and her kids stopped swimming together after the local pool closed permanently, and now do bike rides together instead as their main outdoor activity \u2014 source: \"The pool near us closed for good, so the kids and I don't swim anymore. We do bike rides together instead.\""
    ],
    "label": null,
-   "query_cost": 0.00020928297340124509,
+   "query_cost": 0.00019818564006791176,
    "retrieved_tokens": 311,
    "checkpoint": 34,
    "store_size": 97
@@ -1100,11 +1107,11 @@
    "memories": 3,
    "lines": [
     "[said 2023-07-19] Melanie sold her violin around June 2023 and switched to learning guitar instead, which she finds more fun to play with her children; Melanie sold her violin around June 2023 and switched to learning guitar, which she finds more enjoyable to play with her children \u2014 source: \"I sold my violin last month. I'm learning guitar now instead - it's more fun to play with the kids. \u2026 Our first apartment after the wedding was so tiny - we still laugh about it.\"",
-    "[said 2023-05-25] Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family \u2014 source: \"Yeah, it's tough. So I'm carving out some me-time each day - running, reading, or playing my violin - which refreshes me and helps me stay present for my fam!\" (no longer true since 2023-08-03)",
+    "[said 2023-05-25] Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family \u2014 source: \"Yeah, it's tough. So I'm carving out some me-time each day - running, reading, or playing my violin - which refreshes me and helps me stay present for my fam!\" (no longer true since 2023-07-23)",
     "[said 2023-06-09] Melanie is motivated by her family and their love, and wants to be courageous for them \u2014 source: \"Yes, Caroline! We can do it. Your courage is inspiring. I want to be couragous for my family- they motivate me and give me love. What motivates you?\""
    ],
    "label": null,
-   "query_cost": 0.00020857369156762878,
+   "query_cost": 0.00019759535823429543,
    "retrieved_tokens": 312,
    "checkpoint": 34,
    "store_size": 97
@@ -1128,7 +1135,7 @@
     "[said 2023-08-03] Melanie stopped running due to knee problems around July 21, 2023 and now swims laps at the gym instead \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
    ],
    "label": null,
-   "query_cost": 0.0002079016032258065,
+   "query_cost": 0.0001968066032258065,
    "retrieved_tokens": 206,
    "checkpoint": 34,
    "store_size": 97
@@ -1152,7 +1159,7 @@
     "[said 2023-05-08] Melanie goes swimming with kids and considers taking care of oneself vital \u2014 source: \"Yep, Caroline. Taking care of ourselves is vital. I'm off to go swimming with the kids. Talk to you soon!\""
    ],
    "label": null,
-   "query_cost": 0.00020902190208728656,
+   "query_cost": 0.000197862255028463,
    "retrieved_tokens": 254,
    "checkpoint": 34,
    "store_size": 97
@@ -1196,8 +1203,8 @@
    "memories": 3,
    "lines": [
     "[said 2023-08-03] Caroline changed her adoption plan around July 27, 2023 to foster first before adopting, in order to learn the ropes \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\"",
-    "[said 2023-07-27] Caroline changed her adoption plan around July 27, 2023 to foster children first before pursuing adoption, to gain experience and learn the process \u2014 source: \"I've changed my plan a bit - I'm going to foster first instead of adopting right away, to learn the ropes.\"",
-    "[said 2023-08-13] Caroline changed her adoption plan to foster first instead of adopting right away, to learn the ropes before full adoption \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\""
+    "[said 2023-08-13] Caroline changed her adoption plan to foster first instead of adopting right away, to learn the ropes before full adoption \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\"",
+    "[said 2023-07-27] Caroline changed her adoption plan around July 27, 2023 to foster children first before pursuing adoption, to gain experience and learn the process \u2014 source: \"I've changed my plan a bit - I'm going to foster first instead of adopting right away, to learn the ropes.\""
    ],
    "label": null,
    "query_cost": 0.00017877579803646565,
@@ -1224,7 +1231,7 @@
     "[said 2023-05-25] Melanie views self-care as important for her own wellbeing and recognizes that taking care of herself enables her to better care for her family, a realization she's developing as a personal journey \u2014 source: \"Thanks, Caroline! The event was really thought-provoking. I'm starting to realize that self-care is really important. It's a journey for me, but when I look after myself, I'm able to better look after my family.\""
    ],
    "label": null,
-   "query_cost": 0.00020466503225806455,
+   "query_cost": 0.0001935116989247312,
    "retrieved_tokens": 335,
    "checkpoint": 34,
    "store_size": 97
@@ -1272,7 +1279,7 @@
     "[said 2023-08-13] Melanie and her spouse lived in a very small apartment together after their wedding, which they still laugh about \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\""
    ],
    "label": null,
-   "query_cost": 0.0002094000413462499,
+   "query_cost": 0.000198556629581544,
    "retrieved_tokens": 194,
    "checkpoint": 34,
    "store_size": 97
@@ -1339,8 +1346,8 @@
    "answer": null,
    "memories": 3,
    "lines": [
-    "[said 2023-08-09] Caroline is open to potentially moving back to Sweden in the future but has no plans to do so in the near term as of August 9, 2023 \u2014 source: \"Someday I might move back to Sweden, but not anytime soon.\"",
     "[said 2023-08-13] Caroline is open to potentially moving back to Sweden someday, but has no plans to do so in the near future \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\"",
+    "[said 2023-08-09] Caroline is open to potentially moving back to Sweden in the future but has no plans to do so in the near term as of August 9, 2023 \u2014 source: \"Someday I might move back to Sweden, but not anytime soon.\"",
     "[said 2023-08-13] Caroline's grandmother moved from Sweden to Norway to live with Caroline's aunt \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\""
    ],
    "label": null,
@@ -1368,7 +1375,7 @@
     "[said 2023-05-25] Melanie ran a charity race for mental health around May 20, 2023 and found it rewarding, which prompted reflection on the importance of mental health care \u2014 source: \"Hey Caroline, since we last chatted, I've had a lot of things happening to me. I ran a charity race for mental health last Saturday \u2013 it was really rewarding. Really made me think about taking care of our minds.\""
    ],
    "label": null,
-   "query_cost": 0.00021000077526881722,
+   "query_cost": 0.00019895010860215056,
    "retrieved_tokens": 259,
    "checkpoint": 34,
    "store_size": 97
@@ -1389,11 +1396,11 @@
    "lines": [
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 and describes it as a really nice time together \u2014 source: \"That sounds great, Caroline! It's awesome having stuff around that make us think of good connections and times. Actually, I just took my fam camping in the mountains last week - it was a really nice time together!\"",
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 where they explored nature, roasted marshmallows around a campfire, went on a hike with amazing views, and spent quality time together as a family \u2014 source: \"I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
+    "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience. \u2014 source: \"Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\""
    ],
    "label": null,
-   "query_cost": 0.00021006494836712277,
-   "retrieved_tokens": 411,
+   "query_cost": 0.00019897200719065216,
+   "retrieved_tokens": 412,
    "checkpoint": 34,
    "store_size": 97
   },
@@ -1488,7 +1495,7 @@
     "[said 2023-05-25] Melanie describes her self-care journey as a work in progress but is committed to doing her best \u2014 source: \"Thanks, Caroline. It's still a work in progress, but I'm doing my best. My kids are so excited about summer break! We're thinking about going camping next month. Any fun plans for the summer?\""
    ],
    "label": null,
-   "query_cost": 0.00019774562648556878,
+   "query_cost": 0.00018662446859083194,
    "retrieved_tokens": 285,
    "checkpoint": 34,
    "store_size": 97
@@ -1536,7 +1543,7 @@
     "[said 2023-07-15] Melanie and her kids stopped swimming together after the local pool closed permanently, and now do bike rides together instead as their main outdoor activity \u2014 source: \"The pool near us closed for good, so the kids and I don't swim anymore. We do bike rides together instead.\""
    ],
    "label": null,
-   "query_cost": 0.00020887995840407475,
+   "query_cost": 0.00019772265840407475,
    "retrieved_tokens": 238,
    "checkpoint": 34,
    "store_size": 97
@@ -1743,7 +1750,7 @@
     "[said 2023-08-03] Melanie stopped running due to knee problems around July 21, 2023 and now swims laps at the gym instead \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
    ],
    "label": null,
-   "query_cost": 0.00019500499516129035,
+   "query_cost": 0.00018406924516129036,
    "retrieved_tokens": 259,
    "checkpoint": 34,
    "store_size": 97
@@ -1964,11 +1971,11 @@
    "lines": [
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 and describes it as a really nice time together \u2014 source: \"That sounds great, Caroline! It's awesome having stuff around that make us think of good connections and times. Actually, I just took my fam camping in the mountains last week - it was a really nice time together!\"",
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 where they explored nature, roasted marshmallows around a campfire, went on a hike with amazing views, and spent quality time together as a family \u2014 source: \"I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
+    "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience. \u2014 source: \"Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\""
    ],
    "label": null,
    "query_cost": 0.00019617264712482472,
-   "retrieved_tokens": 411,
+   "retrieved_tokens": 412,
    "checkpoint": 34,
    "store_size": 97
   },
@@ -2011,7 +2018,7 @@
     "[said 2023-08-13] Melanie plans to run another charity race in the fall of 2023, possibly a half marathon \u2014 source: \"I want to run another charity race in the fall - maybe a half marathon this time. \u2026 Next summer we hope to camp at the Grand Canyon, if we can save up.\""
    ],
    "label": null,
-   "query_cost": 0.00019490901999834998,
+   "query_cost": 0.0001838654905865853,
    "retrieved_tokens": 275,
    "checkpoint": 34,
    "store_size": 97
@@ -2033,7 +2040,7 @@
     "[said 2023-05-08] Melanie goes swimming with kids and considers taking care of oneself vital \u2014 source: \"Yep, Caroline. Taking care of ourselves is vital. I'm off to go swimming with the kids. Talk to you soon!\""
    ],
    "label": null,
-   "query_cost": 0.0002062257702233251,
+   "query_cost": 0.0001953589702233251,
    "retrieved_tokens": 254,
    "checkpoint": 34,
    "store_size": 97
@@ -2183,8 +2190,8 @@
    "memories": 3,
    "lines": [
     "[said 2023-06-27] Caroline received a necklace from her grandmother in Sweden when she was young as a gift symbolizing love, faith, and strength. The necklace serves as a reminder of her roots and the love and support from her family.; Caroline has a necklace from her grandmother in Sweden that was given to her when she was young, symbolizing love, faith, and strength, and serves as a reminder of her roots and family support \u2014 source: \"Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. She gave it to me when I was young, and it stands for love, faith and strength. It's like a reminder of my roots and all the love and support I get from my family. \u2026 I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\"",
-    "[said 2023-07-09] Caroline lost her grandmother's necklace at the beach on Saturday, July 8, 2023, after searching for hours. The necklace was a cherished gift from her grandmother in Sweden symbolizing love, faith, and strength. \u2014 source: \"I'm heartbroken - I lost my grandma's necklace at the beach on Saturday. We searched for hours but it's gone.\""
+    "[said 2023-07-09] Caroline lost her grandmother's necklace at the beach on Saturday, July 8, 2023, after searching for hours. The necklace was a cherished gift from her grandmother in Sweden symbolizing love, faith, and strength. \u2014 source: \"I'm heartbroken - I lost my grandma's necklace at the beach on Saturday. We searched for hours but it's gone.\"",
+    "[said 2023-06-27] Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
    ],
    "label": null,
    "query_cost": 0.00020058038691630952,
@@ -2227,8 +2234,8 @@
    "memories": 3,
    "lines": [
     "[said 2023-06-27] Caroline received a necklace from her grandmother in Sweden when she was young as a gift symbolizing love, faith, and strength. The necklace serves as a reminder of her roots and the love and support from her family.; Caroline has a necklace from her grandmother in Sweden that was given to her when she was young, symbolizing love, faith, and strength, and serves as a reminder of her roots and family support \u2014 source: \"Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. She gave it to me when I was young, and it stands for love, faith and strength. It's like a reminder of my roots and all the love and support I get from my family. \u2026 I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\"",
-    "[said 2023-07-09] Caroline lost her grandmother's necklace at the beach on Saturday, July 8, 2023, after searching for hours. The necklace was a cherished gift from her grandmother in Sweden symbolizing love, faith, and strength. \u2014 source: \"I'm heartbroken - I lost my grandma's necklace at the beach on Saturday. We searched for hours but it's gone.\""
+    "[said 2023-07-09] Caroline lost her grandmother's necklace at the beach on Saturday, July 8, 2023, after searching for hours. The necklace was a cherished gift from her grandmother in Sweden symbolizing love, faith, and strength. \u2014 source: \"I'm heartbroken - I lost my grandma's necklace at the beach on Saturday. We searched for hours but it's gone.\"",
+    "[said 2023-06-27] Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
    ],
    "label": null,
    "query_cost": 0.00020095119225806455,
@@ -2253,7 +2260,7 @@
     "[said 2023-06-27] Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday ten years ago (around 2013). The pattern and colors remind her of art and self-expression, and she treasures it for its sentimental value. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
    ],
    "label": null,
-   "query_cost": 0.00021327197303646565,
+   "query_cost": 0.00020251209803646565,
    "retrieved_tokens": 593,
    "checkpoint": 34,
    "store_size": 97
@@ -2271,11 +2278,11 @@
    "memories": 3,
    "lines": [
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 where they explored nature, roasted marshmallows around a campfire, went on a hike with amazing views, and spent quality time together as a family \u2014 source: \"I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\"",
-    "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience. \u2014 source: \"Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\""
+    "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience. \u2014 source: \"Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\"",
+    "[said 2023-06-27] Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
    ],
    "label": null,
-   "query_cost": 0.0002066341643758766,
+   "query_cost": 0.0001956721643758766,
    "retrieved_tokens": 473,
    "checkpoint": 34,
    "store_size": 97
@@ -2409,7 +2416,7 @@
     "[said 2023-05-08] Caroline appreciates Melanie's lake sunrise painting, noting how the colors blend nicely and recognizing painting as a meaningful outlet for self-expression \u2014 source: \"Wow, Melanie! The colors really blend nicely. Painting looks like a great outlet for expressing yourself.\""
    ],
    "label": null,
-   "query_cost": 0.0002096197716468591,
+   "query_cost": 0.0001986656466468591,
    "retrieved_tokens": 308,
    "checkpoint": 34,
    "store_size": 97
@@ -2433,7 +2440,7 @@
     "[said 2023-05-08] Melanie uses painting as a creative outlet to express her feelings and relax after long days \u2014 source: \"Thanks, Caroline! Painting's a fun way to express my feelings and get creative. It's a great way to relax after a long day.\""
    ],
    "label": null,
-   "query_cost": 0.00020949983118279572,
+   "query_cost": 0.0001984374978494624,
    "retrieved_tokens": 213,
    "checkpoint": 34,
    "store_size": 97
@@ -2457,7 +2464,7 @@
     "[said 2023-08-03] Melanie and her spouse lived in a very small apartment immediately after their wedding around June 2018, which they still find amusing to recall \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
    ],
    "label": null,
-   "query_cost": 0.0002082561631878558,
+   "query_cost": 0.0001973336925996205,
    "retrieved_tokens": 200,
    "checkpoint": 34,
    "store_size": 97
@@ -2553,7 +2560,7 @@
     "[said 2023-08-03] Melanie and her children stopped swimming at their local pool around July 15, 2023 when it closed permanently, and now do bike rides together instead \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
    ],
    "label": null,
-   "query_cost": 0.00019792332427843805,
+   "query_cost": 0.00018681100848896436,
    "retrieved_tokens": 212,
    "checkpoint": 34,
    "store_size": 97
@@ -2577,7 +2584,7 @@
     "[said 2023-07-15] Melanie and her kids stopped swimming together after the local pool closed permanently, and now do bike rides together instead as their main outdoor activity \u2014 source: \"The pool near us closed for good, so the kids and I don't swim anymore. We do bike rides together instead.\""
    ],
    "label": null,
-   "query_cost": 0.00020928297340124509,
+   "query_cost": 0.00019818564006791176,
    "retrieved_tokens": 311,
    "checkpoint": 34,
    "store_size": 97
@@ -2597,11 +2604,11 @@
    "memories": 3,
    "lines": [
     "[said 2023-07-19] Melanie sold her violin around June 2023 and switched to learning guitar instead, which she finds more fun to play with her children; Melanie sold her violin around June 2023 and switched to learning guitar, which she finds more enjoyable to play with her children \u2014 source: \"I sold my violin last month. I'm learning guitar now instead - it's more fun to play with the kids. \u2026 Our first apartment after the wedding was so tiny - we still laugh about it.\"",
-    "[said 2023-05-25] Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family \u2014 source: \"Yeah, it's tough. So I'm carving out some me-time each day - running, reading, or playing my violin - which refreshes me and helps me stay present for my fam!\" (no longer true since 2023-08-03)",
+    "[said 2023-05-25] Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family \u2014 source: \"Yeah, it's tough. So I'm carving out some me-time each day - running, reading, or playing my violin - which refreshes me and helps me stay present for my fam!\" (no longer true since 2023-07-23)",
     "[said 2023-06-09] Melanie is motivated by her family and their love, and wants to be courageous for them \u2014 source: \"Yes, Caroline! We can do it. Your courage is inspiring. I want to be couragous for my family- they motivate me and give me love. What motivates you?\""
    ],
    "label": null,
-   "query_cost": 0.00020857369156762878,
+   "query_cost": 0.00019759535823429543,
    "retrieved_tokens": 312,
    "checkpoint": 34,
    "store_size": 97
@@ -2625,7 +2632,7 @@
     "[said 2023-08-03] Melanie stopped running due to knee problems around July 21, 2023 and now swims laps at the gym instead \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
    ],
    "label": null,
-   "query_cost": 0.0002079016032258065,
+   "query_cost": 0.0001968066032258065,
    "retrieved_tokens": 206,
    "checkpoint": 34,
    "store_size": 97
@@ -2649,7 +2656,7 @@
     "[said 2023-05-08] Melanie goes swimming with kids and considers taking care of oneself vital \u2014 source: \"Yep, Caroline. Taking care of ourselves is vital. I'm off to go swimming with the kids. Talk to you soon!\""
    ],
    "label": null,
-   "query_cost": 0.00020902190208728656,
+   "query_cost": 0.000197862255028463,
    "retrieved_tokens": 254,
    "checkpoint": 34,
    "store_size": 97
@@ -2693,8 +2700,8 @@
    "memories": 3,
    "lines": [
     "[said 2023-08-03] Caroline changed her adoption plan around July 27, 2023 to foster first before adopting, in order to learn the ropes \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\"",
-    "[said 2023-07-27] Caroline changed her adoption plan around July 27, 2023 to foster children first before pursuing adoption, to gain experience and learn the process \u2014 source: \"I've changed my plan a bit - I'm going to foster first instead of adopting right away, to learn the ropes.\"",
-    "[said 2023-08-13] Caroline changed her adoption plan to foster first instead of adopting right away, to learn the ropes before full adoption \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\""
+    "[said 2023-08-13] Caroline changed her adoption plan to foster first instead of adopting right away, to learn the ropes before full adoption \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\"",
+    "[said 2023-07-27] Caroline changed her adoption plan around July 27, 2023 to foster children first before pursuing adoption, to gain experience and learn the process \u2014 source: \"I've changed my plan a bit - I'm going to foster first instead of adopting right away, to learn the ropes.\""
    ],
    "label": null,
    "query_cost": 0.00017877579803646565,
@@ -2721,7 +2728,7 @@
     "[said 2023-05-25] Melanie views self-care as important for her own wellbeing and recognizes that taking care of herself enables her to better care for her family, a realization she's developing as a personal journey \u2014 source: \"Thanks, Caroline! The event was really thought-provoking. I'm starting to realize that self-care is really important. It's a journey for me, but when I look after myself, I'm able to better look after my family.\""
    ],
    "label": null,
-   "query_cost": 0.00020466503225806455,
+   "query_cost": 0.0001935116989247312,
    "retrieved_tokens": 335,
    "checkpoint": 34,
    "store_size": 97
@@ -2769,7 +2776,7 @@
     "[said 2023-08-13] Melanie and her spouse lived in a very small apartment together after their wedding, which they still laugh about \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\""
    ],
    "label": null,
-   "query_cost": 0.0002094000413462499,
+   "query_cost": 0.000198556629581544,
    "retrieved_tokens": 194,
    "checkpoint": 34,
    "store_size": 97
@@ -2836,8 +2843,8 @@
    "answer": null,
    "memories": 3,
    "lines": [
-    "[said 2023-08-09] Caroline is open to potentially moving back to Sweden in the future but has no plans to do so in the near term as of August 9, 2023 \u2014 source: \"Someday I might move back to Sweden, but not anytime soon.\"",
     "[said 2023-08-13] Caroline is open to potentially moving back to Sweden someday, but has no plans to do so in the near future \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\"",
+    "[said 2023-08-09] Caroline is open to potentially moving back to Sweden in the future but has no plans to do so in the near term as of August 9, 2023 \u2014 source: \"Someday I might move back to Sweden, but not anytime soon.\"",
     "[said 2023-08-13] Caroline's grandmother moved from Sweden to Norway to live with Caroline's aunt \u2014 source: \"Next summer we hope to camp at the Grand Canyon, if we can save up.\""
    ],
    "label": null,
@@ -2865,7 +2872,7 @@
     "[said 2023-05-25] Melanie ran a charity race for mental health around May 20, 2023 and found it rewarding, which prompted reflection on the importance of mental health care \u2014 source: \"Hey Caroline, since we last chatted, I've had a lot of things happening to me. I ran a charity race for mental health last Saturday \u2013 it was really rewarding. Really made me think about taking care of our minds.\""
    ],
    "label": null,
-   "query_cost": 0.00021000077526881722,
+   "query_cost": 0.00019895010860215056,
    "retrieved_tokens": 259,
    "checkpoint": 34,
    "store_size": 97
@@ -2886,11 +2893,11 @@
    "lines": [
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 and describes it as a really nice time together \u2014 source: \"That sounds great, Caroline! It's awesome having stuff around that make us think of good connections and times. Actually, I just took my fam camping in the mountains last week - it was a really nice time together!\"",
     "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023 where they explored nature, roasted marshmallows around a campfire, went on a hike with amazing views, and spent quality time together as a family \u2014 source: \"I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\"",
-    "[said 2023-06-27] Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget. \u2014 source: \"It was an awesome time, Caroline! We explored nature, roasted marshmallows around the campfire and even went on a hike. The view from the top was amazing! The 2 younger kids love nature. It was so special having these moments together as a family - I'll never forget it!\""
+    "[said 2023-06-27] Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience. \u2014 source: \"Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\""
    ],
    "label": null,
-   "query_cost": 0.00021006494836712277,
-   "retrieved_tokens": 411,
+   "query_cost": 0.00019897200719065216,
+   "retrieved_tokens": 412,
    "checkpoint": 34,
    "store_size": 97
   },
@@ -2985,7 +2992,7 @@
     "[said 2023-05-25] Melanie describes her self-care journey as a work in progress but is committed to doing her best \u2014 source: \"Thanks, Caroline. It's still a work in progress, but I'm doing my best. My kids are so excited about summer break! We're thinking about going camping next month. Any fun plans for the summer?\""
    ],
    "label": null,
-   "query_cost": 0.00019774562648556878,
+   "query_cost": 0.00018662446859083194,
    "retrieved_tokens": 285,
    "checkpoint": 34,
    "store_size": 97
@@ -3033,7 +3040,7 @@
     "[said 2023-07-15] Melanie and her kids stopped swimming together after the local pool closed permanently, and now do bike rides together instead as their main outdoor activity \u2014 source: \"The pool near us closed for good, so the kids and I don't swim anymore. We do bike rides together instead.\""
    ],
    "label": null,
-   "query_cost": 0.00020887995840407475,
+   "query_cost": 0.00019772265840407475,
    "retrieved_tokens": 238,
    "checkpoint": 34,
    "store_size": 97
@@ -3130,7 +3137,7 @@
   "failed_requests": 0,
   "cost_usd": 0.0014622299999999975,
   "jev_latency_ms": 1664.359542017337,
-  "wall_s": 1.7251065419986844,
+  "wall_s": 1.7415654999786057,
   "merged_pairs": [
    [
     "Caroline received a necklace from her grandmother in Sweden when she was young as a gift symbolizing love, faith, and strength. The necklace serves as a reminder of her roots and the love and support from her family.",
@@ -3187,17 +3194,17 @@
  "storage_before_hygiene": {
   "storage": {
    "closes": 4,
-   "closes_correct": 2,
-   "closes_wrong": 2,
+   "closes_correct": 3,
+   "closes_wrong": 1,
    "closes_by_reason": {
-    "belief_wrong": 1,
+    "belief_correct": 1,
     "fulfilled_correct": 2,
     "fulfilled_wrong": 1
    },
    "reopens": 0,
    "disputed": 0,
-   "against_blocked": 15,
-   "against_unconfirmed": 8,
+   "against_blocked": 23,
+   "against_unconfirmed": 9,
    "plan_fulfilled_asks": 234
   },
   "update_behavior": {
@@ -3477,17 +3484,17 @@
  ],
  "storage": {
   "closes": 4,
-  "closes_correct": 2,
-  "closes_wrong": 2,
+  "closes_correct": 3,
+  "closes_wrong": 1,
   "closes_by_reason": {
-   "belief_wrong": 1,
+   "belief_correct": 1,
    "fulfilled_correct": 2,
    "fulfilled_wrong": 1
   },
   "reopens": 0,
   "disputed": 0,
-  "against_blocked": 15,
-  "against_unconfirmed": 8,
+  "against_blocked": 23,
+  "against_unconfirmed": 9,
   "plan_fulfilled_asks": 234
  },
  "fulfills_log": [
@@ -3525,7 +3532,7 @@
  "belief_trace": [
   {
    "message": "D1:3",
-   "fact": "7174157c75de484a",
+   "fact": "46f3a3f488a344ef",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline attended a LGBTQ support group on September 22, 2026, found it to be a powerful experience, but stopped attending after it disbanded when the organizer moved away around July 2023",
@@ -3533,7 +3540,7 @@
   },
   {
    "message": "D1:7",
-   "fact": "65f4694c011845dc",
+   "fact": "3fbe22906c354b21",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline previously felt accepted and gained courage to embrace herself through attending the LGBTQ support group, but stopped attending around July 13, 2023 after it disbanded when the organizer moved away",
@@ -3541,7 +3548,7 @@
   },
   {
    "message": "D1:7",
-   "fact": "7174157c75de484a",
+   "fact": "46f3a3f488a344ef",
    "label": "refinement",
    "p": 0.94,
    "before": 0.5,
@@ -3554,7 +3561,7 @@
   },
   {
    "message": "D1:9",
-   "fact": "79f43d51d84d4d00",
+   "fact": "72fc10d8b5d84432",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline plans to continue her education and explore career options, which she finds exciting",
@@ -3562,7 +3569,7 @@
   },
   {
    "message": "D1:11",
-   "fact": "4513c60f06404273",
+   "fact": "66ce96e753754d98",
    "event": "insert",
    "after": 0.95,
    "fact_text": "Caroline is interested in pursuing counseling or mental health work, motivated by a desire to support people facing similar issues to her own",
@@ -3570,7 +3577,7 @@
   },
   {
    "message": "D1:11",
-   "fact": "79f43d51d84d4d00",
+   "fact": "72fc10d8b5d84432",
    "label": "refinement",
    "p": 0.95,
    "before": 0.5,
@@ -3583,7 +3590,7 @@
   },
   {
    "message": "D1:14",
-   "fact": "f5cd3cdff0ae4f23",
+   "fact": "913904b6b37e4c5a",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie painted a lake sunrise last year (around 2025) that is special to her",
@@ -3591,7 +3598,7 @@
   },
   {
    "message": "D1:15",
-   "fact": "5797e7219ae74807",
+   "fact": "19e6aa79a72e4ee2",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline appreciates Melanie's lake sunrise painting, noting how the colors blend nicely and recognizing painting as a meaningful outlet for self-expression",
@@ -3599,7 +3606,7 @@
   },
   {
    "message": "D1:16",
-   "fact": "9b61fdc22da44b0a",
+   "fact": "a5abbcdda97e42e7",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie uses painting as a creative outlet to express her feelings and relax after long days",
@@ -3607,17 +3614,20 @@
   },
   {
    "message": "D1:16",
-   "fact": "5797e7219ae74807",
+   "fact": "19e6aa79a72e4ee2",
    "label": "refinement",
    "p": 0.5,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.5,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Caroline appreciates Melanie's lake sunrise painting, noting how the colors blend nicely and recognizing painting as a meaningful outlet for self-expression",
    "fact_source": "D1:15"
   },
   {
    "message": "D1:18",
-   "fact": "7ec25845f06f4748",
+   "fact": "46d02e7292b94d0c",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie goes swimming with kids and considers taking care of oneself vital",
@@ -3625,7 +3635,7 @@
   },
   {
    "message": "D2:1",
-   "fact": "c7eea76d11394eca",
+   "fact": "5f65b1f812454052",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie ran a charity race for mental health around May 20, 2023 and found it rewarding, which prompted reflection on the importance of mental health care",
@@ -3633,7 +3643,7 @@
   },
   {
    "message": "D2:3",
-   "fact": "e4eb1709d1fa43b4",
+   "fact": "194a5cf02d4a4552",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie views self-care as important for her own wellbeing and recognizes that taking care of herself enables her to better care for her family, a realization she's developing as a personal journey",
@@ -3641,7 +3651,7 @@
   },
   {
    "message": "D2:3",
-   "fact": "7ec25845f06f4748",
+   "fact": "46d02e7292b94d0c",
    "label": "refinement",
    "p": 0.93,
    "before": 0.5,
@@ -3654,7 +3664,7 @@
   },
   {
    "message": "D2:5",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "event": "insert",
    "after": 0.97,
    "fact_text": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
@@ -3662,7 +3672,7 @@
   },
   {
    "message": "D2:5",
-   "fact": "e4eb1709d1fa43b4",
+   "fact": "194a5cf02d4a4552",
    "label": "refinement",
    "p": 0.97,
    "before": 0.5,
@@ -3675,7 +3685,7 @@
   },
   {
    "message": "D2:5",
-   "fact": "7ec25845f06f4748",
+   "fact": "46d02e7292b94d0c",
    "label": "refinement",
    "p": 0.74,
    "before": 0.93,
@@ -3688,7 +3698,7 @@
   },
   {
    "message": "D2:7",
-   "fact": "156c11e2c18a4117",
+   "fact": "958cb354769a4bff",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie's kids are excited about summer break and the family is considering a camping trip for June 2023",
@@ -3696,7 +3706,7 @@
   },
   {
    "message": "D2:7",
-   "fact": "2342a1c659884e60",
+   "fact": "4ffef33e609c419f",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie describes her self-care journey as a work in progress but is committed to doing her best",
@@ -3704,7 +3714,7 @@
   },
   {
    "message": "D2:7",
-   "fact": "e4eb1709d1fa43b4",
+   "fact": "194a5cf02d4a4552",
    "label": "refinement",
    "p": 0.65,
    "before": 0.9699999999999999,
@@ -3717,7 +3727,7 @@
   },
   {
    "message": "D2:7",
-   "fact": "7ec25845f06f4748",
+   "fact": "46d02e7292b94d0c",
    "label": "refinement",
    "p": 0.53,
    "before": 0.9742355605889014,
@@ -3730,17 +3740,20 @@
   },
   {
    "message": "D2:7",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "label": "refinement",
    "p": 0.45,
    "before": 0.97,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.9635761589403973,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
    "fact_source": "D2:5"
   },
   {
    "message": "D2:8",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "event": "insert",
    "after": 0.98,
    "fact_text": "Caroline has a dream of having a family and is researching adoption agencies to give a loving home to children who need it",
@@ -3748,7 +3761,7 @@
   },
   {
    "message": "D2:10",
-   "fact": "af10df4cd38c41c7",
+   "fact": "ed409780255648fc",
    "event": "insert",
    "after": 0.93,
    "fact_text": "Caroline feels hopeful and optimistic about pursuing her adoption dream and is actively researching adoption agencies to turn her goal of giving children a loving home into reality",
@@ -3756,7 +3769,7 @@
   },
   {
    "message": "D2:10",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.93,
    "before": 0.98,
@@ -3769,7 +3782,7 @@
   },
   {
    "message": "D2:10",
-   "fact": "dd14be37a70b48b5",
+   "fact": "4f490b847ac94c88",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline is grateful for the support she has received from friends and mentors as she works toward her adoption goal",
@@ -3777,7 +3790,7 @@
   },
   {
    "message": "D2:10",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.59,
    "before": 0.98,
@@ -3790,7 +3803,7 @@
   },
   {
    "message": "D2:12",
-   "fact": "8eb07da6773244ba",
+   "fact": "60f8dd4cd716471b",
    "event": "insert",
    "after": 0.94,
    "fact_text": "Caroline chose an adoption agency because they specifically support LGBTQ+ individuals and families with adoption, and their commitment to inclusivity and support resonated with her values",
@@ -3798,7 +3811,7 @@
   },
   {
    "message": "D2:12",
-   "fact": "af10df4cd38c41c7",
+   "fact": "ed409780255648fc",
    "label": "refinement",
    "p": 0.92,
    "before": 0.93,
@@ -3811,7 +3824,7 @@
   },
   {
    "message": "D2:12",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.94,
    "before": 0.98,
@@ -3824,7 +3837,7 @@
   },
   {
    "message": "D2:14",
-   "fact": "4ce1df4f44804f71",
+   "fact": "6dde25def3aa46fe",
    "event": "insert",
    "after": 0.91,
    "fact_text": "Caroline is thrilled about creating a family for children who need one through adoption and is prepared for the challenges of single parenthood",
@@ -3832,7 +3845,7 @@
   },
   {
    "message": "D2:14",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.91,
    "before": 0.98,
@@ -3845,7 +3858,7 @@
   },
   {
    "message": "D2:14",
-   "fact": "af10df4cd38c41c7",
+   "fact": "ed409780255648fc",
    "label": "refinement",
    "p": 0.83,
    "before": 0.98,
@@ -3858,7 +3871,7 @@
   },
   {
    "message": "D3:1",
-   "fact": "2ce8a67651b64110",
+   "fact": "18c8153773c54b28",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline spoke at a school event around June 2, 2023 about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since beginning her transition three years prior (around June 2020)",
@@ -3866,7 +3879,7 @@
   },
   {
    "message": "D3:3",
-   "fact": "1594444d3ab34db1",
+   "fact": "3c0c839081b94474",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline felt empowered giving her school talk on June 9, 2023 about her transgender journey, sharing her struggles and growth since coming out. The audience connected with her message and was inspired to become better allies.",
@@ -3874,17 +3887,20 @@
   },
   {
    "message": "D3:3",
-   "fact": "2ce8a67651b64110",
+   "fact": "18c8153773c54b28",
    "label": "refinement",
    "p": 0.38,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.37999999999999995,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Caroline spoke at a school event around June 2, 2023 about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since beginning her transition three years prior (around June 2020)",
    "fact_source": "D3:1"
   },
   {
    "message": "D3:3",
-   "fact": "e40d86ecbc0c4c0b",
+   "fact": "de9a770154fd4613",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline is passionate about conversations regarding gender identity and inclusion, and feels grateful for the opportunity to advocate for and give voice to the transgender community.",
@@ -3892,7 +3908,7 @@
   },
   {
    "message": "D3:3",
-   "fact": "2ce8a67651b64110",
+   "fact": "18c8153773c54b28",
    "label": "refinement",
    "p": 0.55,
    "before": 0.5,
@@ -3905,7 +3921,7 @@
   },
   {
    "message": "D3:10",
-   "fact": "461cd5ee4c0141e4",
+   "fact": "50f49650628a4997",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie is motivated by her family and their love, and wants to be courageous for them",
@@ -3913,7 +3929,7 @@
   },
   {
    "message": "D3:10",
-   "fact": "03243883a8d54606",
+   "fact": "ae3afc19a5b14a55",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline's primary motivation is using her voice and platform to make positive change and lift others up through sharing her story and promoting understanding and acceptance",
@@ -3921,17 +3937,7 @@
   },
   {
    "message": "D3:10",
-   "fact": "4513c60f06404273",
-   "label": "new",
-   "p": 0.41,
-   "before": 0.95,
-   "event": "ignored_weak",
-   "fact_text": "Caroline is interested in pursuing counseling or mental health work, motivated by a desire to support people facing similar issues to her own",
-   "fact_source": "D1:11"
-  },
-  {
-   "message": "D3:10",
-   "fact": "e40d86ecbc0c4c0b",
+   "fact": "de9a770154fd4613",
    "label": "refinement",
    "p": 0.71,
    "before": 0.5,
@@ -3944,7 +3950,7 @@
   },
   {
    "message": "D3:10",
-   "fact": "1594444d3ab34db1",
+   "fact": "3c0c839081b94474",
    "label": "refinement",
    "p": 0.68,
    "before": 0.5,
@@ -3957,7 +3963,7 @@
   },
   {
    "message": "D3:11",
-   "fact": "efcd06721fe24382",
+   "fact": "12ef48577a184d7d",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline met up with friends around early June 2023",
@@ -3965,7 +3971,7 @@
   },
   {
    "message": "D3:11",
-   "fact": "3e8d7e6563634c99",
+   "fact": "c9d52aa0209d4262",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline's friends, family, and mentors are her primary sources of motivation and strength",
@@ -3973,7 +3979,7 @@
   },
   {
    "message": "D3:11",
-   "fact": "dd14be37a70b48b5",
+   "fact": "4f490b847ac94c88",
    "label": "refinement",
    "p": 0.87,
    "before": 0.5,
@@ -3986,7 +3992,7 @@
   },
   {
    "message": "D3:12",
-   "fact": "d984d2f8c1124b19",
+   "fact": "20b95e4eb00145b6",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline and her support system met up around June 2, 2023 and shared a photo together",
@@ -3994,7 +4000,7 @@
   },
   {
    "message": "D3:12",
-   "fact": "efcd06721fe24382",
+   "fact": "12ef48577a184d7d",
    "label": "refinement",
    "p": 0.97,
    "before": 0.5,
@@ -4007,7 +4013,7 @@
   },
   {
    "message": "D3:12",
-   "fact": "dd14be37a70b48b5",
+   "fact": "4f490b847ac94c88",
    "label": "refinement",
    "p": 0.76,
    "before": 0.8700000000000001,
@@ -4020,7 +4026,7 @@
   },
   {
    "message": "D3:12",
-   "fact": "3e8d7e6563634c99",
+   "fact": "c9d52aa0209d4262",
    "label": "refinement",
    "p": 0.56,
    "before": 0.5,
@@ -4033,7 +4039,7 @@
   },
   {
    "message": "D3:12",
-   "fact": "81ffd0b426ff4143",
+   "fact": "0e68759e7a6d4d15",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline's friends, family, and mentors are her primary sources of motivation and strength, providing her the support she needs to push forward",
@@ -4041,7 +4047,7 @@
   },
   {
    "message": "D3:12",
-   "fact": "3e8d7e6563634c99",
+   "fact": "c9d52aa0209d4262",
    "label": "refinement",
    "p": 0.52,
    "before": 0.5,
@@ -4054,17 +4060,7 @@
   },
   {
    "message": "D3:12",
-   "fact": "03243883a8d54606",
-   "label": "new",
-   "p": 0.39,
-   "before": 0.5,
-   "event": "ignored_weak",
-   "fact_text": "Caroline's primary motivation is using her voice and platform to make positive change and lift others up through sharing her story and promoting understanding and acceptance",
-   "fact_source": "D3:10"
-  },
-  {
-   "message": "D3:12",
-   "fact": "dd14be37a70b48b5",
+   "fact": "4f490b847ac94c88",
    "label": "refinement",
    "p": 0.82,
    "before": 0.8700000000000001,
@@ -4077,7 +4073,7 @@
   },
   {
    "message": "D3:13",
-   "fact": "b8070b087bb04cf0",
+   "fact": "70801342ffe248f6",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline moved from her home country around June 2019 and has known her close friends for 4 years since that move",
@@ -4085,7 +4081,7 @@
   },
   {
    "message": "D3:13",
-   "fact": "3e8d7e6563634c99",
+   "fact": "c9d52aa0209d4262",
    "label": "refinement",
    "p": 0.52,
    "before": 0.52,
@@ -4098,17 +4094,7 @@
   },
   {
    "message": "D3:13",
-   "fact": "dd14be37a70b48b5",
-   "label": "new",
-   "p": 0.49,
-   "before": 0.968241042345277,
-   "event": "ignored_weak",
-   "fact_text": "Caroline is grateful for the support she has received from friends and mentors as she works toward her adoption goal",
-   "fact_source": "D2:10"
-  },
-  {
-   "message": "D3:13",
-   "fact": "14cbcde20a8a4be2",
+   "fact": "115131bbbe8646d4",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline went through a tough breakup and credits her friends' love and support as especially important during that difficult time",
@@ -4116,7 +4102,7 @@
   },
   {
    "message": "D3:13",
-   "fact": "3e8d7e6563634c99",
+   "fact": "c9d52aa0209d4262",
    "label": "refinement",
    "p": 0.98,
    "before": 0.52,
@@ -4128,18 +4114,8 @@
    "fact_source": "D3:11"
   },
   {
-   "message": "D3:13",
-   "fact": "dd14be37a70b48b5",
-   "label": "new",
-   "p": 0.5,
-   "before": 0.968241042345277,
-   "event": "ignored_weak",
-   "fact_text": "Caroline is grateful for the support she has received from friends and mentors as she works toward her adoption goal",
-   "fact_source": "D2:10"
-  },
-  {
    "message": "D3:16",
-   "fact": "48459ec596d24898",
+   "fact": "9c70def502dd4912",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie has been married for 5 years as of June 9, 2023",
@@ -4147,7 +4123,7 @@
   },
   {
    "message": "D3:20",
-   "fact": "dc1388d28e9e407b",
+   "fact": "d80ecced9c364ff1",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie's wedding day (around June 2018) included playing games, eating good food, and hanging out together with family, which she describes as making life awesome",
@@ -4155,7 +4131,7 @@
   },
   {
    "message": "D3:20",
-   "fact": "48459ec596d24898",
+   "fact": "9c70def502dd4912",
    "label": "refinement",
    "p": 0.64,
    "before": 0.5,
@@ -4168,7 +4144,7 @@
   },
   {
    "message": "D3:22",
-   "fact": "a681594f07224e69",
+   "fact": "b79ba3f765c549b7",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie cherishes time with family and describes it as when she feels most alive and happy",
@@ -4176,7 +4152,7 @@
   },
   {
    "message": "D3:22",
-   "fact": "dc1388d28e9e407b",
+   "fact": "d80ecced9c364ff1",
    "label": "refinement",
    "p": 0.53,
    "before": 0.5,
@@ -4189,7 +4165,7 @@
   },
   {
    "message": "D4:3",
-   "fact": "ab46f7568a1444f2",
+   "fact": "649c1c6aa2c64660",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline received a necklace from her grandmother in Sweden when she was young as a gift symbolizing love, faith, and strength. The necklace serves as a reminder of her roots and the love and support from her family.",
@@ -4197,7 +4173,7 @@
   },
   {
    "message": "D4:3",
-   "fact": "3e8d7e6563634c99",
+   "fact": "c9d52aa0209d4262",
    "label": "refinement",
    "p": 0.61,
    "before": 0.98,
@@ -4210,7 +4186,7 @@
   },
   {
    "message": "D4:5",
-   "fact": "e0fe7c97224a49ec",
+   "fact": "2d8de96d0d9d4c22",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday around 2013. The bowl features a meaningful pattern and colors that remind her of art and self-expression.",
@@ -4218,7 +4194,7 @@
   },
   {
    "message": "D4:6",
-   "fact": "9f9f47d8f542403d",
+   "fact": "193eda3fbf574fb6",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie took her family camping in the mountains around June 20, 2023 and describes it as a really nice time together",
@@ -4226,17 +4202,17 @@
   },
   {
    "message": "D4:6",
-   "fact": "156c11e2c18a4117",
+   "fact": "958cb354769a4bff",
    "label": "update",
    "p": 0.5,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "blocked_structure",
    "fact_text": "Melanie's kids are excited about summer break and the family is considering a camping trip for June 2023",
    "fact_source": "D2:7"
   },
   {
    "message": "D4:6",
-   "fact": "a681594f07224e69",
+   "fact": "b79ba3f765c549b7",
    "label": "refinement",
    "p": 0.79,
    "before": 0.5,
@@ -4249,7 +4225,7 @@
   },
   {
    "message": "D4:8",
-   "fact": "f8acb4ed33d24f33",
+   "fact": "4f3c5412088e4710",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family.",
@@ -4257,7 +4233,7 @@
   },
   {
    "message": "D4:8",
-   "fact": "ab46f7568a1444f2",
+   "fact": "649c1c6aa2c64660",
    "label": "duplicate",
    "p": 0.73,
    "before": 0.5,
@@ -4270,7 +4246,7 @@
   },
   {
    "message": "D4:8",
-   "fact": "3e8d7e6563634c99",
+   "fact": "c9d52aa0209d4262",
    "label": "refinement",
    "p": 0.69,
    "before": 0.98,
@@ -4283,7 +4259,7 @@
   },
   {
    "message": "D4:8",
-   "fact": "81ffd0b426ff4143",
+   "fact": "0e68759e7a6d4d15",
    "label": "refinement",
    "p": 0.63,
    "before": 0.5,
@@ -4296,7 +4272,7 @@
   },
   {
    "message": "D4:8",
-   "fact": "88c8a276d97f41f3",
+   "fact": "e7ce33177c224927",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday ten years ago (around 2013). The pattern and colors remind her of art and self-expression, and she treasures it for its sentimental value.",
@@ -4304,7 +4280,7 @@
   },
   {
    "message": "D4:8",
-   "fact": "e0fe7c97224a49ec",
+   "fact": "2d8de96d0d9d4c22",
    "label": "refinement",
    "p": 0.56,
    "before": 0.5,
@@ -4317,7 +4293,7 @@
   },
   {
    "message": "D4:8",
-   "fact": "a8c5c06551de4cfa",
+   "fact": "e20d056f571642f7",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget.",
@@ -4325,7 +4301,7 @@
   },
   {
    "message": "D4:8",
-   "fact": "9f9f47d8f542403d",
+   "fact": "193eda3fbf574fb6",
    "label": "refinement",
    "p": 0.99,
    "before": 0.5,
@@ -4338,7 +4314,7 @@
   },
   {
    "message": "D4:8",
-   "fact": "a681594f07224e69",
+   "fact": "b79ba3f765c549b7",
    "label": "refinement",
    "p": 0.73,
    "before": 0.79,
@@ -4351,7 +4327,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "801c1c71b0d04677",
+   "fact": "26ba9ad1ff224aaa",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline attended an LGBTQ+ counseling workshop on June 23, 2023 where she learned about different therapeutic methods for working with trans people and was inspired by the professionals' commitment to creating safe spaces",
@@ -4359,7 +4335,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "e40d86ecbc0c4c0b",
+   "fact": "de9a770154fd4613",
    "label": "refinement",
    "p": 0.79,
    "before": 0.7100000000000001,
@@ -4372,7 +4348,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "4513c60f06404273",
+   "fact": "66ce96e753754d98",
    "label": "refinement",
    "p": 0.96,
    "before": 0.95,
@@ -4385,7 +4361,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "79f43d51d84d4d00",
+   "fact": "72fc10d8b5d84432",
    "label": "refinement",
    "p": 0.84,
    "before": 0.9499999999999998,
@@ -4398,7 +4374,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "7038f4b888b444e6",
+   "fact": "9fb9b0091b314766",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline has a necklace from her grandmother in Sweden that was given to her when she was young, symbolizing love, faith, and strength, and serves as a reminder of her roots and family support",
@@ -4406,7 +4382,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "ab46f7568a1444f2",
+   "fact": "649c1c6aa2c64660",
    "label": "duplicate",
    "p": 0.97,
    "before": 0.7299999999999999,
@@ -4419,17 +4395,20 @@
   },
   {
    "message": "D4:13",
-   "fact": "f8acb4ed33d24f33",
+   "fact": "4f3c5412088e4710",
    "label": "duplicate",
    "p": 0.41,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.4099999999999999,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family.",
    "fact_source": "D4:8"
   },
   {
    "message": "D4:13",
-   "fact": "3e8d7e6563634c99",
+   "fact": "c9d52aa0209d4262",
    "label": "refinement",
    "p": 0.87,
    "before": 0.98,
@@ -4442,7 +4421,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "374160c845cb4b66",
+   "fact": "f12119357cc74bba",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline has a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013) that she treasures for its artistic pattern, colors, and reminder of self-expression and friendship",
@@ -4450,17 +4429,17 @@
   },
   {
    "message": "D4:13",
-   "fact": "88c8a276d97f41f3",
+   "fact": "e7ce33177c224927",
    "label": "contradiction",
    "p": 0.48,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "blocked_temporal",
    "fact_text": "Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday ten years ago (around 2013). The pattern and colors remind her of art and self-expression, and she treasures it for its sentimental value.",
    "fact_source": "D4:8"
   },
   {
    "message": "D4:13",
-   "fact": "e0fe7c97224a49ec",
+   "fact": "2d8de96d0d9d4c22",
    "label": "refinement",
    "p": 0.77,
    "before": 0.56,
@@ -4473,7 +4452,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "3e8d7e6563634c99",
+   "fact": "c9d52aa0209d4262",
    "label": "refinement",
    "p": 0.6,
    "before": 0.98,
@@ -4486,7 +4465,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "3b266995b78a4acc",
+   "fact": "58c1da9773cb4f41",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie took her family camping in the mountains around June 20, 2023 where they explored nature, roasted marshmallows around a campfire, went on a hike with amazing views, and spent quality time together as a family",
@@ -4494,17 +4473,20 @@
   },
   {
    "message": "D4:13",
-   "fact": "a8c5c06551de4cfa",
+   "fact": "e20d056f571642f7",
    "label": "duplicate",
    "p": 0.5,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.5,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget.",
    "fact_source": "D4:8"
   },
   {
    "message": "D4:13",
-   "fact": "9f9f47d8f542403d",
+   "fact": "193eda3fbf574fb6",
    "label": "refinement",
    "p": 0.74,
    "before": 0.98,
@@ -4517,7 +4499,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "a681594f07224e69",
+   "fact": "b79ba3f765c549b7",
    "label": "refinement",
    "p": 0.92,
    "before": 0.9104831070413641,
@@ -4530,7 +4512,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "6ab1936350dc41f1",
+   "fact": "25a6802ccb674625",
    "event": "insert",
    "after": 0.98,
    "fact_text": "Caroline is interested in pursuing counseling work specifically with transgender people, focusing on helping them accept themselves and supporting their mental health",
@@ -4538,7 +4520,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "4513c60f06404273",
+   "fact": "66ce96e753754d98",
    "label": "refinement",
    "p": 1.0,
    "before": 0.95,
@@ -4551,7 +4533,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "e40d86ecbc0c4c0b",
+   "fact": "de9a770154fd4613",
    "label": "refinement",
    "p": 0.91,
    "before": 0.7100000000000001,
@@ -4564,7 +4546,7 @@
   },
   {
    "message": "D4:13",
-   "fact": "d8c1facd0e3744a1",
+   "fact": "d0b247a994ea4678",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie has two younger children who love nature and spending time outdoors",
@@ -4572,27 +4554,20 @@
   },
   {
    "message": "D4:13",
-   "fact": "a8c5c06551de4cfa",
+   "fact": "e20d056f571642f7",
    "label": "refinement",
    "p": 0.41,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.4099999999999999,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget.",
    "fact_source": "D4:8"
   },
   {
    "message": "D4:13",
-   "fact": "461cd5ee4c0141e4",
-   "label": "new",
-   "p": 0.5,
-   "before": 0.5,
-   "event": "ignored_weak",
-   "fact_text": "Melanie is motivated by her family and their love, and wants to be courageous for them",
-   "fact_source": "D3:10"
-  },
-  {
-   "message": "D4:13",
-   "fact": "a681594f07224e69",
+   "fact": "b79ba3f765c549b7",
    "label": "refinement",
    "p": 0.51,
    "before": 0.9104831070413641,
@@ -4605,7 +4580,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "513f50a5343944b7",
+   "fact": "43cac7692b3e4cfb",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline owns a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013). The bowl has an awesome pattern and colors that remind her of art and self-expression, and it holds sentimental value.",
@@ -4613,17 +4588,17 @@
   },
   {
    "message": "D4:15",
-   "fact": "88c8a276d97f41f3",
+   "fact": "e7ce33177c224927",
    "label": "contradiction",
    "p": 0.44,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "blocked_temporal",
    "fact_text": "Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday ten years ago (around 2013). The pattern and colors remind her of art and self-expression, and she treasures it for its sentimental value.",
    "fact_source": "D4:8"
   },
   {
    "message": "D4:15",
-   "fact": "e0fe7c97224a49ec",
+   "fact": "2d8de96d0d9d4c22",
    "label": "refinement",
    "p": 0.69,
    "before": 0.8099173553719009,
@@ -4636,7 +4611,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "374160c845cb4b66",
+   "fact": "f12119357cc74bba",
    "label": "duplicate",
    "p": 0.98,
    "before": 0.5,
@@ -4649,7 +4624,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "288182fbd3464b33",
+   "fact": "4aabfa70938d4688",
    "event": "insert",
    "after": 0.98,
    "fact_text": "Caroline's motivation to pursue counseling stems from her own personal journey and the support she received, which significantly improved her life. She experienced how counseling and support groups helped her understand herself better and now wants to help others through similar experiences.",
@@ -4657,7 +4632,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "4513c60f06404273",
+   "fact": "66ce96e753754d98",
    "label": "refinement",
    "p": 0.98,
    "before": 0.98,
@@ -4670,17 +4645,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "3e8d7e6563634c99",
-   "label": "new",
-   "p": 0.41000000000000003,
-   "before": 0.98,
-   "event": "ignored_weak",
-   "fact_text": "Caroline's friends, family, and mentors are her primary sources of motivation and strength",
-   "fact_source": "D3:11"
-  },
-  {
-   "message": "D4:15",
-   "fact": "6ab1936350dc41f1",
+   "fact": "25a6802ccb674625",
    "label": "refinement",
    "p": 0.67,
    "before": 0.98,
@@ -4693,7 +4658,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "27668bfb0e2645a5",
+   "fact": "e67da2fe9a914c44",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience.",
@@ -4701,7 +4666,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "3b266995b78a4acc",
+   "fact": "58c1da9773cb4f41",
    "label": "refinement",
    "p": 0.96,
    "before": 0.5,
@@ -4714,12 +4679,12 @@
   },
   {
    "message": "D4:15",
-   "fact": "a8c5c06551de4cfa",
+   "fact": "e20d056f571642f7",
    "label": "duplicate",
    "p": 0.53,
-   "before": 0.5,
+   "before": 0.4099999999999999,
    "event": "applied",
-   "after": 0.53,
+   "after": 0.4393449251920744,
    "closed": false,
    "reopened": false,
    "fact_text": "Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget.",
@@ -4727,7 +4692,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "9f9f47d8f542403d",
+   "fact": "193eda3fbf574fb6",
    "label": "refinement",
    "p": 0.88,
    "before": 0.98,
@@ -4740,7 +4705,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "d8c1facd0e3744a1",
+   "fact": "d0b247a994ea4678",
    "label": "refinement",
    "p": 0.93,
    "before": 0.5,
@@ -4753,7 +4718,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "a681594f07224e69",
+   "fact": "b79ba3f765c549b7",
    "label": "refinement",
    "p": 0.79,
    "before": 0.9136905871388631,
@@ -4766,7 +4731,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "905d69046dc44440",
+   "fact": "159435aa2e1141db",
    "event": "insert",
    "after": 0.98,
    "fact_text": "Caroline is passionate about creating a safe, inviting space for people to grow through her future counseling work, drawing from her own transformative experiences with mental health support.",
@@ -4774,7 +4739,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "4513c60f06404273",
+   "fact": "66ce96e753754d98",
    "label": "refinement",
    "p": 0.98,
    "before": 0.98,
@@ -4787,7 +4752,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "6ab1936350dc41f1",
+   "fact": "25a6802ccb674625",
    "label": "refinement",
    "p": 0.64,
    "before": 0.98,
@@ -4800,7 +4765,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "79f43d51d84d4d00",
+   "fact": "72fc10d8b5d84432",
    "label": "refinement",
    "p": 0.81,
    "before": 0.98,
@@ -4813,7 +4778,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "20286f0ed15042e7",
+   "fact": "7381b4f1960f4141",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie values family time and describes the camping trip as a special experience that created meaningful family memories she will cherish.",
@@ -4821,17 +4786,20 @@
   },
   {
    "message": "D4:15",
-   "fact": "a8c5c06551de4cfa",
+   "fact": "e20d056f571642f7",
    "label": "duplicate",
    "p": 0.36,
-   "before": 0.5,
-   "event": "ignored_weak",
+   "before": 0.4099999999999999,
+   "event": "applied",
+   "after": 0.281035795887281,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget.",
    "fact_source": "D4:8"
   },
   {
    "message": "D4:15",
-   "fact": "3b266995b78a4acc",
+   "fact": "58c1da9773cb4f41",
    "label": "refinement",
    "p": 0.83,
    "before": 0.5,
@@ -4844,7 +4812,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "9f9f47d8f542403d",
+   "fact": "193eda3fbf574fb6",
    "label": "refinement",
    "p": 0.61,
    "before": 0.98,
@@ -4857,7 +4825,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "461cd5ee4c0141e4",
+   "fact": "50f49650628a4997",
    "label": "refinement",
    "p": 0.54,
    "before": 0.5,
@@ -4870,7 +4838,7 @@
   },
   {
    "message": "D4:15",
-   "fact": "a681594f07224e69",
+   "fact": "b79ba3f765c549b7",
    "label": "refinement",
    "p": 0.66,
    "before": 0.9136905871388631,
@@ -4883,7 +4851,7 @@
   },
   {
    "message": "U:E01",
-   "fact": "e97e301121af4b61",
+   "fact": "17fbdfcc3e824934",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie has shifted her primary creative outlet from painting to pottery, attending a pottery studio three evenings a week as of early July 2023. She hasn't painted in several weeks.",
@@ -4891,7 +4859,7 @@
   },
   {
    "message": "U:E01",
-   "fact": "9b61fdc22da44b0a",
+   "fact": "a5abbcdda97e42e7",
    "label": "update",
    "p": 0.8,
    "before": 0.5,
@@ -4901,7 +4869,7 @@
   },
   {
    "message": "U:E01",
-   "fact": "5797e7219ae74807",
+   "fact": "19e6aa79a72e4ee2",
    "label": "update",
    "p": 0.61,
    "before": 0.5,
@@ -4911,7 +4879,7 @@
   },
   {
    "message": "U:E02",
-   "fact": "952ad62112d140b9",
+   "fact": "6158e8b538024ccf",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie's favorite painting has changed from the lake sunrise to a forest-at-dusk piece she finished around late June 2023",
@@ -4919,7 +4887,7 @@
   },
   {
    "message": "U:E02",
-   "fact": "f5cd3cdff0ae4f23",
+   "fact": "913904b6b37e4c5a",
    "label": "update",
    "p": 0.72,
    "before": 0.5,
@@ -4929,7 +4897,7 @@
   },
   {
    "message": "U:E02",
-   "fact": "0c7ea5f2948a430a",
+   "fact": "b526f441a1844de7",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie attends pottery studio three evenings a week and considers it her main creative outlet, having not painted in weeks as of early July 2023",
@@ -4937,7 +4905,7 @@
   },
   {
    "message": "U:E02",
-   "fact": "e97e301121af4b61",
+   "fact": "17fbdfcc3e824934",
    "label": "duplicate",
    "p": 0.9,
    "before": 0.5,
@@ -4950,7 +4918,7 @@
   },
   {
    "message": "U:E02",
-   "fact": "9b61fdc22da44b0a",
+   "fact": "a5abbcdda97e42e7",
    "label": "update",
    "p": 0.76,
    "before": 0.5,
@@ -4960,27 +4928,17 @@
   },
   {
    "message": "U:E02",
-   "fact": "f5cd3cdff0ae4f23",
-   "label": "new",
-   "p": 0.5,
-   "before": 0.5,
-   "event": "ignored_weak",
-   "fact_text": "Melanie painted a lake sunrise last year (around 2025) that is special to her",
-   "fact_source": "D1:14"
-  },
-  {
-   "message": "U:E02",
-   "fact": "5797e7219ae74807",
+   "fact": "19e6aa79a72e4ee2",
    "label": "update",
    "p": 0.38,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "blocked_structure",
    "fact_text": "Caroline appreciates Melanie's lake sunrise painting, noting how the colors blend nicely and recognizing painting as a meaningful outlet for self-expression",
    "fact_source": "D1:15"
   },
   {
    "message": "U:E03",
-   "fact": "bb04656df69e4471",
+   "fact": "78c088a354204b3c",
    "event": "insert",
    "after": 0.85,
    "fact_text": "Melanie quit her job around June 30, 2023 to be home with her children full-time",
@@ -4988,7 +4946,7 @@
   },
   {
    "message": "U:E04",
-   "fact": "40fc4bfa52d14bd5",
+   "fact": "6eb8030af9d74126",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline lost her grandmother's necklace at the beach on Saturday, July 8, 2023, after searching for hours. The necklace was a cherished gift from her grandmother in Sweden symbolizing love, faith, and strength.",
@@ -4996,17 +4954,20 @@
   },
   {
    "message": "U:E04",
-   "fact": "ab46f7568a1444f2",
+   "fact": "649c1c6aa2c64660",
    "label": "refinement",
    "p": 0.45,
    "before": 0.98,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.9756637168141592,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Caroline received a necklace from her grandmother in Sweden when she was young as a gift symbolizing love, faith, and strength. The necklace serves as a reminder of her roots and the love and support from her family.",
    "fact_source": "D4:3"
   },
   {
    "message": "U:E04",
-   "fact": "7038f4b888b444e6",
+   "fact": "9fb9b0091b314766",
    "label": "negates",
    "p": 0.64,
    "before": 0.5,
@@ -5015,18 +4976,8 @@
    "fact_source": "D4:13"
   },
   {
-   "message": "U:E04",
-   "fact": "f8acb4ed33d24f33",
-   "label": "new",
-   "p": 0.28,
-   "before": 0.5,
-   "event": "ignored_weak",
-   "fact_text": "Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family.",
-   "fact_source": "D4:8"
-  },
-  {
    "message": "U:E05",
-   "fact": "795659db21e64cf6",
+   "fact": "83ac6cb00ca74495",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline's hand-painted bowl from her 18th birthday (made by a friend around 2013) fell off a shelf and shattered around July 11, 2023. She kept one shard as a memento, but the bowl itself is gone.",
@@ -5034,7 +4985,7 @@
   },
   {
    "message": "U:E05",
-   "fact": "88c8a276d97f41f3",
+   "fact": "e7ce33177c224927",
    "label": "negates",
    "p": 0.51,
    "before": 0.5,
@@ -5044,7 +4995,7 @@
   },
   {
    "message": "U:E05",
-   "fact": "513f50a5343944b7",
+   "fact": "43cac7692b3e4cfb",
    "label": "negates",
    "p": 0.63,
    "before": 0.5,
@@ -5054,7 +5005,7 @@
   },
   {
    "message": "U:E05",
-   "fact": "e0fe7c97224a49ec",
+   "fact": "2d8de96d0d9d4c22",
    "label": "negates",
    "p": 0.68,
    "before": 0.9046153846153846,
@@ -5064,7 +5015,7 @@
   },
   {
    "message": "U:E05",
-   "fact": "374160c845cb4b66",
+   "fact": "f12119357cc74bba",
    "label": "negates",
    "p": 0.71,
    "before": 0.98,
@@ -5074,7 +5025,7 @@
   },
   {
    "message": "U:E07",
-   "fact": "a9a76c4a345d4bed",
+   "fact": "8b81c21b9f4a4063",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie and her kids stopped swimming together after the local pool closed permanently, and now do bike rides together instead as their main outdoor activity",
@@ -5082,7 +5033,7 @@
   },
   {
    "message": "U:E07",
-   "fact": "7ec25845f06f4748",
+   "fact": "46d02e7292b94d0c",
    "label": "negates",
    "p": 0.76,
    "before": 0.977085454058398,
@@ -5092,7 +5043,7 @@
   },
   {
    "message": "U:E08",
-   "fact": "851ce47c4efd4459",
+   "fact": "c4c68a1fcee84a9a",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie's two younger children have shifted their interests from nature activities to dinosaurs as of mid-July 2023",
@@ -5100,27 +5051,27 @@
   },
   {
    "message": "U:E08",
-   "fact": "27668bfb0e2645a5",
+   "fact": "e67da2fe9a914c44",
    "label": "update",
    "p": 0.47000000000000003,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "blocked_structure",
    "fact_text": "Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience.",
    "fact_source": "D4:15"
   },
   {
    "message": "U:E08",
-   "fact": "a8c5c06551de4cfa",
+   "fact": "e20d056f571642f7",
    "label": "update",
    "p": 0.89,
-   "before": 0.53,
+   "before": 0.281035795887281,
    "event": "blocked_structure",
    "fact_text": "Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget.",
    "fact_source": "D4:8"
   },
   {
    "message": "U:E08",
-   "fact": "d8c1facd0e3744a1",
+   "fact": "d0b247a994ea4678",
    "label": "update",
    "p": 0.78,
    "before": 0.93,
@@ -5130,7 +5081,7 @@
   },
   {
    "message": "U:E09",
-   "fact": "562a9fff19884ff2",
+   "fact": "454030858c4a455b",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie sold her violin around June 2023 and switched to learning guitar instead, which she finds more fun to play with her children",
@@ -5138,17 +5089,17 @@
   },
   {
    "message": "U:E09",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "label": "update",
    "p": 0.74,
-   "before": 0.97,
+   "before": 0.9635761589403973,
    "event": "blocked_structure",
    "fact_text": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
    "fact_source": "D2:5"
   },
   {
    "message": "U:E10",
-   "fact": "60e92432a7264887",
+   "fact": "ab2b7d190dd14fee",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie stopped running due to knee problems and switched to swimming laps at the gym as her primary exercise around July 21, 2023",
@@ -5156,7 +5107,7 @@
   },
   {
    "message": "U:E10",
-   "fact": "7ec25845f06f4748",
+   "fact": "46d02e7292b94d0c",
    "label": "refinement",
    "p": 0.6,
    "before": 0.977085454058398,
@@ -5169,17 +5120,17 @@
   },
   {
    "message": "U:E10",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "label": "update",
    "p": 0.45,
-   "before": 0.97,
-   "event": "ignored_weak",
+   "before": 0.9635761589403973,
+   "event": "unconfirmed",
    "fact_text": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
    "fact_source": "D2:5"
   },
   {
    "message": "U:E11",
-   "fact": "0b0ec266de304069",
+   "fact": "200edcdc9daf49df",
    "event": "insert",
    "after": 0.92,
    "fact_text": "Melanie replaced reading with meditation in her daily me-time routine, now practicing twenty minutes of meditation every morning as of late July 2023",
@@ -5187,20 +5138,20 @@
   },
   {
    "message": "U:E11",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "label": "update",
    "p": 0.92,
-   "before": 0.97,
+   "before": 0.9635761589403973,
    "event": "applied",
-   "after": 0.27714285714285686,
-   "closed": false,
+   "after": 0.23878555798687043,
+   "closed": true,
    "reopened": false,
    "fact_text": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
    "fact_source": "D2:5"
   },
   {
    "message": "U:E11",
-   "fact": "2342a1c659884e60",
+   "fact": "4ffef33e609c419f",
    "label": "refinement",
    "p": 0.6,
    "before": 0.5,
@@ -5213,7 +5164,7 @@
   },
   {
    "message": "U:E11",
-   "fact": "e4eb1709d1fa43b4",
+   "fact": "194a5cf02d4a4552",
    "label": "refinement",
    "p": 0.73,
    "before": 0.98,
@@ -5226,7 +5177,7 @@
   },
   {
    "message": "U:E12",
-   "fact": "e06f2c2e718f4ab3",
+   "fact": "55f1655919f64d24",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and have a faster process",
@@ -5234,7 +5185,7 @@
   },
   {
    "message": "U:E12",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.66,
    "before": 0.98,
@@ -5247,7 +5198,7 @@
   },
   {
    "message": "U:E12",
-   "fact": "8eb07da6773244ba",
+   "fact": "60f8dd4cd716471b",
    "label": "update",
    "p": 0.6,
    "before": 0.94,
@@ -5257,7 +5208,7 @@
   },
   {
    "message": "U:E12",
-   "fact": "af10df4cd38c41c7",
+   "fact": "ed409780255648fc",
    "label": "refinement",
    "p": 0.61,
    "before": 0.98,
@@ -5270,7 +5221,7 @@
   },
   {
    "message": "U:E13",
-   "fact": "363baa4b24da45fa",
+   "fact": "d0de7d48274241dd",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline changed her adoption plan around July 27, 2023 to foster children first before pursuing adoption, to gain experience and learn the process",
@@ -5278,7 +5229,7 @@
   },
   {
    "message": "U:E13",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.72,
    "before": 0.98,
@@ -5291,7 +5242,7 @@
   },
   {
    "message": "U:E13",
-   "fact": "4ce1df4f44804f71",
+   "fact": "6dde25def3aa46fe",
    "label": "refinement",
    "p": 0.54,
    "before": 0.91,
@@ -5304,7 +5255,7 @@
   },
   {
    "message": "U:E14",
-   "fact": "391773f114134ba1",
+   "fact": "a702481525ea4cd4",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie has established a consistent self-care routine as of late July 2023, moving beyond her previous work-in-progress approach to self-care",
@@ -5312,7 +5263,7 @@
   },
   {
    "message": "U:E14",
-   "fact": "2342a1c659884e60",
+   "fact": "4ffef33e609c419f",
    "label": "update",
    "p": 0.73,
    "before": 0.6,
@@ -5322,7 +5273,7 @@
   },
   {
    "message": "U:E14",
-   "fact": "e4eb1709d1fa43b4",
+   "fact": "194a5cf02d4a4552",
    "label": "refinement",
    "p": 0.72,
    "before": 0.98,
@@ -5335,7 +5286,7 @@
   },
   {
    "message": "U:E14",
-   "fact": "0b0ec266de304069",
+   "fact": "200edcdc9daf49df",
    "label": "refinement",
    "p": 0.7,
    "before": 0.98,
@@ -5348,12 +5299,12 @@
   },
   {
    "message": "U:E14",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "label": "refinement",
    "p": 0.55,
-   "before": 0.27714285714285686,
+   "before": 0.23878555798687043,
    "event": "applied",
-   "after": 0.31907894736842085,
+   "after": 0.27714285714285664,
    "closed": false,
    "reopened": false,
    "fact_text": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
@@ -5361,7 +5312,7 @@
   },
   {
    "message": "U:E14",
-   "fact": "7ec25845f06f4748",
+   "fact": "46d02e7292b94d0c",
    "label": "refinement",
    "p": 0.51,
    "before": 0.98,
@@ -5374,7 +5325,7 @@
   },
   {
    "message": "U:E15",
-   "fact": "c3f96e3a9a3b42d1",
+   "fact": "423d88e72c9142ce",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline's grandmother moved from Sweden to Norway around July 31, 2023, where she now lives with Caroline's aunt",
@@ -5382,17 +5333,20 @@
   },
   {
    "message": "U:E15",
-   "fact": "f8acb4ed33d24f33",
+   "fact": "4f3c5412088e4710",
    "label": "refinement",
    "p": 0.47,
-   "before": 0.5,
-   "event": "ignored_weak",
+   "before": 0.4099999999999999,
+   "event": "applied",
+   "after": 0.38128215275029664,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family.",
    "fact_source": "D4:8"
   },
   {
    "message": "U:S01",
-   "fact": "49e3f8fdc6174191",
+   "fact": "87a47824faf542c4",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie stopped running due to knee problems around July 21, 2023 and now swims laps at the gym instead",
@@ -5400,7 +5354,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "60e92432a7264887",
+   "fact": "ab2b7d190dd14fee",
    "label": "duplicate",
    "p": 0.95,
    "before": 0.5,
@@ -5413,7 +5367,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "391773f114134ba1",
+   "fact": "a702481525ea4cd4",
    "label": "refinement",
    "p": 0.68,
    "before": 0.5,
@@ -5426,7 +5380,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "7ec25845f06f4748",
+   "fact": "46d02e7292b94d0c",
    "label": "refinement",
    "p": 0.78,
    "before": 0.98,
@@ -5439,7 +5393,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "239d31d4455a46a4",
+   "fact": "67a3e02e099344f5",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie and her spouse lived in a very small apartment immediately after their wedding around June 2018, which they still find amusing to recall",
@@ -5447,7 +5401,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "48459ec596d24898",
+   "fact": "9c70def502dd4912",
    "label": "refinement",
    "p": 0.73,
    "before": 0.64,
@@ -5460,7 +5414,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "274b5bac3767428e",
+   "fact": "b1a274bff32b48f4",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie's two younger children shifted their interests from nature to dinosaurs around mid-July 2023",
@@ -5468,7 +5422,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "851ce47c4efd4459",
+   "fact": "c4c68a1fcee84a9a",
    "label": "duplicate",
    "p": 0.96,
    "before": 0.5,
@@ -5481,27 +5435,30 @@
   },
   {
    "message": "U:S01",
-   "fact": "27668bfb0e2645a5",
+   "fact": "e67da2fe9a914c44",
    "label": "refinement",
    "p": 0.37,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.37,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Melanie took her family camping in the mountains around June 20, 2023, where they explored nature, roasted marshmallows around a campfire, went on a hike with an amazing view from the top, and her two younger children particularly enjoyed the nature experience.",
    "fact_source": "D4:15"
   },
   {
    "message": "U:S01",
-   "fact": "a8c5c06551de4cfa",
+   "fact": "e20d056f571642f7",
    "label": "update",
    "p": 0.73,
-   "before": 0.53,
+   "before": 0.281035795887281,
    "event": "blocked_structure",
    "fact_text": "Melanie's camping trip in the mountains around June 20, 2023 included exploring nature, roasting marshmallows around a campfire, and hiking. The view from the hilltop was amazing, and her two younger children love nature. Melanie describes it as a special family moment she'll never forget.",
    "fact_source": "D4:8"
   },
   {
    "message": "U:S01",
-   "fact": "d8c1facd0e3744a1",
+   "fact": "d0b247a994ea4678",
    "label": "update",
    "p": 0.84,
    "before": 0.93,
@@ -5511,7 +5468,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "ed1a0a78e4294433",
+   "fact": "2b6dcacca6b64eff",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline changed her adoption plan around July 27, 2023 to foster first before adopting, in order to learn the ropes",
@@ -5519,17 +5476,20 @@
   },
   {
    "message": "U:S01",
-   "fact": "363baa4b24da45fa",
+   "fact": "d0de7d48274241dd",
    "label": "duplicate",
    "p": 0.44,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.44000000000000006,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Caroline changed her adoption plan around July 27, 2023 to foster children first before pursuing adoption, to gain experience and learn the process",
    "fact_source": "U:E13"
   },
   {
    "message": "U:S01",
-   "fact": "4ce1df4f44804f71",
+   "fact": "6dde25def3aa46fe",
    "label": "refinement",
    "p": 0.74,
    "before": 0.9222972972972974,
@@ -5542,7 +5502,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.79,
    "before": 0.98,
@@ -5555,7 +5515,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "6069b1f7d74f4829",
+   "fact": "46a99ec27fe34228",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie replaced reading with a twenty-minute daily meditation practice as her morning me-time routine around July 23, 2023",
@@ -5563,7 +5523,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "0b0ec266de304069",
+   "fact": "200edcdc9daf49df",
    "label": "duplicate",
    "p": 0.9,
    "before": 0.98,
@@ -5576,7 +5536,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "391773f114134ba1",
+   "fact": "a702481525ea4cd4",
    "label": "refinement",
    "p": 0.99,
    "before": 0.5,
@@ -5589,7 +5549,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "3e6fc6c2b0974024",
+   "fact": "9e8820c46386420e",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie's grandmother moved from Sweden to Norway to live with Melanie's aunt around July 31, 2023",
@@ -5597,7 +5557,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "ab65af449f474e8d",
+   "fact": "07ab7c60dac044b6",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie and her children stopped swimming at their local pool around July 15, 2023 when it closed permanently, and now do bike rides together instead",
@@ -5605,7 +5565,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "a9a76c4a345d4bed",
+   "fact": "8b81c21b9f4a4063",
    "label": "duplicate",
    "p": 0.6,
    "before": 0.5,
@@ -5618,17 +5578,17 @@
   },
   {
    "message": "U:S01",
-   "fact": "60e92432a7264887",
+   "fact": "ab2b7d190dd14fee",
    "label": "update",
    "p": 0.33,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "blocked_structure",
    "fact_text": "Melanie stopped running due to knee problems and switched to swimming laps at the gym as her primary exercise around July 21, 2023",
    "fact_source": "U:E10"
   },
   {
    "message": "U:S01",
-   "fact": "908855d2b29c4f47",
+   "fact": "cbcc7bb55eea4d51",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie sold her violin around June 2023 and switched to learning guitar, which she finds more enjoyable to play with her children",
@@ -5636,7 +5596,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "562a9fff19884ff2",
+   "fact": "454030858c4a455b",
    "label": "duplicate",
    "p": 0.98,
    "before": 0.5,
@@ -5649,30 +5609,30 @@
   },
   {
    "message": "U:S01",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "label": "update",
    "p": 0.84,
-   "before": 0.31907894736842085,
+   "before": 0.27714285714285664,
    "event": "blocked_structure",
    "fact_text": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
    "fact_source": "D2:5"
   },
   {
    "message": "U:S01",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "label": "update",
    "p": 0.89,
-   "before": 0.31907894736842085,
+   "before": 0.27714285714285664,
    "event": "applied",
    "after": 0.02,
-   "closed": true,
+   "closed": false,
    "reopened": false,
    "fact_text": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
    "fact_source": "D2:5"
   },
   {
    "message": "U:S01",
-   "fact": "2342a1c659884e60",
+   "fact": "4ffef33e609c419f",
    "label": "refinement",
    "p": 0.83,
    "before": 0.6,
@@ -5685,7 +5645,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "7ec25845f06f4748",
+   "fact": "46d02e7292b94d0c",
    "label": "negates",
    "p": 0.66,
    "before": 0.98,
@@ -5695,7 +5655,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "d568abb720a0407e",
+   "fact": "7aef4b5494fd4f6c",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline switched adoption agencies around July 25, 2023 to Rainbow Families, which is closer to home and has a faster process",
@@ -5703,17 +5663,20 @@
   },
   {
    "message": "U:S01",
-   "fact": "e06f2c2e718f4ab3",
+   "fact": "55f1655919f64d24",
    "label": "duplicate",
    "p": 0.49,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.49,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and have a faster process",
    "fact_source": "U:E12"
   },
   {
    "message": "U:S01",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.8,
    "before": 0.98,
@@ -5726,7 +5689,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "4ce1df4f44804f71",
+   "fact": "6dde25def3aa46fe",
    "label": "refinement",
    "p": 0.72,
    "before": 0.9222972972972974,
@@ -5739,7 +5702,7 @@
   },
   {
    "message": "U:S01",
-   "fact": "8eb07da6773244ba",
+   "fact": "60f8dd4cd716471b",
    "label": "update",
    "p": 0.77,
    "before": 0.94,
@@ -5749,7 +5712,7 @@
   },
   {
    "message": "U:S02",
-   "fact": "56ad0884d9084532",
+   "fact": "a87621126bfd45f6",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline wanted to be a nurse back in high school, but her career aspirations have since evolved toward counseling and mental health work",
@@ -5757,7 +5720,7 @@
   },
   {
    "message": "U:S02",
-   "fact": "4513c60f06404273",
+   "fact": "66ce96e753754d98",
    "label": "refinement",
    "p": 0.69,
    "before": 0.98,
@@ -5770,7 +5733,7 @@
   },
   {
    "message": "U:S02",
-   "fact": "905d69046dc44440",
+   "fact": "159435aa2e1141db",
    "label": "refinement",
    "p": 0.7,
    "before": 0.98,
@@ -5783,7 +5746,7 @@
   },
   {
    "message": "U:S02",
-   "fact": "79f43d51d84d4d00",
+   "fact": "72fc10d8b5d84432",
    "label": "refinement",
    "p": 0.75,
    "before": 0.98,
@@ -5796,7 +5759,7 @@
   },
   {
    "message": "U:S02",
-   "fact": "288182fbd3464b33",
+   "fact": "4aabfa70938d4688",
    "label": "refinement",
    "p": 0.54,
    "before": 0.98,
@@ -5809,7 +5772,7 @@
   },
   {
    "message": "U:S02",
-   "fact": "6ab1936350dc41f1",
+   "fact": "25a6802ccb674625",
    "label": "refinement",
    "p": 0.52,
    "before": 0.98,
@@ -5822,7 +5785,7 @@
   },
   {
    "message": "U:S03",
-   "fact": "4fe997a5349d4438",
+   "fact": "7a1812cff86e4f28",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline experienced loneliness during her first year after moving (around 2019), before meeting her close friends",
@@ -5830,7 +5793,7 @@
   },
   {
    "message": "U:S03",
-   "fact": "b8070b087bb04cf0",
+   "fact": "70801342ffe248f6",
    "label": "refinement",
    "p": 0.79,
    "before": 0.5,
@@ -5843,7 +5806,7 @@
   },
   {
    "message": "U:S04",
-   "fact": "eb52fd93c124479d",
+   "fact": "c190b8b0b0144c26",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline is open to potentially moving back to Sweden in the future but has no plans to do so in the near term as of August 9, 2023",
@@ -5851,35 +5814,15 @@
   },
   {
    "message": "U:S05",
-   "fact": "b4d3f506013b40c7",
+   "fact": "34bea416e40a4a43",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie plans to run another charity race in the fall of 2023, possibly a half marathon",
    "fact_source": "U:S05"
   },
   {
-   "message": "U:S05",
-   "fact": "60e92432a7264887",
-   "label": "new",
-   "p": 0.5,
-   "before": 0.9499999999999998,
-   "event": "ignored_weak",
-   "fact_text": "Melanie stopped running due to knee problems and switched to swimming laps at the gym as her primary exercise around July 21, 2023",
-   "fact_source": "U:E10"
-  },
-  {
-   "message": "U:S05",
-   "fact": "49e3f8fdc6174191",
-   "label": "new",
-   "p": 0.45,
-   "before": 0.5,
-   "event": "ignored_weak",
-   "fact_text": "Melanie stopped running due to knee problems around July 21, 2023 and now swims laps at the gym instead",
-   "fact_source": "U:S01"
-  },
-  {
    "message": "U:S06",
-   "fact": "7032f17282154699",
+   "fact": "4a0f7568738f4637",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie and her spouse lived in a very small apartment together after their wedding, which they still laugh about",
@@ -5887,7 +5830,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "239d31d4455a46a4",
+   "fact": "67a3e02e099344f5",
    "label": "duplicate",
    "p": 0.88,
    "before": 0.5,
@@ -5900,7 +5843,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "5a48603f3ff74542",
+   "fact": "14ab4a34caff43d9",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie switched from reading to meditation for her me-time routine, practicing twenty minutes every morning as of late July 2023",
@@ -5908,7 +5851,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "0b0ec266de304069",
+   "fact": "200edcdc9daf49df",
    "label": "duplicate",
    "p": 0.99,
    "before": 0.98,
@@ -5921,7 +5864,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "6069b1f7d74f4829",
+   "fact": "46a99ec27fe34228",
    "label": "duplicate",
    "p": 0.89,
    "before": 0.98,
@@ -5934,7 +5877,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "391773f114134ba1",
+   "fact": "a702481525ea4cd4",
    "label": "refinement",
    "p": 1.0,
    "before": 0.98,
@@ -5947,7 +5890,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "label": "update",
    "p": 0.91,
    "before": 0.02,
@@ -5957,7 +5900,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "2342a1c659884e60",
+   "fact": "4ffef33e609c419f",
    "label": "refinement",
    "p": 0.92,
    "before": 0.8798586572438162,
@@ -5970,38 +5913,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "6c01ef9006aa440b",
-   "event": "insert",
-   "after": 0.5,
-   "fact_text": "Caroline experienced loneliness during her first year in her current location before meeting her friends",
-   "fact_source": "U:S06"
-  },
-  {
-   "message": "U:S06",
-   "fact": "4fe997a5349d4438",
-   "label": "duplicate",
-   "p": 0.47,
-   "before": 0.5,
-   "event": "ignored_weak",
-   "fact_text": "Caroline experienced loneliness during her first year after moving (around 2019), before meeting her close friends",
-   "fact_source": "U:S03"
-  },
-  {
-   "message": "U:S06",
-   "fact": "b8070b087bb04cf0",
-   "label": "refinement",
-   "p": 0.74,
-   "before": 0.79,
-   "event": "applied",
-   "after": 0.9145807259073843,
-   "closed": false,
-   "reopened": false,
-   "fact_text": "Caroline moved from her home country around June 2019 and has known her close friends for 4 years since that move",
-   "fact_source": "D3:13"
-  },
-  {
-   "message": "U:S06",
-   "fact": "5801e50af6a44ac5",
+   "fact": "ade9bad8deb24da2",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline changed her adoption plan to foster first instead of adopting right away, to learn the ropes before full adoption",
@@ -6009,7 +5921,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "ed1a0a78e4294433",
+   "fact": "2b6dcacca6b64eff",
    "label": "duplicate",
    "p": 0.9,
    "before": 0.5,
@@ -6022,12 +5934,12 @@
   },
   {
    "message": "U:S06",
-   "fact": "363baa4b24da45fa",
+   "fact": "d0de7d48274241dd",
    "label": "duplicate",
    "p": 0.51,
-   "before": 0.5,
+   "before": 0.44000000000000006,
    "event": "applied",
-   "after": 0.51,
+   "after": 0.44987971130713716,
    "closed": false,
    "reopened": false,
    "fact_text": "Caroline changed her adoption plan around July 27, 2023 to foster children first before pursuing adoption, to gain experience and learn the process",
@@ -6035,7 +5947,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "4ce1df4f44804f71",
+   "fact": "6dde25def3aa46fe",
    "label": "refinement",
    "p": 0.85,
    "before": 0.9682758620689655,
@@ -6048,7 +5960,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.85,
    "before": 0.98,
@@ -6061,7 +5973,41 @@
   },
   {
    "message": "U:S06",
-   "fact": "fb18b35957684bdd",
+   "fact": "3e1bdea5d2454f41",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline experienced loneliness during her first year in her current location before meeting her friends",
+   "fact_source": "U:S06"
+  },
+  {
+   "message": "U:S06",
+   "fact": "7a1812cff86e4f28",
+   "label": "duplicate",
+   "p": 0.47,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.47000000000000003,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline experienced loneliness during her first year after moving (around 2019), before meeting her close friends",
+   "fact_source": "U:S03"
+  },
+  {
+   "message": "U:S06",
+   "fact": "70801342ffe248f6",
+   "label": "refinement",
+   "p": 0.74,
+   "before": 0.79,
+   "event": "applied",
+   "after": 0.9145807259073843,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline moved from her home country around June 2019 and has known her close friends for 4 years since that move",
+   "fact_source": "D3:13"
+  },
+  {
+   "message": "U:S06",
+   "fact": "00f72e4c9a4d4757",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline's grandmother moved from Sweden to Norway to live with Caroline's aunt",
@@ -6069,7 +6015,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "c3f96e3a9a3b42d1",
+   "fact": "423d88e72c9142ce",
    "label": "duplicate",
    "p": 0.61,
    "before": 0.5,
@@ -6082,7 +6028,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "7038f4b888b444e6",
+   "fact": "9fb9b0091b314766",
    "label": "refinement",
    "p": 0.59,
    "before": 0.5,
@@ -6095,12 +6041,12 @@
   },
   {
    "message": "U:S06",
-   "fact": "f8acb4ed33d24f33",
+   "fact": "4f3c5412088e4710",
    "label": "refinement",
    "p": 0.56,
-   "before": 0.5,
+   "before": 0.38128215275029664,
    "event": "applied",
-   "after": 0.56,
+   "after": 0.43956008146639497,
    "closed": false,
    "reopened": false,
    "fact_text": "Caroline is from Sweden and has a necklace given to her by her grandmother when she was young. The necklace symbolizes love, faith, and strength, and serves as a reminder of her roots and the love and support from her family.",
@@ -6108,7 +6054,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "3e6fc6c2b0974024",
+   "fact": "9e8820c46386420e",
    "label": "duplicate",
    "p": 0.58,
    "before": 0.5,
@@ -6121,7 +6067,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "2ac6d8a66a17491e",
+   "fact": "f6fc2ad728ac4f7c",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline wanted to be a nurse during high school but pursued a different career path",
@@ -6129,27 +6075,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "56ad0884d9084532",
-   "label": "new",
-   "p": 0.31,
-   "before": 0.5,
-   "event": "ignored_weak",
-   "fact_text": "Caroline wanted to be a nurse back in high school, but her career aspirations have since evolved toward counseling and mental health work",
-   "fact_source": "U:S02"
-  },
-  {
-   "message": "U:S06",
-   "fact": "79f43d51d84d4d00",
-   "label": "new",
-   "p": 0.43,
-   "before": 0.98,
-   "event": "ignored_weak",
-   "fact_text": "Caroline plans to continue her education and explore career options, which she finds exciting",
-   "fact_source": "D1:9"
-  },
-  {
-   "message": "U:S06",
-   "fact": "f361c5128fd34ab9",
+   "fact": "c474e99149d84d58",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie established a consistent self-care routine that sticks as of late July 2023, after previously struggling with self-care consistency",
@@ -6157,7 +6083,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "391773f114134ba1",
+   "fact": "a702481525ea4cd4",
    "label": "duplicate",
    "p": 0.95,
    "before": 0.98,
@@ -6170,7 +6096,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "2342a1c659884e60",
+   "fact": "4ffef33e609c419f",
    "label": "update",
    "p": 0.56,
    "before": 0.8798586572438162,
@@ -6180,7 +6106,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "e4eb1709d1fa43b4",
+   "fact": "194a5cf02d4a4552",
    "label": "refinement",
    "p": 0.81,
    "before": 0.98,
@@ -6193,7 +6119,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "6069b1f7d74f4829",
+   "fact": "46a99ec27fe34228",
    "label": "refinement",
    "p": 0.74,
    "before": 0.98,
@@ -6206,7 +6132,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "0b0ec266de304069",
+   "fact": "200edcdc9daf49df",
    "label": "refinement",
    "p": 0.73,
    "before": 0.98,
@@ -6219,7 +6145,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "bfc9cb293fd44987",
+   "fact": "6d1454ee1bfb4e7f",
    "label": "refinement",
    "p": 0.72,
    "before": 0.02,
@@ -6232,7 +6158,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "df8b4d55bf9b44a1",
+   "fact": "fb8c4986d02f4240",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and move faster",
@@ -6240,17 +6166,17 @@
   },
   {
    "message": "U:S06",
-   "fact": "e06f2c2e718f4ab3",
+   "fact": "55f1655919f64d24",
    "label": "contradiction",
    "p": 0.49,
-   "before": 0.5,
-   "event": "ignored_weak",
+   "before": 0.49,
+   "event": "blocked_temporal",
    "fact_text": "Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and have a faster process",
    "fact_source": "U:E12"
   },
   {
    "message": "U:S06",
-   "fact": "d568abb720a0407e",
+   "fact": "7aef4b5494fd4f6c",
    "label": "duplicate",
    "p": 0.98,
    "before": 0.5,
@@ -6263,7 +6189,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.79,
    "before": 0.98,
@@ -6276,7 +6202,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "8eb07da6773244ba",
+   "fact": "60f8dd4cd716471b",
    "label": "update",
    "p": 0.62,
    "before": 0.94,
@@ -6286,7 +6212,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "4ce1df4f44804f71",
+   "fact": "6dde25def3aa46fe",
    "label": "refinement",
    "p": 0.58,
    "before": 0.9682758620689655,
@@ -6299,7 +6225,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "66c8afc7c9c84fe8",
+   "fact": "8e2de1bb7ae8467f",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie plans to run another charity race in fall 2023, possibly a half marathon",
@@ -6307,7 +6233,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "b4d3f506013b40c7",
+   "fact": "34bea416e40a4a43",
    "label": "duplicate",
    "p": 0.73,
    "before": 0.5,
@@ -6320,27 +6246,17 @@
   },
   {
    "message": "U:S06",
-   "fact": "60e92432a7264887",
-   "label": "new",
-   "p": 0.44,
-   "before": 0.9499999999999998,
-   "event": "ignored_weak",
-   "fact_text": "Melanie stopped running due to knee problems and switched to swimming laps at the gym as her primary exercise around July 21, 2023",
-   "fact_source": "U:E10"
-  },
-  {
-   "message": "U:S06",
-   "fact": "49e3f8fdc6174191",
+   "fact": "87a47824faf542c4",
    "label": "contradiction",
    "p": 0.43,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "blocked_temporal",
    "fact_text": "Melanie stopped running due to knee problems around July 21, 2023 and now swims laps at the gym instead",
    "fact_source": "U:S01"
   },
   {
    "message": "U:S06",
-   "fact": "eddbb6397c8648c2",
+   "fact": "0d972776dd8142a7",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie and her family hope to camp at the Grand Canyon next summer (2024) if they can save up the money",
@@ -6348,7 +6264,7 @@
   },
   {
    "message": "U:S06",
-   "fact": "dfc4681d47434807",
+   "fact": "fd19077b657c4423",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline is open to potentially moving back to Sweden someday, but has no plans to do so in the near future",
@@ -6356,17 +6272,20 @@
   },
   {
    "message": "U:S06",
-   "fact": "eb52fd93c124479d",
+   "fact": "c190b8b0b0144c26",
    "label": "duplicate",
    "p": 0.47,
    "before": 0.5,
-   "event": "ignored_weak",
+   "event": "applied",
+   "after": 0.47000000000000003,
+   "closed": false,
+   "reopened": false,
    "fact_text": "Caroline is open to potentially moving back to Sweden in the future but has no plans to do so in the near term as of August 9, 2023",
    "fact_source": "U:S04"
   },
   {
    "message": "U:S07",
-   "fact": "0a9ccab78d5a49e5",
+   "fact": "3d51fbb56f924ba3",
    "event": "insert",
    "after": 0.5,
    "fact_text": "The LGBTQ+ counseling workshop Caroline attended on June 23, 2023 was her first counseling workshop ever",
@@ -6374,7 +6293,7 @@
   },
   {
    "message": "U:S07",
-   "fact": "801c1c71b0d04677",
+   "fact": "26ba9ad1ff224aaa",
    "label": "refinement",
    "p": 0.92,
    "before": 0.5,
@@ -6387,7 +6306,7 @@
   },
   {
    "message": "U:S07",
-   "fact": "905d69046dc44440",
+   "fact": "159435aa2e1141db",
    "label": "refinement",
    "p": 0.71,
    "before": 0.98,
@@ -6400,7 +6319,7 @@
   },
   {
    "message": "U:S08",
-   "fact": "a7d72fa00dfa433b",
+   "fact": "d3b00b83b52347d2",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Before coming out as transgender, Caroline was too scared to tell anyone about herself",
@@ -6408,7 +6327,7 @@
   },
   {
    "message": "U:S09",
-   "fact": "a74853e281004cfb",
+   "fact": "f097ab57a6b44a06",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline used to believe she would only pursue adoption with a partner, but her perspective has shifted to single parenthood through adoption",
@@ -6416,7 +6335,7 @@
   },
   {
    "message": "U:S09",
-   "fact": "4ce1df4f44804f71",
+   "fact": "6dde25def3aa46fe",
    "label": "refinement",
    "p": 0.6900000000000001,
    "before": 0.976824528573485,
@@ -6429,7 +6348,7 @@
   },
   {
    "message": "U:S09",
-   "fact": "c5d499e806bb407b",
+   "fact": "b401807ca9484f17",
    "label": "refinement",
    "p": 0.76,
    "before": 0.98,
@@ -6442,7 +6361,7 @@
   },
   {
    "message": "U:S10",
-   "fact": "90a50517560c4858",
+   "fact": "384baefd79444f0e",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie was very shy as a teenager and describes herself as having been really shy in her past",
@@ -6450,7 +6369,7 @@
   },
   {
    "message": "U:F01",
-   "fact": "c33309f8aa434d4b",
+   "fact": "cfd27ad8055943fc",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline enrolled in a psychology certificate program at the community college around August 23, 2023, with classes starting the following week",
@@ -6458,7 +6377,7 @@
   },
   {
    "message": "U:F01",
-   "fact": "4513c60f06404273",
+   "fact": "66ce96e753754d98",
    "label": "refinement",
    "p": 0.52,
    "before": 0.98,
@@ -6471,7 +6390,7 @@
   },
   {
    "message": "U:F01",
-   "fact": "56ad0884d9084532",
+   "fact": "a87621126bfd45f6",
    "label": "refinement",
    "p": 0.6,
    "before": 0.5,
@@ -6484,7 +6403,7 @@
   },
   {
    "message": "U:F01",
-   "fact": "79f43d51d84d4d00",
+   "fact": "72fc10d8b5d84432",
    "label": "refinement",
    "p": 0.95,
    "before": 0.98,
@@ -6497,7 +6416,7 @@
   },
   {
    "message": "U:F02",
-   "fact": "116c13834e694fd4",
+   "fact": "bc3ec2848760444a",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Melanie's children started their summer break around August 24, 2023 and are enjoying it",
@@ -6505,7 +6424,7 @@
   },
   {
    "message": "U:F03",
-   "fact": "6b0b03200a0f4545",
+   "fact": "b8a25ddefba440d5",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline started volunteering as a peer counselor for trans youth at the community center around August 25, 2023",
@@ -6513,7 +6432,7 @@
   },
   {
    "message": "U:F03",
-   "fact": "6ab1936350dc41f1",
+   "fact": "25a6802ccb674625",
    "label": "refinement",
    "p": 0.6900000000000001,
    "before": 0.98,
@@ -6526,7 +6445,7 @@
   },
   {
    "message": "U:F04",
-   "fact": "6bdbf9a46c734818",
+   "fact": "9bafc50ed67a4eb0",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline submitted her application to Rainbow Families around August 21, 2023 after completing her research",
@@ -6534,12 +6453,12 @@
   },
   {
    "message": "U:F04",
-   "fact": "e06f2c2e718f4ab3",
+   "fact": "55f1655919f64d24",
    "label": "refinement",
    "p": 0.74,
-   "before": 0.5,
+   "before": 0.49,
    "event": "applied",
-   "after": 0.74,
+   "after": 0.7322294022617124,
    "closed": false,
    "reopened": false,
    "fact_text": "Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and have a faster process",
@@ -6547,7 +6466,7 @@
   },
   {
    "message": "U:F05",
-   "fact": "cefc9c18eda44060",
+   "fact": "928d72e5f364440b",
    "event": "insert",
    "after": 0.5,
    "fact_text": "Caroline gave a talk about her transgender journey at a high school in a neighboring town around August 28, 2023",
@@ -6555,7 +6474,7 @@
   },
   {
    "message": "U:F05",
-   "fact": "e40d86ecbc0c4c0b",
+   "fact": "de9a770154fd4613",
    "label": "refinement",
    "p": 0.67,
    "before": 0.9611722701576912,

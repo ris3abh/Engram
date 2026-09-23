@@ -118,6 +118,7 @@ class WritePipeline:
         self.flags = flags or Flags()
         self.rel_q, self.recheck_q = relation_questions(self.flags.relation_version)
         self.fulfills_log: list[dict] = []  # every fulfills firing, for the audit and the E5 report
+        self.belief_trace: list[dict] = []  # belief-mode only: every initial belief and evidence event (read-only)
         self.fulfills_asks: list[dict] = []  # fulfills_rule="question": every plan_fulfilled ask, fired or not
         self.store = store
         self.backend = backend
@@ -481,6 +482,7 @@ class WritePipeline:
             fact.disputed = True
             self.store.update_fact(target.id, disputed=True)
         self.store.add_fact(fact, vector)
+        self.belief_trace.append({"message": message.id, "fact": fact.id, "event": "insert", "after": fact.belief})
         stored_upto = len(decisions)  # decisions appended after this point are saved at the end
         linked = False
         if relation.label == "duplicate" and confident and not tentative and target:
@@ -498,8 +500,10 @@ class WritePipeline:
                 continue
             label = dec.chosen
             p = dec.probs.get(label, 1.0)
+            ev = {"message": message.id, "fact": c.id, "label": label, "p": p, "before": c.belief}
             if self.flags.belief_evidence == "argmax_gt_half" and not B.counts_as_evidence(dec.probs, label):
                 self.stats["evidence_ignored_weak"] += 1
+                self.belief_trace.append({**ev, "event": "ignored_weak"})
                 continue
             if label in B.SUPPORT:
                 delta, pieces = w * B.logit(p), 0
@@ -508,10 +512,12 @@ class WritePipeline:
                 if not is_current:
                     self.stats["against_blocked_temporal"] += 1
                     self.stats["against_blocked"] += 1
+                    self.belief_trace.append({**ev, "event": "blocked_temporal"})
                     continue
                 if not B.against_allowed(label, c, fact, ums):
                     self.stats["against_blocked_structure"] += 1
                     self.stats["against_blocked"] += 1
+                    self.belief_trace.append({**ev, "event": "blocked_structure"})
                     continue
                 ps = [p]
                 multi_update = label == "update" and not B.is_single(c)  # always needs the second phrasing
@@ -520,6 +526,7 @@ class WritePipeline:
                     ok, p2 = await self._recheck(state, c, decisions)
                     if not ok:
                         self.stats["against_unconfirmed"] += 1
+                        self.belief_trace.append({**ev, "event": "unconfirmed"})
                         continue
                     ps.append(p2)
                 delta, pieces = -w * sum(B.logit(x) for x in ps), len(ps)
@@ -534,6 +541,9 @@ class WritePipeline:
                 fields["against_count"] = c.against_count + pieces
             self.store.update_fact(c.id, **fields)
             t = B.settle(c, before, after)
+            self.belief_trace.append(
+                {**ev, "event": "applied", "before": before, "after": after, "closed": t.closed, "reopened": t.reopened}
+            )
             if t.closed:
                 self.store.expire_fact(c.id, max(fact.valid_from, c.valid_from), reason="belief", by=fact.id)
                 decisions.append(self._rule("belief_close", "closed", f"belief {before:.2f} -> {after:.2f}", c.id))
