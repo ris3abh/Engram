@@ -222,3 +222,21 @@ Write-path requests (16 questions each: one extracted fact against 10 candidates
 | limiter 30 rps for 60 s | 1800 | 1797 | 0 (none) | 3 | 61.9 | 29.0 | 464 | 238 | 482 | 182 |
 
 <!-- throughput:end -->
+
+## Held-out: conv-30 (phase 2 step 8)
+
+Frozen `e4_belief_v2` (tag `e4-frozen`) vs mem0 2.1.0 (Haiku 4.5 extraction), whole conversation (19 sessions,
+369 messages), all 81 non-adversarial questions (conv-30 has no open-domain questions). One ingestion per system;
+k=3 and k=20 answered from the same store. Answer and judge claude-sonnet-4-6.
+
+| system | k | accuracy | multi-hop | temporal | single-hop | retrieved tokens/q |
+|---|---|---|---|---|---|---|
+| engram e4_belief_v2 | 3 | 59/81 (72.8%) | 5/11 | 25/26 | 29/44 | 285 |
+| mem0 | 3 | 55/81 (67.9%) | 3/11 | 24/26 | 28/44 | 155 |
+| engram e4_belief_v2 | 20 | 62/81 (76.5%) | 6/11 | 25/26 | 31/44 | 1,435 (15.0 memories) |
+| mem0 | 20 | 63/81 (77.8%) | 7/11 | 25/26 | 31/44 | 996 (20.0 memories) |
+
+| system | write $/1k msgs | decision layer $/1k msgs | decision p50 / message | write p50 / message | stored (active) |
+|---|---|---|---|---|---|
+| engram | $10.22 | $0.33 (Jev $0.12 total + escalations) | 1,982 ms | 928 ms | 267 (256) |
+| mem0 | $9.92 | – (ADD-only; its one LLM call is extraction) | – | 1,034 ms | 276 (276) |
