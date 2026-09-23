@@ -12,8 +12,8 @@ from engram.decide.questions import (
 )
 
 
-def fact(text, obj, status="current"):
-    return {"text": text, "subject": "user", "object": obj, "temporal_status": status}
+def fact(text, obj):
+    return {"text": text, "subject": "user", "object": obj}
 
 
 @pytest.mark.parametrize(
@@ -31,7 +31,7 @@ def fact(text, obj, status="current"):
             fact("User lives in Berlin", "Berlin"),
             "refinement",
         ),
-        (fact("User interviewed at Acme", "Acme", "past"), fact("User works at Acme", "Acme"), "new"),
+        (fact("User interviewed at Acme last year", "Acme"), fact("User works at Acme", "Acme"), "new"),
         (fact("User likes jazz", "jazz"), fact("User works at Acme", "Acme"), "new"),
     ],
 )

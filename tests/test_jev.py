@@ -115,15 +115,30 @@ async def test_timeout_exhausts_attempts():
         None,
     ],
 )
-async def test_invalid_answers_rejected(bad):
+async def test_invalid_answer_degrades_only_its_question(bad):
     body = json.loads(json.dumps(GOOD))
     body["answers"]["durability"] = bad
 
-    with pytest.raises(DecisionError, match="invalid"):
-        await backend(lambda r: httpx.Response(200, json=body)).ask({}, ASKS)
+    out = await backend(lambda r: httpx.Response(200, json=body)).ask({}, ASKS)
+    assert out["durability"].backend == "fallback" and "invalid" in out["durability"].error
+    assert out["durability"].chosen == "permanent" and out["durability"].probs == {}
+    assert out["relation_to_candidate__0"].backend == "jev"
 
 
 def test_missing_key(monkeypatch):
     monkeypatch.delenv("TYPESAFE_API_KEY", raising=False)
     with pytest.raises(DecisionError):
         JevBackend()
+
+
+async def test_rounding_near_tie_keeps_jevs_choice():
+    """Seen live: Jev picks before rounding to 2 decimals, so its choice can sit 0.01 below the max."""
+    body = json.loads(json.dumps(GOOD))
+    body["answers"]["durability"] = {
+        "type": "choice",
+        "choice": "long_term",
+        "probabilities": {"permanent": 0.5, "long_term": 0.49, "short_lived": 0.01},
+        "confidence": 0.37,
+    }
+    out = await backend(lambda r: httpx.Response(200, json=body)).ask({}, ASKS)
+    assert out["durability"].backend == "jev" and out["durability"].chosen == "long_term"

@@ -7,10 +7,14 @@ Two request layouts are compared (PLAN.md section 4, item 2):
   refs:  existing fact inside the question's instructions object (engram's default)
   state: existing fact inside the shared state, plain-string instructions
 
-Two accuracies are reported:
+Each request asks `relation_to_candidate` and `temporal_status` together, as the write path does. Reported:
   exact:      the chosen relation is in the pair's accepted labels
-  supersedes: the choice agrees on whether the old edge should be closed (update|contradiction vs the rest),
-              which is the decision that actually changes the graph
+  supersedes: the relation agrees on update|contradiction vs the rest
+  temporal:   temporal_status matches the pair's label
+  close:      the write-path rule (close the old edge only if relation is update|contradiction with p >= ACT and
+              temporal_status is current with p >= ACT) matches the expected action, which is "close" exactly
+              when the expected relation is update|contradiction and the labeled status is current.
+              Relations below ESCALATE_BELOW would go to the LLM; they are counted, not simulated.
 """
 
 import argparse
@@ -22,8 +26,9 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from engram import config
 from engram.decide.base import DecisionBackend, DecisionError
-from engram.decide.questions import RELATION_TO_CANDIDATE, Ask
+from engram.decide.questions import RELATION_TO_CANDIDATE, TEMPORAL_STATUS, Ask
 
 ROOT = Path(__file__).parents[1]
 PAIRS = ROOT / "bench" / "contradiction_pairs.jsonl"
@@ -39,8 +44,31 @@ class Result:
     chosen: str
     p: float
     confidence: float | None
+    temporal: str
+    temporal_p: float
     latency_ms: float
     cost_usd: float
+
+    @property
+    def temporal_ok(self) -> bool:
+        return self.temporal == self.pair["temporal_status"]
+
+    @property
+    def closes(self) -> bool:
+        return (
+            self.chosen in SUPERSEDE
+            and self.p >= config.ACT_THRESHOLD
+            and self.temporal == "current"
+            and self.temporal_p >= config.ACT_THRESHOLD
+        )
+
+    @property
+    def should_close(self) -> bool:
+        return self.pair["expected"] in SUPERSEDE and self.pair["temporal_status"] == "current"
+
+    @property
+    def escalates(self) -> bool:
+        return self.chosen in SUPERSEDE and self.p < config.ESCALATE_BELOW
 
     @property
     def exact(self) -> bool:
@@ -51,13 +79,18 @@ class Result:
         return (self.chosen in SUPERSEDE) == (self.pair["expected"] in SUPERSEDE)
 
 
+def load_pairs() -> list[dict]:
+    return [json.loads(line) for line in PAIRS.read_text().splitlines() if line.strip()]
+
+
 def request(pair: dict, layout: str) -> tuple[dict, list[Ask]]:
-    new = {"text": pair["new"], "subject": "user", "temporal_status": pair["temporal_status"]}
-    old = {"text": pair["old"], "subject": "user", "temporal_status": "current"}
+    new = {"text": pair["new"], "subject": "user"}
+    old = {"text": pair["old"], "subject": "user"}
     state = {"new_fact": new, "source_message": pair["message"]}
+    temporal = Ask("temporal", TEMPORAL_STATUS)
     if layout == "refs":
-        return state, [Ask("relation", RELATION_TO_CANDIDATE, {"existing_fact": old})]
-    return {**state, "existing_fact": old}, [Ask("relation", RELATION_TO_CANDIDATE)]
+        return state, [temporal, Ask("relation", RELATION_TO_CANDIDATE, {"existing_fact": old})]
+    return {**state, "existing_fact": old}, [temporal, Ask("relation", RELATION_TO_CANDIDATE)]
 
 
 async def run(backend: DecisionBackend, pairs: list[dict], layout: str) -> list[Result]:
@@ -67,8 +100,9 @@ async def run(backend: DecisionBackend, pairs: list[dict], layout: str) -> list[
         if isinstance(answer, DecisionError):
             print(f"  {pair['id']}: {answer}", file=sys.stderr)
             continue
-        d = answer["relation"]
-        results.append(Result(pair, d.chosen, d.p, d.confidence, d.latency_ms, d.cost_usd))
+        d, t = answer["relation"], answer["temporal"]
+        cost = d.cost_usd + t.cost_usd
+        results.append(Result(pair, d.chosen, d.p, d.confidence, t.chosen, t.p, d.latency_ms, cost))
     return results
 
 
@@ -79,15 +113,17 @@ def mean(xs: list[float]) -> float:
 def report(layout: str, results: list[Result]) -> str:
     lines = [f"#### Layout `{layout}`", ""]
     lines += [
-        "| tier | n | exact | supersedes | mean p (right) | mean p (wrong) | mean conf (right) | mean conf (wrong) |"
+        "| tier | n | exact | supersedes | temporal | close rule | mean p (right) | mean p (wrong) "
+        "| mean conf (right) | mean conf (wrong) |"
     ]
-    lines += ["|---|---|---|---|---|---|---|---|"]
+    lines += ["|---|---|---|---|---|---|---|---|---|---|"]
     for tier in (*TIERS, "all"):
         rs = [r for r in results if tier in ("all", r.pair["tier"])]
         right, wrong = [r for r in rs if r.exact], [r for r in rs if not r.exact]
         conf = lambda group: mean([r.confidence for r in group if r.confidence is not None])  # noqa: E731
         lines.append(
             f"| {tier} | {len(rs)} | {len(right) / len(rs):.0%} | {mean([r.supersede_ok for r in rs]):.0%} "
+            f"| {mean([r.temporal_ok for r in rs]):.0%} | {mean([r.closes == r.should_close for r in rs]):.0%} "
             f"| {mean([r.p for r in right]):.2f} | {mean([r.p for r in wrong]):.2f} "
             f"| {conf(right):.2f} | {conf(wrong):.2f} |"
         )
@@ -99,14 +135,22 @@ def report(layout: str, results: list[Result]) -> str:
             f"| {t:.2f} | {len(acted) / len(results):.0%} | {mean([r.exact for r in acted]):.0%} "
             f"| {mean([r.supersede_ok for r in acted]):.0%} |"
         )
-    wrong = [r for r in results if not r.exact]
+    wrong = [r for r in results if not (r.exact and r.temporal_ok and r.closes == r.should_close)]
     if wrong:
-        lines += ["", "Misses:", "", "| id | old | new | expected | got | p |", "|---|---|---|---|---|---|"]
+        lines += ["", "Pairs with any miss:", ""]
+        lines += ["| id | old | new | expected | got | temporal (label → got) | close (want → got) |"]
+        lines += ["|---|---|---|---|---|---|---|"]
         for r in wrong:
             lines.append(
-                f"| {r.pair['id']} | {r.pair['old']} | {r.pair['new']} ({r.pair['temporal_status']}) "
-                f"| {'/'.join(r.pair['accept'])} | {r.chosen} | {r.p:.2f} |"
+                f"| {r.pair['id']} | {r.pair['old']} | {r.pair['new']} | {'/'.join(r.pair['accept'])} "
+                f"| {r.chosen} {r.p:.2f} | {r.pair['temporal_status']} → {r.temporal} {r.temporal_p:.2f} "
+                f"| {r.should_close} → {r.closes} |"
             )
+    lines += [
+        "",
+        f"Would escalate to the LLM (update/contradiction below {config.ESCALATE_BELOW}): "
+        f"{sum(r.escalates for r in results)} of {len(results)}.",
+    ]
     lines += [
         "",
         f"Median request latency {statistics.median(r.latency_ms for r in results):.0f} ms, "
@@ -134,9 +178,8 @@ async def main() -> None:
     parser.add_argument("--no-write", action="store_true")
     args = parser.parse_args()
 
-    pairs = [json.loads(line) for line in PAIRS.read_text().splitlines() if line.strip()]
+    pairs = load_pairs()
     if args.backend == "jev":
-        from engram import config
         from engram.decide.jev import JevBackend
         from engram.decide.log import DecisionLog
 
@@ -152,7 +195,8 @@ async def main() -> None:
         "## Contradiction test",
         "",
         f"Backend `{args.backend}` (`{model}`), {len(pairs)} pairs from `bench/contradiction_pairs.jsonl`. "
-        "Question: `relation_to_candidate`. Regenerate with `python bench/test_contradictions.py`.",
+        "Questions: `relation_to_candidate` + `temporal_status` in one request. "
+        "Regenerate with `python bench/test_contradictions.py`.",
         "",
     ]
     for layout in layouts:

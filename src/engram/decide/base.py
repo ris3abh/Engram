@@ -56,12 +56,13 @@ def make_decision(
     confidence: float | None = None,
     model: str = "",
     request_id: str = "",
+    chosen: str | None = None,
 ) -> Decision:
     return Decision(
         question=ask.question.id,
         options=ask.question.options,
         probs=probs,
-        chosen=max(probs, key=probs.__getitem__),
+        chosen=chosen or max(probs, key=probs.__getitem__),  # the backend's own pick wins (see jev.py rounding)
         backend=backend,
         latency_ms=latency_ms,
         cost_usd=cost_usd,

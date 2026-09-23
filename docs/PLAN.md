@@ -242,3 +242,26 @@ As in the spec. I stop for your review after steps 1 and 4.
    already has to resolve dates and Jev is weak at temporal reasoning. Listed here only for completeness.
 8. **LoCoMo source.** The plan is `snap-research/locomo` (`data/locomo10.json`) on GitHub. I'll check and
    cite its license in the script before downloading anything in step 8.
+
+## 5. Changes since sign-off (2026-09-23)
+
+- **`temporal_status` Jev question** (your change after step 4): `current | planned | past | hypothetical`,
+  asked in the same request as the other write-path questions. `write.py` closes an old edge only when the
+  relation is update or contradiction (p ≥ 0.85 or escalated) and temporal is `current` at p ≥ 0.85.
+  Otherwise the new fact is tentative and the old edge stays open. The extraction LLM no longer sets temporal
+  status; it only preserves tense in the fact text and resolves dates. The `current` and `past` rubrics were
+  clarified once after the regression run (BENCHMARK.md).
+- **Validator tolerance:** Jev picks `choice` before rounding probabilities to 2 decimals. The reference
+  validator's exact-argmax check rejected about 1 in 150 real answers because of that. It now allows a
+  0.01 gap, and engram records Jev's own `choice`. A malformed answer degrades only its own question to
+  `fallback`, not the whole request.
+- **Server request ids:** each Jev decision's `request_id` is TypeSafe's `x-typesafe-request-id`, so
+  audits can be traced on their side.
+- **Rate limiter default stays 15 rps.** The API accepted 30 rps sustained with no 429s, and the documented
+  cap is 20 rps (BENCHMARK.md).
+- **Added modules:** `engine.py` (wires store, backend, LLM and embedder for the CLI, server and bench) and
+  `decide/log.py`. `embed.py` landed in step 5 instead of step 6, because the write path needs candidates.
+- **CLI input format:** one message per line from `user`; `@name: text` sets another speaker.
+- **Known gap:** facts extracted from the *same* message run in parallel and can't see each other as
+  candidates (for example "is vegetarian" and "has been vegetarian since college" both get stored). The
+  hygiene pass (step 9) merges these.

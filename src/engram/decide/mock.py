@@ -72,6 +72,10 @@ _PERMANENT = r"\bborn\b|allerg|sister|brother|mother|father|\bson\b|daughter|bir
 _FILLER = r"^(hi|hello|hey|thanks|thank you|ok|okay|lol|sure|yes|no|bye|good (morning|night))\b"
 _MEAT = r"steak|burger|\bmeat\b|chicken|bacon|pork|beef|steakhouse|bbq|barbecue"
 
+_PLANNED = r"\b(will|going to|plans? to|next (week|month|year)|starting|tomorrow)\b"
+_HYPOTHETICAL = r"\b(might|may|maybe|could|would|if|thinking about|considering)\b"
+_PAST = r"\b(used to|was|were|went|had|interviewed|lived|visited|ago|last (year|week|month)|as a (kid|child))\b"
+
 _EDGE_REGEX = [(edge, re.compile(pattern, re.I)) for edge, pattern in _EDGE_RULES]
 
 
@@ -87,6 +91,13 @@ def jaccard(a: str, b: str) -> float:
 
 def edge_type(text: str) -> str:
     return next((edge for edge, regex in _EDGE_REGEX if regex.search(text)), "related_to")
+
+
+def temporal_status(text: str) -> str:
+    for label, pattern in (("hypothetical", _HYPOTHETICAL), ("planned", _PLANNED), ("past", _PAST)):
+        if re.search(pattern, text, re.I):
+            return label
+    return "current"
 
 
 def _first(rules: list[tuple[str, str]], text: str, default: str) -> str:
@@ -111,7 +122,7 @@ def relation(new: dict[str, Any], old: dict[str, Any]) -> str:
             return "contradiction"
     if pair == {"prefers", "dislikes"} and tokens(new.get("object", "")) & tokens(old.get("object", "")):
         return "contradiction"
-    if new.get("temporal_status", "current") != "current" and old.get("temporal_status", "current") == "current":
+    if temporal_status(new["text"]) != "current" and temporal_status(old["text"]) == "current":
         return "new"
     if new_edge != old_edge:
         return "new"
@@ -137,10 +148,12 @@ class MockBackend(DecisionBackend):
         options = ask.question.options
         qid = ask.question.id
         if qid == "worth_remembering":
-            filler = re.search(_FILLER, text.strip(), re.I) or len(tokens(text)) < 2
+            filler = re.search(_FILLER, text.strip(), re.I) or not tokens(text)
             probs = noul_probs(0.05 if filler else 0.95)
         elif qid == "fact_kind":
             probs = _peaked(options, _first(_KIND_RULES, text, "bio"))
+        elif qid == "temporal_status":
+            probs = _peaked(options, temporal_status(text))
         elif qid == "relation_to_candidate":
             probs = _peaked(options, relation(fact, ask.refs["existing_fact"]))
         elif qid == "edge_type":

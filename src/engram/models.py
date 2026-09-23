@@ -62,15 +62,15 @@ class Message:
 
 @dataclass
 class ExtractedFact:
-    """LLM output before any decision is made."""
+    """LLM output before any decision is made. Hints are used only if Jev fails (fallback path)."""
 
-    text: str
+    text: str  # third person, tense and modality preserved ("User will start at Meta")
     subject: str
     object: str
     predicate_hint: str = "related_to"
     kind_hint: str = "bio"
-    temporal_status: str = "current"
-    valid_from: datetime | None = None
+    durability_hint: str = "long_term"
+    valid_from: datetime | None = None  # resolved by the LLM from the message date; None = message time
 
 
 @dataclass

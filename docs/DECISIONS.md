@@ -12,8 +12,7 @@ The payloads below show what goes on the wire. `‹…›` marks a value filled 
 
 ```json
 {
-  "new_fact": {"text": "‹User lives in Berlin›", "subject": "‹user›", "object": "‹berlin›",
-               "temporal_status": "‹current|past|planned|hypothetical›"},
+  "new_fact": {"text": "‹User lives in Berlin›", "subject": "‹user›", "object": "‹berlin›"},
   "source_message": "‹raw message text›"
 }
 ```
@@ -44,7 +43,23 @@ Instructions: "What kind of personal fact is `new_fact`?"
 | `task` | Something the user intends or needs to do: a goal, a to-do, a plan. |
 | `opinion` | A belief or judgment about something, not a personal taste. |
 
-### 3. `relation_to_candidate__{i}` (Choice, i = 0..k-1, k=10)
+### 3. `temporal_status` (Choice)
+
+Instructions: "According to `source_message`, when is `new_fact` true?"
+
+| option | rubric |
+|---|---|
+| `current` | True now. Includes a change that already happened and still holds (moved, graduated, got married, switched jobs). |
+| `planned` | Expected or intended to happen in the future; not true yet. |
+| `past` | Only about an earlier time: a finished event or former situation that says nothing about what is true now (a past trip, a former job, childhood). |
+| `hypothetical` | Possible, conditional, wished for, or uncertain; not stated as actually happening. |
+
+Code rule (added after the contradiction test): `write.py` may close an old edge only when this answer is
+`current` with p ≥ `ACT_THRESHOLD` **and** `relation_to_candidate` is `update` or `contradiction` (acted on or
+escalated). Otherwise the new fact is inserted with `tentative=True`, and the old edge's `valid_until` stays
+open. Jev decides the temporal status; code does all date arithmetic.
+
+### 4. `relation_to_candidate__{i}` (Choice, i = 0..k-1, k=10)
 
 The existing fact is carried in `instructions`, not in the state:
 
@@ -52,7 +67,7 @@ The existing fact is carried in `instructions`, not in the state:
 {"type": "choice",
  "instructions": {
    "existing_fact": {"text": "‹User lives in Paris›", "subject": "‹user›", "object": "‹paris›",
-                     "valid_from": "‹2025-03-01›", "temporal_status": "‹current›"},
+                     "valid_from": "‹2025-03-01›"},
    "question": "How does `new_fact` relate to `existing_fact`?"},
  "criteria": {‹table below›}}
 ```
@@ -65,10 +80,12 @@ The existing fact is carried in `instructions`, not in the state:
 | `contradiction` | Both cannot be true at the same time, and `new_fact` does not describe a change over time. It directly conflicts with `existing_fact` (for example "is vegetarian" vs "favorite food is steak"). |
 | `refinement` | `new_fact` adds detail to `existing_fact` without making it false (for example "lives in Berlin" becoming "lives in Kreuzberg, Berlin"). |
 
-Code rule: pick the candidate with the highest non-`new` probability. The act, tentative and escalate
-thresholds are in PLAN.md §2. Escalation is only for `update` or `contradiction` below `ESCALATE_BELOW`.
+Code rule: pick the candidate with the highest non-`new` probability. If that candidate's top answer is still
+`new`, the fact is new (tentative if P(new) < `ACT_THRESHOLD`). The act, tentative and escalate thresholds
+are in PLAN.md §2. Escalation is only for `update` or `contradiction` below `ESCALATE_BELOW`. Closing an old
+edge also requires `temporal_status` (above).
 
-### 4. `edge_type` (Choice, 25 options)
+### 5. `edge_type` (Choice, 25 options)
 
 Instructions: "Which relation best describes how `new_fact.subject` relates to `new_fact.object`?"
 
@@ -100,7 +117,7 @@ Instructions: "Which relation best describes how `new_fact.subject` relates to `
 | `speaks` | A language. |
 | `related_to` | Fallback: none of the above fits. |
 
-### 5. `durability` (Choice)
+### 6. `durability` (Choice)
 
 Instructions: "How long will `new_fact` likely stay true?"
 
@@ -110,7 +127,7 @@ Instructions: "How long will `new_fact` likely stay true?"
 | `long_term` | Stable for months or years: residence, job, diet, hobbies. |
 | `short_lived` | True for days or weeks: current mood, this week's plans, a temporary situation. |
 
-### 6. `sensitivity` (Choice)
+### 7. `sensitivity` (Choice)
 
 Instructions: "Which category of sensitive personal information, if any, does `new_fact` contain?"
 

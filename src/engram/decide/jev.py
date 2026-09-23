@@ -4,20 +4,23 @@ Request and validation follow browser-use/jev-ultrafast `model.py`; limits and p
 """
 
 import asyncio
+import json
 import math
 import time
+from collections import Counter
 from typing import Any
 
 import httpx
 
 from .. import config
 from ..models import Decision, new_id
-from .base import DecisionBackend, DecisionError, State, make_decision, noul_probs
+from .base import DecisionBackend, DecisionError, State, fallback_decision, make_decision, noul_probs
 from .log import DecisionLog
 from .questions import Ask
 
 RETRY_STATUSES = {429, 500, 502, 503, 504, 529}
 MAX_RETRY_AFTER_S = 5.0
+ROUNDING_TOLERANCE = 0.0101
 
 
 class RateLimiter:
@@ -66,6 +69,7 @@ class JevBackend(DecisionBackend):
         self._headers = {"Authorization": f"Bearer {key}"}
         self._transport = transport
         self._clients: dict[int, httpx.AsyncClient] = {}  # one per event loop; httpx pools are loop-bound
+        self.http_statuses: Counter[str] = Counter()  # every attempt's outcome, e.g. "200", "429", "timeout"
 
     def _client(self) -> httpx.AsyncClient:
         loop_id = id(asyncio.get_running_loop())
@@ -89,14 +93,20 @@ class JevBackend(DecisionBackend):
     async def _ask(self, state: State, asks: list[Ask]) -> dict[str, Decision]:
         if not asks:
             return {}
-        result, latency_ms = await self._post(self.request_body(state, asks))
+        result, latency_ms, server_request_id = await self._post(self.request_body(state, asks))
         answers = result.get("answers") or {}
         tokens = (result.get("usage") or {}).get("input_tokens", 0)
         share = tokens * config.JEV_PRICE_PER_INPUT_TOKEN / len(asks)
-        request_id = new_id()
+        request_id = server_request_id or new_id()
         decisions = {}
         for ask in asks:
-            probs, confidence = parse_answer(ask, answers.get(ask.key))
+            try:
+                probs, confidence, chosen = parse_answer(ask, answers.get(ask.key))
+            except DecisionError as e:
+                # One malformed answer degrades only its own question; the rest of the request is still usable.
+                decisions[ask.key] = fallback_decision(ask, default_option(ask), str(e))
+                decisions[ask.key].request_id = request_id
+                continue
             decisions[ask.key] = make_decision(
                 ask,
                 probs,
@@ -106,12 +116,15 @@ class JevBackend(DecisionBackend):
                 confidence=confidence,
                 model=result.get("model", self.model),
                 request_id=request_id,
+                chosen=chosen,
             )
         return decisions
 
-    async def _post(self, body: dict[str, Any]) -> tuple[dict[str, Any], float]:
-        """Returns (response json, latency in ms). Latency starts after the first rate-limiter wait, so it measures
-        the API (including retries and backoff), not local queueing."""
+    async def _post(self, body: dict[str, Any]) -> tuple[dict[str, Any], float, str | None]:
+        """Returns (response json, latency in ms, TypeSafe request id).
+
+        Latency starts after the first rate-limiter wait: it measures the API, retries and backoff, not local queueing.
+        """
         last_error = "no attempt made"
         started = None
         for attempt in range(self.attempts):
@@ -121,9 +134,12 @@ class JevBackend(DecisionBackend):
                 response = await self._client().post(self.url, json=body)
             except httpx.TimeoutException:
                 last_error = f"timeout after {self.timeout_s}s"
+                self.http_statuses["timeout"] += 1
             except httpx.HTTPError as e:
                 last_error = f"connection error: {type(e).__name__}"
+                self.http_statuses["connection_error"] += 1
             else:
+                self.http_statuses[str(response.status_code)] += 1
                 if response.status_code in RETRY_STATUSES:
                     last_error = f"HTTP {response.status_code}"
                     if attempt < self.attempts - 1:
@@ -133,7 +149,8 @@ class JevBackend(DecisionBackend):
                     # 401/422 and other client errors are bugs or bad keys; retrying will not help.
                     raise DecisionError(f"HTTP {response.status_code}: {response.text[:300]}")
                 try:
-                    return response.json(), (time.perf_counter() - started) * 1000
+                    latency_ms = (time.perf_counter() - started) * 1000
+                    return response.json(), latency_ms, response.headers.get("x-typesafe-request-id")
                 except ValueError:
                     raise DecisionError("Jev returned a non-JSON body") from None
             if attempt < self.attempts - 1:
@@ -154,13 +171,14 @@ def _unit(n: object) -> bool:
     return type(n) in (int, float) and math.isfinite(n) and 0 <= n <= 1
 
 
-def parse_answer(ask: Ask, answer: dict[str, Any] | None) -> tuple[dict[str, float], float | None]:
-    """Validate one answer like jev-ultrafast's validate_choice. Returns (probs, confidence)."""
+def parse_answer(ask: Ask, answer: dict[str, Any] | None) -> tuple[dict[str, float], float | None, str]:
+    """Validate one answer like jev-ultrafast's validate_choice. Returns (probs, confidence, chosen)."""
     try:
         if ask.question.type == "noul":
             value = answer["noul"]
             if answer.get("type", "noul") == "noul" and _unit(value):
-                return noul_probs(float(value)), None
+                p = float(value)
+                return noul_probs(p), None, "yes" if p >= 0.5 else "no"
         else:
             probs, choice, confidence = answer["probabilities"], answer["choice"], answer["confidence"]
             options = set(ask.question.options)
@@ -169,9 +187,18 @@ def parse_answer(ask: Ask, answer: dict[str, Any] | None) -> tuple[dict[str, flo
                 and set(probs) == options
                 and all(_unit(n) for n in (*probs.values(), confidence))
                 and abs(sum(probs.values()) - 1) < 0.02
-                and probs[choice] >= max(probs.values()) - 1e-6
+                # Jev rounds probabilities to 2 decimals but picks `choice` before rounding, so a near-tie can
+                # show the chosen option 0.01 below another. Allow exactly that rounding gap and no more.
+                and probs[choice] >= max(probs.values()) - ROUNDING_TOLERANCE
             ):
-                return {k: float(v) for k, v in probs.items()}, float(confidence)
+                return {k: float(v) for k, v in probs.items()}, float(confidence), choice
     except (KeyError, TypeError, ValueError, AttributeError):
         pass
-    raise DecisionError(f"invalid Jev answer for {ask.key}")
+    raise DecisionError(f"invalid Jev answer for {ask.key}: {json.dumps(answer)[:400]}")
+
+
+def default_option(ask: Ask) -> str:
+    """The safe choice recorded when an answer is unusable: "no" for nouls, "new" for relations, else the first."""
+    if ask.question.type == "noul":
+        return "no"
+    return "new" if "new" in ask.question.options else ask.question.options[0]

@@ -33,6 +33,7 @@ STALE_DAYS = 30
 # Paths
 DB_PATH = Path(os.environ.get("ENGRAM_DB", "engram.db"))
 LOG_PATH = Path(os.environ.get("ENGRAM_LOG", "logs/decisions.jsonl"))
+LLM_LOG_PATH = Path(os.environ.get("ENGRAM_LLM_LOG", "logs/llm.jsonl"))
 
 
 def typesafe_api_key() -> str | None:

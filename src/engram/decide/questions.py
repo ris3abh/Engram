@@ -116,6 +116,23 @@ RELATION_TO_CANDIDATE = ChoiceQuestion(
     },
 )
 
+TEMPORAL_STATUS = ChoiceQuestion(
+    id="temporal_status",
+    instructions="According to `source_message`, when is `new_fact` true?",
+    criteria={
+        "current": (
+            "True now. Includes a change that already happened and still holds "
+            "(moved, graduated, got married, switched jobs)."
+        ),
+        "planned": "Expected or intended to happen in the future; not true yet.",
+        "past": (
+            "Only about an earlier time: a finished event or former situation that says nothing about what is "
+            "true now (a past trip, a former job, childhood)."
+        ),
+        "hypothetical": "Possible, conditional, wished for, or uncertain; not stated as actually happening.",
+    },
+)
+
 EDGE_TYPES: dict[str, str] = {
     "lives_in": "Current or past place of residence.",
     "born_in": "Place of birth or origin.",
@@ -195,6 +212,7 @@ ALL_QUESTIONS: dict[str, Question] = {
     for q in (
         WORTH_REMEMBERING,
         FACT_KIND,
+        TEMPORAL_STATUS,
         RELATION_TO_CANDIDATE,
         EDGE_TYPE,
         DURABILITY,

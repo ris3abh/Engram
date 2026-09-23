@@ -1,0 +1,61 @@
+"""LLMBackend: the only three jobs an LLM does in engram. Extraction, hard-case escalation, answer synthesis."""
+
+import json
+import threading
+from abc import ABC, abstractmethod
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+from ..models import ExtractedFact, Message, now
+
+
+class LLMError(RuntimeError):
+    pass
+
+
+@dataclass
+class LLMUsage:
+    purpose: str  # extract | escalate | answer
+    model: str
+    input_tokens: int
+    output_tokens: int
+    latency_ms: float
+    cost_usd: float
+
+
+class UsageLog:
+    """Append-only logs/llm.jsonl, so the benchmark can sum LLM cost next to Jev cost."""
+
+    def __init__(self, path: str | Path):
+        self.path = Path(path)
+        self._lock = threading.Lock()
+
+    def write(self, usage: LLMUsage) -> None:
+        line = json.dumps({"ts": now().isoformat(), **asdict(usage)}) + "\n"
+        with self._lock:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            with self.path.open("a") as f:
+                f.write(line)
+
+    def read(self) -> list[dict]:
+        if not self.path.exists():
+            return []
+        return [json.loads(line) for line in self.path.read_text().splitlines() if line.strip()]
+
+
+class LLMBackend(ABC):
+    name: str
+
+    @abstractmethod
+    async def extract(self, message: Message, context: list[Message]) -> tuple[list[ExtractedFact], LLMUsage]:
+        """Atomic facts stated in `message`. `context` holds earlier messages for resolving references only."""
+
+    @abstractmethod
+    async def judge_relation(
+        self, new_fact: str, existing_fact: str, source_message: str, criteria: dict[str, str]
+    ) -> tuple[str, LLMUsage]:
+        """Pick one key of `criteria`. Used only when Jev is unsure about an update or contradiction."""
+
+    @abstractmethod
+    async def answer(self, question: str, memories: str) -> tuple[str, LLMUsage]:
+        """Answer `question` from the rendered memory subgraph only."""

@@ -6,10 +6,16 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
+    "anthropic>=1.8.0",
     "httpx[http2]>=0.28,<1",
     "networkx>=3.3",
     "numpy>=1.26",
+    "sentence-transformers>=6.1.0",
+    "typer>=0.27.2",
 ]
+
+[project.scripts]
+engram = "engram.cli:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -32,3 +38,6 @@ testpaths = ["tests"]
 asyncio_mode = "auto"
 addopts = "-m \"not live\""
 markers = ["live: hits a paid external API; skipped unless the key is set"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["typer.Option", "typer.Argument"]
