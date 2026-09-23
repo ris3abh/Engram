@@ -166,6 +166,13 @@ ARMS: dict[str, dict] = {
         "backend": "laya",
         "shadow": "jev",
     },
+    "e4_belief_v2_hybrid": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**E4_FROZEN),
+        "backend": "hybrid",
+        "shadow": "jev",
+    },
     "e4_belief_v2_shadow": {"system": "engram", "hygiene": True, "flags": Flags(**E4_FROZEN), "shadow": "laya"},
     "e4_belief_v2_compact": {"system": "engram", "hygiene": True, "flags": Flags(**E4_FROZEN)},  # alias, step 2
     # step 2 comparison: the same arm with the full rendering.
@@ -330,6 +337,12 @@ def prior_spend() -> float:
 
 
 def make_backend(name: str, log, cache: CallCache):
+    if name == "hybrid":
+        # Laya for the high-volume nouls (relevance rerank, hygiene same_fact), Jev for every other question.
+        from engram.decide.hybrid import HybridBackend
+
+        laya = make_backend("laya", log, cache)
+        return HybridBackend(make_backend("jev", log, cache), {"relevant_to_query": laya, "same_fact": laya})
     if name == "laya":
         from engram.decide.laya import LayaBackend
 
@@ -599,10 +612,11 @@ async def run_arm(
     top_k: int | None = None,
     no_dates: bool = False,
     extra_top_ks: list[int] | None = None,
+    no_answer: bool = False,
 ) -> dict:
     spec = ARMS[name]
     sl = load_slice(slice_name)
-    suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "")
+    suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "") + ("__noanswer" if no_answer else "")
     arm_dir = ARMS_DIR / name / (slice_name.replace(":", "_") + suffix)  # each option set gets its own store
     shutil.rmtree(arm_dir, ignore_errors=True)
     arm_dir.mkdir(parents=True)
@@ -621,6 +635,16 @@ async def run_arm(
         lines, retrieve_cost = await system.memories(q["question"], top_k=k, no_dates=no_dates)
         block = json.dumps(lines, indent=4)
         retrieved_tokens = await count_tokens(client, cache, block) - empty_block
+        if no_answer:  # retrieval only: no answer or judge calls; accuracy fields are meaningless
+            return {
+                **q,
+                "answer": None,
+                "memories": len(lines),
+                "lines": lines,
+                "label": None,
+                "query_cost": retrieve_cost,
+                "retrieved_tokens": retrieved_tokens,
+            }
         prompt = ANSWER_PROMPT.format(speakers=speakers, memories=block, question=q["question"])
         ans, _ = await claude(
             client,
@@ -760,7 +784,7 @@ async def run_arm(
         "answers": answers,
         "asked": asked,
     }
-    result["options"] = {"top_k": top_k, "no_dates": no_dates}
+    result["options"] = {"top_k": top_k, "no_dates": no_dates, "no_answer": no_answer}
     if spec["system"] == "engram":
         result["backend"] = decider_report(system.engine.backend)
     if hygiene is not None:
@@ -796,7 +820,7 @@ async def run_arm(
             "memories_mean": statistics.fmean(a["memories"] for a in ans_k),
             "store_size_buckets": [],
         }
-        ksuffix = f"__k{k}" + ("__nodates" if no_dates else "")
+        ksuffix = f"__k{k}" + ("__nodates" if no_dates else "") + ("__noanswer" if no_answer else "")
         (RESULTS / f"{name}__{out_name}{ksuffix}.json").write_text(json.dumps(rk, indent=1, default=str))
         print(f"[{name}/{slice_name}] k={k}: accuracy {rk['accuracy']:.1%} (Q={len(ans_k)})", flush=True)
     if spec["system"] == "engram" and hasattr(system.engine.backend, "drain"):
@@ -808,6 +832,9 @@ def decider_report(backend) -> dict:
     """Which backend decided (and which shadowed), plus Laya's hardware, compute time and truncation counts."""
     main = getattr(backend, "primary", backend)
     out = {"name": main.name, "model": main.model}
+    if routes := getattr(main, "routes", None):
+        out["routes"] = {q: b.name for q, b in routes.items()}
+        main = next(iter(routes.values()))  # report the routed backend's hardware and truncation below
     if shadow := getattr(backend, "shadow", None):
         out["shadow"] = {"name": shadow.name, "model": shadow.model}
     for b in (main, shadow):
@@ -1095,6 +1122,7 @@ async def main() -> None:
     parser.add_argument("--report", nargs="*", help="print the table for these arms from bench/results")
     parser.add_argument("--top-k", type=int, default=None, help="answer from only the top k memories")
     parser.add_argument("--no-dates", action="store_true", help="answer from memory text only")
+    parser.add_argument("--no-answer", action="store_true", help="retrieval only: record memories, skip answer/judge")
     parser.add_argument("--suffix", default="", help="with --report: result-file suffix, e.g. __k3 or __nodates")
     args = parser.parse_args()
     if args.report is not None:
@@ -1106,7 +1134,13 @@ async def main() -> None:
     try:
         extra = [int(k) for k in args.also_top_k.split(",") if k]
         result = await run_arm(
-            args.arm, args.slice, budget, top_k=args.top_k, no_dates=args.no_dates, extra_top_ks=extra
+            args.arm,
+            args.slice,
+            budget,
+            top_k=args.top_k,
+            no_dates=args.no_dates,
+            extra_top_ks=extra,
+            no_answer=args.no_answer,
         )
     finally:
         LEDGER.parent.mkdir(parents=True, exist_ok=True)

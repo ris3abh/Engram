@@ -6,6 +6,8 @@ server's model id, zero cost and wall-clock latency per request. Two differences
 - Retrieval rerank: Laya's option budget is ~20, so relevance nouls are sent RERANK_BATCH per call and the
   per-candidate scores merged (they are independent nouls, so merging is a union). Write-side questions go
   unchanged in one call.
+- native=True swaps in the Laya-native wordings (decide/laya_questions.py) for the four questions whose Jev
+  wording overflows Laya's 192-token question budget; option labels are unchanged.
 - The server reports how many questions it had to truncate (instructions past head_max_len, or state past
   max_len); those counts accumulate in `truncation`.
 """
@@ -19,6 +21,7 @@ from ..cache import CallCache
 from ..models import Decision
 from .base import State
 from .jev import JevBackend
+from .laya_questions import LAYA_NATIVE
 from .log import DecisionLog
 from .questions import RELEVANT_TO_QUERY, Ask
 
@@ -39,6 +42,7 @@ class LayaBackend(JevBackend):
         rerank_batch: int = RERANK_BATCH,
         info: dict[str, Any] | None = None,
         transport: httpx.AsyncBaseTransport | None = None,
+        native: bool = False,
     ):
         server = info or httpx.get(url.replace("/systemone", "/info"), timeout=10).json()
         super().__init__(
@@ -53,8 +57,14 @@ class LayaBackend(JevBackend):
         )
         self.info = server  # checkpoint, limits, calibration, hardware
         self.rerank_batch = rerank_batch
+        self.native = native  # ask the Laya-native wordings (decide/laya_questions.py) where they exist
         self.truncation: Counter[str] = Counter()
         self.compute_ms = 0.0
+
+    async def _ask(self, state: State, asks: list[Ask]) -> dict[str, Decision]:
+        if self.native:
+            asks = [Ask(a.key, LAYA_NATIVE.get(a.question.id, a.question), a.refs, a.target) for a in asks]
+        return await super()._ask(state, asks)
 
     async def _ask_live(self, state: State, asks: list[Ask]) -> dict[str, Decision]:
         rerank = [a for a in asks if a.question is RELEVANT_TO_QUERY]

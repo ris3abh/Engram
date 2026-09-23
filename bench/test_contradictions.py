@@ -215,6 +215,7 @@ async def main() -> None:
     parser.add_argument("--backend", choices=["jev", "laya", "mock"], default="jev")
     parser.add_argument("--layout", choices=["refs", "state", "two_stage", "both", "all"], default="both")
     parser.add_argument("--no-write", action="store_true")
+    parser.add_argument("--native", action="store_true", help="laya: ask the Laya-native question wordings")
     args = parser.parse_args()
 
     pairs = load_pairs()
@@ -228,7 +229,7 @@ async def main() -> None:
         from engram.decide.laya import LayaBackend
         from engram.decide.log import DecisionLog
 
-        backend = LayaBackend(DecisionLog(config.LOG_PATH))
+        backend = LayaBackend(DecisionLog(config.LOG_PATH), native=args.native)
         model = backend.model
     else:
         from engram.decide.mock import MockBackend

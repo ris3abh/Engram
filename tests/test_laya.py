@@ -63,3 +63,34 @@ async def test_shadow_returns_primary_and_records_pairs(tmp_path):
     pair = json.loads((tmp_path / "shadow.jsonl").read_text())
     assert pair["primary"]["backend"] == "mock" and pair["shadow"]["backend"] == "laya"
     assert shadow.name == "mock" and len(calls) == 1
+
+
+async def test_hybrid_routes_by_question():
+    from engram.decide.hybrid import HybridBackend
+    from engram.decide.mock import MockBackend
+
+    calls: list[list[str]] = []
+    hybrid = HybridBackend(MockBackend(), {"relevant_to_query": backend(calls)})
+    asks = [Ask("relevant_to_query__0", RELEVANT_TO_QUERY, {"memory": "m"}), Ask("query_relation", QUERY_RELATION)]
+    out = await hybrid.ask("where does the user live?", asks)
+    assert out["relevant_to_query__0"].backend == "laya" and out["query_relation"].backend == "mock"
+    assert calls == [["relevant_to_query__0"]]
+
+
+async def test_native_wording_swaps_payload_keeps_options():
+    from engram.decide.questions import RELATION_TO_CANDIDATE
+
+    seen = []
+
+    def handler(request):
+        body = json.loads(request.content)
+        seen.append(body["questions"]["r"])
+        return handler_for([])(request)
+
+    laya = LayaBackend(info=INFO, transport=httpx.MockTransport(handler), native=True)
+    out = await laya.ask(
+        {"new_fact": {"text": "x"}}, [Ask("r", RELATION_TO_CANDIDATE, {"existing_fact": {"text": "y"}})]
+    )
+    assert seen[0]["instructions"]["question"] == "How does new_fact relate to existing_fact?"
+    assert list(seen[0]["criteria"]) == RELATION_TO_CANDIDATE.options
+    assert out["r"].question == "relation_to_candidate"
