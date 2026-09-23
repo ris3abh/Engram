@@ -3,6 +3,7 @@
 import json
 import threading
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -29,10 +30,13 @@ class DecisionLog:
     def __init__(self, path: str | Path):
         self.path = Path(path)
         self._lock = threading.Lock()
+        self.listeners: list[Callable[[list[Decision]], None]] = []  # e.g. the server's session counters
 
     def write(self, decisions: list[Decision], **context: Any) -> None:
         if not decisions:
             return
+        for listener in self.listeners:
+            listener(decisions)
         stamp = now().isoformat()
         lines = [json.dumps({"ts": stamp, **context, **asdict(d)}) + "\n" for d in decisions]
         with self._lock:

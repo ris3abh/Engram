@@ -307,6 +307,10 @@ class Store:
             ],
         )
 
+    def redacted_fact_ids(self) -> set[str]:
+        rows = self._db.execute("SELECT DISTINCT fact_id FROM decisions WHERE question = 'redact_credentials'")
+        return {r["fact_id"] for r in rows}
+
     # embeddings
 
     def set_embedding(self, fact_id: str, embedding: np.ndarray) -> None:

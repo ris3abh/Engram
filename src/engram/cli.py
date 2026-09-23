@@ -1,4 +1,4 @@
-"""engram ingest | ask | graph | stats  (hygiene and bench arrive in later build steps)."""
+"""engram ingest | ask | serve | graph | stats  (hygiene and bench arrive in later build steps)."""
 
 import asyncio
 from pathlib import Path
@@ -92,6 +92,21 @@ def ask(
             + (f"  [DEGRADED: {r.degraded}]" if r.degraded else "")
         )
         typer.echo(result.memories)
+
+
+@app.command()
+def serve(
+    backend: str = typer.Option("jev", help="jev | mock"),
+    db: Path = typer.Option(config.DB_PATH),
+    host: str = typer.Option("127.0.0.1"),
+    port: int = typer.Option(8000),
+) -> None:
+    """Run the demo page and JSON API. The embedding model loads before the first request."""
+    import uvicorn
+
+    from .server.app import create_app
+
+    uvicorn.run(create_app(build(db, backend)), host=host, port=port)
 
 
 @app.command()

@@ -3,6 +3,7 @@
 import json
 import threading
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -29,8 +30,11 @@ class UsageLog:
     def __init__(self, path: str | Path):
         self.path = Path(path)
         self._lock = threading.Lock()
+        self.listeners: list[Callable[[LLMUsage], None]] = []
 
     def write(self, usage: LLMUsage) -> None:
+        for listener in self.listeners:
+            listener(usage)
         line = json.dumps({"ts": now().isoformat(), **asdict(usage)}) + "\n"
         with self._lock:
             self.path.parent.mkdir(parents=True, exist_ok=True)
