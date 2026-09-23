@@ -9,7 +9,8 @@ KINDS = ("preference", "bio", "event", "relationship", "task", "opinion")
 DURABILITIES = ("permanent", "long_term", "short_lived")
 SENSITIVITIES = ("none", "health", "financial", "relationship", "credentials")
 TEMPORAL_STATUSES = ("current", "past", "planned", "hypothetical")
-BACKENDS = ("jev", "mock", "llm_escalation", "fallback", "rule")  # rule = a code override, logged like a decision
+# rule = a code override, logged as a decision
+BACKENDS = ("jev", "laya", "mock", "llm_escalation", "fallback", "rule")
 REDACTED = "(redacted)"
 
 

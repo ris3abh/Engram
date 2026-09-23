@@ -53,7 +53,7 @@ def build(
     llm_log_path: str | Path = config.LLM_LOG_PATH,
     embedder: str = "sentence",
 ) -> Engram:
-    """The real stack: Jev (or the mock) for decisions, Claude for extraction and answers."""
+    """The real stack: Jev (or local Laya, or the mock) for decisions, Claude for extraction and answers."""
     from .llm.anthropic import AnthropicLLM
 
     log = DecisionLog(log_path)
@@ -62,6 +62,10 @@ def build(
         from .decide.jev import JevBackend
 
         decider: DecisionBackend = JevBackend(log)
+    elif backend == "laya":
+        from .decide.laya import LayaBackend
+
+        decider = LayaBackend(log)
     else:
         from .decide.mock import MockBackend
 

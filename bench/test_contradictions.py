@@ -212,7 +212,7 @@ def write_section(body: str) -> None:
 
 async def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--backend", choices=["jev", "mock"], default="jev")
+    parser.add_argument("--backend", choices=["jev", "laya", "mock"], default="jev")
     parser.add_argument("--layout", choices=["refs", "state", "two_stage", "both", "all"], default="both")
     parser.add_argument("--no-write", action="store_true")
     args = parser.parse_args()
@@ -223,6 +223,12 @@ async def main() -> None:
         from engram.decide.log import DecisionLog
 
         backend: DecisionBackend = JevBackend(DecisionLog(config.LOG_PATH))
+        model = backend.model
+    elif args.backend == "laya":
+        from engram.decide.laya import LayaBackend
+        from engram.decide.log import DecisionLog
+
+        backend = LayaBackend(DecisionLog(config.LOG_PATH))
         model = backend.model
     else:
         from engram.decide.mock import MockBackend
@@ -243,6 +249,8 @@ async def main() -> None:
         section = report(layout, results)
         print(section)
         sections.append(section)
+    if hasattr(backend, "truncation"):
+        print("laya truncation:", dict(backend.truncation), "compute_ms:", round(backend.compute_ms))
     if not args.no_write:
         write_section("\n".join(sections))
         print(f"wrote {BENCHMARK.relative_to(ROOT)}")
