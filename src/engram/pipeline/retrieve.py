@@ -78,7 +78,7 @@ class Retriever:
                     for f, a in zip(shortlist, asks, strict=False)
                     if d[a.key].backend != "fallback" and d[a.key].probs["yes"] > config.RELEVANCE_THRESHOLD
                 ),
-                key=lambda x: (-x[1], x[0].text),
+                key=lambda x: (-x[1] * (x[0].belief if x[0].belief is not None else 1.0), x[0].text),
             )
             qr = d["query_relation"]
             if qr.backend != "fallback" and qr.chosen != "none" and qr.p >= config.ACT_THRESHOLD:

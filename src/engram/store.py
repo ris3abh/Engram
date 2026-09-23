@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS facts (
     disputed INTEGER NOT NULL DEFAULT 0,
     closed_reason TEXT,
     closed_by TEXT,
+    belief REAL,
+    against_count INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL,
     last_retrieved_at TEXT,
     embedding BLOB
@@ -84,7 +86,7 @@ CREATE TABLE IF NOT EXISTS same_as (
 _FACT_COLUMNS = (
     "id, text, subject, predicate, object, kind, durability, sensitivity, confidence, valid_from, valid_until, "
     "source_message_id, tentative, temporal_status, refines, valid_from_stated, source_text, disputed, closed_reason, "
-    "closed_by, created_at, "
+    "closed_by, belief, against_count, created_at, "
     "last_retrieved_at"
 )
 
@@ -118,6 +120,8 @@ class Store:
             "disputed": "INTEGER NOT NULL DEFAULT 0",
             "closed_reason": "TEXT",
             "closed_by": "TEXT",
+            "belief": "REAL",
+            "against_count": "INTEGER NOT NULL DEFAULT 0",
         }
         for name, ddl in added.items():
             if name not in columns:
@@ -173,7 +177,7 @@ class Store:
                 self._db.execute("INSERT OR IGNORE INTO entities VALUES (?, ?)", (normalize_entity(label), label))
             fact.subject, fact.object = normalize_entity(fact.subject), normalize_entity(fact.object)
             self._db.execute(
-                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 23)})",
+                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 25)})",
                 (
                     fact.id,
                     fact.text,
@@ -195,6 +199,8 @@ class Store:
                     int(fact.disputed),
                     fact.closed_reason,
                     fact.closed_by,
+                    fact.belief,
+                    fact.against_count,
                     _ts(fact.created_at),
                     _ts(fact.last_retrieved_at),
                     _blob(embedding),
@@ -262,6 +268,13 @@ class Store:
                 (_ts(when or now()), reason, by, fact_id),
             )
 
+    def reopen_fact(self, fact_id: str) -> None:
+        """E4: a closed edge whose belief climbed back is current again."""
+        with self._lock, self._db:
+            self._db.execute(
+                "UPDATE facts SET valid_until = NULL, closed_reason = NULL, closed_by = NULL WHERE id = ?", (fact_id,)
+            )
+
     def update_fact(self, fact_id: str, **fields: object) -> None:
         allowed = {
             "text",
@@ -274,6 +287,8 @@ class Store:
             "refines",
             "source_text",
             "disputed",
+            "belief",
+            "against_count",
         }
         if not fields or not set(fields) <= allowed:
             raise ValueError(f"can only update {sorted(allowed)}")
@@ -452,6 +467,8 @@ def _fact(row: sqlite3.Row) -> Fact:
         disputed=bool(row["disputed"]),
         closed_reason=row["closed_reason"],
         closed_by=row["closed_by"],
+        belief=row["belief"],
+        against_count=row["against_count"],
         created_at=_dt(row["created_at"]),
         last_retrieved_at=_dt(row["last_retrieved_at"]),
     )

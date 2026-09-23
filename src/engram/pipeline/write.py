@@ -31,6 +31,7 @@ from ..decide.questions import (
     EDGE_CARDINALITY,
     EDGE_TYPE,
     FACT_KIND,
+    PLAN_FULFILLED,
     SENSITIVITY,
     TEMPORAL_STATUS,
     WORTH_REMEMBERING,
@@ -114,6 +115,7 @@ class WritePipeline:
         self.flags = flags or Flags()
         self.rel_q, self.recheck_q = relation_questions(self.flags.relation_version)
         self.fulfills_log: list[dict] = []  # every fulfills firing, for the audit and the E5 report
+        self.fulfills_asks: list[dict] = []  # fulfills_rule="question": every plan_fulfilled ask, fired or not
         self.store = store
         self.backend = backend
         self.llm = llm
@@ -274,6 +276,9 @@ class WritePipeline:
             return WriteOutcome(draft.text, "dropped", decisions=decisions), []
         tentative = (worth.backend == "fallback" and not draft.user_requested) or p_worth < config.ACT_THRESHOLD
 
+        fulfilled_by_question: dict[str, Decision] = {}
+        if self.flags.fulfills_rule == "question":
+            fulfilled_by_question = await self._ask_fulfilled(state, draft, candidates, decisions)
         usages: list[LLMUsage] = []
         escalated = False
         if self.flags.relation_decider == "llm_update":
@@ -332,7 +337,7 @@ class WritePipeline:
                 action in {"inserted", "refined", "updated", "contradicted", "negated", "disputed", "same_as"}
                 and fact_id
             ):
-                fulfilled = self._apply_fulfills(fact, d, candidates, temporal, decisions)
+                fulfilled = self._apply_fulfills(fact, d, candidates, temporal, decisions, fulfilled_by_question)
             return WriteOutcome(
                 draft.text if not redacted else fact.text,
                 action,
@@ -345,6 +350,24 @@ class WritePipeline:
                 decisions,
                 fulfilled,
             ), usages
+
+        if self.flags.belief:
+            return await self._belief_write(
+                message,
+                draft,
+                fact,
+                vector,
+                relation,
+                d,
+                candidates,
+                state,
+                decisions,
+                tentative,
+                confident,
+                is_current,
+                escalated,
+                outcome,
+            )
 
         target = relation.target
         if relation.label == "new":
@@ -410,13 +433,191 @@ class WritePipeline:
         self.store.add_fact(fact, vector)
         return outcome("inserted", fact.id, target.id, False, True)
 
+    # E4: belief-state policy
+
+    async def _belief_write(
+        self,
+        message,
+        draft,
+        fact,
+        vector,
+        relation,
+        d,
+        candidates,
+        state,
+        decisions,
+        tentative,
+        confident,
+        is_current,
+        escalated,
+        outcome,
+    ):
+        """Insert the new fact with an initial belief, then apply every comparison as evidence (pipeline/belief.py)."""
+        from . import belief as B
+
+        target = relation.target
+        if relation.label == "rewrite" and target:
+            await self._rewrite(target, relation.merged_text or union_text(target.text, draft.text), message, decisions)
+            return outcome("rewritten", target.id, target.id, False, False)
+        fact.tentative = tentative or relation.p < config.ACT_THRESHOLD
+        fact.belief = B.initial_belief(relation.p, fact.tentative)
+        if relation.label == "refinement" and target:
+            fact.refines = target.id
+        disputed = relation.label == "contradiction" and target and not B.against_allowed("contradiction", target, fact)
+        if disputed:
+            fact.disputed = True
+            self.store.update_fact(target.id, disputed=True)
+        self.store.add_fact(fact, vector)
+        stored_upto = len(decisions)  # decisions appended after this point are saved at the end
+        linked = False
+        if relation.label == "duplicate" and confident and not tentative and target:
+            self.store.add_same_as(target.id, fact.id, relation.p)
+            linked = True
+
+        w = self.flags.belief_w
+        mirror = 0.0
+        closed_target = False
+        for i, c in enumerate(candidates):
+            dec = d.get(f"relation_to_candidate__{i}")
+            if escalated and target and c.id == target.id:
+                dec = relation.decision  # the LLM's answer replaces Jev's for this pair
+            if dec is None or dec.backend == "fallback":
+                continue
+            label = dec.chosen
+            p = dec.probs.get(label, 1.0)
+            if label in B.SUPPORT:
+                delta, pieces = w * B.logit(p), 0
+            elif label in B.AGAINST:
+                if not (is_current and B.against_allowed(label, c, fact)):
+                    self.stats["against_blocked"] += 1
+                    continue
+                ps = [p]
+                if c.against_count == 0 and self.flags.close_agreement and dec.backend != "llm_escalation":
+                    ok, p2 = await self._recheck(state, c, decisions)
+                    if not ok:
+                        self.stats["against_unconfirmed"] += 1
+                        continue
+                    ps.append(p2)
+                delta, pieces = -w * sum(B.logit(x) for x in ps), len(ps)
+                mirror += -delta
+                self.stats["against_applied"] += pieces
+            else:
+                continue
+            before = c.belief if c.belief is not None else 0.5
+            after = B.shift(before, delta)
+            fields = {"belief": after}
+            if pieces:
+                fields["against_count"] = c.against_count + pieces
+            self.store.update_fact(c.id, **fields)
+            t = B.settle(c, before, after)
+            if t.closed:
+                self.store.expire_fact(c.id, max(fact.valid_from, c.valid_from), reason="belief", by=fact.id)
+                decisions.append(self._rule("belief_close", "closed", f"belief {before:.2f} -> {after:.2f}", c.id))
+                self.stats["belief_closes"] += 1
+                closed_target = closed_target or (target is not None and c.id == target.id)
+            elif t.reopened:
+                self.store.reopen_fact(c.id)
+                decisions.append(self._rule("belief_reopen", "reopened", f"belief {before:.2f} -> {after:.2f}", c.id))
+                self.stats["reopens"] += 1
+        if mirror:
+            fact.belief = B.shift(fact.belief, mirror)
+            self.store.update_fact(fact.id, belief=fact.belief)
+        self.store.add_decisions(fact.id, decisions[stored_upto:])
+        action = {
+            "new": "inserted",
+            "duplicate": "same_as" if linked else "inserted",
+            "refinement": "refined",
+            "update": "updated",
+            "contradiction": "disputed" if disputed else "contradicted",
+            "negates": "negated",
+        }.get(relation.label, "inserted")
+        return outcome(action, fact.id, target.id if target else None, closed_target, fact.tentative)
+
+    async def _recheck(self, state: dict, target: Fact, decisions: list[Decision]) -> tuple[bool, float]:
+        ask = Ask("relation_to_candidate_recheck", self.recheck_q, {"existing_fact": _ref(target)}, target=target.id)
+        self.stats["agreement_checks"] += 1
+        try:
+            second = (await self.backend.ask(state, [ask]))[ask.key]
+        except DecisionError:
+            return False, 0.0
+        decisions.append(second)
+        ok = second.backend != "fallback" and second.chosen in SUPERSEDE and second.p >= config.ACT_THRESHOLD
+        self.stats["agreements" if ok else "disagreements"] += 1
+        return ok, second.p
+
     # E5: fulfilled plans
 
+    async def _ask_fulfilled(
+        self, state: dict, draft: ExtractedFact, candidates: list[Fact], decisions: list[Decision]
+    ) -> dict[str, Decision]:
+        """fulfills_rule="question": one plan_fulfilled noul per plan/goal candidate, in one extra request."""
+        plans = [
+            (i, c)
+            for i, c in enumerate(candidates)
+            if c.is_valid and (c.predicate in PLAN_RELATIONS or c.temporal_status == "planned")
+        ]
+        if not plans:
+            return {}
+        asks = [Ask(f"plan_fulfilled__{i}", PLAN_FULFILLED, {"existing_fact": _ref(c)}, target=c.id) for i, c in plans]
+        try:
+            answers = await self.backend.ask(state, asks)
+        except DecisionError:
+            return {}
+        fired = {}
+        for (_, c), a in zip(plans, asks, strict=True):
+            dec = answers[a.key]
+            decisions.append(dec)
+            yes = dec.probs.get("yes", 0.0) if dec.backend != "fallback" else 0.0
+            self.stats["plan_fulfilled_asks"] += 1
+            self.fulfills_asks.append(
+                {
+                    "plan": c.text,
+                    "plan_source": c.source_message_id,
+                    "new": draft.text,
+                    "p": round(yes, 3),
+                    "fired": yes >= config.ACT_THRESHOLD,
+                }
+            )
+            if yes >= config.ACT_THRESHOLD:
+                fired[c.id] = dec
+        return fired
+
     def _apply_fulfills(
-        self, fact: Fact, d: dict[str, Decision], candidates: list[Fact], temporal: Decision, decisions: list[Decision]
+        self,
+        fact: Fact,
+        d: dict[str, Decision],
+        candidates: list[Fact],
+        temporal: Decision,
+        decisions: list[Decision],
+        by_question: dict[str, Decision] | None = None,
     ) -> list[str]:
-        """Close planned facts that `fact` fulfills: same subject and predicate, and Jev did not call the pair "new"."""
-        if not self.flags.fulfills_rule:
+        """Close plans that `fact` fulfills. question: the plan_fulfilled noul said yes at p >= 0.85.
+        relaxed (E5 arms only): a plans/goal candidate that Jev did not call "new"."""
+        if self.flags.fulfills_rule == "question":
+            closed = []
+            for c in candidates:
+                if c.id in (by_question or {}) and c.is_valid:
+                    p = by_question[c.id].probs["yes"]
+                    self.store.expire_fact(c.id, max(fact.valid_from, c.valid_from), reason="fulfilled", by=fact.id)
+                    rule = self._rule("fulfills", "closed", f"plan_fulfilled p={p:.2f}", c.id)
+                    decisions.append(rule)
+                    self.store.add_decisions(fact.id, [rule])
+                    closed.append(c.id)
+                    self.stats["fulfilled"] += 1
+                    self.fulfills_log.append(
+                        {
+                            "plan": c.text,
+                            "plan_relation": c.predicate,
+                            "plan_source": c.source_message_id,
+                            "by": fact.text,
+                            "by_source": fact.source_message_id,
+                            "jev_relation": "plan_fulfilled",
+                            "p": round(p, 3),
+                            "temporal": temporal.chosen,
+                        }
+                    )
+            return closed
+        if self.flags.fulfills_rule != "relaxed":
             return []
         if (
             temporal.backend == "fallback"
@@ -644,11 +845,19 @@ class WritePipeline:
         self.store.set_embedding(target.id, vector)
 
     def _candidates(self, vector) -> list[Fact]:
-        ids, matrix = self.store.embeddings(valid_only=True)
+        # With the belief policy, facts closed by belief stay comparable so new evidence can reopen them.
+        ids, matrix = self.store.embeddings(valid_only=not self.flags.belief)
         if not ids or matrix.shape[1] != vector.shape[0]:
             return []
-        hits = top_k(vector, ids, matrix, config.CANDIDATE_K)
-        return [f for f in (self.store.get_fact(i, with_decisions=False) for i, _ in hits) if f]
+        hits = top_k(vector, ids, matrix, len(ids) if self.flags.belief else config.CANDIDATE_K)
+        out = []
+        for i, _ in hits:
+            f = self.store.get_fact(i, with_decisions=False)
+            if f and (f.is_valid or f.closed_reason == "belief"):
+                out.append(f)
+            if len(out) == config.CANDIDATE_K:
+                break
+        return out
 
     def _build_fact(
         self,

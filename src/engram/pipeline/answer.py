@@ -34,7 +34,7 @@ def render_fact(r: RetrievedFact, show_source: bool = False) -> str:
         validity = f"true from {f.valid_from:%Y-%m-%d}, still current"
     else:
         validity = "current"
-    notes = [f"confidence {f.confidence:.2f}", validity]
+    notes = [f"belief {f.belief:.2f}" if f.belief is not None else f"confidence {f.confidence:.2f}", validity]
     if f.tentative:
         notes.append("tentative")
     if f.temporal_status != "current":

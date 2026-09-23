@@ -60,7 +60,7 @@ class Related(MockBackend):
 
 
 async def test_relaxed_fulfills_fires_across_relations_and_is_logged(store):
-    flags = Flags(**V2, fulfills_rule=True)
+    flags = Flags(**V2, fulfills_rule="relaxed")
     p = WritePipeline(store, Related(), ScriptedLLM(SCRIPT), HashEmbedder(), flags=flags)
     edu = (await p.ingest("plan edu")).outcomes[0]
     trip = (await p.ingest("plan trip")).outcomes[0]

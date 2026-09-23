@@ -174,6 +174,11 @@ class MockBackend(DecisionBackend):
             probs = _peaked(options, _first(_SENSITIVITY_RULES, text, "none"))
         elif qid == "relevant_to_query":
             probs = noul_probs(_relevance(s.get("query", ""), ask.refs["memory"]["text"]))
+        elif qid == "plan_fulfilled":
+            old = ask.refs["existing_fact"]
+            happened = temporal_status(text) in ("past", "current") and not re.search(_NEGATION, text, re.I)
+            same_thing = bool(tokens(fact.get("object", "")) & tokens(old.get("object", "")))
+            probs = noul_probs(0.9 if happened and same_thing else 0.1)
         elif qid == "query_relation":
             query = s.get("query", "")
             hinted = next((edge for word, edge in _QUERY_HINTS.items() if word in tokens(query)), "none")

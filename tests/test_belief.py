@@ -1,0 +1,89 @@
+"""E4 belief-state policy and the hygiene pass, offline."""
+
+import pytest
+
+from engram.decide.mock import MockBackend
+from engram.embed import HashEmbedder
+from engram.flags import Flags
+from engram.pipeline import belief as B
+from engram.pipeline.hygiene import hygiene_pass
+from engram.pipeline.write import WritePipeline
+
+from .test_write_pipeline import ScriptedLLM, xf
+
+SCRIPT = {
+    "paris": [xf("User lives in Paris", "Paris", "lives_in")],
+    "berlin": [xf("User lives in Berlin", "Berlin", "lives_in")],
+    "paris again": [xf("User lives in Paris", "Paris", "lives_in")],
+}
+FLAGS = dict(relation_version=2, cardinality_rule=True, close_agreement=True, belief=True, merge_policy="same_as")
+
+
+class Sharp(MockBackend):
+    """Mock with confident answers (p=0.97) and an optional disagreeing recheck."""
+
+    def __init__(self, recheck_agrees=True):
+        super().__init__()
+        self.recheck_agrees = recheck_agrees
+
+    def _decide(self, state, ask, request_id):
+        d = super()._decide(state, ask, request_id)
+        if ask.question.type == "choice":
+            chosen = d.chosen
+            if ask.question.id == "relation_to_candidate_recheck" and not self.recheck_agrees:
+                chosen = "new"
+            d.probs = {o: (0.97 if o == chosen else 0.03 / (len(d.options) - 1)) for o in d.options}
+            d.chosen = chosen
+        return d
+
+
+def test_log_odds_arithmetic():
+    assert B.shift(0.5, B.logit(0.9)) == pytest.approx(0.9)
+    assert B.shift(0.98, 10) == B.B_MAX and B.shift(0.02, -10) == B.B_MIN
+    assert B.initial_belief(0.7, tentative=True) == 0.5
+
+
+async def test_confirmed_update_closes_through_belief(store):
+    p = WritePipeline(store, Sharp(), ScriptedLLM(SCRIPT), HashEmbedder(), flags=Flags(**FLAGS))
+    paris = (await p.ingest("paris")).outcomes[0]
+    assert store.get_fact(paris.fact_id).belief == pytest.approx(0.98)
+    berlin = (await p.ingest("berlin")).outcomes[0]
+    old = store.get_fact(paris.fact_id)
+    assert not old.is_valid and old.closed_reason == "belief" and old.belief < B.CLOSE_BELOW
+    assert old.against_count == 2  # the relation answer and the confirming recheck both count
+    assert store.get_fact(berlin.fact_id).belief > 0.9  # mirror support
+    assert p.stats["belief_closes"] == 1
+
+
+async def test_unconfirmed_first_against_changes_nothing(store):
+    p = WritePipeline(store, Sharp(recheck_agrees=False), ScriptedLLM(SCRIPT), HashEmbedder(), flags=Flags(**FLAGS))
+    paris = (await p.ingest("paris")).outcomes[0]
+    await p.ingest("berlin")
+    old = store.get_fact(paris.fact_id)
+    assert old.is_valid and old.belief == pytest.approx(0.98) and p.stats["against_unconfirmed"] == 1
+
+
+async def test_closed_edge_reopens_on_new_support(store):
+    p = WritePipeline(store, Sharp(), ScriptedLLM(SCRIPT), HashEmbedder(), flags=Flags(**FLAGS))
+    paris = (await p.ingest("paris")).outcomes[0]
+    await p.ingest("berlin")
+    assert not store.get_fact(paris.fact_id).is_valid
+    await p.ingest("paris again")  # a duplicate of the closed fact is support evidence
+    reopened = store.get_fact(paris.fact_id)
+    assert reopened.is_valid and reopened.belief > B.REOPEN_ABOVE and p.stats["reopens"] == 1
+
+
+async def test_hygiene_links_duplicates_once(store):
+    p = WritePipeline(store, MockBackend(), ScriptedLLM(SCRIPT), HashEmbedder(), flags=Flags())
+    await p.ingest("paris")
+    await p.ingest("berlin")
+    store._db.execute("DELETE FROM provenance")
+    from engram.models import new_id
+
+    dup = store.list_facts()[0]
+    dup.id = new_id()
+    store.add_fact(dup)
+    report = await hygiene_pass(store, MockBackend())
+    assert report.merges == 1 and report.decisions == 3 and store.same_as_count() == 1
+    again = await hygiene_pass(store, MockBackend())
+    assert again.merges == 0 and again.already_linked == 1

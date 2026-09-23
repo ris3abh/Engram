@@ -100,6 +100,8 @@ class Fact:
     disputed: bool = False  # E3: a contradiction on a multi-valued relation; both edges stay valid
     closed_reason: str | None = None  # why valid_until was set: superseded | fulfilled
     closed_by: str | None = None  # the fact that closed it
+    belief: float | None = None  # E4: belief that the edge is currently true (None when the belief policy is off)
+    against_count: int = 0  # E4: pieces of against-evidence applied so far
     created_at: datetime = field(default_factory=now)
     last_retrieved_at: datetime | None = None
 

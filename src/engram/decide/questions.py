@@ -257,6 +257,17 @@ def relation_questions(version: int) -> tuple[ChoiceQuestion, ChoiceQuestion]:
     return {1: (RELATION_TO_CANDIDATE_V1, RELATION_RECHECK_V1), 2: (RELATION_TO_CANDIDATE, RELATION_RECHECK)}[version]
 
 
+# E5 (fulfills): asked only for plan/goal candidates. A plan closes as fulfilled at p >= ACT_THRESHOLD.
+PLAN_FULFILLED = NoulQuestion(
+    id="plan_fulfilled",
+    instructions="Does the new fact report that the plan in `existing_fact` has now happened?",
+    true="`new_fact` says the planned or intended thing in `existing_fact` actually took place or was achieved.",
+    false=(
+        "`new_fact` is about something else, only mentions the plan again, adds detail, or reports progress without "
+        "the plan itself having happened."
+    ),
+)
+
 # Read path. State: {"query": "..."}
 
 RELEVANT_TO_QUERY = NoulQuestion(
@@ -295,6 +306,7 @@ ALL_QUESTIONS: dict[str, Question] = {
         EDGE_TYPE,
         DURABILITY,
         SENSITIVITY,
+        PLAN_FULFILLED,
         RELEVANT_TO_QUERY,
         QUERY_RELATION,
         SAME_FACT,

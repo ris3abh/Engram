@@ -198,6 +198,24 @@ attached to the kept fact's audit trail. If this request fails, every fact is wr
 | `worth_remembering` override | extraction sets `user_requested: true` (the speaker explicitly asked to remember it) | the fact is stored regardless of Jev's `worth_remembering`, and not tentative because of it |
 | `redact_credentials` | extraction flags a `secret_value`, **or** Jev's `sensitivity` is `credentials` | the secret is replaced by `(redacted)` in the fact text, its object and the stored message; sensitivity becomes `credentials`. This applies regardless of intent, including `user_requested`. A secret flagged by extraction is removed *before* the Jev request and before anything is stored. |
 
+### `plan_fulfilled__{i}` (Noul, E5 fulfills check)
+
+Asked in one extra request, only for candidates whose relation is `plans` or `goal` or whose temporal status is
+`planned` (`flags.fulfills_rule="question"`). The state is the write path's; the candidate is carried in
+`instructions` as `existing_fact`.
+
+```json
+{"type": "noul",
+ "instructions": {"existing_fact": {"text": "‹Caroline plans to continue her education›", "...": "..."},
+                  "question": "Does the new fact report that the plan in `existing_fact` has now happened?"},
+ "criteria": {"true": "`new_fact` says the planned or intended thing in `existing_fact` actually took place or was achieved.",
+              "false": "`new_fact` is about something else, only mentions the plan again, adds detail, or reports progress without the plan itself having happened."}}
+```
+
+Code rule: noul ≥ `ACT_THRESHOLD` closes the plan with reason `fulfilled`, linked to the new fact, with no text
+merge. Every ask is logged, fired or not. The earlier "relaxed" rule (a plans or goal candidate that Jev did not
+call "new") closed 22 of 25 plans wrongly in E5. It is kept only as `fulfills_rule="relaxed"` so E5 arms reproduce.
+
 ## Read path: one request per query
 
 **State:** `{"query": "‹where does the user live›"}`

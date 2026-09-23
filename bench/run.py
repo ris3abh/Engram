@@ -82,7 +82,7 @@ ARMS: dict[str, dict] = {
         ),
     },
     # E5 arms: relation_to_candidate v2 (negates) and the fulfills rule on top of E2 / E3.
-    "e2_jev_v2": {"system": "engram", "flags": Flags(**E2_FLAGS, relation_version=2, fulfills_rule=True)},
+    "e2_jev_v2": {"system": "engram", "flags": Flags(**E2_FLAGS, relation_version=2, fulfills_rule="relaxed")},
     "e3_structural_v2": {
         "system": "engram",
         "flags": Flags(
@@ -91,7 +91,33 @@ ARMS: dict[str, dict] = {
             close_agreement=True,
             candidate_source="cosine+graph",
             relation_version=2,
-            fulfills_rule=True,
+            fulfills_rule="relaxed",
+        ),
+    },
+    # E3 with the plan_fulfilled question instead of the relaxed fulfills rule.
+    "e3_structural_v3": {
+        "system": "engram",
+        "flags": Flags(
+            **{**E2_FLAGS, "merge_policy": "same_as"},
+            cardinality_rule=True,
+            close_agreement=True,
+            candidate_source="cosine+graph",
+            relation_version=2,
+            fulfills_rule="question",
+        ),
+    },
+    # E4: the belief-state policy on top of e3_structural_v3, plus one hygiene pass after ingestion.
+    "e4_belief": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(
+            **{**E2_FLAGS, "merge_policy": "same_as"},
+            cardinality_rule=True,
+            close_agreement=True,
+            candidate_source="cosine+graph",
+            relation_version=2,
+            fulfills_rule="question",
+            belief=True,
         ),
     },
     # mem0 with the session date passed as its Observation Date (mem0 2.1.0's OSS add() cannot pass one, so the
@@ -217,12 +243,21 @@ class EngramArm:
             "llm_decisions": sum(d.backend == "llm_decider" for d in r.decisions),
         }
 
-    async def memories(self, question: str) -> tuple[list[str], float]:
+    async def memories(
+        self, question: str, top_k: int | None = None, no_dates: bool = False
+    ) -> tuple[list[str], float]:
         from engram.pipeline.answer import render_fact
 
         r = await self.engine.retriever.retrieve(question)
-        show = self.engine.flags.store_source_text
-        return [render_fact(x, show_source=show)[2:] for x in r.facts], r.cost_usd
+        facts = r.facts
+        if no_dates:
+            # Text only: no dates, validity, belief or source. Storage state still decides what is shown: only
+            # currently valid facts (otherwise closes could not matter at all).
+            lines = [x.fact.text for x in facts if x.fact.is_valid]
+        else:
+            show = self.engine.flags.store_source_text
+            lines = [render_fact(x, show_source=show)[2:] for x in facts]
+        return lines[:top_k] if top_k else lines, r.cost_usd
 
     def fact_records(self) -> list[tuple[str, str | None, bool]]:
         return [(f.text, f.source_message_id, f.is_valid) for f in self.engine.store.list_facts()]
@@ -340,9 +375,15 @@ class Mem0Arm:
             "escalations": 0,
         }
 
-    async def memories(self, question: str) -> tuple[list[str], float]:
-        found = await asyncio.to_thread(self.memory.search, question, top_k=20, filters={"user_id": self.user_id})
+    async def memories(
+        self, question: str, top_k: int | None = None, no_dates: bool = False
+    ) -> tuple[list[str], float]:
+        found = await asyncio.to_thread(
+            self.memory.search, question, top_k=top_k or 20, filters={"user_id": self.user_id}
+        )
         items = found.get("results", []) if isinstance(found, dict) else found
+        if no_dates:
+            return [r["memory"] for r in items], 0.0
         return [f"{(r.get('metadata') or {}).get('timestamp', '')}: {r['memory']}" for r in items], 0.0
 
     def fact_records(self) -> list[tuple[str, str | None, bool]]:
@@ -385,7 +426,7 @@ async def claude(client, cache: CallCache, purpose: str, sem: asyncio.Semaphore,
 # ---------------------------------------------------------------- run
 
 
-async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
+async def run_arm(name: str, slice_name: str, budget: Budget, top_k: int | None = None, no_dates: bool = False) -> dict:
     spec = ARMS[name]
     sl = load_slice(slice_name)
     arm_dir = ARMS_DIR / name / slice_name
@@ -402,7 +443,7 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
     speakers = " and ".join(sl["speakers"])
 
     async def one(q: dict) -> dict:
-        lines, retrieve_cost = await system.memories(q["question"])
+        lines, retrieve_cost = await system.memories(q["question"], top_k=top_k, no_dates=no_dates)
         prompt = ANSWER_PROMPT.format(speakers=speakers, memories=json.dumps(lines, indent=4), question=q["question"])
         ans, _ = await claude(
             client,
@@ -441,6 +482,9 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
         }
 
     writes, asked = [], []
+    hygiene, before_hygiene = None, None
+    from engram.embed import SentenceEmbedder
+
     last_of_session = {m["session"]: m["id"] for m in sl["messages"]}
     for n, m in enumerate(sl["messages"], 1):
         writes.append(await system.write(m))
@@ -451,6 +495,16 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
             )
         if m["session"] in sl["checkpoints"] and m["id"] == last_of_session[m["session"]]:
             cp = m["session"]
+            if cp == max(sl["checkpoints"]) and spec.get("hygiene"):
+                from engram.pipeline.hygiene import hygiene_pass
+
+                before_hygiene = update_report(sl, [], system, SentenceEmbedder()) if sl.get("update_items") else None
+                hygiene = await hygiene_pass(system.engine.store, system.engine.backend)
+                print(
+                    f"[{name}/{slice_name}] hygiene: {hygiene.decisions} decisions, {hygiene.merges} merges, "
+                    f"{hygiene.drops} drops, ${hygiene.cost_usd:.4f}, {hygiene.wall_s:.1f} s",
+                    flush=True,
+                )
             size = system.stored()["stored"]
             due = [q for q in sl["questions"] if q["last_evidence_session"] <= cp]
             got = await asyncio.gather(*(one(q) for q in due))
@@ -525,12 +579,21 @@ async def run_arm(name: str, slice_name: str, budget: Budget) -> dict:
         "answers": answers,
         "asked": asked,
     }
+    result["options"] = {"top_k": top_k, "no_dates": no_dates}
+    if hygiene is not None:
+        from dataclasses import asdict as _asdict
+
+        result["hygiene"] = _asdict(hygiene)
+        result["storage_before_hygiene"] = {
+            k: before_hygiene[k] for k in ("storage", "update_behavior") if before_hygiene
+        }
     if sl.get("update_items"):
         result.update(update_report(sl, answers, system, SentenceEmbedder()))
         if spec["system"] == "engram":
             result["fulfills_log"] = system.engine.writer.fulfills_log
     RESULTS.mkdir(parents=True, exist_ok=True)
-    (RESULTS / f"{name}__{slice_name}.json").write_text(json.dumps(result, indent=1, default=str))
+    suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "")
+    (RESULTS / f"{name}__{slice_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))
     return result
 
 
@@ -576,7 +639,35 @@ def update_report(sl: dict, answers: list[dict], system, embedder) -> dict:
             }
         )
 
+    # Storage audit: every closed fact, judged against the expected pairs (update items + LoCoMo superseded labels).
+    from .stale import LABELS
+
+    ok_pairs = {
+        (i["original"]["message_id"], i["update"]["id"]) for i in sl["update_items"] if i["expected"] != "no_close"
+    }
+    ok_pairs |= {(lab["earlier_id"], lab["later_id"]) for lab in json.loads(LABELS.read_text())["items"]}
+    closed = [r for r in records if not r["active"]]
+    audit = Counter()
+    for r in closed:
+        verdict = "correct" if (r["source"], r["closer_source"]) in ok_pairs else "wrong"
+        audit[f"{r['reason'] or 'superseded'}_{verdict}"] += 1
+    stats = getattr(getattr(getattr(system, "engine", None), "writer", None), "stats", {}) or {}
+    storage = {
+        "closes": len(closed),
+        "closes_correct": sum(v for k, v in audit.items() if k.endswith("_correct")),
+        "closes_wrong": sum(v for k, v in audit.items() if k.endswith("_wrong")),
+        "closes_by_reason": dict(audit),
+        "reopens": stats.get("reopens", 0),
+        "disputed": sum(1 for f in getattr(system, "engine", None).store.list_facts() if f.disputed)
+        if hasattr(system, "engine")
+        else 0,
+        "against_blocked": stats.get("against_blocked", 0),
+        "against_unconfirmed": stats.get("against_unconfirmed", 0),
+        "plan_fulfilled_asks": stats.get("plan_fulfilled_asks", 0),
+    }
+
     def acc(rows):
+        rows = [r for r in rows if r.get("label")]
         return statistics.fmean(r["label"] == "CORRECT" for r in rows) if rows else None
 
     tiers = {t: [i for i in items if i["tier"] == t] for t in ("easy", "subtle", "fulfilled")}
@@ -594,6 +685,7 @@ def update_report(sl: dict, answers: list[dict], system, embedder) -> dict:
         "update_behavior": dict(Counter(i["behavior"] for i in items)),
         "stale_on_close_items": (sum(i["behavior"] == "stale" for i in stored_close), len(stored_close)),
         "over_close_on_no_close_items": (sum(i["behavior"] == "over_closed" for i in stored_keep), len(stored_keep)),
+        "storage": storage,
     }
 
 
@@ -733,14 +825,17 @@ async def main() -> None:
     parser.add_argument("--arm", choices=list(ARMS))
     parser.add_argument("--slice", choices=list(SLICES), default="dev")
     parser.add_argument("--report", nargs="*", help="print the table for these arms from bench/results")
+    parser.add_argument("--top-k", type=int, default=None, help="answer from only the top k memories")
+    parser.add_argument("--no-dates", action="store_true", help="answer from memory text only")
+    parser.add_argument("--suffix", default="", help="with --report: result-file suffix, e.g. __k3 or __nodates")
     args = parser.parse_args()
     if args.report is not None:
-        print(table([json.loads((RESULTS / f"{a}__{args.slice}.json").read_text()) for a in args.report]))
+        print(table([json.loads((RESULTS / f"{a}__{args.slice}{args.suffix}.json").read_text()) for a in args.report]))
         return
     budget = Budget(run_limit=RUN_LIMIT, total_limit=PHASE_LIMIT, prior_total=prior_spend())
     started = time.time()
     try:
-        result = await run_arm(args.arm, args.slice, budget)
+        result = await run_arm(args.arm, args.slice, budget, top_k=args.top_k, no_dates=args.no_dates)
     finally:
         LEDGER.parent.mkdir(parents=True, exist_ok=True)
         with LEDGER.open("a") as f:
