@@ -109,13 +109,13 @@ def relation(new: dict[str, Any], old: dict[str, Any]) -> str:
         other = old["text"] if new_edge == "follows_diet" else new["text"]
         if re.search(_MEAT, other, re.I):
             return "contradiction"
-    if pair == {"prefers", "dislikes"} and tokens(new["object"]) & tokens(old["object"]):
+    if pair == {"prefers", "dislikes"} and tokens(new.get("object", "")) & tokens(old.get("object", "")):
         return "contradiction"
     if new.get("temporal_status", "current") != "current" and old.get("temporal_status", "current") == "current":
         return "new"
     if new_edge != old_edge:
         return "new"
-    new_obj, old_obj = tokens(new["object"]), tokens(old["object"])
+    new_obj, old_obj = tokens(new.get("object", new["text"])), tokens(old.get("object", old["text"]))
     if new_obj == old_obj:
         return "duplicate"
     if old_obj and old_obj < new_obj:

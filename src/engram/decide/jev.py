@@ -89,10 +89,7 @@ class JevBackend(DecisionBackend):
     async def _ask(self, state: State, asks: list[Ask]) -> dict[str, Decision]:
         if not asks:
             return {}
-        body = self.request_body(state, asks)
-        started = time.perf_counter()
-        result = await self._post(body)
-        latency_ms = (time.perf_counter() - started) * 1000
+        result, latency_ms = await self._post(self.request_body(state, asks))
         answers = result.get("answers") or {}
         tokens = (result.get("usage") or {}).get("input_tokens", 0)
         share = tokens * config.JEV_PRICE_PER_INPUT_TOKEN / len(asks)
@@ -112,10 +109,14 @@ class JevBackend(DecisionBackend):
             )
         return decisions
 
-    async def _post(self, body: dict[str, Any]) -> dict[str, Any]:
+    async def _post(self, body: dict[str, Any]) -> tuple[dict[str, Any], float]:
+        """Returns (response json, latency in ms). Latency starts after the first rate-limiter wait, so it measures
+        the API (including retries and backoff), not local queueing."""
         last_error = "no attempt made"
+        started = None
         for attempt in range(self.attempts):
             await self.limiter.wait()
+            started = started or time.perf_counter()
             try:
                 response = await self._client().post(self.url, json=body)
             except httpx.TimeoutException:
@@ -132,7 +133,7 @@ class JevBackend(DecisionBackend):
                     # 401/422 and other client errors are bugs or bad keys; retrying will not help.
                     raise DecisionError(f"HTTP {response.status_code}: {response.text[:300]}")
                 try:
-                    return response.json()
+                    return response.json(), (time.perf_counter() - started) * 1000
                 except ValueError:
                     raise DecisionError("Jev returned a non-JSON body") from None
             if attempt < self.attempts - 1:
