@@ -154,6 +154,8 @@ const api = async (method, path, body) => {
 const ms = (x) => x >= 1000 ? `${(x / 1000).toFixed(1)} s` : `${Math.round(x)} ms`;
 const usd = (x) => x < 0.01 ? `$${x.toFixed(5)}` : `$${x.toFixed(3)}`;
 const day = (iso) => iso ? iso.slice(0, 10) : "now";
+// "known since" when the message gave no date: valid_from is then only when engram learned the fact
+const span = (f) => `${f.valid_from_stated ? "" : "known since "}${day(f.valid_from)} → ${day(f.valid_until)}`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
 /* ---------------- chat ---------------- */
@@ -311,7 +313,7 @@ async function showTip(event, d) {
   const rows = [...rest, ...rel].map((x) => `<tr><td>${esc(x.question)}</td><td>${esc(x.chosen)}</td><td class="num">${x.backend === "rule" ? "rule" : x.p.toFixed(2)}</td><td class="dim">${esc(x.backend)}${x.backend === "jev" ? ` · ${ms(x.latency_ms)}` : ""}${x.note && x.backend === "rule" ? ` · ${esc(x.note)}` : ""}</td></tr>`).join("");
   const nRel = f.decisions.filter((x) => x.question === "relation_to_candidate").length;
   tip.innerHTML = `<h4>${esc(f.text)}</h4>
-    <div class="dim">${esc(f.source)} —${esc(f.predicate)}→ ${esc(f.target)} · confidence ${f.confidence.toFixed(2)} · ${f.valid ? "valid" : "no longer true"} ${day(f.valid_from)} → ${day(f.valid_until)}${f.tentative ? " · tentative" : ""}${f.redacted ? " · redacted" : ""}</div>
+    <div class="dim">${esc(f.source)} —${esc(f.predicate)}→ ${esc(f.target)} · confidence ${f.confidence.toFixed(2)} · ${f.valid ? "valid" : "no longer true"} · ${span(f)}${f.tentative ? " · tentative" : ""}${f.redacted ? " · redacted" : ""}</div>
     <table>${rows}</table>
     <div class="dim" style="margin-top:4px">${nRel} candidate comparisons, top ${rel.length} shown · ${f.provenance.length} source message(s)</div>`;
 }
@@ -334,7 +336,7 @@ async function refreshAudit() {
   $("del").disabled = !(sens || kind) || !a.facts.length;
   if (!a.facts.length) { $("facts").innerHTML = `<div class="empty">No facts${sens || kind ? " match this filter" : " yet"}.</div>`; return; }
   $("facts").innerHTML = `<table class="facts"><thead><tr><th>fact</th><th>edge</th><th>kind</th><th>sensitivity</th><th>conf.</th><th>valid</th></tr></thead><tbody>${
-    a.facts.slice().reverse().map((f) => `<tr class="${f.valid ? "" : "expired"}"><td class="text">${f.redacted ? '<span class="badge redacted">redacted</span>' : ""}${f.tentative && f.valid ? '<span class="badge tentative">tentative</span>' : ""}${f.valid ? "" : '<span class="badge expired">no longer true</span>'}${esc(f.text)}</td><td>${esc(f.predicate)}</td><td>${esc(f.kind)}</td><td>${esc(f.sensitivity)}</td><td>${f.confidence.toFixed(2)}</td><td>${day(f.valid_from)} → ${day(f.valid_until)}</td></tr>`).join("")
+    a.facts.slice().reverse().map((f) => `<tr class="${f.valid ? "" : "expired"}"><td class="text">${f.redacted ? '<span class="badge redacted">redacted</span>' : ""}${f.tentative && f.valid ? '<span class="badge tentative">tentative</span>' : ""}${f.valid ? "" : '<span class="badge expired">no longer true</span>'}${esc(f.text)}</td><td>${esc(f.predicate)}</td><td>${esc(f.kind)}</td><td>${esc(f.sensitivity)}</td><td>${f.confidence.toFixed(2)}</td><td>${span(f)}</td></tr>`).join("")
   }</tbody></table>`;
 }
 $("f-sens").addEventListener("change", () => { resetConfirm(); refreshAudit(); });

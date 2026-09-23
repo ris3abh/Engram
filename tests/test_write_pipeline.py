@@ -225,3 +225,21 @@ async def test_timing_and_cost_split(pipe):
     result = await pipe.ingest("I'm allergic to peanuts")
     assert result.latency_ms >= result.extract_ms + result.decide_ms - 1
     assert result.extract_cost == 0.0 and result.decision_cost == 0.0  # mock and fake LLM are free
+
+
+async def test_valid_from_stated_only_when_the_message_gave_a_date(store):
+    from datetime import UTC, datetime
+
+    script = {
+        "I moved to Berlin in May": [
+            ExtractedFact(
+                "User moved to Berlin", "User", "Berlin", "lives_in", valid_from=datetime(2026, 5, 1, tzinfo=UTC)
+            )
+        ],
+        "I like jazz": [xf("User likes jazz", "jazz", "prefers")],
+    }
+    pipe = WritePipeline(store, MockBackend(), ScriptedLLM(script), HashEmbedder())
+    dated = (await pipe.ingest("I moved to Berlin in May")).outcomes[0]
+    undated = (await pipe.ingest("I like jazz")).outcomes[0]
+    assert store.get_fact(dated.fact_id).valid_from_stated is True
+    assert store.get_fact(undated.fact_id).valid_from_stated is False

@@ -94,6 +94,7 @@ class Fact:
     tentative: bool = False
     temporal_status: str = "current"
     refines: str | None = None  # id of the fact this one refines
+    valid_from_stated: bool = False  # True if the message gave a date; else valid_from is just when we learned it
     created_at: datetime = field(default_factory=now)
     last_retrieved_at: datetime | None = None
 

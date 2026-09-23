@@ -1,8 +1,10 @@
-"""Read path: embeddings shortlist -> one Jev rerank request -> history chain -> one-hop graph expansion.
+"""Read path: embeddings shortlist -> one Jev request -> relation pull -> history chain -> one-hop expansion.
 
-Expired facts stay in the shortlist, and every kept fact brings the chain of facts it superseded (same subject
-and predicate, linked by valid_until), so "what was it before?" works without Jev comparing dates. The answer
-step sees each fact's validity window.
+The single Jev request scores every shortlisted fact (`relevant_to_query`) and classifies the query itself
+(`query_relation`). If the query clearly asks about one relation (p >= ACT_THRESHOLD), the currently valid facts
+with that predicate are added to the kept facts (a union, never a replacement). Every fact in that union brings
+the chain of facts it superseded (same subject and predicate, linked by valid_until), so "what was it before?"
+works without Jev comparing dates. The answer step sees each fact's validity window.
 """
 
 import asyncio
@@ -11,12 +13,13 @@ from dataclasses import dataclass, field
 
 from .. import config
 from ..decide.base import DecisionBackend, DecisionError
-from ..decide.questions import RELEVANT_TO_QUERY, Ask
+from ..decide.questions import QUERY_RELATION, RELEVANT_TO_QUERY, Ask
 from ..embed import Embedder, top_k
 from ..models import Decision, Fact
 from ..store import Store
 
 MAX_EXPANDED = 15
+MAX_RELATION_PULL = 10
 HUB_DEGREE = 25  # do not expand through nodes this connected (usually the user node)
 
 
@@ -24,7 +27,7 @@ HUB_DEGREE = 25  # do not expand through nodes this connected (usually the user 
 class RetrievedFact:
     fact: Fact
     relevance: float | None  # Jev's P(relevant); None for facts added by expansion
-    source: str  # rerank (kept by Jev) | history (superseded by a kept fact) | neighbor (one graph hop)
+    source: str  # rerank (kept by Jev) | relation (pulled by query_relation) | history | neighbor
 
 
 @dataclass
@@ -35,6 +38,7 @@ class Retrieval:
     latency_ms: float = 0.0
     shortlist: int = 0
     degraded: str | None = None  # set when Jev failed and cosine order was used instead
+    query_relation: str | None = None  # the relation pulled on, if query_relation cleared the threshold
 
     @property
     def cost_usd(self) -> float:
@@ -53,31 +57,55 @@ class Retriever:
         if not ids:
             return Retrieval(query, [])
         vector = (await asyncio.to_thread(self.embedder.embed, [query]))[0]
-        hits = top_k(vector, ids, matrix, k)
-        shortlist = [f for f in (self.store.get_fact(i, with_decisions=False) for i, _ in hits) if f]
+        order = top_k(vector, ids, matrix, len(ids))  # full cosine order; the shortlist is its head
+        rank = {fact_id: i for i, (fact_id, _) in enumerate(order)}
+        shortlist = [f for f in (self.store.get_fact(i, with_decisions=False) for i, _ in order[:k]) if f]
         asks = [
             Ask(f"relevant_to_query__{i}", RELEVANT_TO_QUERY, {"memory": _memory(f)}, target=f.id)
             for i, f in enumerate(shortlist)
         ]
-        degraded = None
+        asks.append(Ask("query_relation", QUERY_RELATION))
+        degraded, relation = None, None
         try:
             d = await self.backend.ask({"query": query}, asks)
-            scored = [(f, d[a.key].probs["yes"], d[a.key]) for f, a in zip(shortlist, asks, strict=True)]
             decisions = list(d.values())
             kept = sorted(
-                ((f, p) for f, p, dec in scored if dec.backend != "fallback" and p > config.RELEVANCE_THRESHOLD),
+                (
+                    (f, d[a.key].probs["yes"])
+                    for f, a in zip(shortlist, asks, strict=False)
+                    if d[a.key].backend != "fallback" and d[a.key].probs["yes"] > config.RELEVANCE_THRESHOLD
+                ),
                 key=lambda x: -x[1],
             )
+            qr = d["query_relation"]
+            if qr.backend != "fallback" and qr.chosen != "none" and qr.p >= config.ACT_THRESHOLD:
+                relation = qr.chosen
         except DecisionError as e:
             # Never fail a read: fall back to the top 10 by cosine, unscored.
             degraded, decisions = str(e), []
             kept = [(f, None) for f in shortlist[:10]]
 
         results = [RetrievedFact(f, p, "rerank") for f, p in kept]
-        results += self._history([f for f, _ in kept])
+        if relation:
+            results += self._pull(relation, {r.fact.id for r in results}, rank)
+        results += self._history([r.fact for r in results])
         results += self._expand([f for f, _ in kept], {r.fact.id for r in results})
         self.store.mark_retrieved(r.fact.id for r in results if r.source != "neighbor")
-        return Retrieval(query, results, decisions, (time.perf_counter() - started) * 1000, len(shortlist), degraded)
+        return Retrieval(
+            query,
+            results,
+            decisions,
+            (time.perf_counter() - started) * 1000,
+            len(shortlist),
+            degraded,
+            relation,
+        )
+
+    def _pull(self, relation: str, seen: set[str], rank: dict[str, int]) -> list[RetrievedFact]:
+        """Currently valid facts with the queried predicate, closest to the query first."""
+        facts = [f for f in self.store.list_facts(valid_only=True) if f.predicate == relation and f.id not in seen]
+        facts.sort(key=lambda f: rank.get(f.id, len(rank)))
+        return [RetrievedFact(f, None, "relation") for f in facts[:MAX_RELATION_PULL]]
 
     def _history(self, hits: list[Fact]) -> list[RetrievedFact]:
         seen = {f.id for f in hits}

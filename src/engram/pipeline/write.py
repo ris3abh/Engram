@@ -374,6 +374,7 @@ class WritePipeline:
             source_message_id=message.id,
             decisions=decisions,
             temporal_status=temporal_status,
+            valid_from_stated=draft.valid_from is not None,
         )
 
     def _fallback(self, message: Message, draft: ExtractedFact, vector, asks: list[Ask], error: str) -> WriteOutcome:
@@ -403,6 +404,7 @@ class WritePipeline:
             source_message_id=message.id,
             decisions=decisions,
             tentative=True,
+            valid_from_stated=draft.valid_from is not None,
         )
         redacted = self._apply_credentials_rule(fact, draft, message, fact.decisions)
         self.store.add_fact(fact, vector)

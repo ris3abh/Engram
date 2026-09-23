@@ -83,3 +83,18 @@ def test_messages_and_file_store(tmp_path):
     s.add_message(Message("m1", "hello"))
     assert s.get_message("m1").text == "hello"
     s.close()
+
+
+def test_migration_adds_valid_from_stated(tmp_path):
+    import sqlite3
+
+    path = tmp_path / "old.db"
+    Store(path).close()
+    db = sqlite3.connect(path)  # simulate a database created before the column existed
+    db.execute("ALTER TABLE facts DROP COLUMN valid_from_stated")
+    db.commit()
+    db.close()
+    s = Store(path)
+    s.add_fact(make_fact())
+    assert s.list_facts()[0].valid_from_stated is False
+    s.close()

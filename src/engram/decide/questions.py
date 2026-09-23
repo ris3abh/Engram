@@ -198,6 +198,15 @@ RELEVANT_TO_QUERY = NoulQuestion(
     false="It is off-topic or only shares a keyword.",
 )
 
+QUERY_RELATION = ChoiceQuestion(
+    id="query_relation",
+    instructions="Which relation about a person is `query` asking about?",
+    criteria={
+        **{k: v for k, v in EDGE_TYPES.items() if k != "related_to"},
+        "none": "The query does not ask about one of these relations of a person (for example general knowledge).",
+    },
+)
+
 # Hygiene. State: {"subject": "..."}
 
 SAME_FACT = NoulQuestion(
@@ -218,6 +227,7 @@ ALL_QUESTIONS: dict[str, Question] = {
         DURABILITY,
         SENSITIVITY,
         RELEVANT_TO_QUERY,
+        QUERY_RELATION,
         SAME_FACT,
     )
 }

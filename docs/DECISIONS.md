@@ -179,7 +179,46 @@ attached to the kept fact's audit trail. If this request fails, every fact is wr
 
 Keep a fact if its noul is above 0.5. Sort the kept facts by noul.
 
-**History expansion (code, no Jev call).** For every kept fact, retrieval also returns the chain of facts it
+### `query_relation` (Choice, 25 options, in the same request as the relevance nouls)
+
+Instructions: "Which relation about a person is `query` asking about?" The options are the `edge_type` set,
+with the `related_to` fallback replaced by `none`:
+
+| option | rubric |
+|---|---|
+| `lives_in` | Current or past place of residence. |
+| `born_in` | Place of birth or origin. |
+| `works_at` | Employer or workplace. |
+| `has_role` | Job title, profession, or role. |
+| `studies_at` | School, university, or course of study. |
+| `member_of` | A club, team, community, or group. |
+| `married_to` | Spouse. |
+| `partner_of` | Romantic partner who is not a spouse. |
+| `family_of` | Parent, child, sibling, or other relative. |
+| `friend_of` | Friend. |
+| `colleague_of` | Coworker, manager, or report. |
+| `owns` | Possesses an object, pet, vehicle, or property. |
+| `uses` | Uses a tool, product, app, or service. |
+| `prefers` | Likes or favors something. |
+| `dislikes` | Dislikes or avoids something. |
+| `allergic_to` | Allergy or intolerance. |
+| `has_condition` | Health condition, injury, or medication. |
+| `follows_diet` | Dietary pattern (vegetarian, keto, halal, ...). |
+| `hobby` | A leisure activity. |
+| `habit` | A recurring routine. |
+| `goal` | Something the subject aims to achieve. |
+| `plans` | A scheduled or intended future action or event. |
+| `attended` | A past event, trip, or visit. |
+| `speaks` | A language. |
+| `none` | The query does not ask about one of these relations of a person (for example general knowledge). |
+
+Code rule (**relation pull**): only if the answer is not `none` and p ≥ `ACT_THRESHOLD`, retrieval adds the
+currently valid facts with that predicate (up to 10, in cosine order). These are added to the facts Jev kept
+from the cosine shortlist; they never replace them. History expansion then runs on the combined set. This
+handles "where did the user live before Berlin": the query maps to `lives_in`, which pulls the current
+`lives_in` fact, and history expansion adds what it replaced. Jev never has to compare dates.
+
+**History expansion (code, no Jev call).** For every kept or relation-pulled fact, retrieval also returns the chain of facts it
 superseded: same subject and predicate, walking back through `valid_until`. Each predecessor's `valid_until`
 must be at or before its successor's `valid_from` (one day of tolerance). The chain is capped at 5. This
 answers "what was it before" without asking Jev to compare dates, which it is weak at. A briefly tried

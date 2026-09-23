@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS facts (
     tentative INTEGER NOT NULL DEFAULT 0,
     temporal_status TEXT NOT NULL DEFAULT 'current',
     refines TEXT,
+    valid_from_stated INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL,
     last_retrieved_at TEXT,
     embedding BLOB
@@ -71,7 +72,7 @@ CREATE INDEX IF NOT EXISTS decisions_fact ON decisions(fact_id);
 
 _FACT_COLUMNS = (
     "id, text, subject, predicate, object, kind, durability, sensitivity, confidence, valid_from, valid_until, "
-    "source_message_id, tentative, temporal_status, refines, created_at, last_retrieved_at"
+    "source_message_id, tentative, temporal_status, refines, valid_from_stated, created_at, last_retrieved_at"
 )
 
 
@@ -92,7 +93,15 @@ class Store:
         self._db.execute("PRAGMA foreign_keys = ON")
         self._db.execute("PRAGMA journal_mode = WAL")
         self._db.executescript(SCHEMA)
+        self._migrate()
         self._lock = threading.RLock()
+
+    def _migrate(self) -> None:
+        """Add columns introduced after a database was created."""
+        columns = {r["name"] for r in self._db.execute("PRAGMA table_info(facts)")}
+        if "valid_from_stated" not in columns:
+            self._db.execute("ALTER TABLE facts ADD COLUMN valid_from_stated INTEGER NOT NULL DEFAULT 0")
+            self._db.commit()
 
     def close(self) -> None:
         self._db.close()
@@ -143,7 +152,7 @@ class Store:
                 self._db.execute("INSERT OR IGNORE INTO entities VALUES (?, ?)", (normalize_entity(label), label))
             fact.subject, fact.object = normalize_entity(fact.subject), normalize_entity(fact.object)
             self._db.execute(
-                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 18)})",
+                f"INSERT INTO facts ({_FACT_COLUMNS}, embedding) VALUES ({', '.join('?' * 19)})",
                 (
                     fact.id,
                     fact.text,
@@ -160,6 +169,7 @@ class Store:
                     int(fact.tentative),
                     fact.temporal_status,
                     fact.refines,
+                    int(fact.valid_from_stated),
                     _ts(fact.created_at),
                     _ts(fact.last_retrieved_at),
                     _blob(embedding),
@@ -370,6 +380,7 @@ def _fact(row: sqlite3.Row) -> Fact:
         tentative=bool(row["tentative"]),
         temporal_status=row["temporal_status"],
         refines=row["refines"],
+        valid_from_stated=bool(row["valid_from_stated"]),
         created_at=_dt(row["created_at"]),
         last_retrieved_at=_dt(row["last_retrieved_at"]),
     )

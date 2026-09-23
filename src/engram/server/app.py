@@ -100,6 +100,7 @@ def fact_json(f: Fact, redacted: set[str] | None = None) -> dict:
         "sensitivity": f.sensitivity,
         "confidence": f.confidence,
         "valid_from": f.valid_from.isoformat(),
+        "valid_from_stated": f.valid_from_stated,
         "valid_until": f.valid_until.isoformat() if f.valid_until else None,
         "valid": f.is_valid,
         "tentative": f.tentative,

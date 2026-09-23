@@ -36,7 +36,7 @@ async def test_reranks_keeps_expired_and_marks_retrieved(store):
     hits = [x for x in r.facts if x.source == "rerank"]
     assert {x.fact.id for x in hits} == {paris.id, berlin.id}
     assert all(x.relevance > 0.5 for x in hits)
-    assert r.shortlist == 5 and len(r.decisions) == 5
+    assert r.shortlist == 5 and len(r.decisions) == 6  # 5 relevance nouls + query_relation
     assert store.get_fact(berlin.id).last_retrieved_at is not None
     text = render(r)
     assert "no longer true" in text and "User lives in Berlin" in text and "confidence 0.90" in text
@@ -92,3 +92,49 @@ async def test_history_chain_follows_valid_until(store):
     assert by_source[berlin.id] == "rerank"
     assert by_source[paris.id] == "history" and by_source[lisbon.id] == "history"
     assert "earlier value, replaced" in render(r)
+
+
+class Literal(MockBackend):
+    """Jev as seen live on "before Berlin": nothing clears relevance, but the query relation is clear."""
+
+    def __init__(self, relation):
+        super().__init__()
+        self.relation = relation
+
+    def _decide(self, state, ask, request_id):
+        d = super()._decide(state, ask, request_id)
+        if ask.question.id == "relevant_to_query":
+            d.probs, d.chosen = {"yes": 0.2, "no": 0.8}, "no"
+        if ask.question.id == "query_relation":
+            d.probs = {o: (0.9 if o == self.relation else 0.1 / 24) for o in d.options}
+            d.chosen = self.relation
+        return d
+
+
+async def test_relation_pull_then_history(store):
+    paris, berlin, *_ = seed(store)
+    store.expire_fact(paris.id)  # already expired in seed; no-op, kept for clarity
+    r = await Retriever(store, Literal("lives_in"), HashEmbedder()).retrieve("where did the user live before Berlin")
+    by_source = {x.fact.id: x.source for x in r.facts}
+    assert r.query_relation == "lives_in"
+    assert by_source[berlin.id] == "relation"  # current lives_in fact, pulled
+    assert by_source[paris.id] == "history"  # what it replaced
+
+
+async def test_relation_none_pulls_nothing(store):
+    seed(store)
+    r = await Retriever(store, Literal("none"), HashEmbedder()).retrieve("what is the capital of France")
+    assert r.query_relation is None and r.facts == []
+
+
+async def test_relation_below_threshold_ignored(store):
+    class Unsure(Literal):
+        def _decide(self, state, ask, request_id):
+            d = super()._decide(state, ask, request_id)
+            if ask.question.id == "query_relation":
+                d.probs = {o: (0.7 if o == "lives_in" else 0.3 / 24) for o in d.options}
+            return d
+
+    seed(store)
+    r = await Retriever(store, Unsure("lives_in"), HashEmbedder()).retrieve("where did the user live before Berlin")
+    assert r.query_relation is None and r.facts == []
