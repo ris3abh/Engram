@@ -70,7 +70,7 @@ In current open-source systems both parts are LLM calls. mem0 2.1.0's default \t
 \item Under a three-memory budget a listwise Jev rerank puts engram +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points ahead of mem0 at matched context on 610\src{bench/results/heldout\_report.json} held-out questions, and the systems tie at k=20 (\cref{sec:5.2}).
 \item Closing stale facts does not change answers on current benchmarks, and a zero-shot base checkpoint of an open-weights decision model does not make the relational decisions (\cref{sec:5.5}, \cref{sec:5.6}).
 \end{enumerate}
-\textbf{Scope.} We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development conversation and four held-out conversations). We use update sets written by the system's author, and one hosted decision model (Jev, \texttt{jev-1.13.0}).
+\textbf{Scope.} We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development conversation and four held-out conversations, scoring four of its five question categories; adversarial is excluded, following mem0's evaluation protocol). We use update sets written by the system's author, and one hosted decision model (Jev, \texttt{jev-1.13.0}).
 
 We did not test:
 
@@ -103,7 +103,7 @@ It returns a probability distribution per question.
 \textbf{Laya.} Laya is an open-weights model with the same request format. We ran checkpoint convaiinnovations/laya\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} locally through the laya-mlx port on an Apple M2 Pro\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} with 32\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} GB. It reads at most 512\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} tokens per question, of which at most 192\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} go to the instructions and options. This is the 421M\src{convai2026laya (model card)} base checkpoint. Its model card reports zero-shot typed-decision accuracy of 0.362\src{convai2026laya (base checkpoint, typed-decisions, zero-shot)} against a 0.318\src{convai2026laya (random baseline)} random baseline, calls it ``a fast base to specialise, not a zero-shot decision engine,'' and offers a separate checkpoint fine-tuned for typed decisions \citep{convai2026laya}. We used the base checkpoint zero-shot.
 
 \subsection{LoCoMo and its limits}\label{sec:2.3}
-LoCoMo \citep{maharana2024locomo} contains long multi-session conversations with questions in four scored categories.
+LoCoMo \citep{maharana2024locomo} contains long multi-session conversations with questions in five categories, of which we score four (adversarial is excluded, following mem0's evaluation protocol; \cref{sec:4.1}).
 
 \textbf{It barely tests updates.} In the first 215\src{bench/results/e2\_jev\_\_stress.json} messages of conv-26, an LLM labeler (claude-sonnet-4-6, prompt in \texttt{bench/stale.py}) found 2\src{bench/results/e0\_baseline\_\_stress.json} claims that a later message makes no longer true (\texttt{bench/slices/conv26\_\allowbreak{}superseded.json}).
 
@@ -233,7 +233,7 @@ where $\varepsilon_J(\theta)$ is Jev's error rate on the decisions it keeps and 
 \item \emph{stress}: conv-26 sessions 1--10, 215\src{bench/results/e2\_jev\_\_stress.json} messages, 80\src{bench/results/e2\_jev\_\_stress.json} questions.
 \item \emph{held-out}: conv-30, conv-41, conv-42 and conv-43 whole, 610\src{bench/results/heldout\_report.json} questions. These were not used during development. The system configuration was frozen (git tag \texttt{e4-frozen}) before any held-out run.
 \end{itemize}
-LoCoMo's adversarial category is excluded throughout. Each held-out conversation is ingested once per system, and k=3 and k=20 are answered from the same store.
+LoCoMo's questions fall in five categories, of which we score four (adversarial is excluded, following mem0's evaluation protocol). Each held-out conversation is ingested once per system, and k=3 and k=20 are answered from the same store.
 
 \textbf{Caching and budget.} Every LLM and Jev call is cached by its full request, and budget guards stop any run past a spending limit. Phase 2 (all experiments reported here) spent \$93.26\src{bench/results/phase2\_spend.jsonl} over 80\src{bench/results/phase2\_spend.jsonl} ledgered runs. Jev accounts for \$1.47\src{bench/results/phase2\_spend.jsonl} of it (\texttt{bench/results/phase2\_\allowbreak{}spend.jsonl}; per-arm totals in \hyperref[app:E]{Appendix~E}). The build phase was not ledgered; roughly \$10 by the author's estimate.
 

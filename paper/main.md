@@ -64,7 +64,8 @@ drives, the rerank effect on answers with a matched-context control, and the neg
    open-weights decision model does not make the relational decisions (§5.5, §5.6).
 
 **Scope.** We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development
-conversation and four held-out conversations). We use update sets written by the system's author, and one hosted
+conversation and four held-out conversations, scoring four of its five question categories; adversarial is
+excluded, following mem0's evaluation protocol). We use update sets written by the system's author, and one hosted
 decision model (Jev, `jev-1.13.0`).
 
 We did not test:
@@ -109,8 +110,8 @@ checkpoint fine-tuned for typed decisions [convai2026laya]. We used the base che
 
 ### 2.3 LoCoMo and its limits
 
-LoCoMo [maharana2024locomo] contains long multi-session conversations with questions in four scored
-categories.
+LoCoMo [maharana2024locomo] contains long multi-session conversations with questions in five categories, of which we score four
+(adversarial is excluded, following mem0's evaluation protocol; §4.1).
 
 **It barely tests updates.** In the first 215<!-- src: bench/results/e2_jev__stress.json --> messages of conv-26, an LLM labeler (claude-sonnet-4-6,
 prompt in `bench/stale.py`) found 2<!-- src: bench/results/e0_baseline__stress.json --> claims that a later message makes no longer true
@@ -269,7 +270,8 @@ rate on the escalated ones. §5.4 draws the empirical curves of (Eq. cost, Eq. e
 - *held-out*: conv-30, conv-41, conv-42 and conv-43 whole, 610<!-- src: bench/results/heldout_report.json --> questions. These were not used during
   development. The system configuration was frozen (git tag `e4-frozen`) before any held-out run.
 
-LoCoMo's adversarial category is excluded throughout. Each held-out conversation is ingested once per system, and
+LoCoMo's questions fall in five categories, of which we score four (adversarial is excluded, following mem0's
+evaluation protocol). Each held-out conversation is ingested once per system, and
 k=3 and k=20 are answered from the same store.
 
 **Caching and budget.** Every LLM and Jev call is cached by its full request, and budget guards stop any run past
