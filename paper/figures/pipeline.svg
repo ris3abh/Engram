@@ -1,69 +1,141 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="330" viewBox="0 0 760 330" font-family="Helvetica, Arial, sans-serif" font-size="11">
-  <rect width="100%" height="100%" fill="white"/>
-  <defs>
-    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-      <path d="M0,0 L10,5 L0,10 z" fill="#444"/>
-    </marker>
-  </defs>
-  <style>
-    .llm { fill: #fde8d7; stroke: #c9752b; }
-    .jev { fill: #dde9f7; stroke: #3b6fb6; }
-    .store { fill: #e5f2e1; stroke: #4a8a3c; }
-    .code { fill: #f1f1f1; stroke: #888; }
-    .t { font-weight: bold; }
-    line, path.f { stroke: #444; stroke-width: 1.2; fill: none; }
-  </style>
-  <text x="20" y="22" class="t" font-size="13">Write path</text>
-  <rect x="20" y="36" width="110" height="52" rx="6" class="code"/>
-  <text x="75" y="58" text-anchor="middle" class="t">message</text>
-  <text x="75" y="74" text-anchor="middle">+ last 10 messages</text>
-  <rect x="160" y="36" width="130" height="52" rx="6" class="llm"/>
-  <text x="225" y="58" text-anchor="middle" class="t">extraction (LLM)</text>
-  <text x="225" y="74" text-anchor="middle">facts, dates, source quote</text>
-  <rect x="320" y="30" width="220" height="64" rx="6" class="jev"/>
-  <text x="430" y="50" text-anchor="middle" class="t">decision chain (Jev)</text>
-  <text x="430" y="66" text-anchor="middle">worth · kind · temporal · relation ×10</text>
-  <text x="430" y="81" text-anchor="middle">edge type · durability · sensitivity · fulfilled</text>
-  <rect x="570" y="30" width="170" height="64" rx="6" class="code"/>
-  <text x="655" y="50" text-anchor="middle" class="t">policy + belief state</text>
-  <text x="655" y="66" text-anchor="middle">gates, cardinality, recheck,</text>
-  <text x="655" y="81" text-anchor="middle">log-odds belief, close/reopen</text>
-  <line x1="130" y1="62" x2="158" y2="62" marker-end="url(#a)"/>
-  <line x1="290" y1="62" x2="318" y2="62" marker-end="url(#a)"/>
-  <line x1="540" y1="62" x2="568" y2="62" marker-end="url(#a)"/>
-  <text x="430" y="110" text-anchor="middle" fill="#c9752b">relation p &lt; 0.6 on a superseding label → LLM escalation</text>
-  <rect x="250" y="130" width="260" height="60" rx="6" class="store"/>
-  <text x="380" y="152" text-anchor="middle" class="t">graph store (SQLite + NetworkX)</text>
-  <text x="380" y="168" text-anchor="middle">facts as edges with validity windows,</text>
-  <text x="380" y="182" text-anchor="middle">belief, same_as links, decision audit trail</text>
-  <path class="f" d="M655,94 C655,150 560,160 512,160" marker-end="url(#a)"/>
-  <rect x="560" y="140" width="180" height="46" rx="6" class="jev"/>
-  <text x="650" y="160" text-anchor="middle" class="t">hygiene pass (Jev)</text>
-  <text x="650" y="176" text-anchor="middle">same_fact over groups, 50/request</text>
-  <line x1="560" y1="170" x2="512" y2="170" marker-end="url(#a)"/>
-  <text x="20" y="222" class="t" font-size="13">Read path</text>
-  <rect x="20" y="236" width="100" height="52" rx="6" class="code"/>
-  <text x="70" y="266" text-anchor="middle" class="t">question</text>
-  <rect x="145" y="236" width="120" height="52" rx="6" class="code"/>
-  <text x="205" y="258" text-anchor="middle" class="t">embeddings</text>
-  <text x="205" y="274" text-anchor="middle">cosine top-k + floor</text>
-  <rect x="290" y="230" width="150" height="64" rx="6" class="jev"/>
-  <text x="365" y="250" text-anchor="middle" class="t">listwise rerank (Jev)</text>
-  <text x="365" y="266" text-anchor="middle">relevance nouls +</text>
-  <text x="365" y="281" text-anchor="middle">query_relation pull</text>
-  <rect x="465" y="236" width="120" height="52" rx="6" class="code"/>
-  <text x="525" y="258" text-anchor="middle" class="t">history</text>
-  <text x="525" y="274" text-anchor="middle">superseded chain</text>
-  <rect x="610" y="236" width="130" height="52" rx="6" class="llm"/>
-  <text x="675" y="258" text-anchor="middle" class="t">answer (LLM)</text>
-  <text x="675" y="274" text-anchor="middle">top-k compact lines</text>
-  <line x1="120" y1="262" x2="143" y2="262" marker-end="url(#a)"/>
-  <line x1="265" y1="262" x2="288" y2="262" marker-end="url(#a)"/>
-  <line x1="440" y1="262" x2="463" y2="262" marker-end="url(#a)"/>
-  <line x1="585" y1="262" x2="608" y2="262" marker-end="url(#a)"/>
-  <path class="f" d="M380,190 L380,205 L205,205 L205,234" marker-end="url(#a)" stroke-dasharray="4 3"/>
-  <rect x="20" y="305" width="12" height="10" class="llm"/><text x="38" y="314">LLM call (generation)</text>
-  <rect x="170" y="305" width="12" height="10" class="jev"/><text x="188" y="314">typed Jev decision</text>
-  <rect x="310" y="305" width="12" height="10" class="code"/><text x="328" y="314">code</text>
-  <rect x="380" y="305" width="12" height="10" class="store"/><text x="398" y="314">store</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7A8496"/></marker></defs>
+<style>text{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}.title{font-size:16px;font-weight:700}.body{font-size:13px}.tag{font-size:11px;font-weight:700;fill:white;letter-spacing:.4px}.lane{font-size:13px;font-weight:800;letter-spacing:2.2px;fill:#8A94A6}.note{font-size:12.5px}</style>
+<rect width="1280" height="820" fill="white"/>
+<rect x="20" y="20" width="1240" height="300" rx="22" fill="#FAFBFE" stroke="#E7EAF3"/>
+<text x="46" y="54" class="lane">WRITE PATH</text>
+<rect x="20" y="340" width="1240" height="190" rx="22" fill="#F7FBF9" stroke="#DDEFE6"/>
+<text x="46" y="374" class="lane">MEMORY STORE</text>
+<rect x="20" y="550" width="1240" height="250" rx="22" fill="#FAFBFE" stroke="#E7EAF3"/>
+<text x="46" y="584" class="lane">READ PATH</text>
+<rect x="48" y="79" width="210" height="150" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="46" y="76" width="210" height="150" rx="14" fill="#F5F7FA" stroke="#8A94A6" stroke-width="1.6"/>
+<g transform="translate(64,94)"><path d="M2 4 h28 a4 4 0 0 1 4 4 v16 a4 4 0 0 1 -4 4 h-16 l-7 6 v-6 h-5 a4 4 0 0 1 -4 -4 v-16 a4 4 0 0 1 4 -4z" fill="white" stroke="#8A94A6" stroke-width="2"/><line x1="8" y1="12" x2="26" y2="12" stroke="#8A94A6" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="19" x2="20" y2="19" stroke="#8A94A6" stroke-width="2" stroke-linecap="round"/></g>
+<text x="108" y="110" class="title" fill="#1F2430">Message</text>
+<text x="66" y="146" class="body" fill="#4B5566">speaker · date · text</text>
+<text x="66" y="166" class="body" fill="#4B5566">+ last 10 turns</text>
+<text x="66" y="186" class="body" fill="#4B5566">+ 10 similar memories</text>
+<rect x="298" y="79" width="220" height="150" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="296" y="76" width="220" height="150" rx="14" fill="#FFF3EA" stroke="#E8762C" stroke-width="1.6"/>
+<g transform="translate(314,94)"><path d="M16 2 L19.5 12.5 L30 16 L19.5 19.5 L16 30 L12.5 19.5 L2 16 L12.5 12.5 Z" fill="#E8762C" opacity="0.9"/><path d="M29 2 L30.5 6 L34 7.5 L30.5 9 L29 13 L27.5 9 L24 7.5 L27.5 6 Z" fill="#E8762C" opacity="0.55"/></g>
+<text x="358" y="110" class="title" fill="#1F2430">Extraction</text>
+<rect x="467" y="194" width="37" height="20" rx="10" fill="#E8762C"/>
+<text x="485.5" y="208" class="tag" text-anchor="middle">LLM</text>
+<text x="316" y="146" class="body" fill="#B8561A">mem0 extraction prompt</text>
+<text x="316" y="166" class="body" fill="#B8561A">facts with dates</text>
+<text x="316" y="186" class="body" fill="#B8561A">+ verbatim source quote</text>
+<rect x="558" y="79" width="330" height="150" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="556" y="76" width="330" height="150" rx="14" fill="#EEF0FF" stroke="#4453C4" stroke-width="1.6"/>
+<g transform="translate(574,94)"><rect x="1" y="4" width="8" height="8" rx="2" fill="#4453C4"/><path d="M2.6 8 l2 2 l3 -4" fill="none" stroke="white" stroke-width="1.6"/><line x1="14" y1="8" x2="32" y2="8" stroke="#4453C4" stroke-width="2.4" stroke-linecap="round"/><rect x="1" y="15" width="8" height="8" rx="2" fill="#4453C4"/><path d="M2.6 19 l2 2 l3 -4" fill="none" stroke="white" stroke-width="1.6"/><line x1="14" y1="19" x2="27" y2="19" stroke="#4453C4" stroke-width="2.4" stroke-linecap="round"/><rect x="1" y="26" width="8" height="8" rx="2" fill="#4453C4"/><path d="M2.6 30 l2 2 l3 -4" fill="none" stroke="white" stroke-width="1.6"/><line x1="14" y1="30" x2="22" y2="30" stroke="#4453C4" stroke-width="2.4" stroke-linecap="round"/></g>
+<text x="618" y="110" class="title" fill="#1F2430">Decision chain</text>
+<rect x="837" y="194" width="37" height="20" rx="10" fill="#4453C4"/>
+<text x="855.5" y="208" class="tag" text-anchor="middle">JEV</text>
+<rect x="576" y="127" width="62" height="24" rx="12" fill="white" stroke="#AEB6EC"/>
+<text x="607.0" y="143.5" class="body" text-anchor="middle" fill="#2F3A99">worth?</text>
+<rect x="645" y="127" width="48" height="24" rx="12" fill="white" stroke="#AEB6EC"/>
+<text x="669.0" y="143.5" class="body" text-anchor="middle" fill="#2F3A99">kind</text>
+<rect x="700" y="127" width="76" height="24" rx="12" fill="white" stroke="#AEB6EC"/>
+<text x="738.0" y="143.5" class="body" text-anchor="middle" fill="#2F3A99">temporal</text>
+<rect x="576" y="156" width="104" height="24" rx="12" fill="white" stroke="#AEB6EC"/>
+<text x="628.0" y="172.5" class="body" text-anchor="middle" fill="#2F3A99">relation ×10</text>
+<rect x="687" y="156" width="83" height="24" rx="12" fill="white" stroke="#AEB6EC"/>
+<text x="728.5" y="172.5" class="body" text-anchor="middle" fill="#2F3A99">edge type</text>
+<rect x="777" y="156" width="90" height="24" rx="12" fill="white" stroke="#AEB6EC"/>
+<text x="822.0" y="172.5" class="body" text-anchor="middle" fill="#2F3A99">durability</text>
+<rect x="576" y="185" width="97" height="24" rx="12" fill="white" stroke="#AEB6EC"/>
+<text x="624.5" y="201.5" class="body" text-anchor="middle" fill="#2F3A99">sensitivity</text>
+<rect x="680" y="185" width="90" height="24" rx="12" fill="white" stroke="#AEB6EC"/>
+<text x="725.0" y="201.5" class="body" text-anchor="middle" fill="#2F3A99">fulfilled?</text>
+<rect x="928" y="79" width="310" height="150" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="926" y="76" width="310" height="150" rx="14" fill="#F5F7FA" stroke="#8A94A6" stroke-width="1.6"/>
+<g transform="translate(944,94)"><path d="M17 2 L31 7 V17 C31 26 24 32 17 34 C10 32 3 26 3 17 V7 Z" fill="white" stroke="#8A94A6" stroke-width="2"/><path d="M11 18 l4 4 l8 -9" fill="none" stroke="#8A94A6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>
+<text x="988" y="110" class="title" fill="#1F2430">Policy + belief state</text>
+<text x="946" y="146" class="body" fill="#4B5566">gates · cardinality · recheck</text>
+<text x="946" y="166" class="body" fill="#4B5566">log-odds belief per edge</text>
+<text x="946" y="186" class="body" fill="#4B5566">close &lt; 0.25 · reopen &gt; 0.6</text>
+<path d="M256,151 L294,151" fill="none" stroke="#7A8496" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M516,151 L554,151" fill="none" stroke="#7A8496" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M886,151 L924,151" fill="none" stroke="#7A8496" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="556" y="250" width="330" height="44" rx="12" fill="#FFF3EA" stroke="#E8762C" stroke-dasharray="5 4"/>
+<g transform="translate(570,256) scale(0.9)"><path d="M16 2 L19.5 12.5 L30 16 L19.5 19.5 L16 30 L12.5 19.5 L2 16 L12.5 12.5 Z" fill="#E8762C" opacity="0.9"/><path d="M29 2 L30.5 6 L34 7.5 L30.5 9 L29 13 L27.5 9 L24 7.5 L27.5 6 Z" fill="#E8762C" opacity="0.55"/></g>
+<text x="610" y="270" class="note" fill="#B8561A" font-weight="700">LLM escalation</text>
+<text x="610" y="286" class="note" fill="#B8561A">relation p &lt; 0.6 on a superseding label</text>
+<path d="M721,226 L721,248" fill="none" stroke="#E8762C" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arr)"/>
+<rect x="212" y="395" width="280" height="118" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="210" y="392" width="280" height="118" rx="14" fill="#E9F7F0" stroke="#2E9E6B" stroke-width="1.6"/>
+<g transform="translate(228,410)"><line x1="6" y1="8" x2="16" y2="18" stroke="#2E9E6B" stroke-width="1.8"/><line x1="26" y1="5" x2="16" y2="18" stroke="#2E9E6B" stroke-width="1.8"/><line x1="16" y1="18" x2="5" y2="28" stroke="#2E9E6B" stroke-width="1.8"/><line x1="16" y1="18" x2="28" y2="28" stroke="#2E9E6B" stroke-width="1.8"/><line x1="26" y1="5" x2="28" y2="28" stroke="#2E9E6B" stroke-width="1.8"/><circle cx="6" cy="8" r="4.2" fill="white" stroke="#2E9E6B" stroke-width="2"/><circle cx="26" cy="5" r="4.2" fill="white" stroke="#2E9E6B" stroke-width="2"/><circle cx="16" cy="18" r="4.2" fill="white" stroke="#2E9E6B" stroke-width="2"/><circle cx="5" cy="28" r="4.2" fill="white" stroke="#2E9E6B" stroke-width="2"/><circle cx="28" cy="28" r="4.2" fill="white" stroke="#2E9E6B" stroke-width="2"/></g>
+<text x="272" y="426" class="title" fill="#1F2430">Fact graph</text>
+<rect x="420" y="478" width="58" height="20" rx="10" fill="#2E9E6B"/>
+<text x="449.0" y="492" class="tag" text-anchor="middle">SQLITE</text>
+<text x="230" y="462" class="body" fill="#1D7350">facts as edges · validity windows</text>
+<text x="230" y="482" class="body" fill="#1D7350">belief · same_as links</text>
+<rect x="522" y="395" width="250" height="118" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="520" y="392" width="250" height="118" rx="14" fill="#E9F7F0" stroke="#2E9E6B" stroke-width="1.6"/>
+<g transform="translate(538,410)"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.25"/><rect x="10" y="2" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.88"/><rect x="18" y="2" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.62"/><rect x="26" y="2" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.38"/><rect x="2" y="10" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.62"/><rect x="10" y="10" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.38"/><rect x="18" y="10" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="1.00"/><rect x="26" y="10" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.75"/><rect x="2" y="18" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="1.00"/><rect x="10" y="18" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.75"/><rect x="18" y="18" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.50"/><rect x="26" y="18" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.25"/><rect x="2" y="26" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.50"/><rect x="10" y="26" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.25"/><rect x="18" y="26" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.88"/><rect x="26" y="26" width="6" height="6" rx="1.5" fill="#2E9E6B" opacity="0.62"/></g>
+<text x="582" y="426" class="title" fill="#1F2430">Vector index</text>
+<text x="540" y="462" class="body" fill="#1D7350">MiniLM embeddings</text>
+<text x="540" y="482" class="body" fill="#1D7350">one per fact</text>
+<rect x="802" y="395" width="250" height="118" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="800" y="392" width="250" height="118" rx="14" fill="#E9F7F0" stroke="#2E9E6B" stroke-width="1.6"/>
+<g transform="translate(818,410)"><ellipse cx="16" cy="7" rx="13" ry="5" fill="white" stroke="#2E9E6B" stroke-width="2"/><path d="M3 7 v20 c0 3 6 5 13 5 s13 -2 13 -5 v-20" fill="white" stroke="#2E9E6B" stroke-width="2"/><path d="M3 17 c0 3 6 5 13 5 s13 -2 13 -5" fill="none" stroke="#2E9E6B" stroke-width="2"/><ellipse cx="16" cy="7" rx="13" ry="5" fill="white" stroke="#2E9E6B" stroke-width="2"/></g>
+<text x="862" y="426" class="title" fill="#1F2430">History + audit</text>
+<text x="820" y="462" class="body" fill="#1D7350">superseded chains</text>
+<text x="820" y="482" class="body" fill="#1D7350">every decision + probs</text>
+<rect x="48" y="395" width="134" height="118" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="46" y="392" width="134" height="118" rx="14" fill="#EEF0FF" stroke="#4453C4" stroke-width="1.6"/>
+<g transform="translate(64,410)"><line x1="26" y1="3" x2="14" y2="19" stroke="#4453C4" stroke-width="2.6" stroke-linecap="round"/><path d="M9 17 L19 24 L14 33 C9 33 4 29 2 25 Z" fill="#4453C4" opacity="0.85"/><path d="M28 20 l1 3 l3 1 l-3 1 l-1 3 l-1 -3 l-3 -1 l3 -1z" fill="#4453C4" opacity="0.6"/></g>
+<text x="108" y="426" class="title" fill="#1F2430">Hygiene</text>
+<text x="66" y="462" class="body" fill="#2F3A99">same_fact</text>
+<text x="66" y="482" class="body" fill="#2F3A99">50 / request</text>
+<path d="M180,451 L208,451" fill="none" stroke="#7A8496" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M1081,226 C1081,330 1060,402 1049,422" fill="none" stroke="#7A8496" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="1098" y="258" width="140" height="26" rx="13" fill="white" stroke="#D5DAE3"/>
+<text x="1168" y="275.5" class="note" text-anchor="middle" fill="#4B5566">insert · link · close</text>
+<rect x="48" y="609" width="190" height="150" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="46" y="606" width="190" height="150" rx="14" fill="#F5F7FA" stroke="#8A94A6" stroke-width="1.6"/>
+<g transform="translate(64,624)"><circle cx="17" cy="17" r="15" fill="white" stroke="#8A94A6" stroke-width="2"/><text x="17" y="24" text-anchor="middle" font-size="20" font-weight="bold" fill="#8A94A6">?</text></g>
+<text x="108" y="640" class="title" fill="#1F2430">Question</text>
+<text x="66" y="676" class="body" fill="#4B5566">user asks</text>
+<rect x="278" y="609" width="200" height="150" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="276" y="606" width="200" height="150" rx="14" fill="#F5F7FA" stroke="#8A94A6" stroke-width="1.6"/>
+<g transform="translate(294,624)"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.25"/><rect x="10" y="2" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.88"/><rect x="18" y="2" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.62"/><rect x="26" y="2" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.38"/><rect x="2" y="10" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.62"/><rect x="10" y="10" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.38"/><rect x="18" y="10" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="1.00"/><rect x="26" y="10" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.75"/><rect x="2" y="18" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="1.00"/><rect x="10" y="18" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.75"/><rect x="18" y="18" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.50"/><rect x="26" y="18" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.25"/><rect x="2" y="26" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.50"/><rect x="10" y="26" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.25"/><rect x="18" y="26" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.88"/><rect x="26" y="26" width="6" height="6" rx="1.5" fill="#8A94A6" opacity="0.62"/></g>
+<text x="338" y="640" class="title" fill="#1F2430">Embed + recall</text>
+<text x="296" y="676" class="body" fill="#4B5566">cosine top-k</text>
+<text x="296" y="696" class="body" fill="#4B5566">+ top-10 floor</text>
+<rect x="518" y="609" width="220" height="150" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="516" y="606" width="220" height="150" rx="14" fill="#EEF0FF" stroke="#4453C4" stroke-width="1.6"/>
+<g transform="translate(534,624)"><rect x="2" y="3" width="30" height="6" rx="3" fill="#4453C4" opacity="1.00"/><rect x="2" y="12" width="23" height="6" rx="3" fill="#4453C4" opacity="0.78"/><rect x="2" y="21" width="16" height="6" rx="3" fill="#4453C4" opacity="0.56"/><rect x="2" y="30" width="9" height="6" rx="3" fill="#4453C4" opacity="0.34"/></g>
+<text x="578" y="640" class="title" fill="#1F2430">Listwise rerank</text>
+<rect x="687" y="724" width="37" height="20" rx="10" fill="#4453C4"/>
+<text x="705.5" y="738" class="tag" text-anchor="middle">JEV</text>
+<text x="536" y="676" class="body" fill="#2F3A99">relevance per memory</text>
+<text x="536" y="696" class="body" fill="#2F3A99">+ query_relation pull</text>
+<rect x="778" y="609" width="200" height="150" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="776" y="606" width="200" height="150" rx="14" fill="#F5F7FA" stroke="#8A94A6" stroke-width="1.6"/>
+<g transform="translate(794,624)"><circle cx="17" cy="17" r="14" fill="white" stroke="#8A94A6" stroke-width="2"/><path d="M17 9 V17 L23 21" fill="none" stroke="#8A94A6" stroke-width="2.4" stroke-linecap="round"/><path d="M3 9 l0 -6 m0 6 l6 0" stroke="#8A94A6" stroke-width="2" stroke-linecap="round"/></g>
+<text x="838" y="640" class="title" fill="#1F2430">History</text>
+<text x="796" y="676" class="body" fill="#4B5566">add superseded</text>
+<text x="796" y="696" class="body" fill="#4B5566">facts, oldest last</text>
+<rect x="1018" y="609" width="220" height="150" rx="14" fill="#1F2430" opacity="0.06"/>
+<rect x="1016" y="606" width="220" height="150" rx="14" fill="#FFF3EA" stroke="#E8762C" stroke-width="1.6"/>
+<g transform="translate(1034,624)"><path d="M2 4 h28 a4 4 0 0 1 4 4 v16 a4 4 0 0 1 -4 4 h-16 l-7 6 v-6 h-5 a4 4 0 0 1 -4 -4 v-16 a4 4 0 0 1 4 -4z" fill="white" stroke="#E8762C" stroke-width="2"/><line x1="8" y1="12" x2="26" y2="12" stroke="#E8762C" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="19" x2="20" y2="19" stroke="#E8762C" stroke-width="2" stroke-linecap="round"/><circle cx="29" cy="28" r="6" fill="#E8762C"/><path d="M26 28 l2 2 l4 -4" fill="none" stroke="white" stroke-width="1.6"/></g>
+<text x="1078" y="640" class="title" fill="#1F2430">Answer</text>
+<rect x="1187" y="724" width="37" height="20" rx="10" fill="#E8762C"/>
+<text x="1205.5" y="738" class="tag" text-anchor="middle">LLM</text>
+<text x="1036" y="676" class="body" fill="#B8561A">top-k compact lines:</text>
+<text x="1036" y="696" class="body" fill="#B8561A">date · fact · quote</text>
+<path d="M236,681 L274,681" fill="none" stroke="#7A8496" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M476,681 L514,681" fill="none" stroke="#7A8496" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M736,681 L774,681" fill="none" stroke="#7A8496" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M976,681 L1014,681" fill="none" stroke="#7A8496" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M645,510 C645,560 376,560 376,604" fill="none" stroke="#7A8496" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arr)"/>
+<path d="M925,510 L876,604" fill="none" stroke="#7A8496" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arr)"/>
+<rect x="700" y="42" width="16" height="16" rx="4" fill="#FFF3EA" stroke="#E8762C" stroke-width="1.5"/>
+<text x="724" y="55" class="body" fill="#5B6577">LLM call</text>
+<rect x="793.6" y="42" width="16" height="16" rx="4" fill="#EEF0FF" stroke="#4453C4" stroke-width="1.5"/>
+<text x="817.6" y="55" class="body" fill="#5B6577">typed decision (Jev)</text>
+<rect x="973.6" y="42" width="16" height="16" rx="4" fill="#F5F7FA" stroke="#8A94A6" stroke-width="1.5"/>
+<text x="997.6" y="55" class="body" fill="#5B6577">code</text>
+<rect x="1038.4" y="42" width="16" height="16" rx="4" fill="#E9F7F0" stroke="#2E9E6B" stroke-width="1.5"/>
+<text x="1062.4" y="55" class="body" fill="#5B6577">store</text>
 </svg>
