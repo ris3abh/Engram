@@ -1,0 +1,5546 @@
+{
+ "arm": "e4_belief_v2",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "mem0",
+  "store_source_text": true,
+  "worth_filter": false,
+  "merge_policy": "same_as",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "today",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "mem0_update",
+  "relation_decider": "jev",
+  "cardinality_rule": true,
+  "close_agreement": true,
+  "candidate_source": "cosine+graph",
+  "fulfills_rule": "question",
+  "belief": true,
+  "belief_w": 1.0,
+  "temporal_gate": "not_planned_mass",
+  "update_multi_sibling": true,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "render": "compact",
+  "relation_version": 2,
+  "temporal_version": 2
+ },
+ "slice": {
+  "name": "heldout:conv-41",
+  "sessions": [
+   1,
+   32
+  ],
+  "messages": 663,
+  "questions": 152
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 32,
+   "store_size": 668,
+   "questions": 152,
+   "accuracy": 0.743421052631579,
+   "no_memory": 0,
+   "early_questions": 152,
+   "early_accuracy": 0.743421052631579
+  }
+ ],
+ "accuracy": 0.743421052631579,
+ "accuracy_by_category": {
+  "1": 0.5161290322580645,
+  "2": 0.8148148148148148,
+  "3": 0.5,
+  "4": 0.8255813953488372
+ },
+ "stored": 668,
+ "active": 660,
+ "tentative": 648,
+ "disputed": 18,
+ "same_as_edges": 24,
+ "pipeline_stats": {
+  "facts_checked": 672,
+  "plan_fulfilled_asks": 1504,
+  "facts_with_graph_candidates": 416,
+  "graph_candidates": 3203,
+  "against_blocked_structure": 126,
+  "against_blocked": 258,
+  "fulfilled": 6,
+  "against_blocked_temporal": 132,
+  "agreement_checks": 10,
+  "disagreements": 10,
+  "against_unconfirmed": 10,
+  "decisions_on_graph_candidates": 34,
+  "graph_candidate_refinement": 33,
+  "belief_closes": 2,
+  "graph_candidate_rewrite": 1
+ },
+ "facts_extracted": 673,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 9,
+ "llm_decisions": 0,
+ "actions": {
+  "inserted": 170,
+  "refined": 484,
+  "same_as": 1,
+  "rewritten": 5,
+  "disputed": 11,
+  "fallback": 1,
+  "updated": 1
+ },
+ "decision_cost_per_1k": 0.4745326244343892,
+ "cost_per_1k": 10.538185716440422,
+ "write_latency_p50_ms": 1774.8717910144478,
+ "decision_latency_p50_ms": 1614.1415829770267,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 297.2894736842105,
+ "retrieved_tokens_median": 292.0,
+ "memories_mean": 3.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.3066032759999998,
+  "claude": 7.429455999999993
+ },
+ "cache": {
+  "hits": 63,
+  "misses": 25861
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "Who did Maria have dinner with on May 3, 2023?",
+   "gold": "her mother",
+   "category": 2,
+   "evidence": [
+    "D13:16"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Maria had dinner with her mom.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002670408,
+   "retrieved_tokens": 257,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 1,
+   "question": "When did Maria donate her car?",
+   "gold": "21 December 2022",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "December 21, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026840040000000003,
+   "retrieved_tokens": 277,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 2,
+   "question": "What martial arts has John done?",
+   "gold": "Kickboxing, Taekwondo",
+   "category": 1,
+   "evidence": [
+    "D2:28",
+    "D1:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John has done **kickboxing and taekwondo**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002625576,
+   "retrieved_tokens": 203,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 3,
+   "question": "What type of volunteering have John and Maria both done?",
+   "gold": "Volunteering at a homeless shelter",
+   "category": 1,
+   "evidence": [
+    "D3:5",
+    "D2:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, both John and Maria have been involved in **community/food drive volunteering**.\n\n(John organized a food drive; Maria volunteered to help with it, and also volunteers at a homeless shelter.)\n\n**Short answer: Community service/food drive.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003211326,
+   "retrieved_tokens": 200,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 4,
+   "question": "When did John join the online support group?",
+   "gold": "The week before 1 January 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John joined the service-focused online group around **December 25, 2022**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003067524,
+   "retrieved_tokens": 320,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 5,
+   "question": "When did Maria go to the beach?",
+   "gold": "December 2022",
+   "category": 2,
+   "evidence": [
+    "D3:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria took a photo at the beach in **December 2022**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027850619999999996,
+   "retrieved_tokens": 248,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 6,
+   "question": "Where has Maria made friends?",
+   "gold": "homeless shelter, gym, church",
+   "category": 1,
+   "evidence": [
+    "D4:1",
+    "D2:1",
+    "D19:1",
+    "D14:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "At the homeless shelter.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002610066,
+   "retrieved_tokens": 267,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 7,
+   "question": "What items des John mention having as a child?",
+   "gold": "A doll, a film camera",
+   "category": 1,
+   "evidence": [
+    "D5:13",
+    "D3:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A little doll.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002681016,
+   "retrieved_tokens": 283,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 8,
+   "question": "What might John's financial status be?",
+   "gold": "Middle-class or wealthy",
+   "category": 3,
+   "evidence": [
+    "D5:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John experienced financial strain from car repairs (April 2023) and later lost his job (August 2023).\n\n**Likely financially struggling.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0036477000000000002,
+   "retrieved_tokens": 450,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 9,
+   "question": "Who gave Maria's family money when she was younger and her family was going through tough times?",
+   "gold": "Her aunt",
+   "category": 1,
+   "evidence": [
+    "D6:9",
+    "D5:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Maria's aunt helped her family.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003026754,
+   "retrieved_tokens": 369,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 10,
+   "question": "When did Maria meet Jean?",
+   "gold": "February 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "February 24, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002803122,
+   "retrieved_tokens": 314,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 11,
+   "question": "What people has Maria met and helped while volunteering?",
+   "gold": "David, Jean, Cindy, Laura",
+   "category": 1,
+   "evidence": [
+    "D7:5",
+    "D6:5",
+    "D27:8",
+    "D21:19"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria met **a struggling family on the streets** and **fellow volunteers**.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002881452,
+   "retrieved_tokens": 272,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 12,
+   "question": "What test has John taken multiple times?",
+   "gold": "The military aptitude test",
+   "category": 1,
+   "evidence": [
+    "D8:18",
+    "D3:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Military aptitude test.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002544198,
+   "retrieved_tokens": 239,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 13,
+   "question": "When did Maria's grandmother pass away?",
+   "gold": "The week before 6 March 2023",
+   "category": 2,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Late February or early March 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00271314,
+   "retrieved_tokens": 276,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 14,
+   "question": "Would John be considered a patriotic person?",
+   "gold": "Yes",
+   "category": 3,
+   "evidence": [
+    "D8:18",
+    "D8:20"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Yes, John is very patriotic.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002684568,
+   "retrieved_tokens": 269,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 15,
+   "question": "What writing classes has Maria taken?",
+   "gold": "Poetry, creative writing",
+   "category": 1,
+   "evidence": [
+    "D9:1",
+    "D7:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Creative writing class (late February 2023).",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002602638,
+   "retrieved_tokens": 238,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 16,
+   "question": "When did John get his degree?",
+   "gold": "The week before 2 April 2023",
+   "category": 2,
+   "evidence": [
+    "D9:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "March 26, 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0025310040000000003,
+   "retrieved_tokens": 226,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 17,
+   "question": "What might John's degree be in?",
+   "gold": "Political science, Public administration, Public affairs",
+   "category": 3,
+   "evidence": [
+    "D9:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Mechanical engineering.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0028023419999999998,
+   "retrieved_tokens": 331,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 18,
+   "question": "Who did John go to yoga with?",
+   "gold": "Rob",
+   "category": 1,
+   "evidence": [
+    "D7:16",
+    "D10:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A colleague.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0027773579999999997,
+   "retrieved_tokens": 327,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 19,
+   "question": "What damages have happened to John's car?",
+   "gold": "Broken windshield, Car broke down",
+   "category": 1,
+   "evidence": [
+    "D11:1",
+    "D4:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "John's car broke down on April 7, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003237876,
+   "retrieved_tokens": 421,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 20,
+   "question": "When did John take a road trip to the Pacific Northwest?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D11:3",
+    "D11:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027877260000000004,
+   "retrieved_tokens": 311,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 21,
+   "question": "What areas of the U.S. has John been to or is planning to go to?",
+   "gold": "Pacific northwest, east coast",
+   "category": 1,
+   "evidence": [
+    "D11:5",
+    "D12:17"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Pacific Northwest, East Coast, West County.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002728308,
+   "retrieved_tokens": 259,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 22,
+   "question": "When did John go to a convention with colleagues?",
+   "gold": "March 2023",
+   "category": 2,
+   "evidence": [
+    "D12:9"
+   ],
+   "last_evidence_session": 32,
+   "answer": "March 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002777136,
+   "retrieved_tokens": 315,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 23,
+   "question": "What desserts has Maria made?",
+   "gold": "Banana split sundae, Peach cobbler",
+   "category": 1,
+   "evidence": [
+    "D2:25",
+    "D13:18"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Banana split sundae and peach cobbler.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002758032,
+   "retrieved_tokens": 284,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 24,
+   "question": "When did John start boot camp with his family?",
+   "gold": "April.2023",
+   "category": 2,
+   "evidence": [
+    "D13:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "April 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002667156,
+   "retrieved_tokens": 281,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 25,
+   "question": "What European countries has Maria been to?",
+   "gold": "Spain, England",
+   "category": 1,
+   "evidence": [
+    "D13:24",
+    "D8:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria has been to **England and Spain**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028578360000000003,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 26,
+   "question": "What has Maria done to feel closer to her faith?",
+   "gold": "Join a local church, buy a cross necklace",
+   "category": 1,
+   "evidence": [
+    "D14:10",
+    "D11:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Joined a nearby church.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00290619,
+   "retrieved_tokens": 349,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 27,
+   "question": "When did John have a party with veterans?",
+   "gold": "The Friday before 20 May 2023",
+   "category": 2,
+   "evidence": [
+    "D15:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "May 20, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0029050440000000003,
+   "retrieved_tokens": 340,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 28,
+   "question": "What causes does John feel passionate about supporting?",
+   "gold": "Veterans, schools, infrastructure",
+   "category": 1,
+   "evidence": [
+    "D15:3",
+    "D12:5",
+    "D9:8",
+    "D1:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Community, veterans' rights, local politics.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002606082,
+   "retrieved_tokens": 239,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 29,
+   "question": "What events is Maria planning for the homeless shelter funraiser?",
+   "gold": "Chili cook-off, ring-toss tournament",
+   "category": 1,
+   "evidence": [
+    "D16:4",
+    "D15:18"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Chili cook-off.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0028549380000000004,
+   "retrieved_tokens": 323,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 30,
+   "question": "What shelters does Maria volunteer at?",
+   "gold": "The homeless shelter, the dog shelter",
+   "category": 1,
+   "evidence": [
+    "D2:1",
+    "D11:10",
+    "D17:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria volunteers at both a **homeless shelter** and a **dog shelter**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002681502,
+   "retrieved_tokens": 211,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 31,
+   "question": "When did John get his dog Max?",
+   "gold": "In 2013",
+   "category": 2,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Max passed away in early June 2023 after being part of the family for 10 years. So John got Max around **2013**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003390912,
+   "retrieved_tokens": 366,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 32,
+   "question": "What outdoor activities has John done with his colleagues?",
+   "gold": "Hiking, mountaineering",
+   "category": 1,
+   "evidence": [
+    "D18:2",
+    "D16:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Hiking and mountaineering trips.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002775012,
+   "retrieved_tokens": 296,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 33,
+   "question": "What types of yoga has Maria practiced?",
+   "gold": "Aerial, kundalini",
+   "category": 1,
+   "evidence": [
+    "D1:3",
+    "D18:15",
+    "D19:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Aerial yoga and kundalini yoga.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026794500000000003,
+   "retrieved_tokens": 264,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 34,
+   "question": "When did Maria join a gym?",
+   "gold": "The week before 16 June 2023",
+   "category": 2,
+   "evidence": [
+    "D19:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around June 9, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002824032,
+   "retrieved_tokens": 316,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 35,
+   "question": "What states has Maria vacationed at?",
+   "gold": "Oregon, Florida",
+   "category": 1,
+   "evidence": [
+    "D19:23",
+    "D18:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Oregon and Florida.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002678904,
+   "retrieved_tokens": 287,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 36,
+   "question": "What music events has John attended?",
+   "gold": "Live music event, violin concert",
+   "category": 1,
+   "evidence": [
+    "D20:4",
+    "D8:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Violin concert in late February 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002686482,
+   "retrieved_tokens": 262,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 37,
+   "question": "What events for veterans has John participated in?",
+   "gold": "Petition, march, party, visiting veterans hospital, 5K charity run",
+   "category": 1,
+   "evidence": [
+    "D15:1",
+    "D15:11",
+    "D21:22",
+    "D24:1",
+    "D29:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "John participated in a marching event and a veterans' party.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002863548,
+   "retrieved_tokens": 301,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 38,
+   "question": "When did Maria get in a car accident?",
+   "gold": "July 2, 2023",
+   "category": 2,
+   "evidence": [
+    "D21:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "July 2-3, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00265551,
+   "retrieved_tokens": 250,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 39,
+   "question": "Around which US holiday did Maria get into a car accident?",
+   "gold": "Independence Day",
+   "category": 3,
+   "evidence": [
+    "D21:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "July 4th (Independence Day).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026462400000000002,
+   "retrieved_tokens": 250,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 40,
+   "question": "What are the names of John's children?",
+   "gold": "Kyle, Sara",
+   "category": 1,
+   "evidence": [
+    "D8:4",
+    "D22:7"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John's children are **Sara** (daughter) and **Kyle** (son).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002830092,
+   "retrieved_tokens": 250,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 41,
+   "question": "Does John live close to a beach or the mountains?",
+   "gold": "beach",
+   "category": 3,
+   "evidence": [
+    "D22:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on John's memories, he sees ocean sunsets on weekly walks, suggesting he lives near a beach.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003175668,
+   "retrieved_tokens": 358,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 42,
+   "question": "What area was hit by a flood?",
+   "gold": "West County",
+   "category": 1,
+   "evidence": [
+    "D14:21",
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "John's old area/neighborhood.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002788188,
+   "retrieved_tokens": 309,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 43,
+   "question": "When was John's old area hit with a flood?",
+   "gold": "The week before 7 July 2023",
+   "category": 2,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around June 30, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002733978,
+   "retrieved_tokens": 275,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 44,
+   "question": "What activities has Maria done with her church friends?",
+   "gold": "Hiking, picnic, volunteer work",
+   "category": 1,
+   "evidence": [
+    "D25:2",
+    "D24:6",
+    "D28:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Picnic, hiking, and community work.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026725860000000002,
+   "retrieved_tokens": 254,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 45,
+   "question": "Would John be open to moving to another country?",
+   "gold": "No, he has goals specifically in the U.S. like joining the military and running for office.",
+   "category": 3,
+   "evidence": [
+    "D24:3",
+    "D7:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories provided, there is no information about John's openness to moving to another country. The memories focus on his desire to serve his country and community, suggesting he likely would **not** be open to it.\n\n**No evidence in memories.**",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0034360799999999998,
+   "retrieved_tokens": 292,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 46,
+   "question": "When did Maria go hiking with her church friends?",
+   "gold": "The weekend before 22 July 2023",
+   "category": 2,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "July 15-16, 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002718114,
+   "retrieved_tokens": 273,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 47,
+   "question": "What exercises has John done?",
+   "gold": "Weight training, Circuit training, Kickboxing, yoga",
+   "category": 1,
+   "evidence": [
+    "D25:17",
+    "D25:13",
+    "D10:1",
+    "D1:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Beginner yoga and stretching.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0030340799999999998,
+   "retrieved_tokens": 391,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 48,
+   "question": "When did John have his first firefighter call-out?",
+   "gold": "The sunday before 3` July 2023",
+   "category": 2,
+   "evidence": [
+    "D26:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "July 30, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003121302,
+   "retrieved_tokens": 404,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 49,
+   "question": "What food item did Maria drop off at the homeless shelter?",
+   "gold": "Cakes",
+   "category": 1,
+   "evidence": [
+    "D26:1",
+    "D25:19"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Baked goods.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00287871,
+   "retrieved_tokens": 342,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 50,
+   "question": "What attributes describe John?",
+   "gold": "Selfless, family-oriented, passionate, rational",
+   "category": 3,
+   "evidence": [
+    "D26:6",
+    "D2:14",
+    "D3:5",
+    "D4:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John is:\n\n**Family-oriented, grateful, nature-loving, spiritually grounded.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0029556359999999998,
+   "retrieved_tokens": 283,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 51,
+   "question": "When did Maria start volunteering at the homeless shelter?",
+   "gold": "Around August 2022",
+   "category": 2,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "August 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002728308,
+   "retrieved_tokens": 300,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 52,
+   "question": "Who have written notes of gratitude to Maria?",
+   "gold": "Cindy, Laura",
+   "category": 1,
+   "evidence": [
+    "D27:8",
+    "D21:19"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Cindy and Laura.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002542284,
+   "retrieved_tokens": 231,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 53,
+   "question": "When did John help renovate his hometown community center?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D28:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around August 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003020064,
+   "retrieved_tokens": 387,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 54,
+   "question": "When did Maria take up community work with her church friends?",
+   "gold": "August 4, 2023",
+   "category": 2,
+   "evidence": [
+    "D28:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "August 4, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002617998,
+   "retrieved_tokens": 242,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 55,
+   "question": "When did Maria receive a medal from the homeless shelter?",
+   "gold": "The week before 9 August 2023",
+   "category": 2,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Early August 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002796912,
+   "retrieved_tokens": 312,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 56,
+   "question": "When did John participate in a 5K charity run?",
+   "gold": "first weekend of August 2023",
+   "category": 2,
+   "evidence": [
+    "D29:2",
+    "D29:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around August 5-6, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00289644,
+   "retrieved_tokens": 317,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 57,
+   "question": "What causes has John done events for?",
+   "gold": "Toy drive, Community food drive, veterans, domestic violence",
+   "category": 1,
+   "evidence": [
+    "D3:5",
+    "D6:12",
+    "D29:4",
+    "D29:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Domestic abuse awareness and community donations.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00276945,
+   "retrieved_tokens": 299,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 58,
+   "question": "When did Maria get Coco?",
+   "gold": "Two weeks before 11 August 2023",
+   "category": 2,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Late July 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002617038,
+   "retrieved_tokens": 258,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 59,
+   "question": "When did John go on a camping trip with Max?",
+   "gold": "The summer of 2022",
+   "category": 2,
+   "evidence": [
+    "D30:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Summer 2023",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002728944,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 60,
+   "question": "What are Maria's dogs' names?",
+   "gold": "Coco, Shadow",
+   "category": 1,
+   "evidence": [
+    "D30:1",
+    "D31:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria's dogs are named **Coco and Shadow**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002916612,
+   "retrieved_tokens": 305,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 61,
+   "question": "When did Maria adopt Shadow?",
+   "gold": "The week before 13 August 2023",
+   "category": 2,
+   "evidence": [
+    "D31:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Early August 2023 (around August 6).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002706114,
+   "retrieved_tokens": 262,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 62,
+   "question": "How many dogs has Maria adopted from the dog shelter she volunteers at?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D30:1",
+    "D31:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria adopted **one dog** (Shadow) from a shelter. There's no mention of her volunteering at the shelter.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003151956,
+   "retrieved_tokens": 306,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 63,
+   "question": "How many weeks passed between Maria adopting Coco and Shadow?",
+   "gold": "two weeks",
+   "category": 2,
+   "evidence": [
+    "D30:1",
+    "D31:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "There is no memory mentioning Maria adopting a pet named Shadow. Cannot determine the answer.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0028443419999999997,
+   "retrieved_tokens": 258,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 64,
+   "question": "What job might Maria pursue in the future?",
+   "gold": "Shelter coordinator, Counselor",
+   "category": 3,
+   "evidence": [
+    "D32:14",
+    "D5:8",
+    "D11:10",
+    "D27:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria might pursue **volunteering or charity work**.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002662074,
+   "retrieved_tokens": 228,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 65,
+   "question": "What is John's main focus in local politics?",
+   "gold": "Improving education and infrastructure",
+   "category": 4,
+   "evidence": [
+    "D1:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Education and infrastructure improvement.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002773452,
+   "retrieved_tokens": 313,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 66,
+   "question": "What sparked John's interest in improving education and infrastructure in the community?",
+   "gold": "Seeing how lack of education and crumbling infrastructure affected his neighborhood while growing up.",
+   "category": 4,
+   "evidence": [
+    "D1:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Growing up in an affected neighborhood.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002782956,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 67,
+   "question": "How did the extra funding help the school shown in the photo shared by John?",
+   "gold": "Enabled needed repairs and renovations, making the learning environment safer and more modern for students.",
+   "category": 4,
+   "evidence": [
+    "D1:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "The memories don't specify how the funding helped.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002704056,
+   "retrieved_tokens": 252,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 68,
+   "question": "What type of workout class did Maria start doing in December 2023?",
+   "gold": "aerial yoga",
+   "category": 4,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "No memory of December 2023 class.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00281088,
+   "retrieved_tokens": 290,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 69,
+   "question": "What did Maria donate to a homeless shelter in December 2023?",
+   "gold": "old car",
+   "category": 4,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria donated her **old car** to the homeless shelter \u2014 though this occurred in December **2022**, not 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00306024,
+   "retrieved_tokens": 269,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 70,
+   "question": "What kind of meal did John and his family make together in the photo shared by John?",
+   "gold": "pizza",
+   "category": 4,
+   "evidence": [
+    "D2:24"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Pizza.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00261246,
+   "retrieved_tokens": 258,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 71,
+   "question": "What kind of online group did John join?",
+   "gold": "service-focused online group",
+   "category": 4,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Service-focused online group.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0029543399999999997,
+   "retrieved_tokens": 368,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 72,
+   "question": "What kind of activities did John and his mates from the online group do as part of their service efforts?",
+   "gold": "gave out food and supplies at a homeless shelter, organized a toy drive for kids in need",
+   "category": 4,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Volunteered at homeless shelter, organized toy drive.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0031185180000000002,
+   "retrieved_tokens": 373,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 73,
+   "question": "Who inspired Maria to start volunteering?",
+   "gold": "Her aunt",
+   "category": 4,
+   "evidence": [
+    "D5:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Maria's aunt inspired her.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00273609,
+   "retrieved_tokens": 299,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 74,
+   "question": "Why did Maria sit with the little girl at the shelter event in February 2023?",
+   "gold": "The girl seemed sad and had no other family",
+   "category": 4,
+   "evidence": [
+    "D5:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "The girl was lonely with no family.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027822660000000003,
+   "retrieved_tokens": 284,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 75,
+   "question": "What did Jean go through before meeting Maria?",
+   "gold": "divorce, job loss, homelessness",
+   "category": 4,
+   "evidence": [
+    "D7:7"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Divorce, job loss, and homelessness.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003015258,
+   "retrieved_tokens": 365,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 76,
+   "question": "Why did John decide to run for office again?",
+   "gold": "saw the impact he could make in the community through politics",
+   "category": 4,
+   "evidence": [
+    "D7:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Saw positive impact through politics.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002634246,
+   "retrieved_tokens": 253,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 77,
+   "question": "What activity did John's colleague, Rob, invite him to?",
+   "gold": "beginner's yoga class",
+   "category": 4,
+   "evidence": [
+    "D7:16"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Beginner's yoga class.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027134940000000003,
+   "retrieved_tokens": 277,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 78,
+   "question": "What is the name of John's one-year-old child?",
+   "gold": "Kyle",
+   "category": 4,
+   "evidence": [
+    "D8:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "**Kyle**",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0025472339999999998,
+   "retrieved_tokens": 240,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 79,
+   "question": "How often does John take his kids to the park?",
+   "gold": "A few times a week",
+   "category": 4,
+   "evidence": [
+    "D8:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A few times a week.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002687274,
+   "retrieved_tokens": 276,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 80,
+   "question": "What did Maria make for her home to remind her of a trip to England?",
+   "gold": "painting of a castle on a hill",
+   "category": 4,
+   "evidence": [
+    "D8:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A painting.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002920524,
+   "retrieved_tokens": 357,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 81,
+   "question": "Where did Maria get the idea for the castle shadow box in her home?",
+   "gold": "England",
+   "category": 4,
+   "evidence": [
+    "D8:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "From her trip to England/London.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003060222,
+   "retrieved_tokens": 381,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 82,
+   "question": "What did John receive a certificate for?",
+   "gold": "completion of a university degree",
+   "category": 4,
+   "evidence": [
+    "D9:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John received a trophy (not a certificate) for his **promotion**, commemorating his journey and obstacles overcome.\n\nHowever, regarding a **degree**, John graduated around **March 26, 2023**.\n\n**His degree graduation.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003164964,
+   "retrieved_tokens": 207,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 83,
+   "question": "What areas is John particularly interested in for policymaking?",
+   "gold": "education and infrastructure",
+   "category": 4,
+   "evidence": [
+    "D9:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Education and infrastructure.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027706199999999997,
+   "retrieved_tokens": 313,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 84,
+   "question": "What did Maria participate in last weekend before April 10, 2023?",
+   "gold": "a 5K charity run",
+   "category": 4,
+   "evidence": [
+    "D10:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, the question asks about what Maria participated in \"last weekend\" before April 10, 2023.\n\nLooking at the memory from **2023-02-05**, Maria mentions she \"challenged myself last Friday and did a charity event\" \u2014 this refers to around **January 31, 2023**.\n\nHowever, the question asks about \"last weekend before April 10, 2023,\" which would point to the memory from **2023-04-10**, where Maria organized a **meal for shelter residents**.\n\nThe most relevant answer based on the April 10, 2023 memory:\n\n**A meal for shelter residents.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.004745526,
+   "retrieved_tokens": 292,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 85,
+   "question": "What event did John volunteer at last weekend?",
+   "gold": "career fair at a local school",
+   "category": 4,
+   "evidence": [
+    "D10:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memory from 2023-08-09, John participated in a **community fundraising event** around August 5, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003180288,
+   "retrieved_tokens": 312,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 86,
+   "question": "What did John do that put a strain on his wallet?",
+   "gold": "His car broke down",
+   "category": 4,
+   "evidence": [
+    "D11:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "His car broke down.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003068844,
+   "retrieved_tokens": 405,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 87,
+   "question": "Where did John explore on a road trip last year?",
+   "gold": "Pacific Northwest",
+   "category": 4,
+   "evidence": [
+    "D11:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Pacific Northwest coast and national parks.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00287265,
+   "retrieved_tokens": 331,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 88,
+   "question": "What topic has John been blogging about recently?",
+   "gold": "politics and the government",
+   "category": 4,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Politics and government.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002967558,
+   "retrieved_tokens": 380,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 89,
+   "question": "Why did John start blogging about politics and policies?",
+   "gold": "raise awareness and start conversations to create positive change",
+   "category": 4,
+   "evidence": [
+    "D12:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "To make a real impact on education and infrastructure.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00299688,
+   "retrieved_tokens": 360,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 90,
+   "question": "What was the focus of John's recent research and writing on his blog?",
+   "gold": "education reform and infrastructure development",
+   "category": 4,
+   "evidence": [
+    "D12:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Politics, education reform, and infrastructure development.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0030697859999999997,
+   "retrieved_tokens": 380,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 91,
+   "question": "What did John attend with his colleagues in March 2023?",
+   "gold": "a tech-for-good convention",
+   "category": 2,
+   "evidence": [
+    "D12:9"
+   ],
+   "last_evidence_session": 32,
+   "answer": "The memories don't mention John attending anything with colleagues in March 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002836836,
+   "retrieved_tokens": 271,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 92,
+   "question": "How often does John work out with his family?",
+   "gold": "Three times a week",
+   "category": 4,
+   "evidence": [
+    "D13:7"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Three times a week.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026283599999999997,
+   "retrieved_tokens": 265,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 93,
+   "question": "How has John's fitness improved since starting boot camps with his family?",
+   "gold": "More energy, gains in strength and endurance",
+   "category": 4,
+   "evidence": [
+    "D13:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Increased energy, strength, and endurance gains.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028886280000000003,
+   "retrieved_tokens": 313,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 94,
+   "question": "What kind of food did Maria have on her dinner spread iwth her mother?",
+   "gold": "Salads, sandwiches, homemade desserts",
+   "category": 4,
+   "evidence": [
+    "D13:18"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Salads, sandwiches, and homemade desserts.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002933142,
+   "retrieved_tokens": 305,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 95,
+   "question": "What activity did Maria and her mom do together in May 2023?",
+   "gold": "Made dinner together",
+   "category": 4,
+   "evidence": [
+    "D13:16"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Made dinner together.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002623518,
+   "retrieved_tokens": 257,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 96,
+   "question": "What did Maria do to feel closer to a community and her faith?",
+   "gold": "joined a nearby church",
+   "category": 4,
+   "evidence": [
+    "D14:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Joined a nearby church.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002930334,
+   "retrieved_tokens": 352,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 97,
+   "question": "Why did Maria join a nearby church recently?",
+   "gold": "to feel closer to a community and her faith",
+   "category": 4,
+   "evidence": [
+    "D14:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "To feel closer to community and faith.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00294051,
+   "retrieved_tokens": 355,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 98,
+   "question": "What did John host for the veterans in May 2023 as part of the project?",
+   "gold": "a small party to share their stories",
+   "category": 4,
+   "evidence": [
+    "D15:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A small party for veterans.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002936556,
+   "retrieved_tokens": 340,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 99,
+   "question": "What did John and the veterans do during the small party?",
+   "gold": "share stories and make connections",
+   "category": 4,
+   "evidence": [
+    "D15:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Shared stories, made new connections.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002954112,
+   "retrieved_tokens": 351,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 100,
+   "question": "What emotions did John feel during the small party with the veterans?",
+   "gold": "heartwarming",
+   "category": 4,
+   "evidence": [
+    "D15:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Heartwarmed by smiles and friendships.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002971776,
+   "retrieved_tokens": 340,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 101,
+   "question": "What event is Maria getting ready for at the shelter on May 25, 2023?",
+   "gold": "fundraiser",
+   "category": 4,
+   "evidence": [
+    "D16:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A fundraiser (chili cook-off).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00280461,
+   "retrieved_tokens": 279,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 102,
+   "question": "What does Maria need to spread the word about for the fundraiser for the volunteer shelter?",
+   "gold": "chili cook-off",
+   "category": 4,
+   "evidence": [
+    "D16:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Chili cook-off at the fundraiser.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002754384,
+   "retrieved_tokens": 260,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 103,
+   "question": "What was the name of the pet that John had to say goodbye to on 3 June, 2023?",
+   "gold": "Max",
+   "category": 4,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "**Max**",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028091039999999998,
+   "retrieved_tokens": 304,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 104,
+   "question": "How long was Max a part of John's family?",
+   "gold": "10 years",
+   "category": 4,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "10 years.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002825526,
+   "retrieved_tokens": 327,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 105,
+   "question": "How does John plan to honor the memories of his beloved pet?",
+   "gold": "By considering adopting a rescue dog",
+   "category": 4,
+   "evidence": [
+    "D17:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "By adopting a new dog.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002803206,
+   "retrieved_tokens": 305,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 106,
+   "question": "What important values does John want to teach his kids through adopting a rescue dog?",
+   "gold": "Responsibility and compassion",
+   "category": 4,
+   "evidence": [
+    "D17:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Responsibility and compassion.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0025238640000000002,
+   "retrieved_tokens": 211,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 107,
+   "question": "What new activity did Maria start recently, as mentioned on 3 June, 2023?",
+   "gold": "volunteering at a local dog shelter once a month",
+   "category": 4,
+   "evidence": [
+    "D17:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the available memories, there is no memory from June 3, 2023 mentioning a new activity Maria started. The earliest memory is from **June 12, 2023**, which references camping around June 4-5, 2023.\n\n**No record found for June 3, 2023.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00379119,
+   "retrieved_tokens": 311,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 108,
+   "question": "What did Maria say it was like being at the waterfall in Oregon?",
+   "gold": "Like being in a fairy tale",
+   "category": 4,
+   "evidence": [
+    "D18:7"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Like a fairy tale.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027888540000000003,
+   "retrieved_tokens": 307,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 109,
+   "question": "What does Maria say she feels when doing upside-down yoga poses?",
+   "gold": "Free and light",
+   "category": 4,
+   "evidence": [
+    "D18:17"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Free and light.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0025923839999999997,
+   "retrieved_tokens": 247,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 110,
+   "question": "What exciting news did Maria share on 16 June, 2023?",
+   "gold": "joined a gym",
+   "category": 4,
+   "evidence": [
+    "D19:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the available memories, there is no record of Maria sharing any exciting news on June 16, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00298593,
+   "retrieved_tokens": 271,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 111,
+   "question": "What yoga activity has Maria been trying to improve her strength and endurance?",
+   "gold": "kundalini yoga",
+   "category": 4,
+   "evidence": [
+    "D19:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Kundalini yoga.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026788800000000002,
+   "retrieved_tokens": 266,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 112,
+   "question": "What did John recently get promoted to?",
+   "gold": "assistant manager",
+   "category": 4,
+   "evidence": [
+    "D19:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Assistant manager.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002855154,
+   "retrieved_tokens": 351,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 113,
+   "question": "What was one of the biggest challenges John faced in his journey to becoming assistant manager?",
+   "gold": "self-doubt",
+   "category": 4,
+   "evidence": [
+    "D19:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Self-doubt about his path.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003002742,
+   "retrieved_tokens": 362,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 114,
+   "question": "How does John describe the support he received during his journey to becoming assistant manager?",
+   "gold": "having support at home and his own grit",
+   "category": 4,
+   "evidence": [
+    "D19:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Support from home and family.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002979054,
+   "retrieved_tokens": 362,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 115,
+   "question": "What kind of event did John and his family attend in June 2023?",
+   "gold": "live music event",
+   "category": 4,
+   "evidence": [
+    "D20:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Live music event.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002948466,
+   "retrieved_tokens": 362,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 116,
+   "question": "Why did Maria need to help her cousin find a new place to live?",
+   "gold": "Her cousin had to leave and find a new place in a hurry.",
+   "category": 4,
+   "evidence": [
+    "D21:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Her cousin had to leave her previous place urgently.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002771628,
+   "retrieved_tokens": 272,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 117,
+   "question": "What event did John participate in to show support for veterans' rights?",
+   "gold": "marching event",
+   "category": 4,
+   "evidence": [
+    "D21:22"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Marching event for veterans' rights.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028333380000000003,
+   "retrieved_tokens": 301,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 118,
+   "question": "What inspired John to join the marching event for veterans' rights?",
+   "gold": "Respect for the military and the desire to show support",
+   "category": 4,
+   "evidence": [
+    "D21:24"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Great respect for the military.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027553380000000004,
+   "retrieved_tokens": 290,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 119,
+   "question": "How often does John get to see sunsets like the one he shared with Maria?",
+   "gold": "At least once a week",
+   "category": 4,
+   "evidence": [
+    "D22:17"
+   ],
+   "last_evidence_session": 32,
+   "answer": "At least once a week.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00298635,
+   "retrieved_tokens": 364,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 120,
+   "question": "What natural disaster affected John's old area on 7 July, 2023?",
+   "gold": "Flood",
+   "category": 4,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "**Flood**",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002679222,
+   "retrieved_tokens": 268,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 121,
+   "question": "How did the flood impact the homes in John's old area?",
+   "gold": "Lots of homes were ruined.",
+   "category": 4,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Many homes were ruined/destroyed.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028275600000000002,
+   "retrieved_tokens": 309,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 122,
+   "question": "What motivated Maria and John to discuss potential solutions for their community on 7 July, 2023?",
+   "gold": "Flood in John's old area",
+   "category": 4,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A flood affected John's old area.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002720442,
+   "retrieved_tokens": 255,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 123,
+   "question": "What did Maria plan to do later on the evening of 7 July, 2023?",
+   "gold": "have dinner with friends from the gym",
+   "category": 4,
+   "evidence": [
+    "D23:14"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Dinner with gym friends.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002714736,
+   "retrieved_tokens": 267,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 124,
+   "question": "What kind of activities did Maria do at the picnic with her church friends?",
+   "gold": "played games like charades and a scavenger hunt",
+   "category": 4,
+   "evidence": [
+    "D24:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Chilled, played games, ate food.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002725014,
+   "retrieved_tokens": 259,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 125,
+   "question": "What does John appreciate about the veteran's hospital visit?",
+   "gold": "the resilience of the veterans and their inspiring stories",
+   "category": 4,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "What he has and giving back.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0028592039999999997,
+   "retrieved_tokens": 326,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 126,
+   "question": "What did John take away from visiting the veteran's hospital?",
+   "gold": "appreciation for giving back",
+   "category": 4,
+   "evidence": [
+    "D24:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Appreciation and commitment to giving back.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002768994,
+   "retrieved_tokens": 289,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 127,
+   "question": "Why did John feel inspired to join the military after the visit to the hospital?",
+   "gold": "seeing the resilience of the veterans",
+   "category": 4,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Samuel's resilience filled him with hope.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028655580000000003,
+   "retrieved_tokens": 309,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 128,
+   "question": "In what activity did Maria and her church friends participate in July 2023?",
+   "gold": "hiking",
+   "category": 4,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Hiking and a picnic.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026779200000000003,
+   "retrieved_tokens": 257,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 129,
+   "question": "What does John think about trying new classes at the yoga studio?",
+   "gold": "Trying new classes is a fun way to switch up the exercise routine.",
+   "category": 4,
+   "evidence": [
+    "D25:14"
+   ],
+   "last_evidence_session": 32,
+   "answer": "He finds it keeps things interesting.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002884938,
+   "retrieved_tokens": 333,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 130,
+   "question": "Which activity has John done apart from yoga at the studio?",
+   "gold": "weight training",
+   "category": 4,
+   "evidence": [
+    "D25:17"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Weight training, kickboxing, circuit training.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026335020000000002,
+   "retrieved_tokens": 237,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 131,
+   "question": "What community service did Maria mention that she was involved in on 31 July, 2023?",
+   "gold": "volunteered at a homeless shelter",
+   "category": 4,
+   "evidence": [
+    "D26:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories provided, there is no mention of any community service Maria was involved in on July 31, 2023. The closest relevant memory is from July 7, 2023, where Maria committed to attending a community meeting about flood solutions.\n\n**No record found.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003573552,
+   "retrieved_tokens": 287,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 132,
+   "question": "How did Maria start volunteering at the homeless shelter?",
+   "gold": "Witnessed a family struggling on the streets and reached out to the shelter",
+   "category": 4,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "She reached out and asked if they needed volunteers.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002772888,
+   "retrieved_tokens": 285,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 133,
+   "question": "What did John do the week before August 3, 2023 involving his kids?",
+   "gold": "Had a meaningful experience at a military memorial",
+   "category": 4,
+   "evidence": [
+    "D27:9"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Visited a military memorial with kids.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002680584,
+   "retrieved_tokens": 247,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 134,
+   "question": "How did John describe his kids' reaction at the military memorial?",
+   "gold": "awestruck and humbled",
+   "category": 4,
+   "evidence": [
+    "D27:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Awestruck and humbled.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00253887,
+   "retrieved_tokens": 212,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 135,
+   "question": "Why does Maria think it's important for younger generations to visit military memorials?",
+   "gold": "To remember and appreciate those who served",
+   "category": 4,
+   "evidence": [
+    "D27:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "To remember and appreciate those who served.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027609360000000003,
+   "retrieved_tokens": 279,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 136,
+   "question": "What does John believe is important for children regarding veterans?",
+   "gold": "Teaching them to respect and appreciate those who served",
+   "category": 4,
+   "evidence": [
+    "D27:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Respecting and appreciating those who served.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00262908,
+   "retrieved_tokens": 236,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 137,
+   "question": "What happened to John's job in August 2023?",
+   "gold": "John lost his job at the mechanical engineering company.",
+   "category": 4,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "John lost his job when the company failed.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0029020440000000003,
+   "retrieved_tokens": 328,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 138,
+   "question": "What activity did Maria take up with her friends from church in August 2023?",
+   "gold": "community work",
+   "category": 4,
+   "evidence": [
+    "D28:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Community work.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002578542,
+   "retrieved_tokens": 242,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 139,
+   "question": "What did John do to help his community last year in his hometown?",
+   "gold": "Helped renovate a rundown community center.",
+   "category": 4,
+   "evidence": [
+    "D28:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Renovated a rundown community center.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003087468,
+   "retrieved_tokens": 389,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 140,
+   "question": "What cause did the 5K charity run organized by John support?",
+   "gold": "veterans and their families",
+   "category": 4,
+   "evidence": [
+    "D29:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Veterans and their families.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0029655239999999998,
+   "retrieved_tokens": 366,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 141,
+   "question": "Who did John work with to raise awareness and funds for victims of domestic abuse?",
+   "gold": "a local organization",
+   "category": 4,
+   "evidence": [
+    "D29:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A local organization helping domestic abuse victims.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002884224,
+   "retrieved_tokens": 322,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 142,
+   "question": "What recognition did Maria receive at the homeless shelter in August 2023?",
+   "gold": "a medal for volunteering",
+   "category": 4,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Maria received a medal for her service.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002849652,
+   "retrieved_tokens": 312,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 143,
+   "question": "What is the name of Maria's puppy she got two weeks before August 11, 2023?",
+   "gold": "Coco",
+   "category": 4,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Coco",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027691919999999997,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 144,
+   "question": "What activity did John and Max enjoy together last summer?",
+   "gold": "Camping",
+   "category": 4,
+   "evidence": [
+    "D30:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Hiking, swimming, and camping.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002787012,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 145,
+   "question": "How does John describe the camping trip with Max?",
+   "gold": "Peaceful and awesome",
+   "category": 4,
+   "evidence": [
+    "D30:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Chill, peaceful, and rejuvenating.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002840256,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 146,
+   "question": "Why does John say he feels stuck and questioning his decisions and goals?",
+   "gold": "Not feeling like making much of an impact",
+   "category": 4,
+   "evidence": [
+    "D30:14"
+   ],
+   "last_evidence_session": 32,
+   "answer": "He feels he's not making a meaningful impact.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002704518,
+   "retrieved_tokens": 256,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 147,
+   "question": "What is the name of Maria's second puppy?",
+   "gold": "Shadow",
+   "category": 4,
+   "evidence": [
+    "D31:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories provided, there is no mention of Maria having a second puppy. The memories only reference one puppy named **Coco**.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0030343680000000004,
+   "retrieved_tokens": 268,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 148,
+   "question": "How is Maria's new puppy adjusting to its new home?",
+   "gold": "doing great - learning commands and house training",
+   "category": 4,
+   "evidence": [
+    "D31:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Adjustment has been challenging but joyful.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002795106,
+   "retrieved_tokens": 286,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 149,
+   "question": "What is John currently doing as a volunteer in August 2023?",
+   "gold": "mentoring students at a local school",
+   "category": 4,
+   "evidence": [
+    "D31:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Mentoring students at a local school.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002718114,
+   "retrieved_tokens": 265,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 150,
+   "question": "What activities does John's family enjoy doing together?",
+   "gold": "going for hikes, hanging out at the park, having picnics, playing board games, having movie nights",
+   "category": 4,
+   "evidence": [
+    "D31:19"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Climbing, sliding, walks, picnics, concerts.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0027790740000000003,
+   "retrieved_tokens": 275,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 151,
+   "question": "What did the donations help John's community acquire on 16 August, 2023?",
+   "gold": "a brand new fire truck",
+   "category": 4,
+   "evidence": [
+    "D32:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A brand new fire truck.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002734254,
+   "retrieved_tokens": 273,
+   "checkpoint": 32,
+   "store_size": 668
+  }
+ ],
+ "asked": [
+  {
+   "idx": 0,
+   "question": "Who did Maria have dinner with on May 3, 2023?",
+   "gold": "her mother",
+   "category": 2,
+   "evidence": [
+    "D13:16"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Maria had dinner with her mom.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002670408,
+   "retrieved_tokens": 257,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 1,
+   "question": "When did Maria donate her car?",
+   "gold": "21 December 2022",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "December 21, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026840040000000003,
+   "retrieved_tokens": 277,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 2,
+   "question": "What martial arts has John done?",
+   "gold": "Kickboxing, Taekwondo",
+   "category": 1,
+   "evidence": [
+    "D2:28",
+    "D1:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John has done **kickboxing and taekwondo**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002625576,
+   "retrieved_tokens": 203,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 3,
+   "question": "What type of volunteering have John and Maria both done?",
+   "gold": "Volunteering at a homeless shelter",
+   "category": 1,
+   "evidence": [
+    "D3:5",
+    "D2:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, both John and Maria have been involved in **community/food drive volunteering**.\n\n(John organized a food drive; Maria volunteered to help with it, and also volunteers at a homeless shelter.)\n\n**Short answer: Community service/food drive.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003211326,
+   "retrieved_tokens": 200,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 4,
+   "question": "When did John join the online support group?",
+   "gold": "The week before 1 January 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John joined the service-focused online group around **December 25, 2022**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003067524,
+   "retrieved_tokens": 320,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 5,
+   "question": "When did Maria go to the beach?",
+   "gold": "December 2022",
+   "category": 2,
+   "evidence": [
+    "D3:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria took a photo at the beach in **December 2022**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027850619999999996,
+   "retrieved_tokens": 248,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 6,
+   "question": "Where has Maria made friends?",
+   "gold": "homeless shelter, gym, church",
+   "category": 1,
+   "evidence": [
+    "D4:1",
+    "D2:1",
+    "D19:1",
+    "D14:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "At the homeless shelter.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002610066,
+   "retrieved_tokens": 267,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 7,
+   "question": "What items des John mention having as a child?",
+   "gold": "A doll, a film camera",
+   "category": 1,
+   "evidence": [
+    "D5:13",
+    "D3:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A little doll.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002681016,
+   "retrieved_tokens": 283,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 8,
+   "question": "What might John's financial status be?",
+   "gold": "Middle-class or wealthy",
+   "category": 3,
+   "evidence": [
+    "D5:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John experienced financial strain from car repairs (April 2023) and later lost his job (August 2023).\n\n**Likely financially struggling.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0036477000000000002,
+   "retrieved_tokens": 450,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 9,
+   "question": "Who gave Maria's family money when she was younger and her family was going through tough times?",
+   "gold": "Her aunt",
+   "category": 1,
+   "evidence": [
+    "D6:9",
+    "D5:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Maria's aunt helped her family.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003026754,
+   "retrieved_tokens": 369,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 10,
+   "question": "When did Maria meet Jean?",
+   "gold": "February 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "February 24, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002803122,
+   "retrieved_tokens": 314,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 11,
+   "question": "What people has Maria met and helped while volunteering?",
+   "gold": "David, Jean, Cindy, Laura",
+   "category": 1,
+   "evidence": [
+    "D7:5",
+    "D6:5",
+    "D27:8",
+    "D21:19"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria met **a struggling family on the streets** and **fellow volunteers**.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002881452,
+   "retrieved_tokens": 272,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 12,
+   "question": "What test has John taken multiple times?",
+   "gold": "The military aptitude test",
+   "category": 1,
+   "evidence": [
+    "D8:18",
+    "D3:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Military aptitude test.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002544198,
+   "retrieved_tokens": 239,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 13,
+   "question": "When did Maria's grandmother pass away?",
+   "gold": "The week before 6 March 2023",
+   "category": 2,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Late February or early March 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00271314,
+   "retrieved_tokens": 276,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 14,
+   "question": "Would John be considered a patriotic person?",
+   "gold": "Yes",
+   "category": 3,
+   "evidence": [
+    "D8:18",
+    "D8:20"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Yes, John is very patriotic.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002684568,
+   "retrieved_tokens": 269,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 15,
+   "question": "What writing classes has Maria taken?",
+   "gold": "Poetry, creative writing",
+   "category": 1,
+   "evidence": [
+    "D9:1",
+    "D7:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Creative writing class (late February 2023).",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002602638,
+   "retrieved_tokens": 238,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 16,
+   "question": "When did John get his degree?",
+   "gold": "The week before 2 April 2023",
+   "category": 2,
+   "evidence": [
+    "D9:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "March 26, 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0025310040000000003,
+   "retrieved_tokens": 226,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 17,
+   "question": "What might John's degree be in?",
+   "gold": "Political science, Public administration, Public affairs",
+   "category": 3,
+   "evidence": [
+    "D9:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Mechanical engineering.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0028023419999999998,
+   "retrieved_tokens": 331,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 18,
+   "question": "Who did John go to yoga with?",
+   "gold": "Rob",
+   "category": 1,
+   "evidence": [
+    "D7:16",
+    "D10:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A colleague.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0027773579999999997,
+   "retrieved_tokens": 327,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 19,
+   "question": "What damages have happened to John's car?",
+   "gold": "Broken windshield, Car broke down",
+   "category": 1,
+   "evidence": [
+    "D11:1",
+    "D4:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "John's car broke down on April 7, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003237876,
+   "retrieved_tokens": 421,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 20,
+   "question": "When did John take a road trip to the Pacific Northwest?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D11:3",
+    "D11:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027877260000000004,
+   "retrieved_tokens": 311,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 21,
+   "question": "What areas of the U.S. has John been to or is planning to go to?",
+   "gold": "Pacific northwest, east coast",
+   "category": 1,
+   "evidence": [
+    "D11:5",
+    "D12:17"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Pacific Northwest, East Coast, West County.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002728308,
+   "retrieved_tokens": 259,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 22,
+   "question": "When did John go to a convention with colleagues?",
+   "gold": "March 2023",
+   "category": 2,
+   "evidence": [
+    "D12:9"
+   ],
+   "last_evidence_session": 32,
+   "answer": "March 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002777136,
+   "retrieved_tokens": 315,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 23,
+   "question": "What desserts has Maria made?",
+   "gold": "Banana split sundae, Peach cobbler",
+   "category": 1,
+   "evidence": [
+    "D2:25",
+    "D13:18"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Banana split sundae and peach cobbler.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002758032,
+   "retrieved_tokens": 284,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 24,
+   "question": "When did John start boot camp with his family?",
+   "gold": "April.2023",
+   "category": 2,
+   "evidence": [
+    "D13:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "April 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002667156,
+   "retrieved_tokens": 281,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 25,
+   "question": "What European countries has Maria been to?",
+   "gold": "Spain, England",
+   "category": 1,
+   "evidence": [
+    "D13:24",
+    "D8:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria has been to **England and Spain**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028578360000000003,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 26,
+   "question": "What has Maria done to feel closer to her faith?",
+   "gold": "Join a local church, buy a cross necklace",
+   "category": 1,
+   "evidence": [
+    "D14:10",
+    "D11:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Joined a nearby church.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00290619,
+   "retrieved_tokens": 349,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 27,
+   "question": "When did John have a party with veterans?",
+   "gold": "The Friday before 20 May 2023",
+   "category": 2,
+   "evidence": [
+    "D15:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "May 20, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0029050440000000003,
+   "retrieved_tokens": 340,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 28,
+   "question": "What causes does John feel passionate about supporting?",
+   "gold": "Veterans, schools, infrastructure",
+   "category": 1,
+   "evidence": [
+    "D15:3",
+    "D12:5",
+    "D9:8",
+    "D1:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Community, veterans' rights, local politics.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002606082,
+   "retrieved_tokens": 239,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 29,
+   "question": "What events is Maria planning for the homeless shelter funraiser?",
+   "gold": "Chili cook-off, ring-toss tournament",
+   "category": 1,
+   "evidence": [
+    "D16:4",
+    "D15:18"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Chili cook-off.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0028549380000000004,
+   "retrieved_tokens": 323,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 30,
+   "question": "What shelters does Maria volunteer at?",
+   "gold": "The homeless shelter, the dog shelter",
+   "category": 1,
+   "evidence": [
+    "D2:1",
+    "D11:10",
+    "D17:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria volunteers at both a **homeless shelter** and a **dog shelter**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002681502,
+   "retrieved_tokens": 211,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 31,
+   "question": "When did John get his dog Max?",
+   "gold": "In 2013",
+   "category": 2,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Max passed away in early June 2023 after being part of the family for 10 years. So John got Max around **2013**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003390912,
+   "retrieved_tokens": 366,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 32,
+   "question": "What outdoor activities has John done with his colleagues?",
+   "gold": "Hiking, mountaineering",
+   "category": 1,
+   "evidence": [
+    "D18:2",
+    "D16:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Hiking and mountaineering trips.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002775012,
+   "retrieved_tokens": 296,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 33,
+   "question": "What types of yoga has Maria practiced?",
+   "gold": "Aerial, kundalini",
+   "category": 1,
+   "evidence": [
+    "D1:3",
+    "D18:15",
+    "D19:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Aerial yoga and kundalini yoga.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026794500000000003,
+   "retrieved_tokens": 264,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 34,
+   "question": "When did Maria join a gym?",
+   "gold": "The week before 16 June 2023",
+   "category": 2,
+   "evidence": [
+    "D19:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around June 9, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002824032,
+   "retrieved_tokens": 316,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 35,
+   "question": "What states has Maria vacationed at?",
+   "gold": "Oregon, Florida",
+   "category": 1,
+   "evidence": [
+    "D19:23",
+    "D18:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Oregon and Florida.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002678904,
+   "retrieved_tokens": 287,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 36,
+   "question": "What music events has John attended?",
+   "gold": "Live music event, violin concert",
+   "category": 1,
+   "evidence": [
+    "D20:4",
+    "D8:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Violin concert in late February 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002686482,
+   "retrieved_tokens": 262,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 37,
+   "question": "What events for veterans has John participated in?",
+   "gold": "Petition, march, party, visiting veterans hospital, 5K charity run",
+   "category": 1,
+   "evidence": [
+    "D15:1",
+    "D15:11",
+    "D21:22",
+    "D24:1",
+    "D29:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "John participated in a marching event and a veterans' party.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002863548,
+   "retrieved_tokens": 301,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 38,
+   "question": "When did Maria get in a car accident?",
+   "gold": "July 2, 2023",
+   "category": 2,
+   "evidence": [
+    "D21:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "July 2-3, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00265551,
+   "retrieved_tokens": 250,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 39,
+   "question": "Around which US holiday did Maria get into a car accident?",
+   "gold": "Independence Day",
+   "category": 3,
+   "evidence": [
+    "D21:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "July 4th (Independence Day).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026462400000000002,
+   "retrieved_tokens": 250,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 40,
+   "question": "What are the names of John's children?",
+   "gold": "Kyle, Sara",
+   "category": 1,
+   "evidence": [
+    "D8:4",
+    "D22:7"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John's children are **Sara** (daughter) and **Kyle** (son).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002830092,
+   "retrieved_tokens": 250,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 41,
+   "question": "Does John live close to a beach or the mountains?",
+   "gold": "beach",
+   "category": 3,
+   "evidence": [
+    "D22:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on John's memories, he sees ocean sunsets on weekly walks, suggesting he lives near a beach.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003175668,
+   "retrieved_tokens": 358,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 42,
+   "question": "What area was hit by a flood?",
+   "gold": "West County",
+   "category": 1,
+   "evidence": [
+    "D14:21",
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "John's old area/neighborhood.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002788188,
+   "retrieved_tokens": 309,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 43,
+   "question": "When was John's old area hit with a flood?",
+   "gold": "The week before 7 July 2023",
+   "category": 2,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around June 30, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002733978,
+   "retrieved_tokens": 275,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 44,
+   "question": "What activities has Maria done with her church friends?",
+   "gold": "Hiking, picnic, volunteer work",
+   "category": 1,
+   "evidence": [
+    "D25:2",
+    "D24:6",
+    "D28:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Picnic, hiking, and community work.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026725860000000002,
+   "retrieved_tokens": 254,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 45,
+   "question": "Would John be open to moving to another country?",
+   "gold": "No, he has goals specifically in the U.S. like joining the military and running for office.",
+   "category": 3,
+   "evidence": [
+    "D24:3",
+    "D7:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories provided, there is no information about John's openness to moving to another country. The memories focus on his desire to serve his country and community, suggesting he likely would **not** be open to it.\n\n**No evidence in memories.**",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0034360799999999998,
+   "retrieved_tokens": 292,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 46,
+   "question": "When did Maria go hiking with her church friends?",
+   "gold": "The weekend before 22 July 2023",
+   "category": 2,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "July 15-16, 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002718114,
+   "retrieved_tokens": 273,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 47,
+   "question": "What exercises has John done?",
+   "gold": "Weight training, Circuit training, Kickboxing, yoga",
+   "category": 1,
+   "evidence": [
+    "D25:17",
+    "D25:13",
+    "D10:1",
+    "D1:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Beginner yoga and stretching.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0030340799999999998,
+   "retrieved_tokens": 391,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 48,
+   "question": "When did John have his first firefighter call-out?",
+   "gold": "The sunday before 3` July 2023",
+   "category": 2,
+   "evidence": [
+    "D26:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "July 30, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003121302,
+   "retrieved_tokens": 404,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 49,
+   "question": "What food item did Maria drop off at the homeless shelter?",
+   "gold": "Cakes",
+   "category": 1,
+   "evidence": [
+    "D26:1",
+    "D25:19"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Baked goods.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00287871,
+   "retrieved_tokens": 342,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 50,
+   "question": "What attributes describe John?",
+   "gold": "Selfless, family-oriented, passionate, rational",
+   "category": 3,
+   "evidence": [
+    "D26:6",
+    "D2:14",
+    "D3:5",
+    "D4:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John is:\n\n**Family-oriented, grateful, nature-loving, spiritually grounded.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0029556359999999998,
+   "retrieved_tokens": 283,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 51,
+   "question": "When did Maria start volunteering at the homeless shelter?",
+   "gold": "Around August 2022",
+   "category": 2,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "August 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002728308,
+   "retrieved_tokens": 300,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 52,
+   "question": "Who have written notes of gratitude to Maria?",
+   "gold": "Cindy, Laura",
+   "category": 1,
+   "evidence": [
+    "D27:8",
+    "D21:19"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Cindy and Laura.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002542284,
+   "retrieved_tokens": 231,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 53,
+   "question": "When did John help renovate his hometown community center?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D28:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around August 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003020064,
+   "retrieved_tokens": 387,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 54,
+   "question": "When did Maria take up community work with her church friends?",
+   "gold": "August 4, 2023",
+   "category": 2,
+   "evidence": [
+    "D28:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "August 4, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002617998,
+   "retrieved_tokens": 242,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 55,
+   "question": "When did Maria receive a medal from the homeless shelter?",
+   "gold": "The week before 9 August 2023",
+   "category": 2,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Early August 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002796912,
+   "retrieved_tokens": 312,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 56,
+   "question": "When did John participate in a 5K charity run?",
+   "gold": "first weekend of August 2023",
+   "category": 2,
+   "evidence": [
+    "D29:2",
+    "D29:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Around August 5-6, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00289644,
+   "retrieved_tokens": 317,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 57,
+   "question": "What causes has John done events for?",
+   "gold": "Toy drive, Community food drive, veterans, domestic violence",
+   "category": 1,
+   "evidence": [
+    "D3:5",
+    "D6:12",
+    "D29:4",
+    "D29:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Domestic abuse awareness and community donations.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00276945,
+   "retrieved_tokens": 299,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 58,
+   "question": "When did Maria get Coco?",
+   "gold": "Two weeks before 11 August 2023",
+   "category": 2,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Late July 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002617038,
+   "retrieved_tokens": 258,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 59,
+   "question": "When did John go on a camping trip with Max?",
+   "gold": "The summer of 2022",
+   "category": 2,
+   "evidence": [
+    "D30:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Summer 2023",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002728944,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 60,
+   "question": "What are Maria's dogs' names?",
+   "gold": "Coco, Shadow",
+   "category": 1,
+   "evidence": [
+    "D30:1",
+    "D31:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria's dogs are named **Coco and Shadow**.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002916612,
+   "retrieved_tokens": 305,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 61,
+   "question": "When did Maria adopt Shadow?",
+   "gold": "The week before 13 August 2023",
+   "category": 2,
+   "evidence": [
+    "D31:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Early August 2023 (around August 6).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002706114,
+   "retrieved_tokens": 262,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 62,
+   "question": "How many dogs has Maria adopted from the dog shelter she volunteers at?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D30:1",
+    "D31:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria adopted **one dog** (Shadow) from a shelter. There's no mention of her volunteering at the shelter.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003151956,
+   "retrieved_tokens": 306,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 63,
+   "question": "How many weeks passed between Maria adopting Coco and Shadow?",
+   "gold": "two weeks",
+   "category": 2,
+   "evidence": [
+    "D30:1",
+    "D31:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "There is no memory mentioning Maria adopting a pet named Shadow. Cannot determine the answer.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0028443419999999997,
+   "retrieved_tokens": 258,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 64,
+   "question": "What job might Maria pursue in the future?",
+   "gold": "Shelter coordinator, Counselor",
+   "category": 3,
+   "evidence": [
+    "D32:14",
+    "D5:8",
+    "D11:10",
+    "D27:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria might pursue **volunteering or charity work**.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002662074,
+   "retrieved_tokens": 228,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 65,
+   "question": "What is John's main focus in local politics?",
+   "gold": "Improving education and infrastructure",
+   "category": 4,
+   "evidence": [
+    "D1:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Education and infrastructure improvement.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002773452,
+   "retrieved_tokens": 313,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 66,
+   "question": "What sparked John's interest in improving education and infrastructure in the community?",
+   "gold": "Seeing how lack of education and crumbling infrastructure affected his neighborhood while growing up.",
+   "category": 4,
+   "evidence": [
+    "D1:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Growing up in an affected neighborhood.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002782956,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 67,
+   "question": "How did the extra funding help the school shown in the photo shared by John?",
+   "gold": "Enabled needed repairs and renovations, making the learning environment safer and more modern for students.",
+   "category": 4,
+   "evidence": [
+    "D1:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "The memories don't specify how the funding helped.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002704056,
+   "retrieved_tokens": 252,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 68,
+   "question": "What type of workout class did Maria start doing in December 2023?",
+   "gold": "aerial yoga",
+   "category": 4,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "No memory of December 2023 class.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00281088,
+   "retrieved_tokens": 290,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 69,
+   "question": "What did Maria donate to a homeless shelter in December 2023?",
+   "gold": "old car",
+   "category": 4,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, Maria donated her **old car** to the homeless shelter \u2014 though this occurred in December **2022**, not 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00306024,
+   "retrieved_tokens": 269,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 70,
+   "question": "What kind of meal did John and his family make together in the photo shared by John?",
+   "gold": "pizza",
+   "category": 4,
+   "evidence": [
+    "D2:24"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Pizza.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00261246,
+   "retrieved_tokens": 258,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 71,
+   "question": "What kind of online group did John join?",
+   "gold": "service-focused online group",
+   "category": 4,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Service-focused online group.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0029543399999999997,
+   "retrieved_tokens": 368,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 72,
+   "question": "What kind of activities did John and his mates from the online group do as part of their service efforts?",
+   "gold": "gave out food and supplies at a homeless shelter, organized a toy drive for kids in need",
+   "category": 4,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Volunteered at homeless shelter, organized toy drive.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0031185180000000002,
+   "retrieved_tokens": 373,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 73,
+   "question": "Who inspired Maria to start volunteering?",
+   "gold": "Her aunt",
+   "category": 4,
+   "evidence": [
+    "D5:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Maria's aunt inspired her.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00273609,
+   "retrieved_tokens": 299,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 74,
+   "question": "Why did Maria sit with the little girl at the shelter event in February 2023?",
+   "gold": "The girl seemed sad and had no other family",
+   "category": 4,
+   "evidence": [
+    "D5:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "The girl was lonely with no family.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027822660000000003,
+   "retrieved_tokens": 284,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 75,
+   "question": "What did Jean go through before meeting Maria?",
+   "gold": "divorce, job loss, homelessness",
+   "category": 4,
+   "evidence": [
+    "D7:7"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Divorce, job loss, and homelessness.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003015258,
+   "retrieved_tokens": 365,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 76,
+   "question": "Why did John decide to run for office again?",
+   "gold": "saw the impact he could make in the community through politics",
+   "category": 4,
+   "evidence": [
+    "D7:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Saw positive impact through politics.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002634246,
+   "retrieved_tokens": 253,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 77,
+   "question": "What activity did John's colleague, Rob, invite him to?",
+   "gold": "beginner's yoga class",
+   "category": 4,
+   "evidence": [
+    "D7:16"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Beginner's yoga class.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027134940000000003,
+   "retrieved_tokens": 277,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 78,
+   "question": "What is the name of John's one-year-old child?",
+   "gold": "Kyle",
+   "category": 4,
+   "evidence": [
+    "D8:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "**Kyle**",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0025472339999999998,
+   "retrieved_tokens": 240,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 79,
+   "question": "How often does John take his kids to the park?",
+   "gold": "A few times a week",
+   "category": 4,
+   "evidence": [
+    "D8:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A few times a week.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002687274,
+   "retrieved_tokens": 276,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 80,
+   "question": "What did Maria make for her home to remind her of a trip to England?",
+   "gold": "painting of a castle on a hill",
+   "category": 4,
+   "evidence": [
+    "D8:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A painting.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002920524,
+   "retrieved_tokens": 357,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 81,
+   "question": "Where did Maria get the idea for the castle shadow box in her home?",
+   "gold": "England",
+   "category": 4,
+   "evidence": [
+    "D8:15"
+   ],
+   "last_evidence_session": 32,
+   "answer": "From her trip to England/London.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003060222,
+   "retrieved_tokens": 381,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 82,
+   "question": "What did John receive a certificate for?",
+   "gold": "completion of a university degree",
+   "category": 4,
+   "evidence": [
+    "D9:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, John received a trophy (not a certificate) for his **promotion**, commemorating his journey and obstacles overcome.\n\nHowever, regarding a **degree**, John graduated around **March 26, 2023**.\n\n**His degree graduation.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003164964,
+   "retrieved_tokens": 207,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 83,
+   "question": "What areas is John particularly interested in for policymaking?",
+   "gold": "education and infrastructure",
+   "category": 4,
+   "evidence": [
+    "D9:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Education and infrastructure.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027706199999999997,
+   "retrieved_tokens": 313,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 84,
+   "question": "What did Maria participate in last weekend before April 10, 2023?",
+   "gold": "a 5K charity run",
+   "category": 4,
+   "evidence": [
+    "D10:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories, the question asks about what Maria participated in \"last weekend\" before April 10, 2023.\n\nLooking at the memory from **2023-02-05**, Maria mentions she \"challenged myself last Friday and did a charity event\" \u2014 this refers to around **January 31, 2023**.\n\nHowever, the question asks about \"last weekend before April 10, 2023,\" which would point to the memory from **2023-04-10**, where Maria organized a **meal for shelter residents**.\n\nThe most relevant answer based on the April 10, 2023 memory:\n\n**A meal for shelter residents.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.004745526,
+   "retrieved_tokens": 292,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 85,
+   "question": "What event did John volunteer at last weekend?",
+   "gold": "career fair at a local school",
+   "category": 4,
+   "evidence": [
+    "D10:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memory from 2023-08-09, John participated in a **community fundraising event** around August 5, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003180288,
+   "retrieved_tokens": 312,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 86,
+   "question": "What did John do that put a strain on his wallet?",
+   "gold": "His car broke down",
+   "category": 4,
+   "evidence": [
+    "D11:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "His car broke down.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003068844,
+   "retrieved_tokens": 405,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 87,
+   "question": "Where did John explore on a road trip last year?",
+   "gold": "Pacific Northwest",
+   "category": 4,
+   "evidence": [
+    "D11:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Pacific Northwest coast and national parks.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00287265,
+   "retrieved_tokens": 331,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 88,
+   "question": "What topic has John been blogging about recently?",
+   "gold": "politics and the government",
+   "category": 4,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Politics and government.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002967558,
+   "retrieved_tokens": 380,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 89,
+   "question": "Why did John start blogging about politics and policies?",
+   "gold": "raise awareness and start conversations to create positive change",
+   "category": 4,
+   "evidence": [
+    "D12:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "To make a real impact on education and infrastructure.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00299688,
+   "retrieved_tokens": 360,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 90,
+   "question": "What was the focus of John's recent research and writing on his blog?",
+   "gold": "education reform and infrastructure development",
+   "category": 4,
+   "evidence": [
+    "D12:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Politics, education reform, and infrastructure development.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0030697859999999997,
+   "retrieved_tokens": 380,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 91,
+   "question": "What did John attend with his colleagues in March 2023?",
+   "gold": "a tech-for-good convention",
+   "category": 2,
+   "evidence": [
+    "D12:9"
+   ],
+   "last_evidence_session": 32,
+   "answer": "The memories don't mention John attending anything with colleagues in March 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002836836,
+   "retrieved_tokens": 271,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 92,
+   "question": "How often does John work out with his family?",
+   "gold": "Three times a week",
+   "category": 4,
+   "evidence": [
+    "D13:7"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Three times a week.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026283599999999997,
+   "retrieved_tokens": 265,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 93,
+   "question": "How has John's fitness improved since starting boot camps with his family?",
+   "gold": "More energy, gains in strength and endurance",
+   "category": 4,
+   "evidence": [
+    "D13:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Increased energy, strength, and endurance gains.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028886280000000003,
+   "retrieved_tokens": 313,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 94,
+   "question": "What kind of food did Maria have on her dinner spread iwth her mother?",
+   "gold": "Salads, sandwiches, homemade desserts",
+   "category": 4,
+   "evidence": [
+    "D13:18"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Salads, sandwiches, and homemade desserts.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002933142,
+   "retrieved_tokens": 305,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 95,
+   "question": "What activity did Maria and her mom do together in May 2023?",
+   "gold": "Made dinner together",
+   "category": 4,
+   "evidence": [
+    "D13:16"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Made dinner together.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002623518,
+   "retrieved_tokens": 257,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 96,
+   "question": "What did Maria do to feel closer to a community and her faith?",
+   "gold": "joined a nearby church",
+   "category": 4,
+   "evidence": [
+    "D14:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Joined a nearby church.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002930334,
+   "retrieved_tokens": 352,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 97,
+   "question": "Why did Maria join a nearby church recently?",
+   "gold": "to feel closer to a community and her faith",
+   "category": 4,
+   "evidence": [
+    "D14:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "To feel closer to community and faith.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00294051,
+   "retrieved_tokens": 355,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 98,
+   "question": "What did John host for the veterans in May 2023 as part of the project?",
+   "gold": "a small party to share their stories",
+   "category": 4,
+   "evidence": [
+    "D15:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A small party for veterans.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002936556,
+   "retrieved_tokens": 340,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 99,
+   "question": "What did John and the veterans do during the small party?",
+   "gold": "share stories and make connections",
+   "category": 4,
+   "evidence": [
+    "D15:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Shared stories, made new connections.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002954112,
+   "retrieved_tokens": 351,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 100,
+   "question": "What emotions did John feel during the small party with the veterans?",
+   "gold": "heartwarming",
+   "category": 4,
+   "evidence": [
+    "D15:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Heartwarmed by smiles and friendships.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002971776,
+   "retrieved_tokens": 340,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 101,
+   "question": "What event is Maria getting ready for at the shelter on May 25, 2023?",
+   "gold": "fundraiser",
+   "category": 4,
+   "evidence": [
+    "D16:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A fundraiser (chili cook-off).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00280461,
+   "retrieved_tokens": 279,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 102,
+   "question": "What does Maria need to spread the word about for the fundraiser for the volunteer shelter?",
+   "gold": "chili cook-off",
+   "category": 4,
+   "evidence": [
+    "D16:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Chili cook-off at the fundraiser.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002754384,
+   "retrieved_tokens": 260,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 103,
+   "question": "What was the name of the pet that John had to say goodbye to on 3 June, 2023?",
+   "gold": "Max",
+   "category": 4,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "**Max**",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028091039999999998,
+   "retrieved_tokens": 304,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 104,
+   "question": "How long was Max a part of John's family?",
+   "gold": "10 years",
+   "category": 4,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "10 years.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002825526,
+   "retrieved_tokens": 327,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 105,
+   "question": "How does John plan to honor the memories of his beloved pet?",
+   "gold": "By considering adopting a rescue dog",
+   "category": 4,
+   "evidence": [
+    "D17:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "By adopting a new dog.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002803206,
+   "retrieved_tokens": 305,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 106,
+   "question": "What important values does John want to teach his kids through adopting a rescue dog?",
+   "gold": "Responsibility and compassion",
+   "category": 4,
+   "evidence": [
+    "D17:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Responsibility and compassion.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0025238640000000002,
+   "retrieved_tokens": 211,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 107,
+   "question": "What new activity did Maria start recently, as mentioned on 3 June, 2023?",
+   "gold": "volunteering at a local dog shelter once a month",
+   "category": 4,
+   "evidence": [
+    "D17:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the available memories, there is no memory from June 3, 2023 mentioning a new activity Maria started. The earliest memory is from **June 12, 2023**, which references camping around June 4-5, 2023.\n\n**No record found for June 3, 2023.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00379119,
+   "retrieved_tokens": 311,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 108,
+   "question": "What did Maria say it was like being at the waterfall in Oregon?",
+   "gold": "Like being in a fairy tale",
+   "category": 4,
+   "evidence": [
+    "D18:7"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Like a fairy tale.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027888540000000003,
+   "retrieved_tokens": 307,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 109,
+   "question": "What does Maria say she feels when doing upside-down yoga poses?",
+   "gold": "Free and light",
+   "category": 4,
+   "evidence": [
+    "D18:17"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Free and light.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0025923839999999997,
+   "retrieved_tokens": 247,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 110,
+   "question": "What exciting news did Maria share on 16 June, 2023?",
+   "gold": "joined a gym",
+   "category": 4,
+   "evidence": [
+    "D19:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the available memories, there is no record of Maria sharing any exciting news on June 16, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00298593,
+   "retrieved_tokens": 271,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 111,
+   "question": "What yoga activity has Maria been trying to improve her strength and endurance?",
+   "gold": "kundalini yoga",
+   "category": 4,
+   "evidence": [
+    "D19:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Kundalini yoga.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026788800000000002,
+   "retrieved_tokens": 266,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 112,
+   "question": "What did John recently get promoted to?",
+   "gold": "assistant manager",
+   "category": 4,
+   "evidence": [
+    "D19:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Assistant manager.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002855154,
+   "retrieved_tokens": 351,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 113,
+   "question": "What was one of the biggest challenges John faced in his journey to becoming assistant manager?",
+   "gold": "self-doubt",
+   "category": 4,
+   "evidence": [
+    "D19:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Self-doubt about his path.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003002742,
+   "retrieved_tokens": 362,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 114,
+   "question": "How does John describe the support he received during his journey to becoming assistant manager?",
+   "gold": "having support at home and his own grit",
+   "category": 4,
+   "evidence": [
+    "D19:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Support from home and family.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002979054,
+   "retrieved_tokens": 362,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 115,
+   "question": "What kind of event did John and his family attend in June 2023?",
+   "gold": "live music event",
+   "category": 4,
+   "evidence": [
+    "D20:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Live music event.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002948466,
+   "retrieved_tokens": 362,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 116,
+   "question": "Why did Maria need to help her cousin find a new place to live?",
+   "gold": "Her cousin had to leave and find a new place in a hurry.",
+   "category": 4,
+   "evidence": [
+    "D21:5"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Her cousin had to leave her previous place urgently.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002771628,
+   "retrieved_tokens": 272,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 117,
+   "question": "What event did John participate in to show support for veterans' rights?",
+   "gold": "marching event",
+   "category": 4,
+   "evidence": [
+    "D21:22"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Marching event for veterans' rights.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028333380000000003,
+   "retrieved_tokens": 301,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 118,
+   "question": "What inspired John to join the marching event for veterans' rights?",
+   "gold": "Respect for the military and the desire to show support",
+   "category": 4,
+   "evidence": [
+    "D21:24"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Great respect for the military.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027553380000000004,
+   "retrieved_tokens": 290,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 119,
+   "question": "How often does John get to see sunsets like the one he shared with Maria?",
+   "gold": "At least once a week",
+   "category": 4,
+   "evidence": [
+    "D22:17"
+   ],
+   "last_evidence_session": 32,
+   "answer": "At least once a week.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00298635,
+   "retrieved_tokens": 364,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 120,
+   "question": "What natural disaster affected John's old area on 7 July, 2023?",
+   "gold": "Flood",
+   "category": 4,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "**Flood**",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002679222,
+   "retrieved_tokens": 268,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 121,
+   "question": "How did the flood impact the homes in John's old area?",
+   "gold": "Lots of homes were ruined.",
+   "category": 4,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Many homes were ruined/destroyed.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028275600000000002,
+   "retrieved_tokens": 309,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 122,
+   "question": "What motivated Maria and John to discuss potential solutions for their community on 7 July, 2023?",
+   "gold": "Flood in John's old area",
+   "category": 4,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A flood affected John's old area.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002720442,
+   "retrieved_tokens": 255,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 123,
+   "question": "What did Maria plan to do later on the evening of 7 July, 2023?",
+   "gold": "have dinner with friends from the gym",
+   "category": 4,
+   "evidence": [
+    "D23:14"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Dinner with gym friends.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002714736,
+   "retrieved_tokens": 267,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 124,
+   "question": "What kind of activities did Maria do at the picnic with her church friends?",
+   "gold": "played games like charades and a scavenger hunt",
+   "category": 4,
+   "evidence": [
+    "D24:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Chilled, played games, ate food.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002725014,
+   "retrieved_tokens": 259,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 125,
+   "question": "What does John appreciate about the veteran's hospital visit?",
+   "gold": "the resilience of the veterans and their inspiring stories",
+   "category": 4,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "What he has and giving back.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0028592039999999997,
+   "retrieved_tokens": 326,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 126,
+   "question": "What did John take away from visiting the veteran's hospital?",
+   "gold": "appreciation for giving back",
+   "category": 4,
+   "evidence": [
+    "D24:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Appreciation and commitment to giving back.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002768994,
+   "retrieved_tokens": 289,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 127,
+   "question": "Why did John feel inspired to join the military after the visit to the hospital?",
+   "gold": "seeing the resilience of the veterans",
+   "category": 4,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Samuel's resilience filled him with hope.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0028655580000000003,
+   "retrieved_tokens": 309,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 128,
+   "question": "In what activity did Maria and her church friends participate in July 2023?",
+   "gold": "hiking",
+   "category": 4,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Hiking and a picnic.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026779200000000003,
+   "retrieved_tokens": 257,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 129,
+   "question": "What does John think about trying new classes at the yoga studio?",
+   "gold": "Trying new classes is a fun way to switch up the exercise routine.",
+   "category": 4,
+   "evidence": [
+    "D25:14"
+   ],
+   "last_evidence_session": 32,
+   "answer": "He finds it keeps things interesting.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002884938,
+   "retrieved_tokens": 333,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 130,
+   "question": "Which activity has John done apart from yoga at the studio?",
+   "gold": "weight training",
+   "category": 4,
+   "evidence": [
+    "D25:17"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Weight training, kickboxing, circuit training.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0026335020000000002,
+   "retrieved_tokens": 237,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 131,
+   "question": "What community service did Maria mention that she was involved in on 31 July, 2023?",
+   "gold": "volunteered at a homeless shelter",
+   "category": 4,
+   "evidence": [
+    "D26:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories provided, there is no mention of any community service Maria was involved in on July 31, 2023. The closest relevant memory is from July 7, 2023, where Maria committed to attending a community meeting about flood solutions.\n\n**No record found.**",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.003573552,
+   "retrieved_tokens": 287,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 132,
+   "question": "How did Maria start volunteering at the homeless shelter?",
+   "gold": "Witnessed a family struggling on the streets and reached out to the shelter",
+   "category": 4,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "She reached out and asked if they needed volunteers.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002772888,
+   "retrieved_tokens": 285,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 133,
+   "question": "What did John do the week before August 3, 2023 involving his kids?",
+   "gold": "Had a meaningful experience at a military memorial",
+   "category": 4,
+   "evidence": [
+    "D27:9"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Visited a military memorial with kids.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002680584,
+   "retrieved_tokens": 247,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 134,
+   "question": "How did John describe his kids' reaction at the military memorial?",
+   "gold": "awestruck and humbled",
+   "category": 4,
+   "evidence": [
+    "D27:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Awestruck and humbled.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00253887,
+   "retrieved_tokens": 212,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 135,
+   "question": "Why does Maria think it's important for younger generations to visit military memorials?",
+   "gold": "To remember and appreciate those who served",
+   "category": 4,
+   "evidence": [
+    "D27:12"
+   ],
+   "last_evidence_session": 32,
+   "answer": "To remember and appreciate those who served.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027609360000000003,
+   "retrieved_tokens": 279,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 136,
+   "question": "What does John believe is important for children regarding veterans?",
+   "gold": "Teaching them to respect and appreciate those who served",
+   "category": 4,
+   "evidence": [
+    "D27:13"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Respecting and appreciating those who served.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00262908,
+   "retrieved_tokens": 236,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 137,
+   "question": "What happened to John's job in August 2023?",
+   "gold": "John lost his job at the mechanical engineering company.",
+   "category": 4,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "John lost his job when the company failed.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0029020440000000003,
+   "retrieved_tokens": 328,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 138,
+   "question": "What activity did Maria take up with her friends from church in August 2023?",
+   "gold": "community work",
+   "category": 4,
+   "evidence": [
+    "D28:8"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Community work.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002578542,
+   "retrieved_tokens": 242,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 139,
+   "question": "What did John do to help his community last year in his hometown?",
+   "gold": "Helped renovate a rundown community center.",
+   "category": 4,
+   "evidence": [
+    "D28:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Renovated a rundown community center.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.003087468,
+   "retrieved_tokens": 389,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 140,
+   "question": "What cause did the 5K charity run organized by John support?",
+   "gold": "veterans and their families",
+   "category": 4,
+   "evidence": [
+    "D29:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Veterans and their families.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0029655239999999998,
+   "retrieved_tokens": 366,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 141,
+   "question": "Who did John work with to raise awareness and funds for victims of domestic abuse?",
+   "gold": "a local organization",
+   "category": 4,
+   "evidence": [
+    "D29:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A local organization helping domestic abuse victims.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002884224,
+   "retrieved_tokens": 322,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 142,
+   "question": "What recognition did Maria receive at the homeless shelter in August 2023?",
+   "gold": "a medal for volunteering",
+   "category": 4,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Maria received a medal for her service.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002849652,
+   "retrieved_tokens": 312,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 143,
+   "question": "What is the name of Maria's puppy she got two weeks before August 11, 2023?",
+   "gold": "Coco",
+   "category": 4,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Coco",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0027691919999999997,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 144,
+   "question": "What activity did John and Max enjoy together last summer?",
+   "gold": "Camping",
+   "category": 4,
+   "evidence": [
+    "D30:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Hiking, swimming, and camping.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002787012,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 145,
+   "question": "How does John describe the camping trip with Max?",
+   "gold": "Peaceful and awesome",
+   "category": 4,
+   "evidence": [
+    "D30:6"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Chill, peaceful, and rejuvenating.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002840256,
+   "retrieved_tokens": 298,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 146,
+   "question": "Why does John say he feels stuck and questioning his decisions and goals?",
+   "gold": "Not feeling like making much of an impact",
+   "category": 4,
+   "evidence": [
+    "D30:14"
+   ],
+   "last_evidence_session": 32,
+   "answer": "He feels he's not making a meaningful impact.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002704518,
+   "retrieved_tokens": 256,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 147,
+   "question": "What is the name of Maria's second puppy?",
+   "gold": "Shadow",
+   "category": 4,
+   "evidence": [
+    "D31:4"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Based on the memories provided, there is no mention of Maria having a second puppy. The memories only reference one puppy named **Coco**.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0030343680000000004,
+   "retrieved_tokens": 268,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 148,
+   "question": "How is Maria's new puppy adjusting to its new home?",
+   "gold": "doing great - learning commands and house training",
+   "category": 4,
+   "evidence": [
+    "D31:10"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Adjustment has been challenging but joyful.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.002795106,
+   "retrieved_tokens": 286,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 149,
+   "question": "What is John currently doing as a volunteer in August 2023?",
+   "gold": "mentoring students at a local school",
+   "category": 4,
+   "evidence": [
+    "D31:1"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Mentoring students at a local school.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002718114,
+   "retrieved_tokens": 265,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 150,
+   "question": "What activities does John's family enjoy doing together?",
+   "gold": "going for hikes, hanging out at the park, having picnics, playing board games, having movie nights",
+   "category": 4,
+   "evidence": [
+    "D31:19"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Climbing, sliding, walks, picnics, concerts.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0027790740000000003,
+   "retrieved_tokens": 275,
+   "checkpoint": 32,
+   "store_size": 668
+  },
+  {
+   "idx": 151,
+   "question": "What did the donations help John's community acquire on 16 August, 2023?",
+   "gold": "a brand new fire truck",
+   "category": 4,
+   "evidence": [
+    "D32:11"
+   ],
+   "last_evidence_session": 32,
+   "answer": "A brand new fire truck.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.002734254,
+   "retrieved_tokens": 273,
+   "checkpoint": 32,
+   "store_size": 668
+  }
+ ],
+ "options": {
+  "top_k": 3,
+  "no_dates": false
+ },
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "hygiene": {
+  "groups": 28,
+  "pairs": 4008,
+  "decisions": 3958,
+  "merges": 23,
+  "drops": 0,
+  "already_linked": 0,
+  "failed_requests": 1,
+  "cost_usd": 0.025363791102857344,
+  "jev_latency_ms": 24386.99645991437,
+  "wall_s": 36.84677558398107,
+  "merged_pairs": [
+   [
+    "John helped renovate a rundown community center in his hometown around August 2022, found the work demanding but deeply rewarding when witnessing the positive impact on the community",
+    "John helped renovate a rundown community center in his hometown last year (around 2022), found the work challenging but deeply satisfying to witness the positive impact on his community",
+    0.87
+   ],
+   [
+    "John organized a 5K charity run in his neighborhood around August 9, 2023 to raise funds for veterans and their families, involving sponsorship outreach, city coordination, and community promotion",
+    "John organized a 5K charity run in his neighborhood around August 9, 2023 to raise funds for veterans and their families, involving sponsorship outreach, city coordination, and community promotion",
+    0.99
+   ],
+   [
+    "John completed a fire-fighting brigade task with his team in about two hours around August 16, 2023. He found the experience satisfying, noting that everyone was fully engaged and the group successfully accomplished something important and good.",
+    "John participated in a fire-fighting brigade initiative around August 16, 2023 where the team completed a two-hour project, working hard together to accomplish something meaningful and satisfying",
+    0.88
+   ],
+   [
+    "John finds watching the sunset calming during difficult times; it reminds him to enjoy life's small moments",
+    "John finds watching sunsets calming and uses them as a way to appreciate small things in life during difficult times.",
+    0.97
+   ],
+   [
+    "John has been camping multiple times and loves it as a way to get away and be at one with nature, appreciating its simplicity and uncomplicated nature",
+    "John has been camping plenty of times and loves it as a way to get away from everything and be at one with nature, appreciating its uncomplicated nature",
+    0.87
+   ],
+   [
+    "John has been camping multiple times and loves it as a way to get away and be at one with nature, appreciating its simplicity and uncomplicated nature",
+    "John enjoys camping and has gone many times. He loves how it provides a reset, allows him to get away from everything, and appreciates the uncomplicated nature of being at one with nature.",
+    0.93
+   ],
+   [
+    "John has been camping plenty of times and loves it as a way to get away from everything and be at one with nature, appreciating its uncomplicated nature",
+    "John enjoys camping and has gone many times. He loves how it provides a reset, allows him to get away from everything, and appreciates the uncomplicated nature of being at one with nature.",
+    0.96
+   ],
+   [
+    "John is trying out different workout regimes and is interested in rock climbing as a way to push his limits",
+    "John is trying out different workout regimes and is interested in rock climbing as a way to push his physical limits.",
+    0.87
+   ],
+   [
+    "John is trying out different workout regimes and is interested in rock climbing as a way to push his limits",
+    "John is trying out different workout regimes and is interested in rock climbing as a way to push his physical limits.",
+    0.88
+   ],
+   [
+    "John is trying out different workout regimes and is interested in rock climbing as a way to push his physical limits.",
+    "John is trying out different workout regimes and is interested in rock climbing as a way to push his physical limits.",
+    0.99
+   ],
+   [
+    "John is planning a trip to the East Coast as of April 18, 2023",
+    "John is planning a trip to the East Coast as of April 18, 2023.",
+    0.99
+   ],
+   [
+    "John is exploring ways to make a positive impact and has decided to research local organizations and volunteering programs that align with his values, then reach out to them for more information",
+    "John is exploring options to channel his energy into meaningful work, including joining local organizations or volunteering programs. He plans to research and create a list of organizations aligned with his values, then reach out for more information.",
+    0.88
+   ],
+   [
+    "John joined the fire-fighting brigade around August 16, 2023, and is excited about being involved and helping his community. He was impressed by the team's dedication, how well they worked together, and found being around them inspiring.",
+    "John joined the fire-fighting brigade around August 16, 2023, and is excited about being involved and helping his community. He was impressed by the team's dedication, how well they worked together, and found their collaborative spirit inspiring.",
+    0.88
+   ],
+   [
+    "John's car broke down on Friday, April 7, 2023, on his way to work. He is working on getting it fixed but is concerned about the financial strain and is staying positive while seeking a solution.",
+    "John's car broke down on Friday, April 7, 2023, on his way to work, creating financial strain. Despite the difficulty, he remains positive and is actively seeking solutions.",
+    0.93
+   ],
+   [
+    "John has a trophy that commemorates his personal journey and symbolizes all the obstacles he overcame to reach his current position as assistant manager.",
+    "John has a trophy that commemorates his personal journey and serves as a symbol of the obstacles he overcame to achieve his promotion to assistant manager.",
+    0.95
+   ],
+   [
+    "John sees ocean sunsets on his walks at least once a week and finds them a good way to disconnect, think, and find peace amid life's chaos",
+    "John takes walks at least once a week where he sees ocean sunsets, which he uses as a way to disconnect, think, and find peace",
+    0.9
+   ],
+   [
+    "John organized a community event in partnership with a local organization that helps victims of domestic abuse, raising awareness and funds for the cause",
+    "John organized a fundraising and awareness event in partnership with a local organization that helps victims of domestic abuse, raising both awareness and funds for the cause",
+    0.92
+   ],
+   [
+    "Maria has a small family but relies on them for strength during tough times",
+    "Maria's family is small, but she relies on them for strength during tough times",
+    0.98
+   ],
+   [
+    "Maria created a painting inspired by her England trip and the castles she saw, as part of bringing that magical experience into her home",
+    "Maria made a painting inspired by her trip to England and the castles she saw there, bringing that same magic into her home.",
+    0.97
+   ],
+   [
+    "Maria joined a nearby church around May 5, 2023 because she wanted to feel closer to a community and her faith. She has found the experience to be really great so far.",
+    "Maria joined a nearby church around May 5, 2023 to feel closer to a community and her faith, and found the experience rewarding and fulfilling so far",
+    0.89
+   ],
+   [
+    "John joined the fire-fighting brigade around August 16, 2023 and is excited about the opportunity to help his community",
+    "John joined the fire-fighting brigade around August 16, 2023 and is excited about being involved and helping his community",
+    0.89
+   ],
+   [
+    "Maria committed to helping John with his veterans support project around May 20, 2023, expressing enthusiasm to make a difference together",
+    "Maria committed to helping John with his veterans support project around May 20, 2023, expressing enthusiasm to make a difference together.",
+    0.99
+   ],
+   [
+    "Maria is planning a ring-toss tournament for a homeless shelter's fundraiser later in May 2023 and is excited about the potential impact it will make.",
+    "Maria is planning a ring-toss tournament for the homeless shelter's fundraiser later in May 2023 and is excited about the potential impact it will make.",
+    0.98
+   ]
+  ]
+ },
+ "storage_before_hygiene": {}
+}

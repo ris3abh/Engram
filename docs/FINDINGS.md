@@ -4,6 +4,23 @@ Phase 2 conclusions for engram (frozen arm `e4_belief_v2`, tag `e4-frozen`) agai
 everywhere: extraction claude-haiku-4-5 for both systems, answers and judging claude-sonnet-4-6. Details, dev-slice
 experiments and every other table: `docs/BENCHMARK.md`.
 
+## Claims
+
+The four claims the paper makes, each backed by a section of this file or of `docs/BENCHMARK.md`.
+
+1. **Decisions and generation can be split.** With extraction held identical (mem0 2.1.0's prompt and inputs),
+   replacing the LLM decision layer with typed Jev decisions leaves answer accuracy unchanged on the dev slice.
+   It cuts decision-layer cost and latency by more than an order of magnitude (`bench/results/e2_jev__dev.json`,
+   `bench/results/e2_llm__dev.json`). On the held-out set, the full engram arm ties mem0 at k=20 (below).
+2. **A belief-state store policy with reversible merges and closes is safe under trap items.** No update-set
+   no_close item was over-closed by the Jev arms, and belief v3 removes the weak-evidence failure (below; update-set
+   tables in `docs/BENCHMARK.md`).
+3. **A cheap listwise rerank is worth more than a larger k under a small retrieval budget.** Engram at k=3 beats mem0
+   at k=3 and at token-matched k=6 on 610 held-out questions, and ties at k=20 (held-out table below).
+4. **Two negatives.** Closing stale facts does not change answers on current benchmarks, because the answer model
+   resolves recency from dates. A 421M open-weights decision model (Laya) cannot make the relational decisions
+   (negative result below).
+
 ## Held-out LoCoMo: conv-30, 41, 42, 43 pooled (Q=610)
 
 All non-adversarial questions of four conversations never used during development. One ingestion per system per
@@ -44,24 +61,24 @@ What this says:
 
 ## Jev latency (corrected)
 
-Across 7,187 live Jev requests in the decision logs (`python -m bench.jev_latency`, plot `bench/results/jev_latency.svg`):
+Across 9,446 live Jev requests from 25 runs in the decision logs (`python -m bench.jev_latency`,
+`bench/results/jev_latency.json`; regenerated after the conv-43 and later runs were logged):
 
 | questions/request | requests | median | p90 |
 |---|---|---|---|
-| 1 | 1121 | 225 ms | 1,016 ms |
-| 2–3 | 942 | 253 ms | 1,185 ms |
-| 4–6 | 704 | 231 ms | 1,006 ms |
-| 7–10 | 1123 | 248 ms | 1,000 ms |
-| 11–15 | 203 | 230 ms | 787 ms |
-| 16–20 | 2847 | 253 ms | 1,030 ms |
-| 21–30 | 181 | 220 ms | 302 ms |
-| 31–50 | 397 | 255 ms | 586 ms |
-| 51–80 | 561 | 783 ms | 2,452 ms |
+| 1 | 1305 | 229 ms | 1,052 ms |
+| 2–3 | 1054 | 248 ms | 1,176 ms |
+| 4–6 | 775 | 231 ms | 992 ms |
+| 7–10 | 1417 | 246 ms | 967 ms |
+| 11–15 | 227 | 231 ms | 680 ms |
+| 16–20 | 3240 | 255 ms | 1,009 ms |
+| 21–30 | 184 | 222 ms | 312 ms |
+| 31–50 | 505 | 269 ms | 472 ms |
+| 51–80 | 739 | 371 ms | 2,290 ms |
 
-- **Request size barely matters.** Median latency is 220–280 ms from 1 to 80 questions per request, and a straight-line fit gives about 350 ms plus 10.1 ms per question.
-- **What varies is the time of day.** Requests of 16–20 questions had a median of 213–251 ms in every run except conv-30 (793 ms) and conv-41 (607 ms), which ran during a slow period on Jev's side, about 17:55–18:40.
+- **Request size barely matters.** Median latency is 222–269 ms for 1 to 50 questions per request and 371 ms for 51–80; a straight-line fit gives about 380 ms plus 7.2 ms per question.
+- **What varies is the time of day.** Requests of 16–20 questions had a per-run median of 212–267 ms in the other 12 runs with at least 30 such requests, against 793 ms (conv-30) and 607 ms (conv-41), which ran during a slow period on Jev's side, about 17:55–18:40.
   - A probe during that window measured 0.9–1.0 s of server time (from Jev's own timing header) on the same request shape.
-  - conv-42 was back at 251 ms.
 - **The client rate limiter never bound.** Runs averaged under 1 request per second against a 15/s limit, and latency is measured after the limiter wait.
 - **This corrects an earlier note** that attributed conv-30's 0.83 s median to request size. It was API time of day.
 
@@ -77,6 +94,9 @@ Belief v3 (flag `belief_evidence="argmax_gt_half"`, arm `e4_belief_v3`) counts a
 On dev + update sets 1 and 2, replayed from cache with Jev:
 
 - The same facts end up closed as under v2. Stale and keep outcomes and the stale rate are unchanged.
+- One of those closes (fact D2:5) happens at a different message, U:S01 instead of U:E11. That pair is not labeled, so
+  the close audit scores v3 at 2 matching / 2 not matching on dev + set 1, against v2's 3 / 1 (set 2: 8 / 2 against
+  9 / 1). Earlier text here called this attribution only; it is a real change in which message closes the fact.
 - 36 and 39 weak answers are ignored across the two slices.
 - Blocked against-evidence falls from 23 to 15 and from 28 to 19.
 - 3–4 facts no longer erode toward the close line; for example, one went from 0.28 under v2 to 0.53.

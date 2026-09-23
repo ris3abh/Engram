@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="330" viewBox="0 0 760 330" font-family="Helvetica, Arial, sans-serif" font-size="11">
+  <rect width="100%" height="100%" fill="white"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#444"/>
+    </marker>
+  </defs>
+  <style>
+    .llm { fill: #fde8d7; stroke: #c9752b; }
+    .jev { fill: #dde9f7; stroke: #3b6fb6; }
+    .store { fill: #e5f2e1; stroke: #4a8a3c; }
+    .code { fill: #f1f1f1; stroke: #888; }
+    .t { font-weight: bold; }
+    line, path.f { stroke: #444; stroke-width: 1.2; fill: none; }
+  </style>
+  <text x="20" y="22" class="t" font-size="13">Write path</text>
+  <rect x="20" y="36" width="110" height="52" rx="6" class="code"/>
+  <text x="75" y="58" text-anchor="middle" class="t">message</text>
+  <text x="75" y="74" text-anchor="middle">+ last 10 messages</text>
+  <rect x="160" y="36" width="130" height="52" rx="6" class="llm"/>
+  <text x="225" y="58" text-anchor="middle" class="t">extraction (LLM)</text>
+  <text x="225" y="74" text-anchor="middle">facts, dates, source quote</text>
+  <rect x="320" y="30" width="220" height="64" rx="6" class="jev"/>
+  <text x="430" y="50" text-anchor="middle" class="t">decision chain (Jev)</text>
+  <text x="430" y="66" text-anchor="middle">worth · kind · temporal · relation ×10</text>
+  <text x="430" y="81" text-anchor="middle">edge type · durability · sensitivity · fulfilled</text>
+  <rect x="570" y="30" width="170" height="64" rx="6" class="code"/>
+  <text x="655" y="50" text-anchor="middle" class="t">policy + belief state</text>
+  <text x="655" y="66" text-anchor="middle">gates, cardinality, recheck,</text>
+  <text x="655" y="81" text-anchor="middle">log-odds belief, close/reopen</text>
+  <line x1="130" y1="62" x2="158" y2="62" marker-end="url(#a)"/>
+  <line x1="290" y1="62" x2="318" y2="62" marker-end="url(#a)"/>
+  <line x1="540" y1="62" x2="568" y2="62" marker-end="url(#a)"/>
+  <text x="430" y="110" text-anchor="middle" fill="#c9752b">relation p &lt; 0.6 on a superseding label → LLM escalation</text>
+  <rect x="250" y="130" width="260" height="60" rx="6" class="store"/>
+  <text x="380" y="152" text-anchor="middle" class="t">graph store (SQLite + NetworkX)</text>
+  <text x="380" y="168" text-anchor="middle">facts as edges with validity windows,</text>
+  <text x="380" y="182" text-anchor="middle">belief, same_as links, decision audit trail</text>
+  <path class="f" d="M655,94 C655,150 560,160 512,160" marker-end="url(#a)"/>
+  <rect x="560" y="140" width="180" height="46" rx="6" class="jev"/>
+  <text x="650" y="160" text-anchor="middle" class="t">hygiene pass (Jev)</text>
+  <text x="650" y="176" text-anchor="middle">same_fact over groups, 50/request</text>
+  <line x1="560" y1="170" x2="512" y2="170" marker-end="url(#a)"/>
+  <text x="20" y="222" class="t" font-size="13">Read path</text>
+  <rect x="20" y="236" width="100" height="52" rx="6" class="code"/>
+  <text x="70" y="266" text-anchor="middle" class="t">question</text>
+  <rect x="145" y="236" width="120" height="52" rx="6" class="code"/>
+  <text x="205" y="258" text-anchor="middle" class="t">embeddings</text>
+  <text x="205" y="274" text-anchor="middle">cosine top-k + floor</text>
+  <rect x="290" y="230" width="150" height="64" rx="6" class="jev"/>
+  <text x="365" y="250" text-anchor="middle" class="t">listwise rerank (Jev)</text>
+  <text x="365" y="266" text-anchor="middle">relevance nouls +</text>
+  <text x="365" y="281" text-anchor="middle">query_relation pull</text>
+  <rect x="465" y="236" width="120" height="52" rx="6" class="code"/>
+  <text x="525" y="258" text-anchor="middle" class="t">history</text>
+  <text x="525" y="274" text-anchor="middle">superseded chain</text>
+  <rect x="610" y="236" width="130" height="52" rx="6" class="llm"/>
+  <text x="675" y="258" text-anchor="middle" class="t">answer (LLM)</text>
+  <text x="675" y="274" text-anchor="middle">top-k compact lines</text>
+  <line x1="120" y1="262" x2="143" y2="262" marker-end="url(#a)"/>
+  <line x1="265" y1="262" x2="288" y2="262" marker-end="url(#a)"/>
+  <line x1="440" y1="262" x2="463" y2="262" marker-end="url(#a)"/>
+  <line x1="585" y1="262" x2="608" y2="262" marker-end="url(#a)"/>
+  <path class="f" d="M380,190 L380,205 L205,205 L205,234" marker-end="url(#a)" stroke-dasharray="4 3"/>
+  <rect x="20" y="305" width="12" height="10" class="llm"/><text x="38" y="314">LLM call (generation)</text>
+  <rect x="170" y="305" width="12" height="10" class="jev"/><text x="188" y="314">typed Jev decision</text>
+  <rect x="310" y="305" width="12" height="10" class="code"/><text x="328" y="314">code</text>
+  <rect x="380" y="305" width="12" height="10" class="store"/><text x="398" y="314">store</text>
+</svg>

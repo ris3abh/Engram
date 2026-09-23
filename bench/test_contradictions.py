@@ -216,6 +216,7 @@ async def main() -> None:
     parser.add_argument("--layout", choices=["refs", "state", "two_stage", "both", "all"], default="both")
     parser.add_argument("--no-write", action="store_true")
     parser.add_argument("--native", action="store_true", help="laya: ask the Laya-native question wordings")
+    parser.add_argument("--save", help="also write the report (.md) and per-pair results (.json) to this path stem")
     args = parser.parse_args()
 
     pairs = load_pairs()
@@ -245,11 +246,42 @@ async def main() -> None:
         "Regenerate with `python bench/test_contradictions.py`.",
         "",
     ]
+    saved: dict = {}
     for layout in layouts:
         results = await run(backend, pairs, layout)
+        saved[layout] = {
+            "model": model,
+            "pairs": [
+                {
+                    "id": r.pair["id"],
+                    "tier": r.pair["tier"],
+                    "expected": r.pair["expected"],
+                    "chosen": r.chosen,
+                    "p": r.p,
+                    "temporal": r.temporal,
+                    "temporal_p": r.temporal_p,
+                    "exact": r.exact,
+                    "temporal_ok": r.temporal_ok,
+                    "closes": r.closes,
+                    "should_close": r.should_close,
+                }
+                for r in results
+            ],
+            "exact": sum(r.exact for r in results) / len(results),
+            "temporal": sum(r.temporal_ok for r in results) / len(results),
+            "close_rule": sum(r.closes == r.should_close for r in results) / len(results),
+            "false_closes": sum(r.closes and not r.should_close for r in results),
+            "closes": sum(r.closes for r in results),
+        }
         section = report(layout, results)
         print(section)
         sections.append(section)
+    if args.save:
+        stem = Path(args.save)
+        stem.parent.mkdir(parents=True, exist_ok=True)
+        header = f"{sections[2]}\n\nlaya native wording: {args.native}\n" if args.backend == "laya" else sections[2]
+        stem.with_suffix(".md").write_text(header + "\n\n" + "\n".join(sections[4:]) + "\n")
+        stem.with_suffix(".json").write_text(json.dumps(saved, indent=1))
     if hasattr(backend, "truncation"):
         print("laya truncation:", dict(backend.truncation), "compute_ms:", round(backend.compute_ms))
     if not args.no_write:

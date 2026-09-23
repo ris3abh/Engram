@@ -1,0 +1,1480 @@
+{
+ "arm": "e4_belief_v3",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "mem0",
+  "store_source_text": true,
+  "worth_filter": false,
+  "merge_policy": "same_as",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "today",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "mem0_update",
+  "relation_decider": "jev",
+  "cardinality_rule": true,
+  "close_agreement": true,
+  "candidate_source": "cosine+graph",
+  "fulfills_rule": "question",
+  "belief": true,
+  "belief_w": 1.0,
+  "belief_evidence": "argmax_gt_half",
+  "temporal_gate": "not_planned_mass",
+  "update_multi_sibling": true,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "render": "compact",
+  "relation_version": 2,
+  "temporal_version": 2
+ },
+ "slice": {
+  "name": "dev_updates2",
+  "sessions": [
+   1,
+   4
+  ],
+  "messages": 134,
+  "questions": 20
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 62,
+   "store_size": 124,
+   "questions": 20,
+   "accuracy": 0.0,
+   "no_memory": 0,
+   "early_questions": 20,
+   "early_accuracy": 0.0
+  }
+ ],
+ "accuracy": null,
+ "accuracy_by_category": {
+  "update2": 0.0
+ },
+ "stored": 124,
+ "active": 114,
+ "tentative": 110,
+ "disputed": 2,
+ "same_as_edges": 10,
+ "pipeline_stats": {
+  "facts_checked": 127,
+  "plan_fulfilled_asks": 290,
+  "evidence_ignored_weak": 39,
+  "facts_with_graph_candidates": 56,
+  "graph_candidates": 242,
+  "fulfilled": 3,
+  "against_blocked_structure": 16,
+  "against_blocked": 19,
+  "agreement_checks": 21,
+  "disagreements": 11,
+  "against_unconfirmed": 11,
+  "agreements": 10,
+  "against_applied": 21,
+  "belief_closes": 7,
+  "against_blocked_temporal": 3
+ },
+ "facts_extracted": 127,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 5,
+ "closes_detail": [
+  {
+   "closed": "Melanie's guitar teacher is named Ben and is patient with her",
+   "closed_source": "U2:C02.1",
+   "by": "Melanie switched guitar teachers from Ben to Priya around September 28, 2023",
+   "by_source": "U2:C02.2",
+   "labeled": false
+  },
+  {
+   "closed": "Caroline moved into a studio apartment downtown around early September 2023",
+   "closed_source": "U2:C01.1",
+   "by": "Caroline moved to a two-bedroom apartment in Oak Park around October 1, 2023, specifically to have room for a foster child as part of her plan to foster before adopting",
+   "by_source": "U2:C01.2",
+   "labeled": false
+  },
+  {
+   "closed": "Caroline volunteers at the community center on Tuesdays",
+   "closed_source": "U2:C05.1",
+   "by": "Caroline switched her volunteer shift at the community center from Tuesdays to Thursdays around October 3, 2023",
+   "by_source": "U2:C05.2",
+   "labeled": false
+  },
+  {
+   "closed": "User's favorite coffee spot is Blue Door Caf\u00e9",
+   "closed_source": "U2:N01.1",
+   "by": "User's favorite coffee spot is Grind House (updated from Blue Door Caf\u00e9)",
+   "by_source": "U2:N01.2",
+   "labeled": false
+  },
+  {
+   "closed": "Caroline's therapist is Dr. Alvarez",
+   "closed_source": "U2:N03.1",
+   "by": "Caroline's therapist is Dr. Kim (as of November 6, 2023)",
+   "by_source": "U2:N03.2",
+   "labeled": false
+  }
+ ],
+ "wrong_closes": 5,
+ "escalations": 3,
+ "llm_decisions": 0,
+ "actions": {
+  "inserted": 44,
+  "refined": 59,
+  "updated": 16,
+  "negated": 4,
+  "rewritten": 3,
+  "disputed": 1
+ },
+ "decision_cost_per_1k": 0.49274447419763073,
+ "cost_per_1k": 10.343811638376737,
+ "write_latency_p50_ms": 1761.7755840183236,
+ "decision_latency_p50_ms": 681.2186249881051,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 227.5,
+ "retrieved_tokens_median": 204.0,
+ "memories_mean": 3.0,
+ "stale_fact_rate": 0.0,
+ "stale": {
+  "labels_in_slice": 1,
+  "claims_stored": 1,
+  "claims_stale": 0,
+  "rate": 0.0,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 8.568e-05,
+  "claude": 0.0
+ },
+ "cache": {
+  "hits": 3789,
+  "misses": 5
+ },
+ "answers": [
+  {
+   "idx": "U2:P01",
+   "question": "What instrument did Melanie play in June 2023?",
+   "gold": "Violin",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-07-19] Melanie sold her violin around June 2023 and switched to learning guitar instead, which she finds more fun to play with her children; Melanie sold her violin around June 2023 and switched to learning guitar, which she finds more enjoyable to play with her children \u2014 source: \"I sold my violin last month. I'm learning guitar now instead - it's more fun to play with the kids. \u2026 Our first apartment after the wedding was so tiny - we still laugh about it.\"",
+    "[said 2023-09-28] Melanie switched guitar teachers from Ben to Priya around September 28, 2023 \u2014 source: \"I switched guitar teachers - Priya teaches me now.\"",
+    "[said 2023-11-20] Melanie switched from learning guitar via YouTube videos to joining a group guitar class at the community center around November 20, 2023 \u2014 source: \"I joined a group guitar class at the community center instead of YouTube.\""
+   ],
+   "label": null,
+   "query_cost": 0.00021014523870967745,
+   "retrieved_tokens": 247,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:P02",
+   "question": "Where did Caroline's grandma live in May 2023?",
+   "gold": "Sweden",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-07-31] Caroline's grandmother moved from Sweden to Norway around July 31, 2023, where she now lives with Caroline's aunt \u2014 source: \"My grandma moved out of Sweden - she lives in Norway with my aunt now.\"",
+    "[said 2023-06-09] Caroline met up with friends around early June 2023 \u2014 source: \"Thanks, Mel! My friends, family and mentors are my rocks \u2013 they motivate me and give me the strength to push on. Here's a pic from when we met up last week!\"",
+    "[said 2023-11-12] Caroline moved to a house in Evanston around November 12, 2023 \u2014 source: \"We finally found a house - I live in Evanston now.\""
+   ],
+   "label": null,
+   "query_cost": 0.0001943827741935484,
+   "retrieved_tokens": 200,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:P03",
+   "question": "Which adoption agency was Caroline working with in early July 2023?",
+   "gold": "The agency she chose for its LGBTQ+ inclusivity (before switching to Rainbow Families)",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-08-03] Caroline switched adoption agencies around July 25, 2023 to Rainbow Families, which is closer to home and has a faster process; Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and move faster \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it. \u2026 Next summer we hope to camp at the Grand Canyon, if we can save up.\"",
+    "[said 2023-07-25] Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and have a faster process \u2014 source: \"Update on adoption: I switched agencies. I'm with Rainbow Families now - they're closer to home and move faster.\"",
+    "[said 2023-07-27] Caroline changed her adoption plan around July 27, 2023 to foster children first before pursuing adoption, to gain experience and learn the process \u2014 source: \"I've changed my plan a bit - I'm going to foster first instead of adopting right away, to learn the ropes.\""
+   ],
+   "label": null,
+   "query_cost": 0.00018254419354838712,
+   "retrieved_tokens": 269,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:P04",
+   "question": "Did Melanie have a job in June 2023?",
+   "gold": "Yes",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-07-06] Melanie quit her job around June 30, 2023 to be home with her children full-time \u2014 source: \"Big change: I quit my job last Friday so I can be home with the kids full-time.\"",
+    "[said 2023-06-09] Melanie has been married for 5 years as of June 9, 2023 \u2014 source: \"5 years already! Time flies- feels like just yesterday I put this dress on! Thanks, Caroline!\"",
+    "[said 2023-08-24] Melanie's children started their summer break around August 24, 2023 and are enjoying it \u2014 source: \"The kids' summer break finally started and they are loving every minute of it.\""
+   ],
+   "label": null,
+   "query_cost": 0.0001885935483870968,
+   "retrieved_tokens": 193,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:P05",
+   "question": "What was Melanie's main creative outlet in May 2023?",
+   "gold": "Painting",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-05-08] Melanie uses painting as a creative outlet to express her feelings and relax after long days \u2014 source: \"Thanks, Caroline! Painting's a fun way to express my feelings and get creative. It's a great way to relax after a long day.\"",
+    "[said 2023-07-04] Melanie has shifted her primary creative outlet from painting to pottery, attending a pottery studio three evenings a week as of early July 2023. She hasn't painted in several weeks.; Melanie attends pottery studio three evenings a week and considers it her main creative outlet, having not painted in weeks as of early July 2023 \u2014 source: \"I haven't painted in weeks, honestly. Pottery is my main creative outlet now - I go to the studio three evenings a week. \u2026 Funny thing - the lake sunrise isn't my favorite anymore. The forest-at-dusk piece I finished last week is my favorite now.\"",
+    "[said 2023-06-09] Melanie has been married for 5 years as of June 9, 2023 \u2014 source: \"5 years already! Time flies- feels like just yesterday I put this dress on! Thanks, Caroline!\""
+   ],
+   "label": null,
+   "query_cost": 0.000188659935483871,
+   "retrieved_tokens": 296,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C01q1",
+   "question": "Where does Caroline live now?",
+   "gold": "A house in Evanston",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-11-12] Caroline moved to a house in Evanston around November 12, 2023 \u2014 source: \"We finally found a house - I live in Evanston now.\"",
+    "[said 2023-10-01] Caroline moved to a two-bedroom apartment in Oak Park around October 1, 2023, specifically to have room for a foster child as part of her plan to foster before adopting \u2014 source: \"Moved again! I'm in a two-bedroom in Oak Park now, so there's room for a foster kid.\"",
+    "[said 2023-09-03] Caroline moved into a studio apartment downtown around early September 2023 \u2014 source: \"I just moved into a studio apartment downtown.\" (no longer true since 2023-10-01)"
+   ],
+   "label": null,
+   "query_cost": 0.0001950141290322581,
+   "retrieved_tokens": 200,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C01q2",
+   "question": "Where was Caroline living in October 2023?",
+   "gold": "A two-bedroom in Oak Park",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-11-12] Caroline moved to a house in Evanston around November 12, 2023 \u2014 source: \"We finally found a house - I live in Evanston now.\"",
+    "[said 2023-10-01] Caroline moved to a two-bedroom apartment in Oak Park around October 1, 2023, specifically to have room for a foster child as part of her plan to foster before adopting \u2014 source: \"Moved again! I'm in a two-bedroom in Oak Park now, so there's room for a foster kid.\"",
+    "[said 2023-09-03] Caroline moved into a studio apartment downtown around early September 2023 \u2014 source: \"I just moved into a studio apartment downtown.\" (no longer true since 2023-10-01)"
+   ],
+   "label": null,
+   "query_cost": 0.0001969109032258065,
+   "retrieved_tokens": 200,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C02q1",
+   "question": "How is Melanie learning guitar now?",
+   "gold": "A group class at the community center",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-28] Melanie switched guitar teachers from Ben to Priya around September 28, 2023 \u2014 source: \"I switched guitar teachers - Priya teaches me now.\"",
+    "[said 2023-07-19] Melanie sold her violin around June 2023 and switched to learning guitar instead, which she finds more fun to play with her children; Melanie sold her violin around June 2023 and switched to learning guitar, which she finds more enjoyable to play with her children \u2014 source: \"I sold my violin last month. I'm learning guitar now instead - it's more fun to play with the kids. \u2026 Our first apartment after the wedding was so tiny - we still laugh about it.\"",
+    "[said 2023-11-20] Melanie switched from learning guitar via YouTube videos to joining a group guitar class at the community center around November 20, 2023 \u2014 source: \"I joined a group guitar class at the community center instead of YouTube.\""
+   ],
+   "label": null,
+   "query_cost": 0.00020549696774193552,
+   "retrieved_tokens": 247,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C02q2",
+   "question": "Who was teaching Melanie guitar in early October 2023?",
+   "gold": "Priya",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-28] Melanie switched guitar teachers from Ben to Priya around September 28, 2023 \u2014 source: \"I switched guitar teachers - Priya teaches me now.\"",
+    "[said 2023-10-20] Melanie's guitar teacher Priya moved away around October 20, 2023, and Melanie switched to learning guitar from YouTube videos \u2014 source: \"Priya moved away, so I'm learning guitar from YouTube videos for now.\"",
+    "[said 2023-09-05] Melanie's guitar teacher is named Ben and is patient with her \u2014 source: \"My guitar teacher is Ben, he's really patient with me.\" (no longer true since 2023-09-28)"
+   ],
+   "label": null,
+   "query_cost": 0.00021036120000000001,
+   "retrieved_tokens": 188,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C03q1",
+   "question": "Which children is Caroline currently matched with?",
+   "gold": "Maya and Sam (siblings)",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-08] Caroline was matched with a 7-year-old named Leo for foster-to-adopt placement around October 8, 2023 \u2014 source: \"I've been matched with a 7-year-old named Leo.\"",
+    "[said 2023-12-03] Caroline was matched with two siblings, Maya and Sam, for adoption around December 3, 2023 \u2014 source: \"Big news: I've been matched with two siblings, Maya and Sam.\"",
+    "[said 2023-11-05] Leo, the 7-year-old Caroline was matched with for foster-to-adopt placement in October 2023, returned to live with his grandmother around November 5, 2023, which Caroline views as the best outcome for him \u2014 source: \"Leo went back to live with his grandmother, which is the best thing for him.\""
+   ],
+   "label": null,
+   "query_cost": 0.00018988200000000002,
+   "retrieved_tokens": 215,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C03q2",
+   "question": "Who was Caroline matched with in October 2023?",
+   "gold": "Leo, a 7-year-old",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-08] Caroline was matched with a 7-year-old named Leo for foster-to-adopt placement around October 8, 2023 \u2014 source: \"I've been matched with a 7-year-old named Leo.\"",
+    "[said 2023-11-05] Leo, the 7-year-old Caroline was matched with for foster-to-adopt placement in October 2023, returned to live with his grandmother around November 5, 2023, which Caroline views as the best outcome for him \u2014 source: \"Leo went back to live with his grandmother, which is the best thing for him.\"",
+    "[said 2023-06-09] Caroline met up with friends around early June 2023 \u2014 source: \"Thanks, Mel! My friends, family and mentors are my rocks \u2013 they motivate me and give me the strength to push on. Here's a pic from when we met up last week!\""
+   ],
+   "label": null,
+   "query_cost": 0.00020002974193548392,
+   "retrieved_tokens": 235,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C04q1",
+   "question": "Which school does Melanie's oldest child attend now?",
+   "gold": "Lincoln Middle School",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-15] Melanie's oldest switched schools from Lincoln Middle School to Riverside Academy around October 15, 2023, because Lincoln was not a good fit, but then switched back to Lincoln Middle School around November 25, 2023 because Riverside was too far away \u2014 source: \"We moved our oldest to Riverside Academy - Lincoln wasn't a good fit.\"",
+    "[said 2023-09-07] Melanie's oldest child started at Lincoln Middle School around September 7, 2023 \u2014 source: \"My oldest started at Lincoln Middle School this week.\"",
+    "[said 2023-06-27] Melanie has two younger children who love nature and spending time outdoors \u2014 source: \"I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\""
+   ],
+   "label": null,
+   "query_cost": 0.00019731300509337864,
+   "retrieved_tokens": 269,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C04q2",
+   "question": "Which school was Melanie's oldest at in late October 2023?",
+   "gold": "Riverside Academy",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-15] Melanie's oldest switched schools from Lincoln Middle School to Riverside Academy around October 15, 2023, because Lincoln was not a good fit, but then switched back to Lincoln Middle School around November 25, 2023 because Riverside was too far away \u2014 source: \"We moved our oldest to Riverside Academy - Lincoln wasn't a good fit.\"",
+    "[said 2023-09-07] Melanie's oldest child started at Lincoln Middle School around September 7, 2023 \u2014 source: \"My oldest started at Lincoln Middle School this week.\"",
+    "[said 2023-06-09] Melanie has been married for 5 years as of June 9, 2023 \u2014 source: \"5 years already! Time flies- feels like just yesterday I put this dress on! Thanks, Caroline!\""
+   ],
+   "label": null,
+   "query_cost": 0.0001995513483870968,
+   "retrieved_tokens": 212,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C05q1",
+   "question": "When does Caroline volunteer at the community center now?",
+   "gold": "Every other Saturday morning",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-11-01] Caroline's volunteer shift at the community center moved to Saturday mornings around November 1, 2023 \u2014 source: \"My volunteer shift moved to Saturday mornings.\"",
+    "[said 2023-08-25] Caroline started volunteering as a peer counselor for trans youth at the community center around August 25, 2023 \u2014 source: \"I started volunteering as a peer counselor for trans youth at the community center this week.\"",
+    "[said 2023-12-06] Caroline reduced her volunteer shift at the community center to every other Saturday morning around December 6, 2023 \u2014 source: \"I cut back my volunteering to every other Saturday morning.\""
+   ],
+   "label": null,
+   "query_cost": 0.00020053374193548392,
+   "retrieved_tokens": 177,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C05q2",
+   "question": "What day did Caroline volunteer in mid-October 2023?",
+   "gold": "Thursdays",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-03] Caroline switched her volunteer shift at the community center from Tuesdays to Thursdays around October 3, 2023 \u2014 source: \"I switched my volunteer shift to Thursdays.\" (no longer true since 2023-11-01)",
+    "[said 2023-12-06] Caroline reduced her volunteer shift at the community center to every other Saturday morning around December 6, 2023 \u2014 source: \"I cut back my volunteering to every other Saturday morning.\"",
+    "[said 2023-06-09] Caroline met up with friends around early June 2023 \u2014 source: \"Thanks, Mel! My friends, family and mentors are my rocks \u2013 they motivate me and give me the strength to push on. Here's a pic from when we met up last week!\""
+   ],
+   "label": null,
+   "query_cost": 0.00020509006451612907,
+   "retrieved_tokens": 208,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N01",
+   "question": "What is Caroline's favorite coffee spot?",
+   "gold": "Grind House",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-30] User's favorite coffee spot is Grind House (updated from Blue Door Caf\u00e9) \u2014 source: \"My favorite coffee spot is Grind House.\"",
+    "[said 2023-09-04] User's favorite coffee spot is Blue Door Caf\u00e9 \u2014 source: \"My favorite coffee spot is Blue Door Caf\u00e9.\" (no longer true since 2023-10-30)",
+    "[said 2023-06-27] Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday around 2013. The bowl features a meaningful pattern and colors that remind her of art and self-expression.; Caroline has a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013) that she treasures for its artistic pattern, colors, and reminder of self-expression and friendship; Caroline owns a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013). The bowl has an awesome pattern and colors that remind her of art and self-expression, and it holds sentimental value. \u2014 source: \"Yep, Melanie! I've got some other stuff with sentimental value, like my hand-painted bowl. A friend made it for my 18th birthday ten years ago. The pattern and colors are awesome-- it reminds me of art and self-expression. \u2026 I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing. \u2026 Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\""
+   ],
+   "label": null,
+   "query_cost": 0.0001990351283309958,
+   "retrieved_tokens": 517,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N02",
+   "question": "What car does Melanie's family drive?",
+   "gold": "A silver SUV",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-06] Melanie's family drives a blue minivan \u2014 source: \"We drive a blue minivan.\"",
+    "[said 2023-11-02] Melanie's family drives a silver SUV as of November 2, 2023 \u2014 source: \"We drive a silver SUV.\"",
+    "[said 2023-08-03] Melanie and her spouse lived in a very small apartment immediately after their wedding around June 2018, which they still find amusing to recall \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
+   ],
+   "label": null,
+   "query_cost": 0.00020682896434634978,
+   "retrieved_tokens": 156,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N03",
+   "question": "Who is Caroline's therapist?",
+   "gold": "Dr. Kim",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-11-06] Caroline's therapist is Dr. Kim (as of November 6, 2023) \u2014 source: \"My therapist is Dr. Kim.\"",
+    "[said 2023-09-09] Caroline's therapist is Dr. Alvarez \u2014 source: \"My therapist is Dr. Alvarez.\" (no longer true since 2023-11-06)",
+    "[said 2023-05-08] Caroline is interested in pursuing counseling or mental health work, motivated by a desire to support people facing similar issues to her own \u2014 source: \"I'm keen on counseling or working in mental health - I'd love to support those with similar issues.\""
+   ],
+   "label": null,
+   "query_cost": 0.0001962355161290323,
+   "retrieved_tokens": 173,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N04",
+   "question": "Where does Melanie's book club meet?",
+   "gold": "The public library",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-11] Melanie's book club meets at Anna's house \u2014 source: \"Our book club meets at Anna's house.\"",
+    "[said 2023-11-09] Melanie's book club meets at the public library \u2014 source: \"Our book club meets at the public library.\"",
+    "[said 2023-06-09] Melanie is motivated by her family and their love, and wants to be courageous for them \u2014 source: \"Yes, Caroline! We can do it. Your courage is inspiring. I want to be couragous for my family- they motivate me and give me love. What motivates you?\""
+   ],
+   "label": null,
+   "query_cost": 0.00020558722580645163,
+   "retrieved_tokens": 167,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N05",
+   "question": "What phone does Caroline have?",
+   "gold": "A Pixel 8",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-14] Caroline's phone is an iPhone 12 \u2014 source: \"My phone is an iPhone 12.\"",
+    "[said 2023-06-09] Caroline and her support system met up around June 2, 2023 and shared a photo together \u2014 source: \"Wow, that photo is great! How long have you had such a great support system?\"",
+    "[said 2023-06-09] Caroline met up with friends around early June 2023 \u2014 source: \"Thanks, Mel! My friends, family and mentors are my rocks \u2013 they motivate me and give me the strength to push on. Here's a pic from when we met up last week!\""
+   ],
+   "label": null,
+   "query_cost": 0.0001957315161290323,
+   "retrieved_tokens": 181,
+   "checkpoint": 62,
+   "store_size": 124
+  }
+ ],
+ "asked": [
+  {
+   "idx": "U2:P01",
+   "question": "What instrument did Melanie play in June 2023?",
+   "gold": "Violin",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-07-19] Melanie sold her violin around June 2023 and switched to learning guitar instead, which she finds more fun to play with her children; Melanie sold her violin around June 2023 and switched to learning guitar, which she finds more enjoyable to play with her children \u2014 source: \"I sold my violin last month. I'm learning guitar now instead - it's more fun to play with the kids. \u2026 Our first apartment after the wedding was so tiny - we still laugh about it.\"",
+    "[said 2023-09-28] Melanie switched guitar teachers from Ben to Priya around September 28, 2023 \u2014 source: \"I switched guitar teachers - Priya teaches me now.\"",
+    "[said 2023-11-20] Melanie switched from learning guitar via YouTube videos to joining a group guitar class at the community center around November 20, 2023 \u2014 source: \"I joined a group guitar class at the community center instead of YouTube.\""
+   ],
+   "label": null,
+   "query_cost": 0.00021014523870967745,
+   "retrieved_tokens": 247,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:P02",
+   "question": "Where did Caroline's grandma live in May 2023?",
+   "gold": "Sweden",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-07-31] Caroline's grandmother moved from Sweden to Norway around July 31, 2023, where she now lives with Caroline's aunt \u2014 source: \"My grandma moved out of Sweden - she lives in Norway with my aunt now.\"",
+    "[said 2023-06-09] Caroline met up with friends around early June 2023 \u2014 source: \"Thanks, Mel! My friends, family and mentors are my rocks \u2013 they motivate me and give me the strength to push on. Here's a pic from when we met up last week!\"",
+    "[said 2023-11-12] Caroline moved to a house in Evanston around November 12, 2023 \u2014 source: \"We finally found a house - I live in Evanston now.\""
+   ],
+   "label": null,
+   "query_cost": 0.0001943827741935484,
+   "retrieved_tokens": 200,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:P03",
+   "question": "Which adoption agency was Caroline working with in early July 2023?",
+   "gold": "The agency she chose for its LGBTQ+ inclusivity (before switching to Rainbow Families)",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-08-03] Caroline switched adoption agencies around July 25, 2023 to Rainbow Families, which is closer to home and has a faster process; Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and move faster \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it. \u2026 Next summer we hope to camp at the Grand Canyon, if we can save up.\"",
+    "[said 2023-07-25] Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and have a faster process \u2014 source: \"Update on adoption: I switched agencies. I'm with Rainbow Families now - they're closer to home and move faster.\"",
+    "[said 2023-07-27] Caroline changed her adoption plan around July 27, 2023 to foster children first before pursuing adoption, to gain experience and learn the process \u2014 source: \"I've changed my plan a bit - I'm going to foster first instead of adopting right away, to learn the ropes.\""
+   ],
+   "label": null,
+   "query_cost": 0.00018254419354838712,
+   "retrieved_tokens": 269,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:P04",
+   "question": "Did Melanie have a job in June 2023?",
+   "gold": "Yes",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-07-06] Melanie quit her job around June 30, 2023 to be home with her children full-time \u2014 source: \"Big change: I quit my job last Friday so I can be home with the kids full-time.\"",
+    "[said 2023-06-09] Melanie has been married for 5 years as of June 9, 2023 \u2014 source: \"5 years already! Time flies- feels like just yesterday I put this dress on! Thanks, Caroline!\"",
+    "[said 2023-08-24] Melanie's children started their summer break around August 24, 2023 and are enjoying it \u2014 source: \"The kids' summer break finally started and they are loving every minute of it.\""
+   ],
+   "label": null,
+   "query_cost": 0.0001885935483870968,
+   "retrieved_tokens": 193,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:P05",
+   "question": "What was Melanie's main creative outlet in May 2023?",
+   "gold": "Painting",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-05-08] Melanie uses painting as a creative outlet to express her feelings and relax after long days \u2014 source: \"Thanks, Caroline! Painting's a fun way to express my feelings and get creative. It's a great way to relax after a long day.\"",
+    "[said 2023-07-04] Melanie has shifted her primary creative outlet from painting to pottery, attending a pottery studio three evenings a week as of early July 2023. She hasn't painted in several weeks.; Melanie attends pottery studio three evenings a week and considers it her main creative outlet, having not painted in weeks as of early July 2023 \u2014 source: \"I haven't painted in weeks, honestly. Pottery is my main creative outlet now - I go to the studio three evenings a week. \u2026 Funny thing - the lake sunrise isn't my favorite anymore. The forest-at-dusk piece I finished last week is my favorite now.\"",
+    "[said 2023-06-09] Melanie has been married for 5 years as of June 9, 2023 \u2014 source: \"5 years already! Time flies- feels like just yesterday I put this dress on! Thanks, Caroline!\""
+   ],
+   "label": null,
+   "query_cost": 0.000188659935483871,
+   "retrieved_tokens": 296,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C01q1",
+   "question": "Where does Caroline live now?",
+   "gold": "A house in Evanston",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-11-12] Caroline moved to a house in Evanston around November 12, 2023 \u2014 source: \"We finally found a house - I live in Evanston now.\"",
+    "[said 2023-10-01] Caroline moved to a two-bedroom apartment in Oak Park around October 1, 2023, specifically to have room for a foster child as part of her plan to foster before adopting \u2014 source: \"Moved again! I'm in a two-bedroom in Oak Park now, so there's room for a foster kid.\"",
+    "[said 2023-09-03] Caroline moved into a studio apartment downtown around early September 2023 \u2014 source: \"I just moved into a studio apartment downtown.\" (no longer true since 2023-10-01)"
+   ],
+   "label": null,
+   "query_cost": 0.0001950141290322581,
+   "retrieved_tokens": 200,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C01q2",
+   "question": "Where was Caroline living in October 2023?",
+   "gold": "A two-bedroom in Oak Park",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-11-12] Caroline moved to a house in Evanston around November 12, 2023 \u2014 source: \"We finally found a house - I live in Evanston now.\"",
+    "[said 2023-10-01] Caroline moved to a two-bedroom apartment in Oak Park around October 1, 2023, specifically to have room for a foster child as part of her plan to foster before adopting \u2014 source: \"Moved again! I'm in a two-bedroom in Oak Park now, so there's room for a foster kid.\"",
+    "[said 2023-09-03] Caroline moved into a studio apartment downtown around early September 2023 \u2014 source: \"I just moved into a studio apartment downtown.\" (no longer true since 2023-10-01)"
+   ],
+   "label": null,
+   "query_cost": 0.0001969109032258065,
+   "retrieved_tokens": 200,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C02q1",
+   "question": "How is Melanie learning guitar now?",
+   "gold": "A group class at the community center",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-28] Melanie switched guitar teachers from Ben to Priya around September 28, 2023 \u2014 source: \"I switched guitar teachers - Priya teaches me now.\"",
+    "[said 2023-07-19] Melanie sold her violin around June 2023 and switched to learning guitar instead, which she finds more fun to play with her children; Melanie sold her violin around June 2023 and switched to learning guitar, which she finds more enjoyable to play with her children \u2014 source: \"I sold my violin last month. I'm learning guitar now instead - it's more fun to play with the kids. \u2026 Our first apartment after the wedding was so tiny - we still laugh about it.\"",
+    "[said 2023-11-20] Melanie switched from learning guitar via YouTube videos to joining a group guitar class at the community center around November 20, 2023 \u2014 source: \"I joined a group guitar class at the community center instead of YouTube.\""
+   ],
+   "label": null,
+   "query_cost": 0.00020549696774193552,
+   "retrieved_tokens": 247,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C02q2",
+   "question": "Who was teaching Melanie guitar in early October 2023?",
+   "gold": "Priya",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-28] Melanie switched guitar teachers from Ben to Priya around September 28, 2023 \u2014 source: \"I switched guitar teachers - Priya teaches me now.\"",
+    "[said 2023-10-20] Melanie's guitar teacher Priya moved away around October 20, 2023, and Melanie switched to learning guitar from YouTube videos \u2014 source: \"Priya moved away, so I'm learning guitar from YouTube videos for now.\"",
+    "[said 2023-09-05] Melanie's guitar teacher is named Ben and is patient with her \u2014 source: \"My guitar teacher is Ben, he's really patient with me.\" (no longer true since 2023-09-28)"
+   ],
+   "label": null,
+   "query_cost": 0.00021036120000000001,
+   "retrieved_tokens": 188,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C03q1",
+   "question": "Which children is Caroline currently matched with?",
+   "gold": "Maya and Sam (siblings)",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-08] Caroline was matched with a 7-year-old named Leo for foster-to-adopt placement around October 8, 2023 \u2014 source: \"I've been matched with a 7-year-old named Leo.\"",
+    "[said 2023-12-03] Caroline was matched with two siblings, Maya and Sam, for adoption around December 3, 2023 \u2014 source: \"Big news: I've been matched with two siblings, Maya and Sam.\"",
+    "[said 2023-11-05] Leo, the 7-year-old Caroline was matched with for foster-to-adopt placement in October 2023, returned to live with his grandmother around November 5, 2023, which Caroline views as the best outcome for him \u2014 source: \"Leo went back to live with his grandmother, which is the best thing for him.\""
+   ],
+   "label": null,
+   "query_cost": 0.00018988200000000002,
+   "retrieved_tokens": 215,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C03q2",
+   "question": "Who was Caroline matched with in October 2023?",
+   "gold": "Leo, a 7-year-old",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-08] Caroline was matched with a 7-year-old named Leo for foster-to-adopt placement around October 8, 2023 \u2014 source: \"I've been matched with a 7-year-old named Leo.\"",
+    "[said 2023-11-05] Leo, the 7-year-old Caroline was matched with for foster-to-adopt placement in October 2023, returned to live with his grandmother around November 5, 2023, which Caroline views as the best outcome for him \u2014 source: \"Leo went back to live with his grandmother, which is the best thing for him.\"",
+    "[said 2023-06-09] Caroline met up with friends around early June 2023 \u2014 source: \"Thanks, Mel! My friends, family and mentors are my rocks \u2013 they motivate me and give me the strength to push on. Here's a pic from when we met up last week!\""
+   ],
+   "label": null,
+   "query_cost": 0.00020002974193548392,
+   "retrieved_tokens": 235,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C04q1",
+   "question": "Which school does Melanie's oldest child attend now?",
+   "gold": "Lincoln Middle School",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-15] Melanie's oldest switched schools from Lincoln Middle School to Riverside Academy around October 15, 2023, because Lincoln was not a good fit, but then switched back to Lincoln Middle School around November 25, 2023 because Riverside was too far away \u2014 source: \"We moved our oldest to Riverside Academy - Lincoln wasn't a good fit.\"",
+    "[said 2023-09-07] Melanie's oldest child started at Lincoln Middle School around September 7, 2023 \u2014 source: \"My oldest started at Lincoln Middle School this week.\"",
+    "[said 2023-06-27] Melanie has two younger children who love nature and spending time outdoors \u2014 source: \"I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing.\""
+   ],
+   "label": null,
+   "query_cost": 0.00019731300509337864,
+   "retrieved_tokens": 269,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C04q2",
+   "question": "Which school was Melanie's oldest at in late October 2023?",
+   "gold": "Riverside Academy",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-15] Melanie's oldest switched schools from Lincoln Middle School to Riverside Academy around October 15, 2023, because Lincoln was not a good fit, but then switched back to Lincoln Middle School around November 25, 2023 because Riverside was too far away \u2014 source: \"We moved our oldest to Riverside Academy - Lincoln wasn't a good fit.\"",
+    "[said 2023-09-07] Melanie's oldest child started at Lincoln Middle School around September 7, 2023 \u2014 source: \"My oldest started at Lincoln Middle School this week.\"",
+    "[said 2023-06-09] Melanie has been married for 5 years as of June 9, 2023 \u2014 source: \"5 years already! Time flies- feels like just yesterday I put this dress on! Thanks, Caroline!\""
+   ],
+   "label": null,
+   "query_cost": 0.0001995513483870968,
+   "retrieved_tokens": 212,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C05q1",
+   "question": "When does Caroline volunteer at the community center now?",
+   "gold": "Every other Saturday morning",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-11-01] Caroline's volunteer shift at the community center moved to Saturday mornings around November 1, 2023 \u2014 source: \"My volunteer shift moved to Saturday mornings.\"",
+    "[said 2023-08-25] Caroline started volunteering as a peer counselor for trans youth at the community center around August 25, 2023 \u2014 source: \"I started volunteering as a peer counselor for trans youth at the community center this week.\"",
+    "[said 2023-12-06] Caroline reduced her volunteer shift at the community center to every other Saturday morning around December 6, 2023 \u2014 source: \"I cut back my volunteering to every other Saturday morning.\""
+   ],
+   "label": null,
+   "query_cost": 0.00020053374193548392,
+   "retrieved_tokens": 177,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:C05q2",
+   "question": "What day did Caroline volunteer in mid-October 2023?",
+   "gold": "Thursdays",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-03] Caroline switched her volunteer shift at the community center from Tuesdays to Thursdays around October 3, 2023 \u2014 source: \"I switched my volunteer shift to Thursdays.\" (no longer true since 2023-11-01)",
+    "[said 2023-12-06] Caroline reduced her volunteer shift at the community center to every other Saturday morning around December 6, 2023 \u2014 source: \"I cut back my volunteering to every other Saturday morning.\"",
+    "[said 2023-06-09] Caroline met up with friends around early June 2023 \u2014 source: \"Thanks, Mel! My friends, family and mentors are my rocks \u2013 they motivate me and give me the strength to push on. Here's a pic from when we met up last week!\""
+   ],
+   "label": null,
+   "query_cost": 0.00020509006451612907,
+   "retrieved_tokens": 208,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N01",
+   "question": "What is Caroline's favorite coffee spot?",
+   "gold": "Grind House",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-10-30] User's favorite coffee spot is Grind House (updated from Blue Door Caf\u00e9) \u2014 source: \"My favorite coffee spot is Grind House.\"",
+    "[said 2023-09-04] User's favorite coffee spot is Blue Door Caf\u00e9 \u2014 source: \"My favorite coffee spot is Blue Door Caf\u00e9.\" (no longer true since 2023-10-30)",
+    "[said 2023-06-27] Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday around 2013. The bowl features a meaningful pattern and colors that remind her of art and self-expression.; Caroline has a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013) that she treasures for its artistic pattern, colors, and reminder of self-expression and friendship; Caroline owns a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013). The bowl has an awesome pattern and colors that remind her of art and self-expression, and it holds sentimental value. \u2014 source: \"Yep, Melanie! I've got some other stuff with sentimental value, like my hand-painted bowl. A friend made it for my 18th birthday ten years ago. The pattern and colors are awesome-- it reminds me of art and self-expression. \u2026 I'm still figuring out the details, but I'm thinking of working with trans people, helping them accept themselves and supporting their mental health. Last Friday, I went to an LGBTQ+ counseling workshop and it was really enlightening. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing. \u2026 Thanks, Melanie. It really mattered. My own journey and the support I got made a huge difference. Now I want to help people go through it too. I saw how counseling and support groups improved my life, so I started caring more about mental health and understanding myself. Now I'm passionate about creating a safe, inviting place for people to grow.\""
+   ],
+   "label": null,
+   "query_cost": 0.0001990351283309958,
+   "retrieved_tokens": 517,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N02",
+   "question": "What car does Melanie's family drive?",
+   "gold": "A silver SUV",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-06] Melanie's family drives a blue minivan \u2014 source: \"We drive a blue minivan.\"",
+    "[said 2023-11-02] Melanie's family drives a silver SUV as of November 2, 2023 \u2014 source: \"We drive a silver SUV.\"",
+    "[said 2023-08-03] Melanie and her spouse lived in a very small apartment immediately after their wedding around June 2018, which they still find amusing to recall \u2014 source: \"Our first apartment after the wedding was so tiny - we still laugh about it.\""
+   ],
+   "label": null,
+   "query_cost": 0.00020682896434634978,
+   "retrieved_tokens": 156,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N03",
+   "question": "Who is Caroline's therapist?",
+   "gold": "Dr. Kim",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-11-06] Caroline's therapist is Dr. Kim (as of November 6, 2023) \u2014 source: \"My therapist is Dr. Kim.\"",
+    "[said 2023-09-09] Caroline's therapist is Dr. Alvarez \u2014 source: \"My therapist is Dr. Alvarez.\" (no longer true since 2023-11-06)",
+    "[said 2023-05-08] Caroline is interested in pursuing counseling or mental health work, motivated by a desire to support people facing similar issues to her own \u2014 source: \"I'm keen on counseling or working in mental health - I'd love to support those with similar issues.\""
+   ],
+   "label": null,
+   "query_cost": 0.0001962355161290323,
+   "retrieved_tokens": 173,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N04",
+   "question": "Where does Melanie's book club meet?",
+   "gold": "The public library",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-11] Melanie's book club meets at Anna's house \u2014 source: \"Our book club meets at Anna's house.\"",
+    "[said 2023-11-09] Melanie's book club meets at the public library \u2014 source: \"Our book club meets at the public library.\"",
+    "[said 2023-06-09] Melanie is motivated by her family and their love, and wants to be courageous for them \u2014 source: \"Yes, Caroline! We can do it. Your courage is inspiring. I want to be couragous for my family- they motivate me and give me love. What motivates you?\""
+   ],
+   "label": null,
+   "query_cost": 0.00020558722580645163,
+   "retrieved_tokens": 167,
+   "checkpoint": 62,
+   "store_size": 124
+  },
+  {
+   "idx": "U2:N05",
+   "question": "What phone does Caroline have?",
+   "gold": "A Pixel 8",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": null,
+   "memories": 3,
+   "lines": [
+    "[said 2023-09-14] Caroline's phone is an iPhone 12 \u2014 source: \"My phone is an iPhone 12.\"",
+    "[said 2023-06-09] Caroline and her support system met up around June 2, 2023 and shared a photo together \u2014 source: \"Wow, that photo is great! How long have you had such a great support system?\"",
+    "[said 2023-06-09] Caroline met up with friends around early June 2023 \u2014 source: \"Thanks, Mel! My friends, family and mentors are my rocks \u2013 they motivate me and give me the strength to push on. Here's a pic from when we met up last week!\""
+   ],
+   "label": null,
+   "query_cost": 0.0001957315161290323,
+   "retrieved_tokens": 181,
+   "checkpoint": 62,
+   "store_size": 124
+  }
+ ],
+ "options": {
+  "top_k": 3,
+  "no_dates": false,
+  "no_answer": true
+ },
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "hygiene": {
+  "groups": 22,
+  "pairs": 350,
+  "decisions": 350,
+  "merges": 10,
+  "drops": 0,
+  "already_linked": 0,
+  "failed_requests": 0,
+  "cost_usd": 0.0021743114400000047,
+  "jev_latency_ms": 2478.613334009424,
+  "wall_s": 2.54541895899456,
+  "merged_pairs": [
+   [
+    "Caroline received a necklace from her grandmother in Sweden when she was young as a gift symbolizing love, faith, and strength. The necklace serves as a reminder of her roots and the love and support from her family.",
+    "Caroline has a necklace from her grandmother in Sweden that was given to her when she was young, symbolizing love, faith, and strength, and serves as a reminder of her roots and family support",
+    0.97
+   ],
+   [
+    "Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday around 2013. The bowl features a meaningful pattern and colors that remind her of art and self-expression.",
+    "Caroline owns a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013). The bowl has an awesome pattern and colors that remind her of art and self-expression, and it holds sentimental value.",
+    0.85
+   ],
+   [
+    "Caroline has a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013) that she treasures for its artistic pattern, colors, and reminder of self-expression and friendship",
+    "Caroline owns a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013). The bowl has an awesome pattern and colors that remind her of art and self-expression, and it holds sentimental value.",
+    0.92
+   ],
+   [
+    "Melanie has shifted her primary creative outlet from painting to pottery, attending a pottery studio three evenings a week as of early July 2023. She hasn't painted in several weeks.",
+    "Melanie attends pottery studio three evenings a week and considers it her main creative outlet, having not painted in weeks as of early July 2023",
+    0.87
+   ],
+   [
+    "Melanie sold her violin around June 2023 and switched to learning guitar instead, which she finds more fun to play with her children",
+    "Melanie sold her violin around June 2023 and switched to learning guitar, which she finds more enjoyable to play with her children",
+    0.94
+   ],
+   [
+    "Caroline switched adoption agencies around July 25, 2023 to Rainbow Families, which is closer to home and has a faster process",
+    "Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and move faster",
+    0.96
+   ],
+   [
+    "Melanie replaced reading with meditation in her daily me-time routine, now practicing twenty minutes of meditation every morning as of late July 2023",
+    "Melanie switched from reading to meditation for her me-time routine, practicing twenty minutes every morning as of late July 2023",
+    0.97
+   ],
+   [
+    "Melanie has established a consistent self-care routine as of late July 2023, moving beyond her previous work-in-progress approach to self-care",
+    "Melanie established a consistent self-care routine that sticks as of late July 2023, after previously struggling with self-care consistency",
+    0.88
+   ],
+   [
+    "Melanie plans to run another charity race in the fall of 2023, possibly a half marathon",
+    "Melanie plans to run another charity race in fall 2023, possibly a half marathon",
+    0.99
+   ],
+   [
+    "Melanie's two younger children have shifted their interests from nature activities to dinosaurs as of mid-July 2023",
+    "Melanie's two younger children shifted their interests from nature to dinosaurs around mid-July 2023",
+    0.93
+   ]
+  ]
+ },
+ "storage_before_hygiene": {
+  "storage": {
+   "closes": 10,
+   "closes_correct": 8,
+   "closes_wrong": 2,
+   "closes_by_reason": {
+    "belief_wrong": 1,
+    "fulfilled_correct": 2,
+    "fulfilled_wrong": 1,
+    "belief_correct": 6
+   },
+   "reopens": 0,
+   "disputed": 2,
+   "against_blocked": 19,
+   "against_unconfirmed": 11,
+   "plan_fulfilled_asks": 290
+  },
+  "update_behavior": {
+   "stale": 14,
+   "not_stored": 4,
+   "closed": 3,
+   "kept": 8,
+   "fulfilled": 1
+  }
+ },
+ "locomo_accuracy": null,
+ "locomo_accuracy_excl": null,
+ "locomo_q": 20,
+ "locomo_q_excl": 20,
+ "update_accuracy": null,
+ "update_accuracy_by_tier": {
+  "easy": null,
+  "subtle": null,
+  "fulfilled": null
+ },
+ "update_items": [
+  {
+   "id": "E01",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E02",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E03",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "not_stored",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E04",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E05",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E06",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E07",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E08",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E09",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "closed",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E10",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "closed",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E11",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "closed",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E12",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E13",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E14",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E15",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S01",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S02",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "not_stored",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S03",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S04",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S05",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S06",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S07",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S08",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "not_stored",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S09",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S10",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F01",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F02",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "fulfilled",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F03",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F04",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F05",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "not_stored",
+   "answer": null,
+   "label": null
+  }
+ ],
+ "update_behavior": {
+  "stale": 14,
+  "not_stored": 4,
+  "closed": 3,
+  "kept": 8,
+  "fulfilled": 1
+ },
+ "stale_on_close_items": [
+  14,
+  18
+ ],
+ "over_close_on_no_close_items": [
+  0,
+  8
+ ],
+ "storage": {
+  "closes": 10,
+  "closes_correct": 8,
+  "closes_wrong": 2,
+  "closes_by_reason": {
+   "belief_wrong": 1,
+   "fulfilled_correct": 2,
+   "fulfilled_wrong": 1,
+   "belief_correct": 6
+  },
+  "reopens": 0,
+  "disputed": 2,
+  "against_blocked": 19,
+  "against_unconfirmed": 11,
+  "plan_fulfilled_asks": 290
+ },
+ "set2_accuracy": 0.0,
+ "set2_q": 20,
+ "set2_accuracy_by_type": {
+  "chain_current": [
+   0.0,
+   5
+  ],
+  "chain_point_in_time": [
+   0.0,
+   5
+  ],
+  "no_temporal_cue": [
+   0.0,
+   5
+  ],
+  "point_in_time": [
+   0.0,
+   5
+  ]
+ },
+ "set2_stale_values": [
+  10,
+  16
+ ],
+ "set2_stale_pairs": [
+  [
+   "U2:C01.2",
+   "U2:C01.3"
+  ],
+  [
+   "U2:C02.2",
+   "U2:C02.3"
+  ],
+  [
+   "U2:C02.3",
+   "U2:C02.4"
+  ],
+  [
+   "U2:C03.2",
+   "U2:C03.3"
+  ],
+  [
+   "U2:C04.1",
+   "U2:C04.2"
+  ],
+  [
+   "U2:C04.2",
+   "U2:C04.3"
+  ],
+  [
+   "U2:C05.3",
+   "U2:C05.4"
+  ],
+  [
+   "U2:N02.1",
+   "U2:N02.2"
+  ],
+  [
+   "U2:N04.1",
+   "U2:N04.2"
+  ],
+  [
+   "U2:N05.1",
+   "U2:N05.2"
+  ]
+ ],
+ "set2_keep_ok": [
+  1,
+  1
+ ],
+ "fulfills_log": [
+  {
+   "plan": "Melanie's kids are excited about summer break and the family is considering a camping trip for June 2023",
+   "plan_relation": "plans",
+   "plan_source": "D2:7",
+   "by": "Melanie took her family camping in the mountains around June 20, 2023 and describes it as a really nice time together",
+   "by_source": "D4:6",
+   "jev_relation": "plan_fulfilled",
+   "p": 0.95,
+   "temporal": "past"
+  },
+  {
+   "plan": "Caroline feels hopeful and optimistic about pursuing her adoption dream and is actively researching adoption agencies to turn her goal of giving children a loving home into reality",
+   "plan_relation": "goal",
+   "plan_source": "D2:10",
+   "by": "Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and have a faster process",
+   "by_source": "U:E12",
+   "jev_relation": "plan_fulfilled",
+   "p": 0.87,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline is interested in pursuing counseling work specifically with transgender people, focusing on helping them accept themselves and supporting their mental health",
+   "plan_relation": "goal",
+   "plan_source": "D4:13",
+   "by": "Caroline started volunteering as a peer counselor for trans youth at the community center around August 25, 2023",
+   "by_source": "U:F03",
+   "jev_relation": "plan_fulfilled",
+   "p": 0.88,
+   "temporal": "current"
+  }
+ ]
+}

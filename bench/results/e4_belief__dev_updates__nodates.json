@@ -1,0 +1,2720 @@
+{
+ "arm": "e4_belief",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "mem0",
+  "store_source_text": true,
+  "worth_filter": false,
+  "merge_policy": "same_as",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "today",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "mem0_update",
+  "relation_decider": "jev",
+  "cardinality_rule": true,
+  "close_agreement": true,
+  "candidate_source": "cosine+graph",
+  "fulfills_rule": "question",
+  "belief": true,
+  "belief_w": 1.0,
+  "relation_version": 2
+ },
+ "slice": {
+  "name": "dev_updates",
+  "sessions": [
+   1,
+   4
+  ],
+  "messages": 106,
+  "questions": 65
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 34,
+   "store_size": 97,
+   "questions": 65,
+   "accuracy": 0.8769230769230769,
+   "no_memory": 0,
+   "early_questions": 65,
+   "early_accuracy": 0.8769230769230769
+  }
+ ],
+ "accuracy": 0.8,
+ "accuracy_by_category": {
+  "1": 1.0,
+  "2": 0.5555555555555556,
+  "3": 1.0,
+  "4": 0.8421052631578947,
+  "update": 0.9666666666666667
+ },
+ "stored": 97,
+ "active": 94,
+ "tentative": 86,
+ "disputed": 0,
+ "same_as_edges": 10,
+ "pipeline_stats": {
+  "facts_checked": 99,
+  "plan_fulfilled_asks": 234,
+  "facts_with_graph_candidates": 39,
+  "graph_candidates": 114,
+  "against_blocked": 33,
+  "fulfilled": 3,
+  "agreement_checks": 1,
+  "disagreements": 1,
+  "against_unconfirmed": 1
+ },
+ "facts_extracted": 99,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 2,
+ "llm_decisions": 0,
+ "actions": {
+  "inserted": 36,
+  "refined": 51,
+  "updated": 6,
+  "negated": 4,
+  "rewritten": 2
+ },
+ "decision_cost_per_1k": 0.44063612456898454,
+ "cost_per_1k": 10.32312669060672,
+ "write_latency_p50_ms": 1672.7609785157256,
+ "decision_latency_p50_ms": 596.3386669754982,
+ "no_memory_questions": 0,
+ "stale_fact_rate": 0.0,
+ "stale": {
+  "labels_in_slice": 1,
+  "claims_stored": 1,
+  "claims_stale": 0,
+  "rate": 0.0,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.0,
+  "claude": 0.253467
+ },
+ "cache": {
+  "hits": 4417,
+  "misses": 85
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "When did Caroline go to the LGBTQ support group?",
+   "gold": "7 May 2023",
+   "category": 2,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 1,
+   "answer": "September 22, 2026.",
+   "memories": 16,
+   "label": "WRONG",
+   "query_cost": 0.0038695055741935483,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 1,
+   "question": "When did Melanie paint a sunrise?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D1:12"
+   ],
+   "last_evidence_session": 1,
+   "answer": "Based on the memories, Melanie painted a lake sunrise **around 2024** (described as \"last year\" in a memory from around 2025).",
+   "memories": 9,
+   "label": "WRONG",
+   "query_cost": 0.0034853450868162694,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 2,
+   "question": "What fields would Caroline be likely to pursue in her educaton?",
+   "gold": "Psychology, counseling certification",
+   "category": 3,
+   "evidence": [
+    "D1:9",
+    "D1:11"
+   ],
+   "last_evidence_session": 1,
+   "answer": "**Psychology and counseling/mental health**",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0033018910979757086,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 3,
+   "question": "What did Caroline research?",
+   "gold": "Adoption agencies",
+   "category": 1,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Adoption agencies.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.002784173810752688,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 4,
+   "question": "What is Caroline's identity?",
+   "gold": "Transgender woman",
+   "category": 1,
+   "evidence": [
+    "D1:5"
+   ],
+   "last_evidence_session": 1,
+   "answer": "Transgender",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.003687460109181141,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 5,
+   "question": "When did Melanie run a charity race?",
+   "gold": "The sunday before 25 May 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Around May 20, 2023.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00409863139516129,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 6,
+   "question": "When is Melanie planning on going camping?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D2:7"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Summer 2024 at the Grand Canyon.",
+   "memories": 17,
+   "label": "WRONG",
+   "query_cost": 0.003662032364392377,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 7,
+   "question": "What is Caroline's relationship status?",
+   "gold": "Single",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D2:14"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Single (went through a tough breakup)",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0028001721890818856,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 8,
+   "question": "When did Caroline give a speech at a school?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Caroline gave speeches on **June 9, 2023** and **August 28, 2023**.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0030151780964433415,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 9,
+   "question": "When did Caroline meet up with her friends, family, and mentors?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:11"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Early June 2023 (around June 2).",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.002693556472862621,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 10,
+   "question": "How long has Caroline had her current group of friends for?",
+   "gold": "4 years",
+   "category": 2,
+   "evidence": [
+    "D3:13"
+   ],
+   "last_evidence_session": 3,
+   "answer": "4 years",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0027664511593052106,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 11,
+   "question": "Where did Caroline move from 4 years ago?",
+   "gold": "Sweden",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Sweden",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0026260980909677423,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 12,
+   "question": "How long ago was Caroline's 18th birthday?",
+   "gold": "10 years ago",
+   "category": 2,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Based on the memories, Caroline's 18th birthday was around **2013**, which is approximately **10 years ago** (relative to 2023).",
+   "memories": 8,
+   "label": "CORRECT",
+   "query_cost": 0.0034991818380084153,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 13,
+   "question": "What career path has Caroline decided to persue?",
+   "gold": "counseling or mental health for Transgender people",
+   "category": 1,
+   "evidence": [
+    "D4:13",
+    "D1:11"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Counseling and mental health work.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.003163675593052109,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 14,
+   "question": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+   "gold": "Likely no",
+   "category": 3,
+   "evidence": [
+    "D4:15",
+    "D3:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Based on the memories, Caroline's motivation to pursue counseling **directly stems from** the support she received, which transformed her life. Without that support, it's unlikely she would pursue counseling.\n\n**Short answer: Likely no, she wouldn't.**",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.003492599286143398,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 31,
+   "question": "When did Melanie go camping in June?",
+   "gold": "The week before 27 June 2023",
+   "category": 2,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 4,
+   "answer": "June 20, 2023",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.003955172647124825,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 82,
+   "question": "What did the charity race raise awareness for?",
+   "gold": "mental health",
+   "category": 4,
+   "evidence": [
+    "D2:2"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Mental health.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.002647010717419355,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 83,
+   "question": "What did Melanie realize after the charity race?",
+   "gold": "self-care is important",
+   "category": 4,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Based on the memories, after the charity race, Melanie reflected on the **importance of mental health care**.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0030874528199983497,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 84,
+   "question": "How does Melanie prioritize self-care?",
+   "gold": "by carving out some me-time each day for activities like running, reading, or playing the violin",
+   "category": 4,
+   "evidence": [
+    "D2:5"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Consistent daily routine and family motivation.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.003599859170223325,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 85,
+   "question": "What are Caroline's plans for the summer?",
+   "gold": "researching adoption agencies",
+   "category": 4,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Based on the memories, there's no specific information about Caroline's summer plans.",
+   "memories": 17,
+   "label": "WRONG",
+   "query_cost": 0.003388712274441687,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 86,
+   "question": "What type of individuals does the adoption agency Caroline is considering support?",
+   "gold": "LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 2,
+   "answer": "LGBTQ+ individuals and families.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028115132803970223,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 87,
+   "question": "Why did Caroline choose the adoption agency?",
+   "gold": "because of their inclusivity and support for LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 2,
+   "answer": "They support LGBTQ+ individuals and families.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0029060551265508686,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 88,
+   "question": "What is Caroline excited about in the adoption process?",
+   "gold": "creating a family for kids who need one",
+   "category": 4,
+   "evidence": [
+    "D2:14"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Creating a family for children in need.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.002873594946401985,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 89,
+   "question": "What does Melanie think about Caroline's decision to adopt?",
+   "gold": "she thinks Caroline is doing something amazing and will be an awesome mom",
+   "category": 4,
+   "evidence": [
+    "D2:15"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Based on the available memories, there is **no information** about Melanie's thoughts on Caroline's adoption decision.",
+   "memories": 9,
+   "label": "WRONG",
+   "query_cost": 0.0029131342438709676,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 90,
+   "question": "How long have Mel and her husband been married?",
+   "gold": "Mel and her husband have been married for 5 years.",
+   "category": 4,
+   "evidence": [
+    "D3:16"
+   ],
+   "last_evidence_session": 3,
+   "answer": "5 years (as of June 2023)",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0029384167951612902,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 91,
+   "question": "What does Caroline's necklace symbolize?",
+   "gold": "love, faith, and strength",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Love, faith, and strength.",
+   "memories": 7,
+   "label": "CORRECT",
+   "query_cost": 0.0032245803869163096,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 92,
+   "question": "What country is Caroline's grandma from?",
+   "gold": "Sweden",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Sweden",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.002860015495483871,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 93,
+   "question": "What was grandma's gift to Caroline?",
+   "gold": "necklace",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "A necklace symbolizing love, faith, strength.",
+   "memories": 7,
+   "label": "CORRECT",
+   "query_cost": 0.0032819511922580645,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 94,
+   "question": "What is Melanie's hand-painted bowl a reminder of?",
+   "gold": "art and self-expression",
+   "category": 4,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Based on the memories, **Melanie does not have a hand-painted bowl**. It is **Caroline** who owns a hand-painted bowl (now shattered) that reminded her of **art and self-expression**.",
+   "memories": 7,
+   "label": "CORRECT",
+   "query_cost": 0.0037538409730364657,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 95,
+   "question": "What did Melanie and her family do while camping?",
+   "gold": "explored nature, roasted marshmallows, and went on a hike",
+   "category": 4,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Explored nature, roasted marshmallows, hiked.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0030661219643758767,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 96,
+   "question": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+   "gold": "working with trans people, helping them accept themselves and supporting their mental health",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "LGBTQ+ and trans youth counseling.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0031454025756823822,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 97,
+   "question": "What workshop did Caroline attend recently?",
+   "gold": "LGBTQ+ counseling workshop",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "LGBTQ+ counseling workshop (June 23, 2023).",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.004021897850896058,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 98,
+   "question": "What was discussed in the LGBTQ+ counseling workshop?",
+   "gold": "therapeutic methods and how to best work with trans people",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Therapeutic methods for working with trans people.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0029733729677419354,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 99,
+   "question": "What motivated Caroline to pursue counseling?",
+   "gold": "her own journey and the support she received, and how counseling improved her life",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Her own personal journey and support received.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0028981486377171214,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 100,
+   "question": "What kind of place does Caroline want to create for people?",
+   "gold": "a safe and inviting place for people to grow",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Safe, inviting space for growth.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0032654993871902758,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E01",
+   "question": "What is Melanie's main creative outlet now?",
+   "gold": "Pottery (she has stopped painting)",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E01"
+   ],
+   "last_evidence_session": 5,
+   "answer": "Pottery (as of early July 2023).",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.003600707900679117,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E02",
+   "question": "Which of her own paintings does Melanie consider her favorite now?",
+   "gold": "The forest-at-dusk painting",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E02"
+   ],
+   "last_evidence_session": 6,
+   "answer": "Forest-at-dusk piece.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0029285175086021503,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E03",
+   "question": "Does Melanie still have a job?",
+   "gold": "No, she quit to stay home with the kids",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E03"
+   ],
+   "last_evidence_session": 7,
+   "answer": "No, she quit around June 30, 2023.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.002963425582542694,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E04",
+   "question": "Does Caroline still have her grandmother's necklace?",
+   "gold": "No, she lost it at the beach",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E04"
+   ],
+   "last_evidence_session": 8,
+   "answer": "No, she lost it at the beach.",
+   "memories": 8,
+   "label": "CORRECT",
+   "query_cost": 0.0034174506997518613,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E05",
+   "question": "Does Caroline still have the hand-painted bowl from her 18th birthday?",
+   "gold": "No, it broke",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E05"
+   ],
+   "last_evidence_session": 9,
+   "answer": "No, it shattered in July 2023.",
+   "memories": 7,
+   "label": "CORRECT",
+   "query_cost": 0.0033215946377171215,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E06",
+   "question": "Does Caroline still go to the LGBTQ support group?",
+   "gold": "No, the group disbanded",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E06"
+   ],
+   "last_evidence_session": 10,
+   "answer": "No, it disbanded around July 2023.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0030139502516129033,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E07",
+   "question": "Does Melanie still go swimming with her kids?",
+   "gold": "No, the pool closed; they go on bike rides instead",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E07"
+   ],
+   "last_evidence_session": 11,
+   "answer": "No, they switched to bike rides.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0026620114533106964,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E08",
+   "question": "What are Melanie's two younger kids into now?",
+   "gold": "Dinosaurs",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E08"
+   ],
+   "last_evidence_session": 12,
+   "answer": "Dinosaurs (as of mid-July 2023).",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028863304572722126,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E09",
+   "question": "What instrument does Melanie play now?",
+   "gold": "Guitar (she sold her violin)",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E09"
+   ],
+   "last_evidence_session": 13,
+   "answer": "Guitar (switched from violin in June 2023).",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028647431109224677,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E10",
+   "question": "What exercise does Melanie do now instead of running?",
+   "gold": "Swimming laps",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E10"
+   ],
+   "last_evidence_session": 14,
+   "answer": "Swimming laps at the gym.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028729490870967743,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E11",
+   "question": "What does Melanie do in her me-time now instead of reading?",
+   "gold": "Meditation",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E11"
+   ],
+   "last_evidence_session": 15,
+   "answer": "Twenty minutes of meditation every morning.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0036449474504743834,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E12",
+   "question": "Which adoption agency is Caroline working with now?",
+   "gold": "Rainbow Families",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E12"
+   ],
+   "last_evidence_session": 16,
+   "answer": "Rainbow Families",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.002834159747545582,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E13",
+   "question": "Is Caroline adopting right away or fostering first?",
+   "gold": "Fostering first",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E13"
+   ],
+   "last_evidence_session": 17,
+   "answer": "Fostering first before adopting.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.003172775798036466,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E14",
+   "question": "Is self-care still a work in progress for Melanie?",
+   "gold": "No, she now has a routine that sticks",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E14"
+   ],
+   "last_evidence_session": 18,
+   "answer": "No, she established a consistent routine (late July 2023).",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0031276718709677418,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E15",
+   "question": "Where does Caroline's grandma live now?",
+   "gold": "Norway",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Norway (with Caroline's aunt).",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0029644734789081887,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S01",
+   "question": "Is Melanie still married?",
+   "gold": "Yes, married for 5 years",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S01"
+   ],
+   "last_evidence_session": 20,
+   "answer": "Yes, married as of June 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0028776507510236693,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S02",
+   "question": "What career is Caroline pursuing?",
+   "gold": "Counseling / mental health, working with trans people",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S02"
+   ],
+   "last_evidence_session": 21,
+   "answer": "Counseling or mental health work.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.003141175677419355,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S03",
+   "question": "How long has Caroline had her current group of friends?",
+   "gold": "4 years",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S03"
+   ],
+   "last_evidence_session": 22,
+   "answer": "4 years",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0027555504193548385,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S04",
+   "question": "Has Caroline moved back to Sweden?",
+   "gold": "No, it's only a someday idea",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S04"
+   ],
+   "last_evidence_session": 23,
+   "answer": "No, she has no plans to.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00290067305955335,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S05",
+   "question": "Has Melanie run a second charity race yet?",
+   "gold": "No, she plans one for the fall",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S05"
+   ],
+   "last_evidence_session": 24,
+   "answer": "Looking at the memories:\n\n- Melanie ran a charity race around **May 20, 2023**\n- She **planned** to run another in fall 2023\n- She stopped running due to knee problems around **July 21, 2023**\n\n**No, not yet planned only.**",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.005044120065591398,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S06",
+   "question": "Where did Melanie most recently go camping with her family?",
+   "gold": "The mountains",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S06"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Mountains (around June 20, 2023).",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.0040570717870768,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S07",
+   "question": "Has Caroline attended an LGBTQ+ counseling workshop?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S07"
+   ],
+   "last_evidence_session": 26,
+   "answer": "Yes, on June 23, 2023.",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.004002315367741935,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S08",
+   "question": "Is Caroline open about being transgender?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S08"
+   ],
+   "last_evidence_session": 27,
+   "answer": "Yes, she speaks publicly about it.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028857440322580647,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S09",
+   "question": "Is Caroline planning to raise kids as a single parent?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S09"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Yes, as a single parent.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.003134794258064516,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S10",
+   "question": "Does Melanie want to be courageous for her family?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yes, she does.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.0036068039490662136,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F01",
+   "question": "Has Caroline enrolled in a program to continue her education?",
+   "gold": "Yes, a psychology certificate program at the community college",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F01"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, a psychology certificate program.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0026638247741935486,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F02",
+   "question": "Has Melanie's kids' summer break started?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F02"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Yes, around August 24, 2023.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.003038968087436333,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F03",
+   "question": "Has Caroline started working with trans people?",
+   "gold": "Yes, she volunteers as a peer counselor for trans youth",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F03"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Yes, since August 25, 2023.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0029134156258064513,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F04",
+   "question": "Has Caroline submitted an adoption application?",
+   "gold": "Yes, to Rainbow Families",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F04"
+   ],
+   "last_evidence_session": 33,
+   "answer": "Yes, to Rainbow Families (August 2023).",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.002985990070381232,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F05",
+   "question": "Has Caroline given another talk about her journey?",
+   "gold": "Yes, at a high school in the next town",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F05"
+   ],
+   "last_evidence_session": 34,
+   "answer": "Yes, she gave another talk in August 2023.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0028422153431085046,
+   "checkpoint": 34,
+   "store_size": 97
+  }
+ ],
+ "asked": [
+  {
+   "idx": 0,
+   "question": "When did Caroline go to the LGBTQ support group?",
+   "gold": "7 May 2023",
+   "category": 2,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 1,
+   "answer": "September 22, 2026.",
+   "memories": 16,
+   "label": "WRONG",
+   "query_cost": 0.0038695055741935483,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 1,
+   "question": "When did Melanie paint a sunrise?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D1:12"
+   ],
+   "last_evidence_session": 1,
+   "answer": "Based on the memories, Melanie painted a lake sunrise **around 2024** (described as \"last year\" in a memory from around 2025).",
+   "memories": 9,
+   "label": "WRONG",
+   "query_cost": 0.0034853450868162694,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 2,
+   "question": "What fields would Caroline be likely to pursue in her educaton?",
+   "gold": "Psychology, counseling certification",
+   "category": 3,
+   "evidence": [
+    "D1:9",
+    "D1:11"
+   ],
+   "last_evidence_session": 1,
+   "answer": "**Psychology and counseling/mental health**",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0033018910979757086,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 3,
+   "question": "What did Caroline research?",
+   "gold": "Adoption agencies",
+   "category": 1,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Adoption agencies.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.002784173810752688,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 4,
+   "question": "What is Caroline's identity?",
+   "gold": "Transgender woman",
+   "category": 1,
+   "evidence": [
+    "D1:5"
+   ],
+   "last_evidence_session": 1,
+   "answer": "Transgender",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.003687460109181141,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 5,
+   "question": "When did Melanie run a charity race?",
+   "gold": "The sunday before 25 May 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Around May 20, 2023.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00409863139516129,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 6,
+   "question": "When is Melanie planning on going camping?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D2:7"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Summer 2024 at the Grand Canyon.",
+   "memories": 17,
+   "label": "WRONG",
+   "query_cost": 0.003662032364392377,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 7,
+   "question": "What is Caroline's relationship status?",
+   "gold": "Single",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D2:14"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Single (went through a tough breakup)",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0028001721890818856,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 8,
+   "question": "When did Caroline give a speech at a school?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Caroline gave speeches on **June 9, 2023** and **August 28, 2023**.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0030151780964433415,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 9,
+   "question": "When did Caroline meet up with her friends, family, and mentors?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:11"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Early June 2023 (around June 2).",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.002693556472862621,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 10,
+   "question": "How long has Caroline had her current group of friends for?",
+   "gold": "4 years",
+   "category": 2,
+   "evidence": [
+    "D3:13"
+   ],
+   "last_evidence_session": 3,
+   "answer": "4 years",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0027664511593052106,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 11,
+   "question": "Where did Caroline move from 4 years ago?",
+   "gold": "Sweden",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Sweden",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0026260980909677423,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 12,
+   "question": "How long ago was Caroline's 18th birthday?",
+   "gold": "10 years ago",
+   "category": 2,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Based on the memories, Caroline's 18th birthday was around **2013**, which is approximately **10 years ago** (relative to 2023).",
+   "memories": 8,
+   "label": "CORRECT",
+   "query_cost": 0.0034991818380084153,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 13,
+   "question": "What career path has Caroline decided to persue?",
+   "gold": "counseling or mental health for Transgender people",
+   "category": 1,
+   "evidence": [
+    "D4:13",
+    "D1:11"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Counseling and mental health work.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.003163675593052109,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 14,
+   "question": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+   "gold": "Likely no",
+   "category": 3,
+   "evidence": [
+    "D4:15",
+    "D3:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Based on the memories, Caroline's motivation to pursue counseling **directly stems from** the support she received, which transformed her life. Without that support, it's unlikely she would pursue counseling.\n\n**Short answer: Likely no, she wouldn't.**",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.003492599286143398,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 31,
+   "question": "When did Melanie go camping in June?",
+   "gold": "The week before 27 June 2023",
+   "category": 2,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 4,
+   "answer": "June 20, 2023",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.003955172647124825,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 82,
+   "question": "What did the charity race raise awareness for?",
+   "gold": "mental health",
+   "category": 4,
+   "evidence": [
+    "D2:2"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Mental health.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.002647010717419355,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 83,
+   "question": "What did Melanie realize after the charity race?",
+   "gold": "self-care is important",
+   "category": 4,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Based on the memories, after the charity race, Melanie reflected on the **importance of mental health care**.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0030874528199983497,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 84,
+   "question": "How does Melanie prioritize self-care?",
+   "gold": "by carving out some me-time each day for activities like running, reading, or playing the violin",
+   "category": 4,
+   "evidence": [
+    "D2:5"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Consistent daily routine and family motivation.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.003599859170223325,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 85,
+   "question": "What are Caroline's plans for the summer?",
+   "gold": "researching adoption agencies",
+   "category": 4,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Based on the memories, there's no specific information about Caroline's summer plans.",
+   "memories": 17,
+   "label": "WRONG",
+   "query_cost": 0.003388712274441687,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 86,
+   "question": "What type of individuals does the adoption agency Caroline is considering support?",
+   "gold": "LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 2,
+   "answer": "LGBTQ+ individuals and families.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028115132803970223,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 87,
+   "question": "Why did Caroline choose the adoption agency?",
+   "gold": "because of their inclusivity and support for LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 2,
+   "answer": "They support LGBTQ+ individuals and families.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0029060551265508686,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 88,
+   "question": "What is Caroline excited about in the adoption process?",
+   "gold": "creating a family for kids who need one",
+   "category": 4,
+   "evidence": [
+    "D2:14"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Creating a family for children in need.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.002873594946401985,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 89,
+   "question": "What does Melanie think about Caroline's decision to adopt?",
+   "gold": "she thinks Caroline is doing something amazing and will be an awesome mom",
+   "category": 4,
+   "evidence": [
+    "D2:15"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Based on the available memories, there is **no information** about Melanie's thoughts on Caroline's adoption decision.",
+   "memories": 9,
+   "label": "WRONG",
+   "query_cost": 0.0029131342438709676,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 90,
+   "question": "How long have Mel and her husband been married?",
+   "gold": "Mel and her husband have been married for 5 years.",
+   "category": 4,
+   "evidence": [
+    "D3:16"
+   ],
+   "last_evidence_session": 3,
+   "answer": "5 years (as of June 2023)",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0029384167951612902,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 91,
+   "question": "What does Caroline's necklace symbolize?",
+   "gold": "love, faith, and strength",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Love, faith, and strength.",
+   "memories": 7,
+   "label": "CORRECT",
+   "query_cost": 0.0032245803869163096,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 92,
+   "question": "What country is Caroline's grandma from?",
+   "gold": "Sweden",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Sweden",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.002860015495483871,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 93,
+   "question": "What was grandma's gift to Caroline?",
+   "gold": "necklace",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "A necklace symbolizing love, faith, strength.",
+   "memories": 7,
+   "label": "CORRECT",
+   "query_cost": 0.0032819511922580645,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 94,
+   "question": "What is Melanie's hand-painted bowl a reminder of?",
+   "gold": "art and self-expression",
+   "category": 4,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Based on the memories, **Melanie does not have a hand-painted bowl**. It is **Caroline** who owns a hand-painted bowl (now shattered) that reminded her of **art and self-expression**.",
+   "memories": 7,
+   "label": "CORRECT",
+   "query_cost": 0.0037538409730364657,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 95,
+   "question": "What did Melanie and her family do while camping?",
+   "gold": "explored nature, roasted marshmallows, and went on a hike",
+   "category": 4,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Explored nature, roasted marshmallows, hiked.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0030661219643758767,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 96,
+   "question": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+   "gold": "working with trans people, helping them accept themselves and supporting their mental health",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "LGBTQ+ and trans youth counseling.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0031454025756823822,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 97,
+   "question": "What workshop did Caroline attend recently?",
+   "gold": "LGBTQ+ counseling workshop",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "LGBTQ+ counseling workshop (June 23, 2023).",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.004021897850896058,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 98,
+   "question": "What was discussed in the LGBTQ+ counseling workshop?",
+   "gold": "therapeutic methods and how to best work with trans people",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Therapeutic methods for working with trans people.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0029733729677419354,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 99,
+   "question": "What motivated Caroline to pursue counseling?",
+   "gold": "her own journey and the support she received, and how counseling improved her life",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Her own personal journey and support received.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0028981486377171214,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": 100,
+   "question": "What kind of place does Caroline want to create for people?",
+   "gold": "a safe and inviting place for people to grow",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Safe, inviting space for growth.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0032654993871902758,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E01",
+   "question": "What is Melanie's main creative outlet now?",
+   "gold": "Pottery (she has stopped painting)",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E01"
+   ],
+   "last_evidence_session": 5,
+   "answer": "Pottery (as of early July 2023).",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.003600707900679117,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E02",
+   "question": "Which of her own paintings does Melanie consider her favorite now?",
+   "gold": "The forest-at-dusk painting",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E02"
+   ],
+   "last_evidence_session": 6,
+   "answer": "Forest-at-dusk piece.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0029285175086021503,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E03",
+   "question": "Does Melanie still have a job?",
+   "gold": "No, she quit to stay home with the kids",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E03"
+   ],
+   "last_evidence_session": 7,
+   "answer": "No, she quit around June 30, 2023.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.002963425582542694,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E04",
+   "question": "Does Caroline still have her grandmother's necklace?",
+   "gold": "No, she lost it at the beach",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E04"
+   ],
+   "last_evidence_session": 8,
+   "answer": "No, she lost it at the beach.",
+   "memories": 8,
+   "label": "CORRECT",
+   "query_cost": 0.0034174506997518613,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E05",
+   "question": "Does Caroline still have the hand-painted bowl from her 18th birthday?",
+   "gold": "No, it broke",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E05"
+   ],
+   "last_evidence_session": 9,
+   "answer": "No, it shattered in July 2023.",
+   "memories": 7,
+   "label": "CORRECT",
+   "query_cost": 0.0033215946377171215,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E06",
+   "question": "Does Caroline still go to the LGBTQ support group?",
+   "gold": "No, the group disbanded",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E06"
+   ],
+   "last_evidence_session": 10,
+   "answer": "No, it disbanded around July 2023.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0030139502516129033,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E07",
+   "question": "Does Melanie still go swimming with her kids?",
+   "gold": "No, the pool closed; they go on bike rides instead",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E07"
+   ],
+   "last_evidence_session": 11,
+   "answer": "No, they switched to bike rides.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0026620114533106964,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E08",
+   "question": "What are Melanie's two younger kids into now?",
+   "gold": "Dinosaurs",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E08"
+   ],
+   "last_evidence_session": 12,
+   "answer": "Dinosaurs (as of mid-July 2023).",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028863304572722126,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E09",
+   "question": "What instrument does Melanie play now?",
+   "gold": "Guitar (she sold her violin)",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E09"
+   ],
+   "last_evidence_session": 13,
+   "answer": "Guitar (switched from violin in June 2023).",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028647431109224677,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E10",
+   "question": "What exercise does Melanie do now instead of running?",
+   "gold": "Swimming laps",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E10"
+   ],
+   "last_evidence_session": 14,
+   "answer": "Swimming laps at the gym.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028729490870967743,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E11",
+   "question": "What does Melanie do in her me-time now instead of reading?",
+   "gold": "Meditation",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E11"
+   ],
+   "last_evidence_session": 15,
+   "answer": "Twenty minutes of meditation every morning.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0036449474504743834,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E12",
+   "question": "Which adoption agency is Caroline working with now?",
+   "gold": "Rainbow Families",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E12"
+   ],
+   "last_evidence_session": 16,
+   "answer": "Rainbow Families",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.002834159747545582,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E13",
+   "question": "Is Caroline adopting right away or fostering first?",
+   "gold": "Fostering first",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E13"
+   ],
+   "last_evidence_session": 17,
+   "answer": "Fostering first before adopting.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.003172775798036466,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E14",
+   "question": "Is self-care still a work in progress for Melanie?",
+   "gold": "No, she now has a routine that sticks",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E14"
+   ],
+   "last_evidence_session": 18,
+   "answer": "No, she established a consistent routine (late July 2023).",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0031276718709677418,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:E15",
+   "question": "Where does Caroline's grandma live now?",
+   "gold": "Norway",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Norway (with Caroline's aunt).",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0029644734789081887,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S01",
+   "question": "Is Melanie still married?",
+   "gold": "Yes, married for 5 years",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S01"
+   ],
+   "last_evidence_session": 20,
+   "answer": "Yes, married as of June 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0028776507510236693,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S02",
+   "question": "What career is Caroline pursuing?",
+   "gold": "Counseling / mental health, working with trans people",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S02"
+   ],
+   "last_evidence_session": 21,
+   "answer": "Counseling or mental health work.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.003141175677419355,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S03",
+   "question": "How long has Caroline had her current group of friends?",
+   "gold": "4 years",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S03"
+   ],
+   "last_evidence_session": 22,
+   "answer": "4 years",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0027555504193548385,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S04",
+   "question": "Has Caroline moved back to Sweden?",
+   "gold": "No, it's only a someday idea",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S04"
+   ],
+   "last_evidence_session": 23,
+   "answer": "No, she has no plans to.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00290067305955335,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S05",
+   "question": "Has Melanie run a second charity race yet?",
+   "gold": "No, she plans one for the fall",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S05"
+   ],
+   "last_evidence_session": 24,
+   "answer": "Looking at the memories:\n\n- Melanie ran a charity race around **May 20, 2023**\n- She **planned** to run another in fall 2023\n- She stopped running due to knee problems around **July 21, 2023**\n\n**No, not yet planned only.**",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.005044120065591398,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S06",
+   "question": "Where did Melanie most recently go camping with her family?",
+   "gold": "The mountains",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S06"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Mountains (around June 20, 2023).",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.0040570717870768,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S07",
+   "question": "Has Caroline attended an LGBTQ+ counseling workshop?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S07"
+   ],
+   "last_evidence_session": 26,
+   "answer": "Yes, on June 23, 2023.",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.004002315367741935,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S08",
+   "question": "Is Caroline open about being transgender?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S08"
+   ],
+   "last_evidence_session": 27,
+   "answer": "Yes, she speaks publicly about it.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0028857440322580647,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S09",
+   "question": "Is Caroline planning to raise kids as a single parent?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S09"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Yes, as a single parent.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.003134794258064516,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:S10",
+   "question": "Does Melanie want to be courageous for her family?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yes, she does.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.0036068039490662136,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F01",
+   "question": "Has Caroline enrolled in a program to continue her education?",
+   "gold": "Yes, a psychology certificate program at the community college",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F01"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, a psychology certificate program.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0026638247741935486,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F02",
+   "question": "Has Melanie's kids' summer break started?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F02"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Yes, around August 24, 2023.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.003038968087436333,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F03",
+   "question": "Has Caroline started working with trans people?",
+   "gold": "Yes, she volunteers as a peer counselor for trans youth",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F03"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Yes, since August 25, 2023.",
+   "memories": 9,
+   "label": "CORRECT",
+   "query_cost": 0.0029134156258064513,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F04",
+   "question": "Has Caroline submitted an adoption application?",
+   "gold": "Yes, to Rainbow Families",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F04"
+   ],
+   "last_evidence_session": 33,
+   "answer": "Yes, to Rainbow Families (August 2023).",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.002985990070381232,
+   "checkpoint": 34,
+   "store_size": 97
+  },
+  {
+   "idx": "U:F05",
+   "question": "Has Caroline given another talk about her journey?",
+   "gold": "Yes, at a high school in the next town",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F05"
+   ],
+   "last_evidence_session": 34,
+   "answer": "Yes, she gave another talk in August 2023.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0028422153431085046,
+   "checkpoint": 34,
+   "store_size": 97
+  }
+ ],
+ "options": {
+  "top_k": null,
+  "no_dates": true
+ },
+ "hygiene": {
+  "groups": 18,
+  "pairs": 235,
+  "decisions": 235,
+  "merges": 10,
+  "drops": 0,
+  "already_linked": 0,
+  "failed_requests": 0,
+  "cost_usd": 0.0014622299999999975,
+  "jev_latency_ms": 1664.359542017337,
+  "wall_s": 1.7135303340037353,
+  "merged_pairs": [
+   [
+    "Caroline received a necklace from her grandmother in Sweden when she was young as a gift symbolizing love, faith, and strength. The necklace serves as a reminder of her roots and the love and support from her family.",
+    "Caroline has a necklace from her grandmother in Sweden that was given to her when she was young, symbolizing love, faith, and strength, and serves as a reminder of her roots and family support",
+    0.97
+   ],
+   [
+    "Caroline has a hand-painted bowl made by a friend as a gift for her 18th birthday around 2013. The bowl features a meaningful pattern and colors that remind her of art and self-expression.",
+    "Caroline owns a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013). The bowl has an awesome pattern and colors that remind her of art and self-expression, and it holds sentimental value.",
+    0.85
+   ],
+   [
+    "Caroline has a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013) that she treasures for its artistic pattern, colors, and reminder of self-expression and friendship",
+    "Caroline owns a hand-painted bowl made by a friend for her 18th birthday ten years ago (around 2013). The bowl has an awesome pattern and colors that remind her of art and self-expression, and it holds sentimental value.",
+    0.92
+   ],
+   [
+    "Melanie has shifted her primary creative outlet from painting to pottery, attending a pottery studio three evenings a week as of early July 2023. She hasn't painted in several weeks.",
+    "Melanie attends pottery studio three evenings a week and considers it her main creative outlet, having not painted in weeks as of early July 2023",
+    0.87
+   ],
+   [
+    "Melanie sold her violin around June 2023 and switched to learning guitar instead, which she finds more fun to play with her children",
+    "Melanie sold her violin around June 2023 and switched to learning guitar, which she finds more enjoyable to play with her children",
+    0.94
+   ],
+   [
+    "Caroline switched adoption agencies around July 25, 2023 to Rainbow Families, which is closer to home and has a faster process",
+    "Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and move faster",
+    0.96
+   ],
+   [
+    "Melanie replaced reading with meditation in her daily me-time routine, now practicing twenty minutes of meditation every morning as of late July 2023",
+    "Melanie switched from reading to meditation for her me-time routine, practicing twenty minutes every morning as of late July 2023",
+    0.97
+   ],
+   [
+    "Melanie has established a consistent self-care routine as of late July 2023, moving beyond her previous work-in-progress approach to self-care",
+    "Melanie established a consistent self-care routine that sticks as of late July 2023, after previously struggling with self-care consistency",
+    0.88
+   ],
+   [
+    "Melanie plans to run another charity race in the fall of 2023, possibly a half marathon",
+    "Melanie plans to run another charity race in fall 2023, possibly a half marathon",
+    0.99
+   ],
+   [
+    "Melanie's two younger children have shifted their interests from nature activities to dinosaurs as of mid-July 2023",
+    "Melanie's two younger children shifted their interests from nature to dinosaurs around mid-July 2023",
+    0.93
+   ]
+  ]
+ },
+ "storage_before_hygiene": {
+  "storage": {
+   "closes": 3,
+   "closes_correct": 2,
+   "closes_wrong": 1,
+   "closes_by_reason": {
+    "fulfilled_correct": 2,
+    "fulfilled_wrong": 1
+   },
+   "reopens": 0,
+   "disputed": 0,
+   "against_blocked": 33,
+   "against_unconfirmed": 1,
+   "plan_fulfilled_asks": 234
+  },
+  "update_behavior": {
+   "stale": 17,
+   "not_stored": 4,
+   "kept": 8,
+   "fulfilled": 1
+  }
+ },
+ "locomo_accuracy": 0.8,
+ "locomo_accuracy_excl": 0.8125,
+ "locomo_q": 35,
+ "locomo_q_excl": 32,
+ "update_accuracy": 0.9666666666666667,
+ "update_accuracy_by_tier": {
+  "easy": 1.0,
+  "subtle": 1.0,
+  "fulfilled": 0.8
+ },
+ "update_items": [
+  {
+   "id": "E01",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Pottery (as of early July 2023).",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E02",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Forest-at-dusk piece.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E03",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "not_stored",
+   "answer": "No, she quit around June 30, 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E04",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "No, she lost it at the beach.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E05",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "No, it shattered in July 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E06",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "No, it disbanded around July 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E07",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "No, they switched to bike rides.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E08",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Dinosaurs (as of mid-July 2023).",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E09",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Guitar (switched from violin in June 2023).",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E10",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Swimming laps at the gym.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E11",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Twenty minutes of meditation every morning.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E12",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Rainbow Families",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E13",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Fostering first before adopting.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E14",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "No, she established a consistent routine (late July 2023).",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E15",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Norway (with Caroline's aunt).",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S01",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Yes, married as of June 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S02",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "not_stored",
+   "answer": "Counseling or mental health work.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S03",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "4 years",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S04",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "No, she has no plans to.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S05",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Looking at the memories:\n\n- Melanie ran a charity race around **May 20, 2023**\n- She **planned** to run another in fall 2023\n- She stopped running due to knee problems around **July 21, 2023**\n\n**No, not yet planned only.**",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S06",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Mountains (around June 20, 2023).",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S07",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Yes, on June 23, 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S08",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "not_stored",
+   "answer": "Yes, she speaks publicly about it.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S09",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Yes, as a single parent.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S10",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Yes, she does.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F01",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": "Yes, a psychology certificate program.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F02",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "fulfilled",
+   "answer": "Yes, around August 24, 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F03",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": "Yes, since August 25, 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F04",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": "Yes, to Rainbow Families (August 2023).",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F05",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "not_stored",
+   "answer": "Yes, she gave another talk in August 2023.",
+   "label": "WRONG"
+  }
+ ],
+ "update_behavior": {
+  "stale": 17,
+  "not_stored": 4,
+  "kept": 8,
+  "fulfilled": 1
+ },
+ "stale_on_close_items": [
+  17,
+  18
+ ],
+ "over_close_on_no_close_items": [
+  0,
+  8
+ ],
+ "storage": {
+  "closes": 3,
+  "closes_correct": 2,
+  "closes_wrong": 1,
+  "closes_by_reason": {
+   "fulfilled_correct": 2,
+   "fulfilled_wrong": 1
+  },
+  "reopens": 0,
+  "disputed": 0,
+  "against_blocked": 33,
+  "against_unconfirmed": 1,
+  "plan_fulfilled_asks": 234
+ },
+ "fulfills_log": [
+  {
+   "plan": "Melanie's kids are excited about summer break and the family is considering a camping trip for June 2023",
+   "plan_relation": "plans",
+   "plan_source": "D2:7",
+   "by": "Melanie took her family camping in the mountains around June 20, 2023 and describes it as a really nice time together",
+   "by_source": "D4:6",
+   "jev_relation": "plan_fulfilled",
+   "p": 0.95,
+   "temporal": "past"
+  },
+  {
+   "plan": "Caroline feels hopeful and optimistic about pursuing her adoption dream and is actively researching adoption agencies to turn her goal of giving children a loving home into reality",
+   "plan_relation": "goal",
+   "plan_source": "D2:10",
+   "by": "Caroline switched adoption agencies to Rainbow Families around July 25, 2023 because they are closer to home and have a faster process",
+   "by_source": "U:E12",
+   "jev_relation": "plan_fulfilled",
+   "p": 0.87,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline is interested in pursuing counseling work specifically with transgender people, focusing on helping them accept themselves and supporting their mental health",
+   "plan_relation": "goal",
+   "plan_source": "D4:13",
+   "by": "Caroline started volunteering as a peer counselor for trans youth at the community center around August 25, 2023",
+   "by_source": "U:F03",
+   "jev_relation": "plan_fulfilled",
+   "p": 0.88,
+   "temporal": "current"
+  }
+ ]
+}

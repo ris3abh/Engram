@@ -118,7 +118,17 @@ def main() -> None:
     )
     RESULTS.mkdir(exist_ok=True)
     (RESULTS / "jev_latency.json").write_text(
-        json.dumps({"table": table, "fit_per_question": [a_n, b_n], "fit_per_token": [a_t, b_t]}, indent=1)
+        json.dumps(
+            {
+                "n_requests": len(rows),
+                "n_runs": len({r["arm"] for r in rows}),
+                "p50_all": pct([r["latency"] for r in rows], 0.5),
+                "table": table,
+                "fit_per_question": [a_n, b_n],
+                "fit_per_token": [a_t, b_t],
+                "requests": [[r["n"], round(r["latency"], 1), round(r["tokens"]), r["arm"]] for r in rows],
+            }
+        )
     )
     (RESULTS / "jev_latency.svg").write_text(svg(rows, table))
 

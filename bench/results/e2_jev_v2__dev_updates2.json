@@ -1,0 +1,1230 @@
+{
+ "arm": "e2_jev_v2",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "mem0",
+  "store_source_text": true,
+  "worth_filter": false,
+  "merge_policy": "union",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "today",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "mem0_update",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "relaxed",
+  "belief": false,
+  "belief_w": 1.0,
+  "relation_version": 2
+ },
+ "slice": {
+  "name": "dev_updates2",
+  "sessions": [
+   1,
+   4
+  ],
+  "messages": 134,
+  "questions": 20
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 62,
+   "store_size": 109,
+   "questions": 20,
+   "accuracy": 0.95,
+   "no_memory": 0,
+   "early_questions": 20,
+   "early_accuracy": 0.95
+  }
+ ],
+ "accuracy": 0.95,
+ "accuracy_by_category": {
+  "update2": 0.95
+ },
+ "stored": 109,
+ "active": 95,
+ "tentative": 101,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {
+  "fulfilled": 14
+ },
+ "facts_extracted": 110,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 2,
+ "closes_detail": [
+  {
+   "closed": "Melanie carves out daily me-time through running, reading, or playing violin to refresh herself and stay present for her family",
+   "closed_source": "D2:5",
+   "by": "Melanie replaced reading with meditation as part of her daily me-time routine, practicing twenty minutes every morning as of late July 2023",
+   "by_source": "U:E11",
+   "labeled": false
+  },
+  {
+   "closed": "Caroline moved into a studio apartment downtown around early September 2023",
+   "closed_source": "U2:C01.1",
+   "by": "Caroline moved to a two-bedroom apartment in Oak Park around October 1, 2023, specifically to have room for a foster child",
+   "by_source": "U2:C01.2",
+   "labeled": false
+  }
+ ],
+ "wrong_closes": 2,
+ "escalations": 3,
+ "llm_decisions": 0,
+ "actions": {
+  "inserted": 42,
+  "refined": 46,
+  "updated": 16,
+  "negated": 3,
+  "contradicted": 2,
+  "rewritten": 1
+ },
+ "decision_cost_per_1k": 0.3496500587686568,
+ "cost_per_1k": 10.192702297574627,
+ "write_latency_p50_ms": 1409.6939169976395,
+ "decision_latency_p50_ms": 274.93937499821186,
+ "no_memory_questions": 0,
+ "stale_fact_rate": 0.0,
+ "stale": {
+  "labels_in_slice": 1,
+  "claims_stored": 1,
+  "claims_stale": 0,
+  "rate": 0.0,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.010370220000000003,
+  "claude": 0.42647800000000013
+ },
+ "cache": {
+  "hits": 1432,
+  "misses": 1132
+ },
+ "answers": [
+  {
+   "idx": "U2:P01",
+   "question": "What instrument did Melanie play in June 2023?",
+   "gold": "Violin",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Violin (sold around June 2023).",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.005180898000000001,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:P02",
+   "question": "Where did Caroline's grandma live in May 2023?",
+   "gold": "Sweden",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Caroline's grandmother moved from Sweden to Norway around July 31, 2023. Therefore, in May 2023 (before the move), she still lived in **Sweden**.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00558519,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:P03",
+   "question": "Which adoption agency was Caroline working with in early July 2023?",
+   "gold": "The agency she chose for its LGBTQ+ inclusivity (before switching to Rainbow Families)",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Caroline switched to Rainbow Families around July 25, 2023. Before that switch, she was with her **previous agency** (unnamed) in early July 2023.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.006017796,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:P04",
+   "question": "Did Melanie have a job in June 2023?",
+   "gold": "Yes",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Yes, she quit June 30, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.005379024,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:P05",
+   "question": "What was Melanie's main creative outlet in May 2023?",
+   "gold": "Painting",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Painting.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.006026058,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C01q1",
+   "question": "Where does Caroline live now?",
+   "gold": "A house in Evanston",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Evanston (as of November 2023).",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.005768436,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C01q2",
+   "question": "Where was Caroline living in October 2023?",
+   "gold": "A two-bedroom in Oak Park",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Oak Park (two-bedroom apartment).",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.005573148,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C02q1",
+   "question": "How is Melanie learning guitar now?",
+   "gold": "A group class at the community center",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Group guitar class at community center.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.004558932000000001,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C02q2",
+   "question": "Who was teaching Melanie guitar in early October 2023?",
+   "gold": "Priya",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Melanie switched to Priya on September 28, 2023, and Priya moved away around October 20, 2023. So in early October 2023, **Priya** was teaching Melanie guitar.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.005040696,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C03q1",
+   "question": "Which children is Caroline currently matched with?",
+   "gold": "Maya and Sam (siblings)",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Maya and Sam (two siblings).",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.005437998,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C03q2",
+   "question": "Who was Caroline matched with in October 2023?",
+   "gold": "Leo, a 7-year-old",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Leo, a 7-year-old boy.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.005022678,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C04q1",
+   "question": "Which school does Melanie's oldest child attend now?",
+   "gold": "Lincoln Middle School",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, the most recent information (November 25, 2023) states that Melanie's oldest child returned to **Lincoln Middle School**.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00499905,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C04q2",
+   "question": "Which school was Melanie's oldest at in late October 2023?",
+   "gold": "Riverside Academy",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories:\n\n- Oct 15, 2023: Moved to Riverside Academy\n- Nov 25, 2023: Moved back to Lincoln Middle\n\nIn late October 2023, the child was at **Riverside Academy**.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.005800722,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C05q1",
+   "question": "When does Caroline volunteer at the community center now?",
+   "gold": "Every other Saturday morning",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Every other Saturday morning.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.004433376,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C05q2",
+   "question": "What day did Caroline volunteer in mid-October 2023?",
+   "gold": "Thursdays",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Caroline switched her volunteer shift from Tuesdays to Thursdays around October 3, 2023, and didn't change again until November 1, 2023 (Saturday mornings).\n\n**Thursdays**",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0049554840000000005,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N01",
+   "question": "What is Caroline's favorite coffee spot?",
+   "gold": "Grind House",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Caroline's favorite coffee spot changed from Blue Door Caf\u00e9 (September 2023) to **Grind House** (October 30, 2023), which is the most recent memory.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.006927636,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N02",
+   "question": "What car does Melanie's family drive?",
+   "gold": "A silver SUV",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, the most recent entry (November 2, 2023) states Melanie's family drives a **silver SUV**.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.005436084,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N03",
+   "question": "Who is Caroline's therapist?",
+   "gold": "Dr. Kim",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Dr. Kim.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.005285166,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N04",
+   "question": "Where does Melanie's book club meet?",
+   "gold": "The public library",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "The public library.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00531942,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N05",
+   "question": "What phone does Caroline have?",
+   "gold": "A Pixel 8",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "iPhone 12",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.008659158,
+   "checkpoint": 62,
+   "store_size": 109
+  }
+ ],
+ "asked": [
+  {
+   "idx": "U2:P01",
+   "question": "What instrument did Melanie play in June 2023?",
+   "gold": "Violin",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Violin (sold around June 2023).",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.005180898000000001,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:P02",
+   "question": "Where did Caroline's grandma live in May 2023?",
+   "gold": "Sweden",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Caroline's grandmother moved from Sweden to Norway around July 31, 2023. Therefore, in May 2023 (before the move), she still lived in **Sweden**.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00558519,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:P03",
+   "question": "Which adoption agency was Caroline working with in early July 2023?",
+   "gold": "The agency she chose for its LGBTQ+ inclusivity (before switching to Rainbow Families)",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Caroline switched to Rainbow Families around July 25, 2023. Before that switch, she was with her **previous agency** (unnamed) in early July 2023.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.006017796,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:P04",
+   "question": "Did Melanie have a job in June 2023?",
+   "gold": "Yes",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Yes, she quit June 30, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.005379024,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:P05",
+   "question": "What was Melanie's main creative outlet in May 2023?",
+   "gold": "Painting",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Painting.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.006026058,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C01q1",
+   "question": "Where does Caroline live now?",
+   "gold": "A house in Evanston",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Evanston (as of November 2023).",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.005768436,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C01q2",
+   "question": "Where was Caroline living in October 2023?",
+   "gold": "A two-bedroom in Oak Park",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Oak Park (two-bedroom apartment).",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.005573148,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C02q1",
+   "question": "How is Melanie learning guitar now?",
+   "gold": "A group class at the community center",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Group guitar class at community center.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.004558932000000001,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C02q2",
+   "question": "Who was teaching Melanie guitar in early October 2023?",
+   "gold": "Priya",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Melanie switched to Priya on September 28, 2023, and Priya moved away around October 20, 2023. So in early October 2023, **Priya** was teaching Melanie guitar.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.005040696,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C03q1",
+   "question": "Which children is Caroline currently matched with?",
+   "gold": "Maya and Sam (siblings)",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Maya and Sam (two siblings).",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.005437998,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C03q2",
+   "question": "Who was Caroline matched with in October 2023?",
+   "gold": "Leo, a 7-year-old",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Leo, a 7-year-old boy.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.005022678,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C04q1",
+   "question": "Which school does Melanie's oldest child attend now?",
+   "gold": "Lincoln Middle School",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, the most recent information (November 25, 2023) states that Melanie's oldest child returned to **Lincoln Middle School**.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00499905,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C04q2",
+   "question": "Which school was Melanie's oldest at in late October 2023?",
+   "gold": "Riverside Academy",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories:\n\n- Oct 15, 2023: Moved to Riverside Academy\n- Nov 25, 2023: Moved back to Lincoln Middle\n\nIn late October 2023, the child was at **Riverside Academy**.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.005800722,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C05q1",
+   "question": "When does Caroline volunteer at the community center now?",
+   "gold": "Every other Saturday morning",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Every other Saturday morning.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.004433376,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:C05q2",
+   "question": "What day did Caroline volunteer in mid-October 2023?",
+   "gold": "Thursdays",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Caroline switched her volunteer shift from Tuesdays to Thursdays around October 3, 2023, and didn't change again until November 1, 2023 (Saturday mornings).\n\n**Thursdays**",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0049554840000000005,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N01",
+   "question": "What is Caroline's favorite coffee spot?",
+   "gold": "Grind House",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, Caroline's favorite coffee spot changed from Blue Door Caf\u00e9 (September 2023) to **Grind House** (October 30, 2023), which is the most recent memory.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.006927636,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N02",
+   "question": "What car does Melanie's family drive?",
+   "gold": "A silver SUV",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Based on the memories, the most recent entry (November 2, 2023) states Melanie's family drives a **silver SUV**.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.005436084,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N03",
+   "question": "Who is Caroline's therapist?",
+   "gold": "Dr. Kim",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Dr. Kim.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.005285166,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N04",
+   "question": "Where does Melanie's book club meet?",
+   "gold": "The public library",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "The public library.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00531942,
+   "checkpoint": 62,
+   "store_size": 109
+  },
+  {
+   "idx": "U2:N05",
+   "question": "What phone does Caroline have?",
+   "gold": "A Pixel 8",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "iPhone 12",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.008659158,
+   "checkpoint": 62,
+   "store_size": 109
+  }
+ ],
+ "options": {
+  "top_k": null,
+  "no_dates": false
+ },
+ "locomo_accuracy": 0.95,
+ "locomo_accuracy_excl": 0.95,
+ "locomo_q": 20,
+ "locomo_q_excl": 20,
+ "update_accuracy": null,
+ "update_accuracy_by_tier": {
+  "easy": null,
+  "subtle": null,
+  "fulfilled": null
+ },
+ "update_items": [
+  {
+   "id": "E01",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E02",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E03",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "not_stored",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E04",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E05",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E06",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E07",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E08",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E09",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "closed",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E10",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "closed",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E11",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "closed",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E12",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E13",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "closed",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E14",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "closed",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E15",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S01",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S02",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "not_stored",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S03",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S04",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S05",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S06",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S07",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S08",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "not_stored",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S09",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S10",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F01",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "fulfilled",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F02",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "fulfilled",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F03",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F04",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "fulfilled",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F05",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "not_stored",
+   "answer": null,
+   "label": null
+  }
+ ],
+ "update_behavior": {
+  "stale": 10,
+  "not_stored": 4,
+  "closed": 5,
+  "kept": 8,
+  "fulfilled": 3
+ },
+ "stale_on_close_items": [
+  10,
+  18
+ ],
+ "over_close_on_no_close_items": [
+  0,
+  8
+ ],
+ "storage": {
+  "closes": 14,
+  "closes_correct": 4,
+  "closes_wrong": 10,
+  "closes_by_reason": {
+   "fulfilled_wrong": 10,
+   "superseded_correct": 2,
+   "fulfilled_correct": 2
+  },
+  "reopens": 0,
+  "disputed": 0,
+  "against_blocked": 0,
+  "against_unconfirmed": 0,
+  "plan_fulfilled_asks": 0
+ },
+ "set2_accuracy": 0.95,
+ "set2_q": 20,
+ "set2_accuracy_by_type": {
+  "chain_current": [
+   1.0,
+   5
+  ],
+  "chain_point_in_time": [
+   1.0,
+   5
+  ],
+  "no_temporal_cue": [
+   0.8,
+   5
+  ],
+  "point_in_time": [
+   1.0,
+   5
+  ]
+ },
+ "set2_stale_values": [
+  15,
+  16
+ ],
+ "set2_stale_pairs": [
+  [
+   "U2:C01.2",
+   "U2:C01.3"
+  ],
+  [
+   "U2:C02.1",
+   "U2:C02.2"
+  ],
+  [
+   "U2:C02.2",
+   "U2:C02.3"
+  ],
+  [
+   "U2:C02.3",
+   "U2:C02.4"
+  ],
+  [
+   "U2:C03.2",
+   "U2:C03.3"
+  ],
+  [
+   "U2:C04.1",
+   "U2:C04.2"
+  ],
+  [
+   "U2:C04.2",
+   "U2:C04.3"
+  ],
+  [
+   "U2:C05.1",
+   "U2:C05.2"
+  ],
+  [
+   "U2:C05.2",
+   "U2:C05.3"
+  ],
+  [
+   "U2:C05.3",
+   "U2:C05.4"
+  ],
+  [
+   "U2:N01.1",
+   "U2:N01.2"
+  ],
+  [
+   "U2:N02.1",
+   "U2:N02.2"
+  ],
+  [
+   "U2:N03.1",
+   "U2:N03.2"
+  ],
+  [
+   "U2:N04.1",
+   "U2:N04.2"
+  ],
+  [
+   "U2:N05.1",
+   "U2:N05.2"
+  ]
+ ],
+ "set2_keep_ok": [
+  1,
+  1
+ ],
+ "fulfills_log": [
+  {
+   "plan": "Caroline plans to continue her education and explore career options, which she finds exciting",
+   "plan_relation": "plans",
+   "plan_source": "D1:9",
+   "by": "Caroline is interested in pursuing counseling or mental health work, motivated by a desire to support people facing similar issues to her own",
+   "by_source": "D1:11",
+   "jev_relation": "refinement",
+   "p": 0.95,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline has been researching adoption agencies as part of a long-held dream to have a family and provide a loving home to children in need",
+   "plan_relation": "goal",
+   "plan_source": "D2:8",
+   "by": "Caroline feels grateful for support from friends and mentors as she works toward her adoption goal and is feeling hopeful and optimistic about turning her dream into reality",
+   "by_source": "D2:10",
+   "jev_relation": "refinement",
+   "p": 0.68,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline has been researching adoption agencies as part of a long-held dream to have a family and provide a loving home to children in need",
+   "plan_relation": "goal",
+   "plan_source": "D2:8",
+   "by": "Caroline is actively researching and looking into specific adoption agencies as part of her plan to adopt and provide a loving home for children in need",
+   "by_source": "D2:10",
+   "jev_relation": "refinement",
+   "p": 0.59,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline feels grateful for support from friends and mentors as she works toward her adoption goal and is feeling hopeful and optimistic about turning her dream into reality",
+   "plan_relation": "goal",
+   "plan_source": "D2:10",
+   "by": "Caroline met up with friends last week around June 2, 2023 and has a photo from the meetup",
+   "by_source": "D3:11",
+   "jev_relation": "refinement",
+   "p": 0.51,
+   "temporal": "past"
+  },
+  {
+   "plan": "Caroline feels grateful for support from friends and mentors as she works toward her adoption goal and is feeling hopeful and optimistic about turning her dream into reality",
+   "plan_relation": "goal",
+   "plan_source": "D2:10",
+   "by": "Caroline's friends, family, and mentors are her primary sources of motivation and strength, helping her push forward in her goals and journey",
+   "by_source": "D3:11",
+   "jev_relation": "refinement",
+   "p": 0.76,
+   "temporal": "current"
+  },
+  {
+   "plan": "Melanie's kids are excited about summer break and the family is planning a camping trip for June 2023",
+   "plan_relation": "plans",
+   "plan_source": "D2:7",
+   "by": "Melanie took her family camping in the mountains around June 20, 2023 and found it to be a nice time together",
+   "by_source": "D4:6",
+   "jev_relation": "refinement",
+   "p": 0.61,
+   "temporal": "past"
+  },
+  {
+   "plan": "Caroline is interested in pursuing counseling or mental health work, motivated by a desire to support people facing similar issues to her own",
+   "plan_relation": "goal",
+   "plan_source": "D1:11",
+   "by": "Caroline attended an LGBTQ+ counseling workshop around June 23, 2023 where she learned about different therapeutic methods for working with trans people and was inspired by the professionals' passion for creating safe spaces",
+   "by_source": "D4:13",
+   "jev_relation": "refinement",
+   "p": 0.97,
+   "temporal": "past"
+  },
+  {
+   "plan": "Caroline's own journey through counseling and support groups significantly improved her life, which motivated her to pursue counseling as a career to help others, particularly transgender people, create safe spaces for growth and self-acceptance",
+   "plan_relation": "goal",
+   "plan_source": "D4:15",
+   "by": "Caroline stopped attending the LGBTQ support group around July 13, 2023 after it disbanded when the organizer moved away",
+   "by_source": "U:E06",
+   "jev_relation": "refinement",
+   "p": 0.61,
+   "temporal": "current"
+  },
+  {
+   "plan": "Melanie describes her self-care journey as a work in progress but is committed to doing her best",
+   "plan_relation": "goal",
+   "plan_source": "D2:7",
+   "by": "Melanie replaced reading with meditation as part of her daily me-time routine, practicing twenty minutes every morning as of late July 2023",
+   "by_source": "U:E11",
+   "jev_relation": "refinement",
+   "p": 0.67,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline is actively researching and looking into specific adoption agencies as part of her plan to adopt and provide a loving home for children in need",
+   "plan_relation": "plans",
+   "plan_source": "D2:10",
+   "by": "Caroline switched adoption agencies around July 25, 2023, moving from her previous agency to Rainbow Families because they are closer to home and have a faster process",
+   "by_source": "U:E12",
+   "jev_relation": "update",
+   "p": 0.64,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline wanted to be a nurse in high school, but her career aspirations have since evolved toward counseling and mental health work with transgender people",
+   "plan_relation": "goal",
+   "plan_source": "U:S02",
+   "by": "Caroline enrolled in a psychology certificate program at community college around August 23, 2023, with classes starting the following week",
+   "by_source": "U:F01",
+   "jev_relation": "refinement",
+   "p": 0.56,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline is interested in pursuing counseling work specifically with transgender people to help them accept themselves and support their mental health, motivated by her own experiences",
+   "plan_relation": "goal",
+   "plan_source": "D4:13",
+   "by": "Caroline started volunteering as a peer counselor for trans youth at the community center around August 25, 2023",
+   "by_source": "U:F03",
+   "jev_relation": "refinement",
+   "p": 0.66,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline decided to foster children first instead of adopting right away around July 27, 2023, to learn the ropes before committing to adoption",
+   "plan_relation": "plans",
+   "plan_source": "U:E13",
+   "by": "Caroline has been matched with a 7-year-old named Leo for foster care around October 8, 2023",
+   "by_source": "U2:C03.2",
+   "jev_relation": "refinement",
+   "p": 0.71,
+   "temporal": "current"
+  },
+  {
+   "plan": "Caroline is thrilled about adopting and creating a family for children in need, and is aware it will be challenging as a single parent but feels ready for the responsibility",
+   "plan_relation": "plans",
+   "plan_source": "D2:14",
+   "by": "Caroline has been matched with a 7-year-old named Leo for foster care around October 8, 2023",
+   "by_source": "U2:C03.2",
+   "jev_relation": "refinement",
+   "p": 0.67,
+   "temporal": "current"
+  }
+ ]
+}
