@@ -402,7 +402,8 @@ PREAMBLE = r"""\documentclass[10pt,twocolumn]{article}
 \usepackage{enumitem}
 \usepackage{url}
 \usepackage[numbers,sort&compress]{natbib}
-\usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram]{hyperref}
+\usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram,
+  pdftitle={Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}]{hyperref}
 \definecolor{engram}{HTML}{4453C4}
 \definecolor{codebg}{HTML}{F5F7FA}
 \captionsetup{font=small,labelfont=bf,skip=5pt}

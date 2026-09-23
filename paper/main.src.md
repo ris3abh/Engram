@@ -1,7 +1,7 @@
 <!-- GENERATED from paper/main.src.md by paper/build.py. Edit the source, not this file.
 Every number carries a src comment naming the file it comes from; paper/numbers.json lists them all. -->
 
-# What Does a Typed Decision Layer Buy Agent Memory? A Controlled Study of Cost, Safety and Retrieval
+# Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs
 
 <!-- Repo tagline: Decide, Don't Generate. -->
 
@@ -9,7 +9,8 @@ Every number carries a src comment naming the file it comes from; paper/numbers.
 
 ## Abstract
 
-We measure what a typed decision layer buys an agent memory system in cost, store safety and retrieval. Memory
+Typed decisions cut an agent memory system's decision cost and latency and help retrieval under a small budget;
+they do not change answers after facts change, and a small zero-shot model cannot make them. Memory
 systems make an LLM call for every write decision, which makes revisiting the store unaffordable, yet most of that
 work is choice among fixed options. In engram, an LLM extracts facts and every decision is a typed question answered
 by a hosted decision model (Jev). With extraction held identical to mem0 2.1.0's, typed decisions cut decision-layer

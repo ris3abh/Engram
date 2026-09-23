@@ -14,7 +14,8 @@
 \usepackage{enumitem}
 \usepackage{url}
 \usepackage[numbers,sort&compress]{natbib}
-\usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram]{hyperref}
+\usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram,
+  pdftitle={Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}]{hyperref}
 \definecolor{engram}{HTML}{4453C4}
 \definecolor{codebg}{HTML}{F5F7FA}
 \captionsetup{font=small,labelfont=bf,skip=5pt}
@@ -30,13 +31,13 @@
 % Every number is written as value\src{source file}; \src prints nothing. See paper/numbers.json.
 \newcommand{\src}[1]{}
 
-\title{\textbf{What Does a Typed Decision Layer Buy Agent Memory? A Controlled Study of Cost, Safety and Retrieval}}
+\title{\textbf{Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}}
 \author{[Author(s) TBD]\\\small Code: [REPO URL PLACEHOLDER]}
 \date{}
 \begin{document}
 \maketitle
 \begin{abstract}
-We measure what a typed decision layer buys an agent memory system in cost, store safety and retrieval. Memory systems make an LLM call for every write decision, which makes revisiting the store unaffordable, yet most of that work is choice among fixed options. In engram, an LLM extracts facts and every decision is a typed question answered by a hosted decision model (Jev). With extraction held identical to mem0 2.1.0's, typed decisions cut decision-layer cost by 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} and median decision latency by 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json}, with equal dev accuracy (31/35\src{bench/results/e2\_jev\_\_dev.json} against 31/35\src{bench/results/e2\_llm\_\_dev.json}). On 610\src{bench/results/heldout\_report.json} held-out LoCoMo questions under a three-memory retrieval budget, engram answers +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points more than mem0 at matched context tokens (95\% CI +5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} to +12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}); at k=20 the systems tie (+0.8\src{bench/results/heldout\_report.json}, CI -2.3\src{bench/results/heldout\_report.json} to +3.9\src{bench/results/heldout\_report.json}). A belief-state store policy over-closed no labeled keep item. Two results are negative: closing stale facts does not change answers on current benchmarks, and the 421M\src{convai2026laya (model card)} base checkpoint of the open-weights decision model Laya, used zero-shot as its documentation advises against, does not make the relational decisions. Code, prompts and per-question results are released.
+Typed decisions cut an agent memory system's decision cost and latency and help retrieval under a small budget; they do not change answers after facts change, and a small zero-shot model cannot make them. Memory systems make an LLM call for every write decision, which makes revisiting the store unaffordable, yet most of that work is choice among fixed options. In engram, an LLM extracts facts and every decision is a typed question answered by a hosted decision model (Jev). With extraction held identical to mem0 2.1.0's, typed decisions cut decision-layer cost by 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} and median decision latency by 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json}, with equal dev accuracy (31/35\src{bench/results/e2\_jev\_\_dev.json} against 31/35\src{bench/results/e2\_llm\_\_dev.json}). On 610\src{bench/results/heldout\_report.json} held-out LoCoMo questions under a three-memory retrieval budget, engram answers +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points more than mem0 at matched context tokens (95\% CI +5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} to +12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}); at k=20 the systems tie (+0.8\src{bench/results/heldout\_report.json}, CI -2.3\src{bench/results/heldout\_report.json} to +3.9\src{bench/results/heldout\_report.json}). A belief-state store policy over-closed no labeled keep item. Two results are negative: closing stale facts does not change answers on current benchmarks, and the 421M\src{convai2026laya (model card)} base checkpoint of the open-weights decision model Laya, used zero-shot as its documentation advises against, does not make the relational decisions. Code, prompts and per-question results are released.
 
 \end{abstract}
 \section{Introduction}
