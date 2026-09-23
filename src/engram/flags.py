@@ -43,6 +43,9 @@ class Flags:
     # Read-path switches for attribution (E4 k=3 ablations): history expansion and Jev reranking/query_relation.
     retrieval_history: bool = True
     retrieval_rerank: bool = True
+    # Answer-model rendering (phase 2 step 2): full = belief/confidence, validity, relevance, source quote;
+    # compact = "[said date] text - source quote", validity only for closed facts, no belief or scores.
+    render: str = "full"
     relation_version: int = 1  # relation_to_candidate version: 1 (E0-E3) | 2 (adds `negates`, E5 on)
     temporal_version: int = 1  # temporal_status version: 1 | 2 (completed changes never hypothetical)
 

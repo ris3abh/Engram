@@ -89,6 +89,8 @@ E4_V2 = dict(
     update_multi_sibling=True,
 )
 
+E4_FROZEN = {**E4_V2, "temporal_gate": "not_planned_mass", "temporal_version": 2, "render": "compact"}
+
 ARMS: dict[str, dict] = {
     "e0_baseline": {"system": "engram", "flags": Flags()},
     "e1_recall": {"system": "engram", "flags": Flags(**E1_FLAGS)},
@@ -149,11 +151,15 @@ ARMS: dict[str, dict] = {
     # multi-valued relation (two-phrasing agreement every time); contradiction stays single-valued only.
     # E4 v2 with temporal_status v1, as run before phase-2 step 1 (kept so its results reproduce).
     "e4_belief_v2_t1": {"system": "engram", "hygiene": True, "flags": Flags(**E4_V2)},
+    # FROZEN (tag e4-frozen, phase 2 step 3): the held-out arm. Do not change until held-out numbers are in.
     "e4_belief_v2": {
         "system": "engram",
         "hygiene": True,
-        "flags": Flags(**{**E4_V2, "temporal_gate": "not_planned_mass"}, temporal_version=2),
+        "flags": Flags(**E4_FROZEN),
     },
+    "e4_belief_v2_compact": {"system": "engram", "hygiene": True, "flags": Flags(**E4_FROZEN)},  # alias, step 2
+    # step 2 comparison: the same arm with the full rendering.
+    "e4_belief_v2_full": {"system": "engram", "hygiene": True, "flags": Flags(**{**E4_FROZEN, "render": "full"})},
     # Attribution of the top-k=3 gain (read path only; ingestion identical and cached).
     "e4_belief_v2_nohist": {
         "system": "engram",
@@ -329,8 +335,13 @@ class EngramArm:
             # currently valid facts (otherwise closes could not matter at all).
             lines = [x.fact.text for x in facts if x.fact.is_valid]
         else:
-            show = self.engine.flags.store_source_text
-            lines = [render_fact(x, show_source=show)[2:] for x in facts]
+            if self.engine.flags.render == "compact":
+                from engram.pipeline.answer import render_fact_compact
+
+                lines = [render_fact_compact(x)[2:] for x in facts]
+            else:
+                show = self.engine.flags.store_source_text
+                lines = [render_fact(x, show_source=show)[2:] for x in facts]
         return lines[:top_k] if top_k else lines, r.cost_usd
 
     def fact_records(self) -> list[tuple[str, str | None, bool]]:

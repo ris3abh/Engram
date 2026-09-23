@@ -48,6 +48,15 @@ def render_fact(r: RetrievedFact, show_source: bool = False) -> str:
     return f"- {said}{f.text}{source} ({'; '.join(notes)})"
 
 
+def render_fact_compact(r: RetrievedFact) -> str:
+    """Compact line: the date it was said, the fact, the verbatim source; validity only when no longer true."""
+    f = r.fact
+    said = f"[said {r.said_at:%Y-%m-%d}] " if r.said_at else ""
+    source = f' — source: "{f.source_text}"' if f.source_text else ""
+    closed = f" (no longer true since {f.valid_until:%Y-%m-%d})" if not f.is_valid else ""
+    return f"- {said}{f.text}{source}{closed}"
+
+
 def render(retrieval: Retrieval) -> str:
     if not retrieval.facts:
         return "(no memories)"
