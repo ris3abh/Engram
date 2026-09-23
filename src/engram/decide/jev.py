@@ -8,11 +8,13 @@ import json
 import math
 import time
 from collections import Counter
+from dataclasses import asdict
 from typing import Any
 
 import httpx
 
 from .. import config
+from ..cache import CallCache, call_key
 from ..models import Decision, new_id
 from .base import DecisionBackend, DecisionError, State, fallback_decision, make_decision, noul_probs
 from .log import DecisionLog
@@ -56,8 +58,10 @@ class JevBackend(DecisionBackend):
         attempts: int = config.JEV_ATTEMPTS,
         max_rps: float = config.JEV_MAX_RPS,
         transport: httpx.AsyncBaseTransport | None = None,
+        cache: CallCache | None = None,
     ):
         super().__init__(log)
+        self.cache = cache  # per-question answers keyed by (model, state, question payload)
         key = api_key or config.typesafe_api_key()
         if not key:
             raise DecisionError("TYPESAFE_API_KEY is not set")
@@ -91,6 +95,31 @@ class JevBackend(DecisionBackend):
         return {"model": self.model, "state": state, "questions": {a.key: a.payload() for a in asks}}
 
     async def _ask(self, state: State, asks: list[Ask]) -> dict[str, Decision]:
+        if not asks or self.cache is None:
+            return await self._ask_live(state, asks)
+        keys = {a.key: call_key("jev", self.model, state, a.payload()) for a in asks}
+        hits = {a.key: self.cache.get(keys[a.key]) for a in asks}
+        missing = [a for a in asks if hits[a.key] is None]
+        live = await self._ask_live(state, missing) if missing else {}
+        for a in missing:
+            d = live[a.key]
+            if d.backend != "fallback":
+                self.cache.put(keys[a.key], asdict(d))
+        if live:
+            self.cache.spend("jev", sum(d.cost_usd for d in live.values()))
+        else:
+            await self.cache.replay(max(h["latency_ms"] for h in hits.values()))
+        out = {}
+        for a in asks:
+            if a.key in live:
+                out[a.key] = live[a.key]
+            else:
+                d = Decision(**hits[a.key])
+                d.question, d.target = a.question.id, a.target  # same payload may serve a different candidate id
+                out[a.key] = d
+        return out
+
+    async def _ask_live(self, state: State, asks: list[Ask]) -> dict[str, Decision]:
         if not asks:
             return {}
         result, latency_ms, server_request_id = await self._post(self.request_body(state, asks))

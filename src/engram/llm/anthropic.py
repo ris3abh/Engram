@@ -9,6 +9,7 @@ import anthropic
 from pydantic import BaseModel, Field, create_model
 
 from .. import config
+from ..cache import CallCache, call_key
 from ..decide.questions import DURABILITY, EDGE_TYPES, FACT_KIND
 from ..models import ExtractedFact, Message
 from .base import LLMBackend, LLMError, LLMUsage, UsageLog
@@ -79,10 +80,12 @@ class AnthropicLLM(LLMBackend):
         model: str = config.LLM_MODEL,
         extract_model: str = config.EXTRACT_MODEL,
         usage_log: UsageLog | None = None,
+        cache: CallCache | None = None,
     ):
         self.model = model
         self.extract_model = extract_model
         self.usage_log = usage_log
+        self.cache = cache
         self._clients: dict[int, anthropic.AsyncAnthropic] = {}  # one per event loop
 
     def _client(self) -> anthropic.AsyncAnthropic:
@@ -110,6 +113,26 @@ class AnthropicLLM(LLMBackend):
             self.usage_log.write(usage)
         return usage
 
+    async def _cached(self, purpose: str, model: str, request: dict, run, encode, decode):
+        """Run `run()` (returns (response, started)) unless an identical request is cached.
+
+        encode(response) -> JSON-able output; decode(output) -> the method's return value.
+        """
+        key = call_key("anthropic", purpose, model, request) if self.cache else None
+        if key and (hit := self.cache.get(key)):
+            await self.cache.replay(hit["usage"]["latency_ms"])
+            usage = LLMUsage(**{**hit["usage"], "cached": True})
+            if self.usage_log:
+                self.usage_log.write(usage)
+            return decode(hit["output"]), usage
+        response, started = await run()
+        usage = self._usage(purpose, response, started, model)
+        output = encode(response)
+        if key:
+            self.cache.put(key, {"output": output, "usage": {**usage.__dict__, "cached": False}})
+            self.cache.spend("claude", usage.cost_usd)
+        return decode(output), usage
+
     async def extract(self, message: Message, context: list[Message]) -> tuple[list[ExtractedFact], LLMUsage]:
         speaker = "User" if message.speaker == "user" else message.speaker
         earlier = "\n".join(f"[{m.created_at:%Y-%m-%d}] {m.speaker}: {m.text}" for m in context[-6:]) or "(none)"
@@ -117,22 +140,38 @@ class AnthropicLLM(LLMBackend):
             f"Earlier messages (context only):\n{earlier}\n\n"
             f"Latest message, sent {message.created_at:%Y-%m-%d} by {speaker}:\n{message.text}"
         )
-        started = time.perf_counter()
-        try:
-            response = await self._client().messages.parse(
-                model=self.extract_model,
-                max_tokens=4096,
-                system=EXTRACT_SYSTEM,
-                messages=[{"role": "user", "content": prompt}],
-                output_format=_Extraction,
-            )
-        except anthropic.APIError as e:
-            raise LLMError(f"extraction failed: {e}") from e
-        usage = self._usage("extract", response, started, self.extract_model)
-        parsed = response.parsed_output
-        if parsed is None:
-            raise LLMError(f"extraction returned no parsable output (stop_reason={response.stop_reason})")
-        return [_to_extracted(f) for f in parsed.facts], usage
+        request = {
+            "message_id": message.id,
+            "system": EXTRACT_SYSTEM,
+            "prompt": prompt,
+            "schema": _Extraction.model_json_schema(),
+        }
+
+        async def run():
+            started = time.perf_counter()
+            try:
+                response = await self._client().messages.parse(
+                    model=self.extract_model,
+                    max_tokens=4096,
+                    system=EXTRACT_SYSTEM,
+                    messages=[{"role": "user", "content": prompt}],
+                    output_format=_Extraction,
+                )
+            except anthropic.APIError as e:
+                raise LLMError(f"extraction failed: {e}") from e
+            if response.parsed_output is None:
+                raise LLMError(f"extraction returned no parsable output (stop_reason={response.stop_reason})")
+            return response, started
+
+        facts, usage = await self._cached(
+            "extract",
+            self.extract_model,
+            request,
+            run,
+            encode=lambda r: [f.model_dump() for f in r.parsed_output.facts],
+            decode=lambda out: [_to_extracted(_Fact(**f)) for f in out],
+        )
+        return facts, usage
 
     async def judge_relation(
         self, new_fact: str, existing_fact: str, source_message: str, criteria: dict[str, str]
@@ -144,37 +183,53 @@ class AnthropicLLM(LLMBackend):
             f'Message the new fact came from: "{source_message}"\n\n'
             "How does the new fact relate to the existing memory?"
         )
-        started = time.perf_counter()
-        try:
-            response = await self._client().messages.parse(
-                model=self.model,
-                max_tokens=8192,
-                thinking={"type": "adaptive"},
-                system=ESCALATE_SYSTEM,
-                messages=[{"role": "user", "content": prompt}],
-                output_format=verdict,
-            )
-        except anthropic.APIError as e:
-            raise LLMError(f"escalation failed: {e}") from e
-        usage = self._usage("escalate", response, started)
-        if response.parsed_output is None:
-            raise LLMError(f"escalation returned no parsable output (stop_reason={response.stop_reason})")
-        return response.parsed_output.relation, usage
+        request = {"system": ESCALATE_SYSTEM, "prompt": prompt, "options": list(criteria)}
+
+        async def run():
+            started = time.perf_counter()
+            try:
+                response = await self._client().messages.parse(
+                    model=self.model,
+                    max_tokens=8192,
+                    thinking={"type": "adaptive"},
+                    system=ESCALATE_SYSTEM,
+                    messages=[{"role": "user", "content": prompt}],
+                    output_format=verdict,
+                )
+            except anthropic.APIError as e:
+                raise LLMError(f"escalation failed: {e}") from e
+            if response.parsed_output is None:
+                raise LLMError(f"escalation returned no parsable output (stop_reason={response.stop_reason})")
+            return response, started
+
+        return await self._cached(
+            "escalate", self.model, request, run, encode=lambda r: r.parsed_output.relation, decode=lambda x: x
+        )
 
     async def answer(self, question: str, memories: str) -> tuple[str, LLMUsage]:
-        started = time.perf_counter()
-        try:
-            response = await self._client().messages.create(
-                model=self.model,
-                max_tokens=1024,
-                system=ANSWER_SYSTEM,
-                messages=[{"role": "user", "content": f"Memories:\n{memories}\n\nQuestion: {question}"}],
-            )
-        except anthropic.APIError as e:
-            raise LLMError(f"answer failed: {e}") from e
-        usage = self._usage("answer", response, started)
-        text = "".join(b.text for b in response.content if b.type == "text").strip()
-        return text, usage
+        content = f"Memories:\n{memories}\n\nQuestion: {question}"
+
+        async def run():
+            started = time.perf_counter()
+            try:
+                response = await self._client().messages.create(
+                    model=self.model,
+                    max_tokens=1024,
+                    system=ANSWER_SYSTEM,
+                    messages=[{"role": "user", "content": content}],
+                )
+            except anthropic.APIError as e:
+                raise LLMError(f"answer failed: {e}") from e
+            return response, started
+
+        return await self._cached(
+            "answer",
+            self.model,
+            {"system": ANSWER_SYSTEM, "content": content},
+            run,
+            encode=lambda r: "".join(b.text for b in r.content if b.type == "text").strip(),
+            decode=lambda x: x,
+        )
 
 
 def _to_extracted(f: _Fact) -> ExtractedFact:

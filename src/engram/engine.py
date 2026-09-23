@@ -8,6 +8,7 @@ from . import config
 from .decide.base import DecisionBackend
 from .decide.log import DecisionLog
 from .embed import Embedder, HashEmbedder, SentenceEmbedder
+from .flags import Flags
 from .llm.base import LLMBackend, UsageLog
 from .pipeline.answer import Answer, answer
 from .pipeline.retrieve import Retriever
@@ -23,10 +24,11 @@ class Engram:
     embedder: Embedder
     log: DecisionLog
     usage_log: UsageLog | None = None
+    flags: Flags = Flags()
 
     def __post_init__(self) -> None:
         self.writer = WritePipeline(self.store, self.backend, self.llm, self.embedder, self.log)
-        self.retriever = Retriever(self.store, self.backend, self.embedder)
+        self.retriever = Retriever(self.store, self.backend, self.embedder, cosine_floor=self.flags.retrieval_floor)
 
     async def ingest(self, text: str, **kw):
         return await self.writer.ingest(text, **kw)

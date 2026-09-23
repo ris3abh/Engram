@@ -21,7 +21,8 @@ class LLMUsage:
     input_tokens: int
     output_tokens: int
     latency_ms: float
-    cost_usd: float
+    cost_usd: float  # what the call costs (nominal); a cached replay reports the original cost
+    cached: bool = False  # True when served from the call cache: nothing was actually spent
 
 
 class UsageLog:
