@@ -100,6 +100,7 @@ XREF_KIND = {"Table": "tab", "Tables": "tab", "Figure": "fig", "Figures": "fig",
 TOKEN = re.compile(
     rf"(?P<num>{OPEN}(?P<nd>[^{SEP}]*){SEP}(?P<ns>[^{CLOSE}]*){CLOSE})"
     r"|(?P<cite>\[(?P<ck>@[\w-]+(?:;\s*@[\w-]+)*)\])"
+    r"|(?P<eqref>\[\[(?P<eqk>eq:[\w,:-]+)\]\])"
     r"|(?P<sref>§(?P<s1>\d+(?:\.\d+)?)(?:–(?P<s2>\d+(?:\.\d+)?))?)"
     r"|(?P<aref>\bAppendix (?P<ax>[A-E])\b)"
     r"|(?P<code>`(?P<c>[^`]+)`)"
@@ -124,6 +125,8 @@ def inline(text: str) -> str:
         out.append(esc(text[pos : m.start()]))
         if m.group("num"):
             out.append(number(m.group("nd"), m.group("ns")))
+        elif m.group("eqref"):
+            out.append(r"\cref{" + m.group("eqk") + "}")
         elif m.group("sref"):
             prev = text[: m.start()].rstrip()
             cap = not prev or prev.endswith((".", "?", "!", ":"))
@@ -329,7 +332,10 @@ def convert(md: str) -> tuple[str, str, str, str]:
             while j < len(lines) and not lines[j].strip().startswith(fence):
                 code.append(lines[j])
                 j += 1
-            cur += [r"\begin{lstlisting}", "\n".join(code), r"\end{lstlisting}"]
+            if s[len(fence) :].strip() == "math":  # numbered, aligned display math with \label{} lines
+                cur += [r"\begin{align}", "\n".join(code), r"\end{align}"]
+            else:
+                cur += [r"\begin{lstlisting}", "\n".join(code), r"\end{lstlisting}"]
             i = j + 1
             continue
         if s.startswith("|"):

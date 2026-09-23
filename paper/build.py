@@ -1226,7 +1226,12 @@ CITE = re.compile(r"\[(@[\w-]+(?:;\s*@[\w-]+)*)\]")
 
 
 def md_cites(text: str) -> str:
-    """[@a; @b] -> [a; b] for the Markdown version (the LaTeX build turns them into \\citep)."""
+    """[@a; @b] -> [a; b] and [[eq:x]] -> (Eq. x) for the Markdown version (LaTeX: \\citep and \\cref)."""
+    text = re.sub(
+        r"\[\[(eq:[\w,:-]+)\]\]",
+        lambda m: "(" + ", ".join("Eq. " + k.split(":")[1] for k in m.group(1).split(",")) + ")",
+        text,
+    )
     return CITE.sub(lambda m: "[" + "; ".join(k.strip().lstrip("@") for k in m.group(1).split(";")) + "]", text)
 
 

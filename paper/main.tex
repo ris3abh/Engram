@@ -180,9 +180,11 @@ Decisions act only through explicit rules (\texttt{src/engram/pipeline/write.py}
 \subsection{Belief state}\label{sec:3.4}
 Each edge $i$ carries a belief $b_i \in [$ 0.02\src{src/engram/pipeline/belief.py}, 0.98\src{src/engram/pipeline/belief.py} $]$ that it is currently true. A typed answer $z$ about the edge, with probability $q$ for its chosen label, updates it in log-odds:
 
-\[\operatorname{logit} b_i \leftarrow \operatorname{logit} b_i + w(z)\, \operatorname{logit} q .\]
-
-With a per-question temperature $T$ (\cref{sec:5.4}), $\operatorname{logit} q$ is replaced by $\operatorname{logit} q / T$. We use $\vert w\vert  = 1$. The sign and the zero cases are exactly the policy rules of \cref{sec:3.3}:
+\begin{align}
+\operatorname{logit} b_i &\leftarrow \operatorname{logit} b_i + w(z)\, \operatorname{logit} q , \label{eq:belief} \\
+\operatorname{logit} q &\leftarrow \operatorname{logit} q \,/\, T . \label{eq:temper}
+\end{align}
+With a per-question temperature $T$ (\cref{sec:5.4}), $\operatorname{logit} q$ is first rescaled as in \cref{eq:temper}. We use $\vert w\vert  = 1$. The sign and the zero cases are exactly the policy rules of \cref{sec:3.3}:
 
 \begin{itemize}
 \item $w = +1$ for \texttt{duplicate} and \texttt{refinement} (support)
@@ -198,7 +200,7 @@ An open edge closes when $b_i <$ 0.25\src{src/engram/pipeline/belief.py} and reo
 \includegraphics[width=\columnwidth]{figures/belief_trace.pdf}
 \caption{Belief in the fact ``Melanie carves out daily me-time through running, reading, or playing violin'' (message D2:5), dev + update set 1, under v2 and v3. Under v2 a weak refinement answer at D2:7 (p = 0.45\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3\_\_noanswer.json (belief\_trace, D2:7)}) lowers belief slightly, so the update at U:E11 takes it below the close line; v3 ignores that answer ($\times$) and the fact closes one message later, at U:S01. Source: the belief trace in \texttt{bench/results/e4\_\allowbreak{}belief\_\allowbreak{}v2\_\allowbreak{}\_\allowbreak{}dev\_\allowbreak{}updates\_\allowbreak{}\_\allowbreak{}k3\_\allowbreak{}\_\allowbreak{}noanswer.json} and its v3 counterpart.}\label{fig:3}
 \end{figure}
-\textbf{What this assumes.} The log-odds rule treats $q$ as a calibrated likelihood. Where the model is miscalibrated, belief moves by the wrong amount. This is why \cref{sec:5.4} measures calibration and why a per-question temperature is part of the rule.
+\textbf{What this assumes.} The log-odds rule \cref{eq:belief} treats $q$ as a calibrated likelihood. Where the model is miscalibrated, belief moves by the wrong amount. This is why \cref{sec:5.4} measures calibration and why a per-question temperature is part of the rule.
 
 \subsection{Hygiene pass}\label{sec:3.5}
 After ingestion, one pass re-checks every group of facts that share a subject and relation. It asks the yes/no question \texttt{same\_\allowbreak{}fact} for each pair, 50\src{src/engram/pipeline/hygiene.py} pairs per request. At $p \ge$ 0.85\src{src/engram/config.py} the pair is linked, and at $p \le$ 0.15\src{src/engram/pipeline/hygiene.py (1 − ACT\_THRESHOLD)} an existing link is dropped.
@@ -208,9 +210,11 @@ On the held-out conversations one pass made between 1,865\src{bench/results/e4\_
 \subsection{Cost model}\label{sec:3.6}
 With a per-decision Jev cost $c_J$, an LLM escalation cost $c_L$ and an escalation threshold $\theta$ on the top probability $q$:
 
-\[C(\theta) = c_J + P(q < \theta)\, c_L ,\] \[E(\theta) = P(q \ge \theta)\, \varepsilon_J(\theta) + P(q < \theta)\, \varepsilon_L ,\]
-
-where $\varepsilon_J(\theta)$ is Jev's error rate on the decisions it keeps and $\varepsilon_L$ is the LLM's error rate on the escalated ones. \Cref{sec:5.4} draws the empirical curve.
+\begin{align}
+C(\theta) &= c_J + P(q < \theta)\, c_L , \label{eq:cost} \\
+E(\theta) &= P(q \ge \theta)\, \varepsilon_J(\theta) + P(q < \theta)\, \varepsilon_L , \label{eq:error}
+\end{align}
+where $\varepsilon_J(\theta)$ is Jev's error rate on the decisions it keeps and $\varepsilon_L$ is the LLM's error rate on the escalated ones. \Cref{sec:5.4} draws the empirical curves of \cref{eq:cost,eq:error}.
 
 \section{Experimental setup}\label{sec:4}
 \subsection{Models, data, caching and budget}\label{sec:4.1}

@@ -187,9 +187,12 @@ Decisions act only through explicit rules (`src/engram/pipeline/write.py`):
 Each edge $i$ carries a belief $b_i \in [$ {{k.bmin}}, {{k.bmax}} $]$ that it is currently true. A typed answer $z$
 about the edge, with probability $q$ for its chosen label, updates it in log-odds:
 
-$$\operatorname{logit} b_i \leftarrow \operatorname{logit} b_i + w(z)\, \operatorname{logit} q .$$
+```math
+\operatorname{logit} b_i &\leftarrow \operatorname{logit} b_i + w(z)\, \operatorname{logit} q , \label{eq:belief} \\
+\operatorname{logit} q &\leftarrow \operatorname{logit} q \,/\, T . \label{eq:temper}
+```
 
-With a per-question temperature $T$ (§5.4), $\operatorname{logit} q$ is replaced by $\operatorname{logit} q / T$.
+With a per-question temperature $T$ (§5.4), $\operatorname{logit} q$ is first rescaled as in [[eq:temper]].
 We use $|w| = 1$. The sign and the zero cases are exactly the policy rules of §3.3:
 - $w = +1$ for `duplicate` and `refinement` (support)
 - $w = -1$ for `update`, `contradiction` and `negates` where §3.3 permits a close
@@ -210,7 +213,7 @@ lowers belief slightly, so the update at U:E11 takes it below the close line; v3
 fact closes one message later, at U:S01. Source: the belief trace in
 `bench/results/e4_belief_v2__dev_updates__k3__noanswer.json` and its v3 counterpart.*
 
-**What this assumes.** The log-odds rule treats $q$ as a calibrated likelihood. Where the model is miscalibrated,
+**What this assumes.** The log-odds rule [[eq:belief]] treats $q$ as a calibrated likelihood. Where the model is miscalibrated,
 belief moves by the wrong amount. This is why §5.4 measures calibration and why a per-question temperature is
 part of the rule.
 
@@ -229,11 +232,13 @@ store at that scale is what becomes unaffordable.
 With a per-decision Jev cost $c_J$, an LLM escalation cost $c_L$ and an escalation threshold $\theta$ on the top
 probability $q$:
 
-$$C(\theta) = c_J + P(q < \theta)\, c_L ,$$
-$$E(\theta) = P(q \ge \theta)\, \varepsilon_J(\theta) + P(q < \theta)\, \varepsilon_L ,$$
+```math
+C(\theta) &= c_J + P(q < \theta)\, c_L , \label{eq:cost} \\
+E(\theta) &= P(q \ge \theta)\, \varepsilon_J(\theta) + P(q < \theta)\, \varepsilon_L , \label{eq:error}
+```
 
 where $\varepsilon_J(\theta)$ is Jev's error rate on the decisions it keeps and $\varepsilon_L$ is the LLM's error
-rate on the escalated ones. §5.4 draws the empirical curve.
+rate on the escalated ones. §5.4 draws the empirical curves of [[eq:cost,eq:error]].
 
 ## 4. Experimental setup
 
