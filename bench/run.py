@@ -44,10 +44,23 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 ROOT = Path(__file__).parents[1]
 UPDATES = ROOT / "bench" / "updates_conv26.json"
+UPDATES2 = ROOT / "bench" / "updates2_conv26.json"
+# Set-2 storage expectations: (earlier message, later message) pairs whose earlier value should close, and
+# messages whose facts must stay current. C03's home study stays true when a match arrives; only the Leo match ends.
+SET2_CLOSE_PAIRS = {
+    *((f"U2:C01.{k}", f"U2:C01.{k + 1}") for k in (1, 2)),
+    *((f"U2:C02.{k}", f"U2:C02.{k + 1}") for k in (1, 2, 3)),
+    ("U2:C03.2", "U2:C03.3"),
+    *((f"U2:C04.{k}", f"U2:C04.{k + 1}") for k in (1, 2)),
+    *((f"U2:C05.{k}", f"U2:C05.{k + 1}") for k in (1, 2, 3)),
+    *((f"U2:N0{k}.1", f"U2:N0{k}.2") for k in range(1, 6)),
+}
+SET2_KEEP = {"U2:C03.1"}
 EXCLUDED_AFTER_UPDATES = {84, 86, 87}  # LoCoMo dev questions about facts the update set changes
 SLICES = {
     "dev": (ROOT / "bench" / "slices" / "conv26_slice.json", [4]),
     "dev_updates": (ROOT / "bench" / "slices" / "conv26_slice.json", None),  # dev + bench/updates_conv26.json
+    "dev_updates2": (ROOT / "bench" / "slices" / "conv26_slice.json", None),  # dev + set 1 + set 2; set-2 questions
     "stress": (ROOT / "bench" / "slices" / "conv26_stress.json", [4, 7, 10]),
 }
 ARMS_DIR = ROOT / "bench" / ".cache" / "arms"
@@ -139,7 +152,7 @@ def session_time(text: str) -> datetime:
 def load_slice(name: str) -> dict:
     path, checkpoints = SLICES[name]
     s = json.loads(path.read_text())
-    if name == "dev_updates":
+    if name in ("dev_updates", "dev_updates2"):
         # The 30 update messages follow the slice in date order, one pseudo-session each (sessions 5..34).
         items = sorted(
             json.loads(UPDATES.read_text())["items"], key=lambda i: session_time(i["update"]["session_date"])
@@ -170,11 +183,40 @@ def load_slice(name: str) -> dict:
             )
         s["update_items"] = items
         checkpoints = [n]
+        if name == "dev_updates2":
+            doc2 = json.loads(UPDATES2.read_text())
+            s["questions"] = []  # only set-2 questions are asked on this slice
+            for m in sorted(doc2["messages"], key=lambda m: session_time(m["session_date"])):
+                n += 1
+                s["messages"].append(
+                    {
+                        "id": m["id"],
+                        "session": n,
+                        "index": 0,
+                        "speaker": m["speaker"],
+                        "text": m["text"],
+                        "session_date": m["session_date"],
+                    }
+                )
+            for q in doc2["questions"]:
+                s["questions"].append(
+                    {
+                        "idx": f"U2:{q['id']}",
+                        "question": q["question"],
+                        "gold": q["gold"],
+                        "category": "update2",
+                        "type": q["type"],
+                        "evidence": [],
+                        "last_evidence_session": n,
+                    }
+                )
+            s["set2"] = True
+            checkpoints = [n]
     s["checkpoints"] = checkpoints
     for m in s["messages"]:
         m["at"] = session_time(m["session_date"]) + timedelta(seconds=m["index"])
     for q in s["questions"]:
-        if q.get("category") == "update":
+        if q.get("category") in ("update", "update2"):
             continue
         q.setdefault(
             "last_evidence_session",
@@ -429,7 +471,8 @@ async def claude(client, cache: CallCache, purpose: str, sem: asyncio.Semaphore,
 async def run_arm(name: str, slice_name: str, budget: Budget, top_k: int | None = None, no_dates: bool = False) -> dict:
     spec = ARMS[name]
     sl = load_slice(slice_name)
-    arm_dir = ARMS_DIR / name / slice_name
+    suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "")
+    arm_dir = ARMS_DIR / name / (slice_name + suffix)  # each option set gets its own store
     shutil.rmtree(arm_dir, ignore_errors=True)
     arm_dir.mkdir(parents=True)
     cache = CallCache(CACHE, budget=budget)
@@ -592,7 +635,6 @@ async def run_arm(name: str, slice_name: str, budget: Budget, top_k: int | None 
         if spec["system"] == "engram":
             result["fulfills_log"] = system.engine.writer.fulfills_log
     RESULTS.mkdir(parents=True, exist_ok=True)
-    suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "")
     (RESULTS / f"{name}__{slice_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))
     return result
 
@@ -634,8 +676,8 @@ def update_report(sl: dict, answers: list[dict], system, embedder) -> dict:
                 "tier": item["tier"],
                 "expected": item["expected"],
                 "behavior": behavior,
-                "answer": upd[f"U:{item['id']}"]["answer"],
-                "label": upd[f"U:{item['id']}"]["label"],
+                "answer": upd.get(f"U:{item['id']}", {}).get("answer"),
+                "label": upd.get(f"U:{item['id']}", {}).get("label"),
             }
         )
 
@@ -646,6 +688,8 @@ def update_report(sl: dict, answers: list[dict], system, embedder) -> dict:
         (i["original"]["message_id"], i["update"]["id"]) for i in sl["update_items"] if i["expected"] != "no_close"
     }
     ok_pairs |= {(lab["earlier_id"], lab["later_id"]) for lab in json.loads(LABELS.read_text())["items"]}
+    if sl.get("set2"):
+        ok_pairs |= SET2_CLOSE_PAIRS
     closed = [r for r in records if not r["active"]]
     audit = Counter()
     for r in closed:
@@ -686,12 +730,38 @@ def update_report(sl: dict, answers: list[dict], system, embedder) -> dict:
         "stale_on_close_items": (sum(i["behavior"] == "stale" for i in stored_close), len(stored_close)),
         "over_close_on_no_close_items": (sum(i["behavior"] == "over_closed" for i in stored_keep), len(stored_keep)),
         "storage": storage,
+        **(set2_report(answers, records) if sl.get("set2") else {}),
+    }
+
+
+def set2_report(answers: list[dict], records: list[dict]) -> dict:
+    by_source: dict[str, list[dict]] = {}
+    for r in records:
+        by_source.setdefault(r["source"], []).append(r)
+    rows = [a for a in answers if a["category"] == "update2"]
+    types = sorted({a["type"] for a in rows})
+    stale = [(a, b) for a, b in sorted(SET2_CLOSE_PAIRS) if any(f["active"] for f in by_source.get(a, []))]
+    stored = [(a, b) for a, b in sorted(SET2_CLOSE_PAIRS) if by_source.get(a)]
+    kept = [m for m in SET2_KEEP if by_source.get(m) and all(f["active"] for f in by_source[m])]
+    return {
+        "set2_accuracy": statistics.fmean(a["label"] == "CORRECT" for a in rows) if rows else None,
+        "set2_q": len(rows),
+        "set2_accuracy_by_type": {
+            t: (
+                statistics.fmean(a["label"] == "CORRECT" for a in rows if a["type"] == t),
+                sum(a["type"] == t for a in rows),
+            )
+            for t in types
+        },
+        "set2_stale_values": (len(stale), len(stored)),
+        "set2_stale_pairs": stale,
+        "set2_keep_ok": (len(kept), sum(1 for m in SET2_KEEP if by_source.get(m))),
     }
 
 
 def fmt(r: dict | None, key: str) -> str:
     if r is None or r.get(key) is None:
-        return "—"
+        return "—"  # e.g. LoCoMo accuracy on dev_updates2, which asks only set-2 questions
     v = r[key]
     if key == "accuracy":
         return f"{v:.1%} (Q={r.get('locomo_q', r['slice']['questions'])})"
