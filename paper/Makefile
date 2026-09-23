@@ -2,14 +2,14 @@
 # Uses a local pdflatex if there is one, otherwise the texlive/texlive Docker image.
 ROOT := $(abspath ..)
 UV := cd $(ROOT) && uv run
-LATEX_IMAGE ?= texlive/texlive:latest-medium
+LATEX_IMAGE ?= engram-paper-tex  # docker/Dockerfile: TeX Live medium + placeins, inconsolata
 ifeq ($(shell command -v pdflatex 2>/dev/null),)
 TEX := docker run --rm -v $(CURDIR):/w -w /w $(LATEX_IMAGE)
 else
 TEX :=
 endif
 
-.PHONY: paper numbers figures tex pdf check clean
+.PHONY: paper numbers figures tex pdf check clean image
 
 paper: numbers figures tex pdf check
 
@@ -31,6 +31,9 @@ pdf:
 
 check:
 	$(UV) python paper/check.py | head -3
+
+image:
+	docker build -q -t engram-paper-tex docker
 
 clean:
 	rm -f main.aux main.bbl main.blg main.log main.out main.toc

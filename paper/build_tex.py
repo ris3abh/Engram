@@ -100,6 +100,8 @@ XREF_KIND = {"Table": "tab", "Tables": "tab", "Figure": "fig", "Figures": "fig",
 TOKEN = re.compile(
     rf"(?P<num>{OPEN}(?P<nd>[^{SEP}]*){SEP}(?P<ns>[^{CLOSE}]*){CLOSE})"
     r"|(?P<cite>\[(?P<ck>@[\w-]+(?:;\s*@[\w-]+)*)\])"
+    r"|(?P<sref>§(?P<s1>\d+(?:\.\d+)?)(?:–(?P<s2>\d+(?:\.\d+)?))?)"
+    r"|(?P<aref>\bAppendix (?P<ax>[A-E])\b)"
     r"|(?P<code>`(?P<c>[^`]+)`)"
     r"|(?P<dmath>\$\$(?P<dm>.+?)\$\$)"
     r"|(?P<math>(?<![\w\\])\$(?![\d/ ])(?P<m>[^$\n]+?)(?<! )\$)"
@@ -122,6 +124,16 @@ def inline(text: str) -> str:
         out.append(esc(text[pos : m.start()]))
         if m.group("num"):
             out.append(number(m.group("nd"), m.group("ns")))
+        elif m.group("sref"):
+            prev = text[: m.start()].rstrip()
+            cap = not prev or prev.endswith((".", "?", "!", ":"))
+            if m.group("s2"):
+                cmd = r"\Crefrange" if cap else r"\crefrange"
+                out.append(cmd + "{sec:" + m.group("s1") + "}{sec:" + m.group("s2") + "}")
+            else:
+                out.append((r"\Cref" if cap else r"\cref") + "{sec:" + m.group("s1") + "}")
+        elif m.group("aref"):
+            out.append(r"\hyperref[app:" + m.group("ax") + "]{Appendix~" + m.group("ax") + "}")
         elif m.group("cite"):
             keys = [k.strip().lstrip("@") for k in m.group("ck").split(";")]
             out.append(r"\citep{" + ",".join(keys) + "}")
@@ -284,15 +296,27 @@ def convert(md: str) -> tuple[str, str, str, str]:
                     if text.startswith(ONECOLUMN_FROM) and not onecolumn:
                         cur.append(r"\onecolumn")
                         onecolumn = True
-                    cur.append(r"\section{" + inline(re.sub(r"^Appendix [A-E]\.\s*", "", text)) + "}")
+                    letter = re.match(r"^Appendix ([A-E])", text).group(1)
+                    cur.append(r"\FloatBarrier")
+                    cur.append(
+                        r"\section{"
+                        + inline(re.sub(r"^Appendix [A-E]\.\s*", "", text))
+                        + r"}\label{app:"
+                        + letter
+                        + "}"
+                    )
                 elif text == "References":
                     cur = body
                     cur += [r"\bibliographystyle{plainnat}", r"\bibliography{references}"]
                 else:
                     cur = body
-                    cur.append(r"\section{" + inline(re.sub(r"^\d+\.\s*", "", text)) + "}")
+                    num = re.match(r"^(\d+)\.", text)
+                    lab = rf"\label{{sec:{num.group(1)}}}" if num else ""
+                    cur.append(r"\section{" + inline(re.sub(r"^\d+\.\s*", "", text)) + "}" + lab)
             elif level == 3:
-                cur.append(r"\subsection{" + inline(re.sub(r"^\d+\.\d+\s*", "", text)) + "}")
+                num = re.match(r"^(\d+\.\d+)\s", text)
+                lab = rf"\label{{sec:{num.group(1)}}}" if num else ""
+                cur.append(r"\subsection{" + inline(re.sub(r"^\d+\.\d+\s*", "", text)) + "}" + lab)
             else:
                 cur.append(r"\paragraph{" + inline(text) + "}")
             i += 1
@@ -395,6 +419,7 @@ PREAMBLE = r"""\documentclass[10pt,twocolumn]{article}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs,longtable,array,tabularx}
+\usepackage{placeins}
 \usepackage[table]{xcolor}
 \usepackage{caption}
 \usepackage{microtype}
@@ -404,6 +429,14 @@ PREAMBLE = r"""\documentclass[10pt,twocolumn]{article}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram,
   pdftitle={Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\crefname{equation}{Eq.}{Eqs.}\Crefname{equation}{Eq.}{Eqs.}
+\newcommand{\secfmt}[1]{%
+  \crefformat{#1}{##2\S##1##3}\Crefformat{#1}{##2\S##1##3}%
+  \crefrangeformat{#1}{\S\S##3##1##4--##5##2##6}\Crefrangeformat{#1}{\S\S##3##1##4--##5##2##6}%
+  \crefmultiformat{#1}{\S\S##2##1##3}{ and~##2##1##3}{, ##2##1##3}{ and~##2##1##3}%
+  \Crefmultiformat{#1}{\S\S##2##1##3}{ and~##2##1##3}{, ##2##1##3}{ and~##2##1##3}}
+\secfmt{section}\secfmt{subsection}
 \definecolor{engram}{HTML}{4453C4}
 \definecolor{codebg}{HTML}{F5F7FA}
 \captionsetup{font=small,labelfont=bf,skip=5pt}
