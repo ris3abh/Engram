@@ -44,8 +44,9 @@ From `bench/v2_power.py` (no API calls; output in `bench/results/v2/power.json`)
 
 - **Decision.** At the v1 effect the primary test has power 1.00 (above 0.8), so H1 is tested on the five fresh
   conversations as stated and no fallback applies. The v1 effect was measured on another model stack and may be
-  smaller on the OpenAI stack; at half the v1 effect power falls to 0.76. The pooled-nine result (the four v1
-  conversations plus the five fresh ones) is reported as exploratory, never as a substitute confirmatory test.
+  smaller on the OpenAI stack; at half the v1 effect power falls to 0.76. The same contrast on the pooled nine
+  conversations (power 0.95 at half the v1 effect) is tested as secondary hypothesis S12, Holm-corrected with the
+  family; it never replaces H1.
 
 ## 3. Stack
 
@@ -112,7 +113,7 @@ H1 (section 1). Tested once, uncorrected.
 ### 6.2 Secondary family: Holm–Bonferroni at family-wise α = 0.05
 
 Every secondary test is an exact two-sided McNemar test on paired per-question correctness under the primary judge.
-All nine are corrected together (Holm–Bonferroni); the paper reports raw and Holm-adjusted p-values.
+All ten are corrected together (Holm–Bonferroni); the paper reports raw and Holm-adjusted p-values.
 
 | # | contrast | data split |
 |---|---|---|
@@ -125,9 +126,10 @@ All nine are corrected together (Holm–Bonferroni); the paper reports raw and H
 | S9 | store correctness: engram vs mem0, memory text without dates, k=3, validity-window gold | update set 3 questions (section 9); sets 1–2 if set 3 is not frozen, then labeled exploratory |
 | S10 | LongMemEval knowledge-update: engram k=3 vs mem0 at its token-matched k | LongMemEval-S cleaned, knowledge-update questions (78) |
 | S11 | LongMemEval knowledge-update: engram k=3 vs Graphiti at its token-matched k | LongMemEval-S cleaned, knowledge-update questions (78) |
+| S12 | H1's contrast: engram k=3 vs mem0 at its token-matched k (the token-matched k chosen on the nine conversations) | pooled nine held-out LoCoMo conversations (conv-30, 41, 42, 43, 44, 47, 48, 49, 50), four scored categories, 1,388 questions |
 
 For S9, if update set 3 is not frozen when Stage 4 runs, the store-correctness experiment runs on sets 1–2 and is
-labeled exploratory in the paper, not dropped; S9 then leaves the family and Holm is applied to the remaining eight.
+labeled exploratory in the paper, not dropped; S9 then leaves the family and Holm is applied to the remaining nine.
 
 ### 6.3 Exploratory (no significance tests)
 
@@ -138,8 +140,8 @@ accuracy, decision agreement with Jev, decision cost, decision latency and store
 conversation, and the slice is small, so a non-significant difference there is not evidence of equal accuracy; the
 paper says so.
 
-Also exploratory: per-category differences; the four v1 conversations (conv-30, 41, 42, 43, already evaluated on another stack); the
-pooled-nine and pooled-ten results; Zep Cloud and A-MEM; adversarial accuracy; LongMemEval temporal-reasoning and k=20;
+Also exploratory: per-category differences; the four v1 conversations on their own (conv-30, 41, 42, 43, already evaluated on
+another stack); pooled-nine results other than S12, and pooled-ten results; Zep Cloud and A-MEM; adversarial accuracy; LongMemEval temporal-reasoning and k=20;
 the store-correctness contrasts other than S9 (engram vs Graphiti, with dates); latencies, costs and store sizes. Every
 table marks exploratory results as such.
 
@@ -236,6 +238,8 @@ one.
 - 2026-09-24, §6: S7 and S8 (frozen-extraction deciders) leave the Holm family and become exploratory, reported
   descriptively (accuracy, decision agreement with Jev, cost, latency, store size); non-significance on a small tuning
   slice is not evidence of equal accuracy. The family has nine tests.
+- 2026-09-24, §6 and §2: S12 added, H1's contrast (engram k=3 vs mem0 token-matched) on the pooled nine held-out
+  conversations, Holm-corrected with the family (ten tests). H1 stays on the five fresh conversations.
 
 ### Where this plan differs from the phase-3 brief
 
