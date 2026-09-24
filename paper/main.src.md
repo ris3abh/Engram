@@ -25,12 +25,9 @@ zero-shot as its documentation advises against, does not make the relational dec
 ## 1. Introduction
 
 **The cost problem.** A memory system for an LLM agent turns conversation into facts it can retrieve later. Each
-write has two parts:
-- Extraction: what facts does this message state?
-- Decisions: is each fact new, a duplicate, a refinement, or a change to something already stored? Is it worth
-  keeping? Is it sensitive?
-
-In current open-source systems both parts are LLM calls. mem0 2.1.0's default `add()` makes a single LLM call per
+write has two parts. Extraction asks what facts a message states. Decisions ask, for each fact, whether it is new, a
+duplicate, a refinement or a change to something already stored, whether it is worth keeping, and whether it is
+sensitive. In current open-source systems both parts are LLM calls. mem0 2.1.0's default `add()` makes a single LLM call per
 message with its additive extraction prompt, and has no separate update or delete step (`mem0/memory/main.py`,
 `Memory._add_to_vector_store`). An LLM call per decision is expensive enough that nothing re-examines the store
 afterwards. Facts that stopped being true stay in it.
@@ -51,28 +48,20 @@ level: MRR@5 rose from {{ext.atmem.mrr.before}} to {{ext.atmem.mrr.after}} and R
 measurement: an identical-extraction ablation of the decision layer, its calibration, the safety of the store it
 drives, the rerank effect on answers with a matched-context control, and the negatives.
 
-**Contributions.**
-
-1. With extraction held identical, typed decisions replace an LLM decision layer at {{e2.cost_ratio}} lower cost and
-   {{e2.lat_ratio}} lower median latency with no measured accuracy loss (§5.1).
-2. A belief-state store policy with reversible, gated closes over-closes no labeled keep item, and its v3 rule removes
-   a weak-evidence failure that closes true facts (§3.3, §5.3).
-3. Under a three-memory budget a listwise Jev rerank puts engram {{tm.diff}} points ahead of mem0 at matched context
-   on {{ho.q}} held-out questions, and the systems tie at k=20 (§5.2).
-4. Closing stale facts does not change answers on current benchmarks, and a zero-shot base checkpoint of an
-   open-weights decision model does not make the relational decisions (§5.4).
+**Contributions.** The paper makes four. First, with extraction held identical, typed decisions replace an LLM
+decision layer at {{e2.cost_ratio}} lower cost and {{e2.lat_ratio}} lower median latency with no measured accuracy
+loss (§5.1). Second, a belief-state store policy with reversible, gated closes over-closes no labeled keep item, and
+its v3 rule removes a weak-evidence failure that closes true facts (§3.3, §5.3). Third, under a three-memory budget
+a listwise Jev rerank puts engram {{tm.diff}} points ahead of mem0 at matched context on {{ho.q}} held-out
+questions, while at k=20 the systems tie (§5.2). Fourth, two results are negative: closing stale facts does not
+change answers on current benchmarks, and a zero-shot base checkpoint of an open-weights decision model does not
+make the relational decisions (§5.4).
 
 **Scope.** We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development
 conversation and four held-out conversations, scoring four of its five question categories; adversarial is
 excluded, following mem0's evaluation protocol). We use update sets written by the system's author, and one hosted
-decision model (Jev, `jev-1.13.0`).
-
-We did not test:
-- Zep/Graphiti or Letta
-- LongMemEval
-- other extraction, answer or judge models
-- multi-user stores
-- non-English text
+decision model (Jev, `jev-1.13.0`). We did not test Zep/Graphiti or Letta, LongMemEval, other extraction,
+answer or judge models, multi-user stores, or non-English text.
 
 ## 2. Background and Related Work
 
@@ -93,12 +82,9 @@ agentic reasoning only for novel questions [@nguyen2026byterover].
 
 ### 2.2 Typed decision models
 
-A typed decision model takes a shared *state* (JSON) and a set of questions. Each question is one of:
-- a choice among named options, each with a rubric
-- a yes/no ("noul") question
-- a score
-
-It returns a probability distribution per question.
+A typed decision model takes a shared *state* (JSON) and a set of questions, and returns a probability
+distribution for each question. A question is a choice among named options, each with a rubric; a yes/no ("noul")
+question; or a score.
 
 **Jev.** We use Jev through TypeSafe's API: model `jev-1.13.0`, priced at {{k.price}} USD per million input tokens
 as billed to our account (`src/engram/config.py`); the public documentation does not list a price. Its documentation gives a limit of {{ext.jev.options}} options per choice question
@@ -152,21 +138,16 @@ give principled thresholds for acting on a model's probability. The belief updat
 
 ![Figure 1: engram's write and read paths. Orange boxes are LLM calls, blue boxes are typed Jev decisions.](figures/pipeline.svg)
 
-**Write path.**
-1. An LLM extracts facts from a message. In the experiments this uses mem0's prompt and inputs; §4.2.
-2. Each fact goes to Jev as a single request. The request carries the fact questions and one
-   `relation_to_candidate` question for each of up to {{k.cand}} candidate facts.
-3. A policy layer and a belief state (§3.2–3.3) turn the answers into store operations.
-4. The store is SQLite plus NetworkX. Facts are edges with validity windows, and every decision is logged with its
-   probabilities.
+**Write path.** An LLM extracts facts from a message; in the experiments it uses mem0's prompt and inputs (§4.2).
+Each fact then goes to Jev as a single request that carries the fact questions and one `relation_to_candidate`
+question for each of up to {{k.cand}} candidate facts. A policy layer and a belief state (§3.2–3.3) turn the answers
+into store operations. The store is SQLite plus NetworkX: facts are edges with validity windows, and every decision
+is logged with its probabilities.
 
-**Read path.**
-1. Embed the question and take the cosine top-k.
-2. Jev reranks the candidates with one yes/no relevance question per candidate, plus a `query_relation` question
-   that can pull in facts by relation type.
-3. Add history: the facts each retrieved fact superseded.
-4. Render compact lines for the answer model: the date the fact was said, the fact, and the verbatim source
-   quote.
+**Read path.** The question is embedded and the cosine top-k taken. Jev reranks these candidates with one yes/no
+relevance question per candidate, plus a `query_relation` question that can pull in facts by relation type. History
+is added next, meaning the facts that each retrieved fact superseded. The answer model sees compact lines, each
+with the date the fact was said, the fact, and the verbatim source quote.
 
 Figure 2 walks through these stages on a question from the retrieval regression test.
 
@@ -182,23 +163,22 @@ chain, is not, but no stored run records which stage added Paris.*
 The current chain has {{k.nq}} questions, listed in Appendix A. Choice questions carry a rubric per option. When a
 question's wording changes, its version number is bumped and old arms keep the old version.
 
-Decisions act only through explicit rules (`src/engram/pipeline/write.py`):
+**Policy.** Decisions act only through explicit rules (`src/engram/pipeline/write.py`). A decision acts at
+$p \ge$ {{k.act}}. A superseding relation (update, contradiction, negates) below {{k.esc}} is escalated to an LLM
+with mem0's update prompt, and anything in between is stored as tentative.
 
-- **Thresholds.** A decision acts at $p \ge$ {{k.act}}. A superseding relation (update, contradiction, negates)
-  below {{k.esc}} is escalated to an LLM, using mem0's update prompt. Anything in between is stored as tentative.
-- **Temporal gate.** An old edge can close only if the new fact is current or past:
-  $P(\text{current}) + P(\text{past}) \ge$ {{k.act}}. Planned and hypothetical statements never close anything.
-- **Cardinality.** Each relation type is single- or multi-valued. `contradiction` closes only a sibling (same
-  subject and relation) on a single-valued relation. `update` may also close a multi-valued sibling. `negates`
-  (the new fact says the old one stopped) may close any edge.
-- **Two-phrasing agreement.** The first piece of evidence against an edge must be confirmed by a second phrasing
-  of the relation question (`relation_to_candidate_recheck`). Otherwise it does not count.
-- **Plans.** A dedicated yes/no question, `plan_fulfilled`, asks whether a new fact reports that a stored plan has
-  happened. At $p \ge$ {{k.act}} the plan closes with reason *fulfilled*.
-- **Merges are links.** A duplicate becomes a `same_as` link, collapsed at retrieval and removable. Text is never
-  merged.
-- **Overrides.** An explicit request to remember overrides `worth_remembering`. A credential is redacted before
-  storage, whatever the other answers say.
+Closing an edge is gated three ways. The new fact must be current or past, with
+$P(\text{current}) + P(\text{past}) \ge$ {{k.act}}, so planned and hypothetical statements never close anything.
+The relation type's cardinality must allow the close: `contradiction` closes only a sibling (same subject and
+relation) on a single-valued relation, `update` may also close a multi-valued sibling, and `negates` (the new fact
+says the old one stopped) may close any edge. And the first piece of evidence against an edge counts only if a
+second phrasing of the relation question (`relation_to_candidate_recheck`) confirms it.
+
+Three further rules cover plans, duplicates and overrides. A dedicated yes/no question, `plan_fulfilled`, asks
+whether a new fact reports that a stored plan has happened; at $p \ge$ {{k.act}} the plan closes with reason
+*fulfilled*. A duplicate becomes a `same_as` link that is collapsed at retrieval and can be removed, so text is
+never merged. An explicit request to remember overrides `worth_remembering`, and a credential is redacted before
+storage whatever the other answers say.
 
 **Hygiene.** After ingestion, one pass re-checks every group of facts that share a subject and relation. It asks
 the yes/no question `same_fact` for each pair, {{k.hyg.batch}} pairs per request. At $p \ge$ {{k.act}} the pair is
@@ -217,10 +197,9 @@ about the edge, with probability $q$ for its chosen label, updates it in log-odd
 ```
 
 With a per-question temperature $T$ (§5.3), $\operatorname{logit} q$ is first rescaled as in [[eq:temper]].
-We use $|w| = 1$. The sign and the zero cases are exactly the policy rules of §3.2:
-- $w = +1$ for `duplicate` and `refinement` (support)
-- $w = -1$ for `update`, `contradiction` and `negates` where §3.2 permits a close
-- $w = 0$ for `new`, and for any answer a gate blocks
+We use $|w| = 1$, and the sign follows the policy rules of §3.2: $w = +1$ for the supporting answers
+`duplicate` and `refinement`, $w = -1$ for `update`, `contradiction` and `negates` where a close is permitted, and
+$w = 0$ for `new` and for any answer a gate blocks.
 
 An open edge closes when $b_i <$ {{k.close}} and reopens when $b_i >$ {{k.reopen}}. The gap between the two gives
 hysteresis.
@@ -258,21 +237,16 @@ rate on the escalated ones. §5.3 draws the empirical curves of [[eq:cost,eq:err
 
 ### 4.1 Models, data and protocol
 
-**Models** (the same in every arm):
-- Extraction: `claude-haiku-4-5`.
-- Answers and judging: `claude-sonnet-4-6`, with mem0's LoCoMo evaluation prompts (`bench/locomo_subset.py`).
-- The LLM decision layer and all escalations: `claude-sonnet-4-6` with mem0's update prompt.
-- mem0 2.1.0 runs on `claude-haiku-4-5` with telemetry off.
+**Models.** Every arm uses the same models. `claude-haiku-4-5` extracts facts, for engram and for mem0 2.1.0
+(which runs with telemetry off). `claude-sonnet-4-6` answers and judges, with mem0's LoCoMo evaluation prompts
+(§4.2), and is also the LLM decision layer and the escalation model, with mem0's update prompt.
 
-**Slices:**
-- *dev*: conv-26 sessions 1–4, {{dev.msgs}} messages, {{dev.q}} questions.
-- *stress*: conv-26 sessions 1–10, {{stress.msgs}} messages, {{stress.q}} questions.
-- *held-out*: conv-30, conv-41, conv-42 and conv-43 whole, {{ho.q}} questions. These were not used during
-  development. The system configuration was frozen (git tag `e4-frozen`) before any held-out run.
-
-LoCoMo's questions fall in five categories, of which we score four (adversarial is excluded, following mem0's
-evaluation protocol). Each held-out conversation is ingested once per system, and
-k=3 and k=20 are answered from the same store.
+**Data.** The *dev* slice is conv-26 sessions 1–4 ({{dev.msgs}} messages, {{dev.q}} questions), and the *stress*
+slice is conv-26 sessions 1–10 ({{stress.msgs}} messages, {{stress.q}} questions). The *held-out* slice is conv-30,
+conv-41, conv-42 and conv-43 whole ({{ho.q}} questions); none of it was used during development, and the system
+configuration was frozen (git tag `e4-frozen`) before any held-out run. LoCoMo's questions fall in five categories,
+of which we score four (adversarial is excluded, following mem0's evaluation protocol). Each held-out conversation is
+ingested once per system, and k=3 and k=20 are answered from the same store.
 
 **Caching and budget.** Every LLM and Jev call is cached by its full request, and budget guards stop any run past
 a spending limit. Phase 2 (all experiments reported here) spent {{spend.total}} over {{spend.runs}} ledgered runs.
@@ -281,13 +255,9 @@ phase was not ledgered; roughly $10 by the author's estimate.
 
 ### 4.2 Identical extraction
 
-For each message, mem0 2.1.0's `add()` builds its extraction prompt from:
-- the new message, as `[date] speaker: text`
-- the last {{k.lastk}} messages
-- the {{k.cand}} existing memories most similar to it
-- a current date
-
-It passes no observation date, so relative dates in historical conversations resolve against the current date. We
+For each message, mem0 2.1.0's `add()` builds its extraction prompt from the new message (as
+`[date] speaker: text`), the last {{k.lastk}} messages, the {{k.cand}} existing memories most similar to it, and a
+current date. It passes no observation date, so relative dates in historical conversations resolve against the current date. We
 report this as-is, and a patched variant in §6.
 
 engram's E-arms build the same prompt with the same function (`generate_additive_extraction_prompt`), inputs and
@@ -305,38 +275,29 @@ per-speaker memory lists to a single list (`bench/locomo_subset.py`).
 LoCoMo has almost no updates (§2.3). Two update sets, written in the speakers' voices, extend it. Both are appended to the dev
 slice and were frozen by SHA-256 before any run.
 
-**Set 1** (`bench/updates_conv26.json`, SHA-256 prefix {{u1.sha}}) has {{u1.n}} items:
-- {{u1.n.easy}} easy closes
-- {{u1.n.subtle}} subtle items labeled *no_close*: past-tense mentions and unrealised plans
-- {{u1.n.fulfilled}} fulfilled plans
-
-**Set 2** (`bench/updates2_conv26.json`, prefix {{u2.sha}}) adds {{u2.nm}} messages and {{u2.nq}} questions:
-- {{u2.type.point_in_time}} point-in-time questions
-- {{u2.type.chain_current}} chains of 3–5 changes asked about now
-- {{u2.type.chain_point_in_time}} chains asked about a past moment
-- {{u2.type.no_temporal_cue}} updates with no temporal cue in the message
-
-Appendix B shows one item of each kind; the full sets are in the two files. The system's author wrote and labeled
+Set 1 (`bench/updates_conv26.json`, SHA-256 prefix {{u1.sha}}) has {{u1.n}} items: {{u1.n.easy}} easy closes,
+{{u1.n.subtle}} subtle items labeled *no_close* (past-tense mentions and unrealised plans that must not close
+anything), and {{u1.n.fulfilled}} fulfilled plans. Set 2 (`bench/updates2_conv26.json`, prefix {{u2.sha}}) adds
+{{u2.nm}} messages and {{u2.nq}} questions. Of these, {{u2.type.point_in_time}} ask about a past moment in set 1's
+items, {{u2.type.chain_current}} ask for the current value after a chain of 3–5 changes, {{u2.type.chain_point_in_time}}
+ask for a chain's value at a past moment, and {{u2.type.no_temporal_cue}} follow an update whose message has no
+temporal cue such as "now" or "anymore". Appendix B shows one item of each kind; the full sets are in the two files. The system's author wrote and labeled
 them, and this is a source of bias.
 
 ### 4.4 Statistics
 
 Both systems answer the same questions, so comparisons are paired: $d_i = \text{engram}_i - \text{mem0}_i$. We
-report:
-- an exact McNemar test on the discordant questions
-- a 95% interval from the per-question normal approximation
-- a cluster bootstrap that resamples the four held-out conversations. With four clusters, treat it as a
-  robustness check.
-
-The token-matched comparison reports the per-question interval only.
+report an exact McNemar test on the discordant questions and a 95% interval from the per-question normal
+approximation. We also report a cluster bootstrap that resamples the four held-out conversations; with four
+clusters it is a robustness check, not a primary interval. The token-matched comparison reports the per-question
+interval only.
 
 ## 5. Results
 
 ### 5.1 Replacing the decision layer
 
-The three arms in Table 2 share extraction. The two engram arms differ only in what decides after it:
-- Jev typed questions (E2 Jev)
-- `claude-sonnet-4-6` with mem0's update prompt, one call per extracted fact (E2 LLM)
+The three arms in Table 2 share extraction. The two engram arms differ only in what decides after it: Jev's
+typed questions in E2 Jev, and `claude-sonnet-4-6` with mem0's update prompt, one call per extracted fact, in E2 LLM.
 
 *Table 2. Dev slice, conv-26 sessions 1–4, {{dev.msgs}} messages, {{dev.q}} questions, all retrieved memories
 (default k). Extraction claude-haiku-4-5 for all arms; answers and judge claude-sonnet-4-6; E2 LLM decides with
@@ -452,12 +413,11 @@ dev + set 1 split by whether they match a labeled pair, and no_close items over-
 
 **Over-closes.** No labeled keep item was over-closed by any arm.
 
-**Closes outside the labels.** They separate the policies:
-- The first Jev arm (E2), which closed whenever a superseding label cleared {{k.act}}, made {{u1.e2.closes}}
-  closes on dev + set 1. {{u1.e2.closes_wrong}} of them match no labeled pair.
-- Belief v2 made {{u1.e4v2.closes}}, of which {{u1.e4v2.closes_wrong}} match no labeled pair.
-- On set 2 the same comparison is {{u2.e2.closes_wrong}} of {{u2.e2.closes}} against {{u2.e4v2.closes_wrong}} of
-  {{u2.e4v2.closes}}.
+**Closes outside the labels.** These separate the policies. The first Jev arm (E2), which closed whenever a
+superseding label cleared {{k.act}}, made {{u1.e2.closes}} closes on dev + set 1, and {{u1.e2.closes_wrong}} of them
+match no labeled pair. Belief v2 made {{u1.e4v2.closes}}, of which {{u1.e4v2.closes_wrong}} match no labeled pair.
+On set 2 the comparison is {{u2.e2.closes_wrong}} of {{u2.e2.closes}} against {{u2.e4v2.closes_wrong}} of
+{{u2.e4v2.closes}}.
 
 **Stale items.** A stale item is a close item whose old fact is still active. Belief v2 left {{u1.e4v2.stale}} of
 the set-1 close items stale, against {{u1.e4v1.stale}} under belief v1 and {{u1.mem0.stale}} for mem0, which never
@@ -481,23 +441,18 @@ making {{hyg.conv-30.merges}}, {{hyg.conv-41.merges}}, {{hyg.conv-42.merges}} an
 
 **Contradiction regression.** The regression set has {{tr.n}} contradiction pairs, each an old fact, a new fact and a message, labeled
 with accepted relations and a temporal status (`bench/contradiction_pairs.jsonl`). Under the current question
-versions:
-- Jev's relation choice is in the accepted set for {{jreg.exact}} of pairs (easy {{jreg.tier.easy}}, medium
-  {{jreg.tier.medium}}, subtle {{jreg.tier.subtle}}).
-- Its temporal status is right for {{jreg.temporal}}.
-- The write path's close rule is right for {{jreg.close_rule}}, with {{jreg.false_closes}} false closes.
-- Its mean top probability is {{jreg.p_right}} when right and {{jreg.p_wrong}} when wrong.
+versions, Jev's relation choice is in the accepted set for {{jreg.exact}} of pairs (easy {{jreg.tier.easy}}, medium
+{{jreg.tier.medium}}, subtle {{jreg.tier.subtle}}), and its temporal status is right for {{jreg.temporal}}. The
+write path's close rule is right for {{jreg.close_rule}}, with {{jreg.false_closes}} false closes. Jev's mean top
+probability is {{jreg.p_right}} when it is right and {{jreg.p_wrong}} when it is wrong.
 
 *Table 9. Contradiction regression ({{tr.n}} gold pairs), relation_to_candidate and temporal_status in one request. Laya:
 {{laya.ckpt}} base checkpoint, zero-shot, fp16, on the local MLX server.*
 
 {{table:regression}}
 
-**Calibration error.** We measure expected calibration error (ECE) on two label sets:
-- {{cal.esc.rel.jev.n}} escalation labels, where Sonnet decided a relation Jev was unsure of
-- the {{tr.n}} gold pairs
-
-On the gold pairs Jev's relation ECE is {{cal.gold.rel.jev.ece}} (fitted $T$ = {{cal.gold.rel.jev.T}}) and its
+**Calibration error.** We measure expected calibration error (ECE) on two label sets: the {{tr.n}} gold pairs, and
+{{cal.esc.rel.jev.n}} escalation labels, where Sonnet decided a relation Jev was unsure of. On the gold pairs Jev's relation ECE is {{cal.gold.rel.jev.ece}} (fitted $T$ = {{cal.gold.rel.jev.T}}) and its
 temporal ECE is {{cal.gold.tmp.jev.ece}}. On the escalation labels, which are by construction the cases Jev was
 unsure of, relation ECE is {{cal.esc.rel.jev.ece}}. Table 7 has the full comparison, with Laya.
 
@@ -509,12 +464,10 @@ predate `negates`.*
 
 ![Figure 9: reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.](figures/calibration.svg)
 
-**Cost/error tradeoff.** The {{cal.esc.rel.jev.n}} escalation labels are too few for a curve, so Figure 10 uses the {{tr.n}} gold pairs.
-- $c_J$ = {{tr.cJ}} is the mean Jev cost of one relation decision over {{tr.cJ_n}} held-out decisions.
-- $c_L$ = {{tr.cL}} is the mean cost of one escalation over {{tr.cL_n}} logged escalations.
-- No LLM run on the gold pairs is saved, so $\varepsilon_L$ is an assumption, plotted at 0 and 0.1.
-
-With Jev alone the error is {{tr.jev_err}}. At $\theta$ = 0.85, {{tr.0.85.pesc}} of decisions escalate, the cost is
+**Cost/error tradeoff.** The {{cal.esc.rel.jev.n}} escalation labels are too few for a curve, so Figure 10 uses
+the {{tr.n}} gold pairs. The Jev cost $c_J$ = {{tr.cJ}} is the mean cost of one relation decision over {{tr.cJ_n}}
+held-out decisions, and the escalation cost $c_L$ = {{tr.cL}} is the mean over {{tr.cL_n}} logged escalations. No LLM
+run on the gold pairs is saved, so $\varepsilon_L$ is an assumption, plotted at 0 and 0.1. With Jev alone the error is {{tr.jev_err}}. At $\theta$ = 0.85, {{tr.0.85.pesc}} of decisions escalate, the cost is
 {{tr.0.85.C}} per decision, and $E$ is {{tr.0.85.E0}} ($\varepsilon_L$ = 0) or {{tr.0.85.E1}} ($\varepsilon_L$ =
 0.1). At the production threshold of {{k.esc}}, {{tr.0.6.pesc}} escalate and $E$ is {{tr.0.6.E0}} or {{tr.0.6.E1}}.
 
@@ -571,11 +524,11 @@ When Laya decided every question, on dev + set 1 at k=3 it scored {{lay.e4_belie
 {{lay.e4_belief_v2_laya.stored}} facts active. Most of these closes came from weak `duplicate` and `refinement`
 answers below 0.5 lowering belief, the failure belief v3 removes (§3.3).
 
-**Hybrid.** Laya answered the two high-volume yes/no questions (`relevant_to_query`, `same_fact`) and Jev the rest.
-- Agreement on the routed questions: same answer {{hyb.agree}}, same action {{hyb.act}}.
-- Writes were identical to the all-Jev arm. At k=3 only {{hyb.kept.k3}} of Jev's top-3 lines survived.
-- It saved {{hyb.dev_updates.saved}} of Jev's cost on dev + set 1 ({{hyb.dev_updates.saved_usd}} per run).
-- Table 11 has accuracy.
+**Hybrid.** In a hybrid arm Laya answered the two high-volume yes/no questions (`relevant_to_query`, `same_fact`)
+and Jev the rest. On the routed questions the two models gave the same answer on {{hyb.agree}} and the same action
+on {{hyb.act}}. Writes were identical to the all-Jev arm, but at k=3 only {{hyb.kept.k3}} of Jev's top-3 lines
+survived the change of reranker. The hybrid saved {{hyb.dev_updates.saved}} of Jev's cost on dev + set 1
+({{hyb.dev_updates.saved_usd}} per run); Table 11 has its accuracy.
 
 *Table 11. Hybrid against all-Jev: dev slice with update sets (Q per row: {{dev.q}} LoCoMo, {{u1.n}} set 1, {{u2.nq}} set 2), k as labeled, extraction claude-haiku-4-5, answers and judge
 claude-sonnet-4-6.*
@@ -599,41 +552,30 @@ held-out runs made during one slower period.
 
 ## 6. Discussion and Limitations
 
-**What the decision layer buys.**
-- Cost and latency (§5.1).
-- An audit trail: every decision has probabilities and a version.
-- Store operations that are reversible and gated (§5.3).
-- A price at which re-examining the store is routine (§3.2).
-
-**What it does not buy.**
-- Accuracy at default k: it ties (§5.1).
-- Update-question accuracy on today's questions: every arm is near its ceiling (§5.4).
+**What the decision layer buys, and what it does not.** Typed decisions buy lower cost and latency (§5.1), an
+audit trail in which every decision carries probabilities and a question version, store operations that are
+reversible and gated (§5.3), and a price at which re-examining the store is routine (§3.2). They do not buy accuracy
+at default k, where the systems tie (§5.1), or accuracy on today's update questions, where every arm is near its
+ceiling (§5.4).
 
 **Benchmarks do not see storage correctness.** A question about a fact that changed is answerable from a store
 that kept both versions, as long as the memories carry dates. An evaluation that rewards a correct store would
-need:
-- questions scored against validity windows
-- small retrieval budgets, where a stale fact displaces a current one
-- memories stored without dates
-- long chains of changes
-
-Update set 2 targets these, and every arm is at its ceiling on it.
+score answers against validity windows, use small retrieval budgets in which a stale fact displaces a current one,
+store memories without dates, and ask about long chains of changes. Update set 2 targets the last of these, and every
+arm is at its ceiling on it.
 
 **Rerank or larger k.** Under a three-memory budget, a cheap listwise rerank is worth {{tm.diff}} points over
 mem0 at matched tokens. At k=20 the ranking stops mattering. For deployments that pay per context token, reranking
 is the cheaper route to the same accuracy.
 
-**Limitations.**
-- *One baseline and one benchmark.* We compare only mem0 OSS 2.1.0, on four held-out LoCoMo conversations.
-- *Author-written update sets.* The update sets and the regression pairs were written and labeled by the
-  system's author.
-- *One decision model.* Jev is the only decision model evaluated as the deciding backend, at one version. Laya
-  was tested only as a zero-shot base checkpoint.
-- *mem0's date handling.* mem0's open-source path gives no observation date, so relative dates resolve against
-  the run date; the comparison uses it as shipped. A variant with the session date patched in scored
-  {{mem0_dated__dev.acc}} on dev, against {{mem0__dev.acc}} unpatched, within noise.
-- *Dev-only rerank attribution.* The rerank attribution in §5.2 rests on a dev ablation.
-- *One judge model.* The judge is an LLM (claude-sonnet-4-6). We did not measure its agreement with human labels.
+**Limitations.** The comparison has one baseline, mem0 OSS 2.1.0, on one benchmark, four held-out LoCoMo
+conversations. The update sets and the regression pairs were written and labeled by the system's author. Jev is the
+only decision model evaluated as the deciding backend, at one version, and Laya was tested only as a zero-shot base
+checkpoint. mem0's open-source path gives no observation date, so relative dates resolve against the run date; we
+use it as shipped, and a variant with the session date patched in scored {{mem0_dated__dev.acc}} on dev against
+{{mem0__dev.acc}} unpatched, within noise. The attribution of the matched-context gain to reranking (§5.2) rests on a
+dev ablation, not a held-out one. Finally, the judge is an LLM (claude-sonnet-4-6), and we did not measure its
+agreement with human labels.
 
 ## 7. Conclusion
 
