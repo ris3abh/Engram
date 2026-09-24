@@ -16,7 +16,20 @@ import json
 import random
 from pathlib import Path
 
-from .common import AUDIT, FRESH, JUDGES, KEY, PAIRS, PRIMARY_JUDGE, SCORED_CATEGORIES, SHEET_COLUMNS, labels
+from .common import (
+    AUDIT,
+    FRESH,
+    JUDGES,
+    KEY,
+    N_SECOND,
+    PAIRS,
+    PRIMARY_JUDGE,
+    SCORED_CATEGORIES,
+    SECOND,
+    SECOND_SEED,
+    SHEET_COLUMNS,
+    labels,
+)
 
 SEED = 0
 N_AGREED = 100
@@ -86,6 +99,13 @@ def build(engram: dict, mem0: dict, n_agreed: int = N_AGREED, seed: int = SEED) 
     return sheet, key, pairs
 
 
+def second_sheet(sheet: list[dict], n: int = N_SECOND, seed: int = SECOND_SEED) -> list[dict]:
+    """A random n rows of the audit sheet for the second grader, reshuffled; same blinding (no system, no labels)."""
+    rows = random.Random(seed).sample(sheet, min(n, len(sheet)))
+    random.Random(seed).shuffle(rows)
+    return [dict(r) for r in rows]
+
+
 def write_csv(path: Path, rows: list[dict], columns: list[str]) -> None:
     with path.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=columns)
@@ -102,12 +122,14 @@ def main() -> None:
     if AUDIT.exists():
         raise SystemExit(f"{AUDIT} exists; the audit set is built once (delete it deliberately to rebuild)")
     write_csv(AUDIT, sheet, SHEET_COLUMNS)
+    write_csv(SECOND, second_sheet(sheet), SHEET_COLUMNS)
     write_csv(KEY, key, list(key[0]))
     PAIRS.write_text(json.dumps(pairs, indent=1) + "\n")
     n_disc = len({(r["conv"], r["idx"]) for r in key if r["discordant"]})
     n_agreed = len({(r["conv"], r["idx"]) for r in key if not r["discordant"]})
     print(f"audit set: {len(sheet)} rows ({n_disc} discordant and {n_agreed} agreed questions, both answers each)")
     print(f"grade {AUDIT.name} by hand and save it as graded.csv; do not open {KEY.name}")
+    print(f"a second grader (not the system's author) grades {SECOND.name} and saves it as graded_second.csv")
 
 
 if __name__ == "__main__":

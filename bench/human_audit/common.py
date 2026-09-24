@@ -10,9 +10,13 @@ Files in bench/human_audit/:
     graded.csv       the grader's copy of audit.csv with every grade filled (CORRECT, WRONG or UNCLEAR)
     audit_key.csv    which system, question and judge labels each audit_id is; the grader does not open it
     audit_pairs.json every paired question of the primary comparison with both systems' judge labels
+    audit_second.csv a random 50 rows of audit.csv (seed 1), blinded the same way, for the second grader
+    graded_second.csv the second grader's copy of audit_second.csv
+    graders.json     who graded: {"first_grader": ..., "second_grader": ..., "second_grader_is_system_author": false}
 """
 
 import csv
+import json
 from pathlib import Path
 
 HERE = Path(__file__).parent
@@ -20,6 +24,10 @@ AUDIT = HERE / "audit.csv"
 GRADED = HERE / "graded.csv"
 KEY = HERE / "audit_key.csv"
 PAIRS = HERE / "audit_pairs.json"
+SECOND = HERE / "audit_second.csv"
+GRADED_SECOND = HERE / "graded_second.csv"
+GRADERS = HERE / "graders.json"
+N_SECOND, SECOND_SEED = 50, 1
 PRIMARY_JUDGE = "gpt-4o-mini"
 JUDGES = ("gpt-4o-mini", "gpt-4o", "claude-sonnet-4-6")
 FRESH = ("conv-44", "conv-47", "conv-48", "conv-49", "conv-50")
@@ -39,12 +47,28 @@ def read_sheet(path: Path) -> list[dict[str, str]]:
         return [dict(r) for r in csv.DictReader(f)]
 
 
-def audit_problems(audit: Path = AUDIT, graded: Path = GRADED) -> list[str]:
-    """Why the human-audit gate is closed; empty once graded.csv grades every row of audit.csv."""
+def audit_problems(
+    audit: Path = AUDIT,
+    graded: Path = GRADED,
+    second: Path = SECOND,
+    graded_second: Path = GRADED_SECOND,
+    graders: Path = GRADERS,
+) -> list[str]:
+    """Why the human-audit gate is closed; empty once both graders have graded every row of their sheets."""
+    problems = coverage(audit, graded) + coverage(second, graded_second)
+    if not graders.exists():
+        problems.append(f"{graders.name} does not exist: record who graded (the second grader is not the author)")
+    elif json.loads(graders.read_text()).get("second_grader_is_system_author", True):
+        problems.append("the second grader must not be the system's author (graders.json)")
+    return problems
+
+
+def coverage(audit: Path, graded: Path) -> list[str]:
+    """Why graded does not yet grade every row of audit; empty when it does."""
     if not audit.exists():
         return [f"{audit.name} does not exist: run bench/human_audit/make_audit.py after the held-out runs"]
     if not graded.exists():
-        return [f"{graded.name} does not exist: the audit set has not been graded by hand"]
+        return [f"{graded.name} does not exist: {audit.name} has not been graded by hand"]
     wanted = {r["audit_id"] for r in read_sheet(audit)}
     rows = read_sheet(graded)
     got = {r.get("audit_id", "") for r in rows}

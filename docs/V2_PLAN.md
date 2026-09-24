@@ -172,11 +172,15 @@ table marks exploratory results as such.
   and one answer, nothing else. The key mapping rows to systems and judge labels is kept in a separate file the
   grader does not open.
 - **Labels:** CORRECT, WRONG or UNCLEAR.
-- **Report:** human–judge agreement (Cohen's κ, UNCLEAR rows excluded and counted) for each of the three judges; H1
+- **Second grader:** a second person, not the system's author, grades a random 50-row subset of the audit sheet
+  (seed 1), blinded the same way (`audit_second.csv`). Who graded is recorded in `bench/human_audit/graders.json`.
+- **Report:** inter-grader agreement (Cohen's κ on the 50 doubly graded rows) alongside human–judge agreement
+  (Cohen's κ, UNCLEAR rows excluded and counted) for each of the three judges; H1
   recomputed on human labels (human labels replace judge labels on the audited questions; the discordant set is
   audited in full).
-- **Gate:** the v2 paper cannot be built until `bench/human_audit/graded.csv` exists and grades every row of the audit
-  set (`paper/check.py --v2`).
+- **Gate:** the v2 paper cannot be built until `bench/human_audit/graded.csv` grades every row of the audit set,
+  `graded_second.csv` grades every row of the second grader's subset, and `graders.json` records a second grader who
+  is not the system's author (`paper/check.py --v2`).
 - Tools: `bench/human_audit/make_audit.py` builds the blinded CSV and the key from result files;
   `bench/human_audit/score_audit.py` computes κ and the recomputed primary result.
 
@@ -261,6 +265,8 @@ one.
   abstention questions are reported separately.
 - 2026-09-24, §9: update set 3 is sealed: bench code refuses to load it unless the v2-frozen tag exists and the set
   matches its frozen hash (bench/update_sets.py, tests/test_update_set_3_seal.py).
+- 2026-09-24, §8: a second grader, not the system's author, grades a random 50-row subset (seed 1) of the audit
+  sheet, blinded the same way; inter-grader κ is reported alongside human–judge κ, and the gate requires both graders.
 
 ### Where this plan differs from the phase-3 brief
 

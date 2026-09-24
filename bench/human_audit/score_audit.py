@@ -14,7 +14,7 @@ import statistics
 from pathlib import Path
 
 from ..heldout_report import mcnemar
-from .common import GRADED, JUDGES, KEY, PAIRS, PRIMARY_JUDGE, audit_problems, read_sheet
+from .common import GRADED, GRADED_SECOND, JUDGES, KEY, PAIRS, PRIMARY_JUDGE, audit_problems, read_sheet
 
 OUT = Path(__file__).parents[2] / "bench" / "results" / "v2" / "human_audit.json"
 
@@ -41,6 +41,21 @@ def paired(engram: list[bool], mem0: list[bool]) -> dict:
         "engram_only": b,
         "mem0_only": c,
         "mcnemar_p": mcnemar(b, c),
+    }
+
+
+def inter_grader(graded: list[dict], graded_second: list[dict]) -> dict:
+    """Cohen's κ between the two human graders on the rows both graded CORRECT or WRONG."""
+    first = {r["audit_id"]: r["grade"].strip().upper() for r in graded}
+    both = [
+        (first[r["audit_id"]], r["grade"].strip().upper())
+        for r in graded_second
+        if r["audit_id"] in first and "UNCLEAR" not in (first[r["audit_id"]], r["grade"].strip().upper())
+    ]
+    return {
+        "kappa": cohen_kappa([a == "CORRECT" for a, _ in both], [b == "CORRECT" for _, b in both]),
+        "n": len(both),
+        "rows_second": len(graded_second),
     }
 
 
@@ -88,7 +103,9 @@ def score(key: list[dict], graded: list[dict], pairs: list[dict]) -> dict:
 def main() -> None:
     if problems := audit_problems():
         raise SystemExit("human audit not complete:\n  - " + "\n  - ".join(problems))
-    out = score(read_sheet(KEY), read_sheet(GRADED), json.loads(PAIRS.read_text()))
+    graded = read_sheet(GRADED)
+    out = score(read_sheet(KEY), graded, json.loads(PAIRS.read_text()))
+    out["inter_grader"] = inter_grader(graded, read_sheet(GRADED_SECOND))
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps(out, indent=1))
