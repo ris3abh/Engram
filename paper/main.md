@@ -37,7 +37,7 @@ models are built for. They return a probability over a fixed option set in one s
 they cost far less than generating text. engram is built on that observation: an LLM extracts facts, and every
 decision after extraction is a typed question (Figure 1).
 
-![Figure 1: engram's write and read paths. Orange boxes are LLM calls, blue boxes are typed Jev decisions.](figures/pipeline.svg)
+![Figure 1: Only extraction, the answer and the escalation of unsure superseding relations are LLM calls (orange); every other decision on the write and read paths is a typed Jev question (blue).](figures/pipeline.svg)
 
 
 **Concurrent work.** The architectural idea of routing memory decisions to a typed decision model was reached
@@ -63,7 +63,8 @@ make the relational decisions (§5.4). Figure 2 plots the third against the cont
 
 ![Figure 2: Accuracy against retrieved tokens.](figures/acc_vs_tokens.svg)
 
-*Figure 2. Pooled held-out accuracy (610<!-- src: bench/results/heldout_report.json --> questions) against mean retrieved tokens per question. mem0
+*Figure 2. engram at k=3<!-- src: bench/results/heldout_report.json (k=3 run) --> sits above the line through mem0's measured settings, and the two systems meet at
+k=20<!-- src: bench/results/heldout_report.json (k=20 run) -->: under a small budget, which memories are shown matters more than how many tokens. Pooled held-out accuracy (610<!-- src: bench/results/heldout_report.json --> questions) against mean retrieved tokens per question. mem0
 accuracy was measured at three settings, k=3<!-- src: bench/results/heldout_report.json (k=3 run) -->, 6<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> and 20<!-- src: bench/results/heldout_report.json (k=20 run) -->; the token-matching sweep counted
 tokens at the other k without answering. Models as in Table 2.*
 
@@ -212,7 +213,8 @@ when its label is the argmax and $q > 0.5$ (§5.3). Figure 3 traces one fact fro
 
 ![Figure 3: Belief trace of one fact under v2 and v3.](figures/belief_trace.svg)
 
-*Figure 3. Belief in the fact "Melanie carves out daily me-time through running, reading, or playing violin"
+*Figure 3. Look at message D2:7: a weak refinement answer lowers belief under v2 but is ignored under v3, which moves
+the close by one message. Belief in the fact "Melanie carves out daily me-time through running, reading, or playing violin"
 (message D2:5), dev + update set 1, under v2 and v3. Under v2 a weak refinement answer at D2:7 (p = 0.45<!-- src: bench/results/e4_belief_v2__dev_updates__k3__noanswer.json (belief_trace, D2:7) -->)
 lowers belief slightly, so the update at U:E11 takes it below the close line; v3 ignores that answer (×) and the
 fact closes one message later, at U:S01. Source: the belief trace in
@@ -301,7 +303,8 @@ interval only.
 The three arms in Table 1 share extraction. The two engram arms differ only in what decides after it: Jev's
 typed questions in E2 Jev, and `claude-sonnet-4-6` with mem0's update prompt, one call per extracted fact, in E2 LLM.
 
-*Table 1. Dev slice, conv-26 sessions 1–4, 76<!-- src: bench/results/e2_jev__dev.json --> messages, 35<!-- src: bench/results/e2_jev__dev.json --> questions, all retrieved memories
+*Table 1. The two decision layers answer the same number of questions, while the Jev layer costs 70.0×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json --> less
+and decides 27.6×<!-- src: bench/results/e2_llm__dev.json ÷ bench/results/e2_jev__dev.json --> faster. Dev slice, conv-26 sessions 1–4, 76<!-- src: bench/results/e2_jev__dev.json --> messages, 35<!-- src: bench/results/e2_jev__dev.json --> questions, all retrieved memories
 (default k). Extraction claude-haiku-4-5 for all arms; answers and judge claude-sonnet-4-6; E2 LLM decides with
 claude-sonnet-4-6. Costs are per 1,000 messages written. Decision p50: median time after extraction, per message,
 over messages that produced at least one fact. Write p50: median end-to-end write time per message over all
@@ -346,7 +349,8 @@ difference is the source quote on each engram line. To separate context size fro
 tokens came closest to engram's 290<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->: k=6<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->, at 315<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> tokens. That gives mem0 slightly more
 context than engram. The run cost $2.52<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->.
 
-*Table 2. Held-out LoCoMo accuracy, pooled over conv-30, 41, 42 and 43 (610<!-- src: bench/results/heldout_report.json --> questions, adversarial category
+*Table 2. Read the Δ column: engram leads mem0 at k=3 even when mem0 gets as many context tokens (k=6<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->), and the
+systems tie at k=20. Held-out LoCoMo accuracy, pooled over conv-30, 41, 42 and 43 (610<!-- src: bench/results/heldout_report.json --> questions, adversarial category
 excluded), with each mem0 row's paired difference against engram at the same budget (engram k=3 for the k=3 and
 token-matched rows, engram k=20 for the k=20 row). Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6;
 one ingestion per system per conversation. Tokens: mean retrieved-context tokens per question. 95% CI: per-question
@@ -361,7 +365,7 @@ answered correctly.*
 | engram | 20 | 1,461<!-- src: bench/results/heldout_report.json --> | 79.0%<!-- src: bench/results/heldout_report.json --> | – | – | – | – | – |
 | mem0 | 20 | 1,024<!-- src: bench/results/heldout_report.json --> | 78.2%<!-- src: bench/results/heldout_report.json --> | +0.8<!-- src: bench/results/heldout_report.json --> | [-2.3<!-- src: bench/results/heldout_report.json -->, +3.9<!-- src: bench/results/heldout_report.json -->] | [-4.5<!-- src: bench/results/heldout_report.json -->, +5.4<!-- src: bench/results/heldout_report.json -->] | 49<!-- src: bench/results/heldout_report.json --> / 44<!-- src: bench/results/heldout_report.json --> | 0.679<!-- src: bench/results/heldout_report.json --> |
 
-At k=3 engram is ahead of mem0 by +14.9<!-- src: bench/results/heldout_report.json --> points (95% CI +11.2<!-- src: bench/results/heldout_report.json --> to +18.7<!-- src: bench/results/heldout_report.json -->). Against
+Table 2 has the pooled results. At k=3 engram is ahead of mem0 by +14.9<!-- src: bench/results/heldout_report.json --> points (95% CI +11.2<!-- src: bench/results/heldout_report.json --> to +18.7<!-- src: bench/results/heldout_report.json -->). Against
 token-matched mem0 the difference is +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> points (95% CI +5.2<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> to +12.1<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->; McNemar
 $p$ = 1.3e-06<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->; 86<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> questions only engram answered against 33<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> only mem0 answered).
 
@@ -372,7 +376,8 @@ engram's point estimate is ahead in every category at matched context (Table 3) 
 (Appendix C). Per conversation, the matched-context interval excludes zero in 2<!-- src: bench/results/perconv_diffs.json: conversations whose matched-context interval excludes zero --> of four
 conversations (conv-42 and conv-43); conv-30 and conv-41 are within noise on their own.
 
-*Table 3. Held-out accuracy by LoCoMo category, 610<!-- src: bench/results/heldout_report.json --> questions, k as labeled. Models as in Table 2.*
+*Table 3. At k=3 engram is ahead of token-matched mem0 in every category, most in multi-hop and open-domain. Held-out
+accuracy by LoCoMo category, 610<!-- src: bench/results/heldout_report.json --> questions, k as labeled. Models as in Table 2.*
 
 | category | Q | engram k=3 | mem0 k=3 | mem0 k=6 (matched) | engram k=20 | mem0 k=20 |
 |---|---|---|---|---|---|---|
@@ -391,7 +396,8 @@ off, and mem0 answered 25/30<!-- src: bench/results/mem0__dev_updates__k3.json -
 
 ### 5.3 Store safety and calibration
 
-*Table 4. Store safety and update-question accuracy on the dev slice with update sets 1 and 2 (extraction
+*Table 4. No arm over-closes a no_close item, and closing stale facts lowers the stale counts without moving
+update-question accuracy at default k, which is at or near ceiling for every arm that answered. Store safety and update-question accuracy on the dev slice with update sets 1 and 2 (extraction
 claude-haiku-4-5, decisions Jev jev-1.13.0, answers and judge claude-sonnet-4-6). Closes are on dev + set 1, split
 by whether (closed fact's message, closing message) is a labeled update or superseded pair. Over-closed: set-1
 no_close items whose fact was closed by their own update message, over those stored. Stale: close items whose old
@@ -407,11 +413,13 @@ retrieved memories) unless marked; "–": run without answering or not run.*
 | E4: belief v2 (frozen) | 4<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 3<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 1<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 0/8<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 14/18<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 10/16<!-- src: bench/results/e4_belief_v2_shadow__dev_updates2__k3.json --> | 30/30<!-- src: bench/results/e4_belief_v2_full__dev_updates.json --> | 30/30<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | – | 20/20<!-- src: bench/results/e4_belief_v2_full__dev_updates2.json --> |
 | E4: belief v3 | 4<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 2<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 2<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 0/8<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 14/18<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 10/16<!-- src: bench/results/e4_belief_v3__dev_updates2__k3__noanswer.json --> | – | – | – | – |
 
-Figure 4 shows the same outcomes per arm.
+Table 4 lists, for each arm, its closes, over-closes and stale items together with its accuracy on the update
+questions, and Figure 4 plots the store outcomes.
 
 ![Figure 4: Store outcomes per arm.](figures/store_outcomes.svg)
 
-*Figure 4. Store outcomes on the update sets: set-1 close items left stale, set-2 stale values, closes on
+*Figure 4. The replace-on-update arm (E2) makes most of the closes that match no labeled pair; the belief arms close
+less and leave more set-1 items stale, and mem0 closes nothing. Store outcomes on the update sets: set-1 close items left stale, set-2 stale values, closes on
 dev + set 1 split by whether they match a labeled pair, and no_close items over-closed. E3 was not run on set 2.*
 
 **Over-closes.** No labeled keep item was over-closed by any arm.
@@ -442,7 +450,7 @@ true facts under Laya (§5.4).
 conversations it cost $0.0112<!-- src: bench/results/e4_belief_v2__heldout_conv-30__k3.json -->, $0.0254<!-- src: bench/results/e4_belief_v2__heldout_conv-41__k3.json -->, $0.0332<!-- src: bench/results/e4_belief_v2__heldout_conv-42__k3.json --> and $0.0323<!-- src: bench/results/e4_belief_v2__heldout_conv-43__k3.json -->,
 making 9<!-- src: bench/results/e4_belief_v2__heldout_conv-30__k3.json -->, 23<!-- src: bench/results/e4_belief_v2__heldout_conv-41__k3.json -->, 32<!-- src: bench/results/e4_belief_v2__heldout_conv-42__k3.json --> and 24<!-- src: bench/results/e4_belief_v2__heldout_conv-43__k3.json --> links.
 
-**Contradiction regression.** The regression set has 50<!-- src: bench/results/tradeoff.json --> contradiction pairs, each an old fact, a new fact and a message, labeled
+**Contradiction regression.** Table 6 scores Jev and Laya on the regression set. The set has 50<!-- src: bench/results/tradeoff.json --> contradiction pairs, each an old fact, a new fact and a message, labeled
 with accepted relations and a temporal status (`bench/contradiction_pairs.jsonl`). Under the current question
 versions, Jev's relation choice is in the accepted set for 90.0%<!-- src: bench/results/jev_regression_v2.json --> of pairs (easy 100.0%<!-- src: bench/results/jev_regression_v2.json -->, medium
 93.3%<!-- src: bench/results/jev_regression_v2.json -->, subtle 73.3%<!-- src: bench/results/jev_regression_v2.json -->), and its temporal status is right for 94.0%<!-- src: bench/results/jev_regression_v2.json -->. The
@@ -455,7 +463,8 @@ temporal ECE is 0.04<!-- src: bench/results/calibration.json -->. On the escalat
 unsure of, relation ECE is 0.15<!-- src: bench/results/calibration.json -->. Table 5 has the full comparison, with Laya, and Figure 6 in
 Appendix C the reliability diagrams.
 
-*Table 5. Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last
+*Table 5. Jev's relation accuracy is about 80% on both label sets with an ECE near 0.15; Laya's is 10–28%, and a
+fitted temperature repairs its calibration but not its accuracy. Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last
 column is out of sample (2-fold). Relation probabilities fold `negates` into `contradiction`, since the pairs
 predate `negates`.*
 
@@ -468,7 +477,8 @@ predate `negates`.*
 | gold pairs | temporal status | jev | 50<!-- src: bench/results/calibration.json --> | 94.0%<!-- src: bench/results/calibration.json --> | 0.95<!-- src: bench/results/calibration.json --> | 0.04<!-- src: bench/results/calibration.json --> | 1.13<!-- src: bench/results/calibration.json --> | 0.04<!-- src: bench/results/calibration.json --> |
 | gold pairs | temporal status | laya | 50<!-- src: bench/results/calibration.json --> | 76.0%<!-- src: bench/results/calibration.json --> | 0.72<!-- src: bench/results/calibration.json --> | 0.06<!-- src: bench/results/calibration.json --> | 0.74<!-- src: bench/results/calibration.json --> | 0.07<!-- src: bench/results/calibration.json --> |
 
-*Table 6. Contradiction regression (50<!-- src: bench/results/tradeoff.json --> gold pairs), relation_to_candidate and temporal_status in one request. Laya:
+*Table 6. Jev chooses an accepted relation for 90.0%<!-- src: bench/results/jev_regression_v2.json --> of the pairs with no false close; the Laya base checkpoint
+chooses one for at most 48.0%<!-- src: bench/results/laya_regression_jev_wording.json --> and never closes. Contradiction regression (50<!-- src: bench/results/tradeoff.json --> gold pairs), relation_to_candidate and temporal_status in one request. Laya:
 convaiinnovations/laya<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> base checkpoint, zero-shot, fp16, on the local MLX server.*
 
 | backend | relation exact | temporal | close rule | closes | false closes |
@@ -486,7 +496,8 @@ $0.002368<!-- src: bench/results/tradeoff.json --> per decision, and $E$ is 6.0%
 
 ![Figure 5: C(θ) and E(θ) on the gold contradiction pairs.](figures/tradeoff.svg)
 
-*Figure 5. $C(\theta)$ and $E(\theta)$ on the 50<!-- src: bench/results/tradeoff.json --> gold pairs. $\varepsilon_L$ is assumed, not measured; the 29<!-- src: bench/results/calibration.json --> escalation labels were too few for a curve.*
+*Figure 5. Error drops below Jev's own 10.0%<!-- src: bench/results/tradeoff.json --> only where escalations make up almost all of the cost per
+decision, and how far it drops depends on an $\varepsilon_L$ we did not measure. $C(\theta)$ and $E(\theta)$ on the 50<!-- src: bench/results/tradeoff.json --> gold pairs. $\varepsilon_L$ is assumed, not measured; the 29<!-- src: bench/results/calibration.json --> escalation labels were too few for a curve.*
 
 ### 5.4 Negative results
 
