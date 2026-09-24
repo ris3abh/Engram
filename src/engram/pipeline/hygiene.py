@@ -69,7 +69,7 @@ async def hygiene_pass(store: Store, backend: DecisionBackend) -> HygieneReport:
                 report.cost_usd += d.cost_usd
                 p = d.probs["yes"]
                 key = tuple(sorted((a.id, b.id)))
-                if p >= config.ACT_THRESHOLD:
+                if p >= config.HYGIENE_LINK:
                     if key in linked:
                         report.already_linked += 1
                     else:
@@ -77,7 +77,7 @@ async def hygiene_pass(store: Store, backend: DecisionBackend) -> HygieneReport:
                         linked.add(key)
                         report.merges += 1
                         report.merged_pairs.append((a.text, b.text, round(p, 3)))
-                elif p <= 1 - config.ACT_THRESHOLD and key in linked:
+                elif p <= config.HYGIENE_DROP and key in linked:
                     store.drop_same_as(a.id, b.id)
                     linked.discard(key)
                     report.drops += 1

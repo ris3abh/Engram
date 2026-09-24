@@ -22,12 +22,13 @@ reopens when b > REOPEN_ABOVE.
 import math
 from dataclasses import dataclass
 
+from .. import config
 from ..decide.questions import EDGE_CARDINALITY
 from ..models import Fact, normalize_entity
 
-B_MIN, B_MAX = 0.02, 0.98
-CLOSE_BELOW = 0.25
-REOPEN_ABOVE = 0.6
+B_MIN, B_MAX = config.BELIEF_MIN, config.BELIEF_MAX
+CLOSE_BELOW = config.CLOSE_BELOW
+REOPEN_ABOVE = config.REOPEN_ABOVE
 SUPPORT = {"duplicate", "refinement"}
 AGAINST = {"update", "contradiction", "negates"}
 

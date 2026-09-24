@@ -34,6 +34,7 @@ from pathlib import Path
 
 import anthropic
 
+from engram import config
 from engram.cache import Budget, CallCache, call_key
 from engram.flags import Flags
 
@@ -68,12 +69,18 @@ CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
-RUN_LIMIT, PHASE_LIMIT = 20.0, 95.0  # per-run stop $20; phase cap $12 -> $20 -> $30 -> $45 -> $90 -> $95 (user)
+# per-run stop $20; phase cap $12 -> $20 -> $30 -> $45 -> $90 -> $95 -> $105 (user; the last raise, 2026-09-24, for
+# the held-out no-rerank arm and the adversarial category, bench/heldout_extra.py)
+RUN_LIMIT, PHASE_LIMIT = 20.0, 105.0
 FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy from step 8, for the E0 check
 PINNED_DATE = "2026-09-23"  # mem0's and engram's "Current Date", pinned so cached runs are reproducible
 
 E1_FLAGS = dict(
-    extract_prompt="v2", store_source_text=True, worth_filter=False, retrieval_floor=10, merge_policy="union"
+    extract_prompt="v2",
+    store_source_text=True,
+    worth_filter=False,
+    retrieval_floor=config.RETRIEVAL_FLOOR,
+    merge_policy="union",
 )
 E2_FLAGS = {**E1_FLAGS, "extract_prompt": "mem0", "escalation_prompt": "mem0_update"}
 

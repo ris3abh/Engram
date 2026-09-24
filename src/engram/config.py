@@ -22,11 +22,22 @@ ACT_THRESHOLD = 0.85  # act without escalation
 ESCALATE_BELOW = 0.60  # below this, update/contradiction goes to the LLM
 RELEVANCE_THRESHOLD = 0.5  # keep a retrieved fact if relevant_to_query exceeds this
 
+# Belief state (pipeline/belief.py): belief is clamped to [BELIEF_MIN, BELIEF_MAX]; an edge closes below CLOSE_BELOW
+# and a belief-closed edge reopens above REOPEN_ABOVE.
+BELIEF_MIN, BELIEF_MAX = 0.02, 0.98
+CLOSE_BELOW = 0.25
+REOPEN_ABOVE = 0.6
+
+# Hygiene (pipeline/hygiene.py): same_fact links a pair at p >= HYGIENE_LINK and drops a link at p <= HYGIENE_DROP.
+HYGIENE_LINK = ACT_THRESHOLD
+HYGIENE_DROP = 1 - ACT_THRESHOLD
+
 # Retrieval
 EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 EMBED_DEVICE = os.environ.get("ENGRAM_EMBED_DEVICE", "cpu")  # MiniLM is fast on CPU; Metal is not thread-safe here
 CANDIDATE_K = 10  # candidates compared per new fact on the write path
 RETRIEVE_K = 30  # facts reranked per query
+RETRIEVAL_FLOOR = 10  # top-cosine facts always kept at retrieval (flag retrieval_floor, E1 on)
 
 # Hygiene
 SHORT_LIVED_DAYS = 7
