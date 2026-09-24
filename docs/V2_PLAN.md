@@ -270,6 +270,8 @@ one.
   sheet, blinded the same way; inter-grader κ is reported alongside human–judge κ, and the gate requires both graders.
 - 2026-09-24, preamble and tests: the plan's guard now hashes the primary hypothesis, hypothesis family, judges,
   human audit, LongMemEval, statistics and budget sections; each needs a new dated entry naming it to change.
+- 2026-09-24, brief-differences note: the S9 fallback count now reads nine remaining tests, after S7 and S8 left
+  the family and S12 joined it (a correction of the note, no change to the analysis).
 
 ### Where this plan differs from the phase-3 brief
 
@@ -279,8 +281,8 @@ Recorded at registration, not deviations: the plan wins where the two disagree.
   on the five fresh conversations, so it is added to the held-out arms.
 - **LongMemEval ingestion and sampling.** User turns only, and a 60-question temporal-reasoning sample, to keep each
   run under the $40 cap (section 10).
-- **S9 fallback.** If set 3 is not frozen, S9 leaves the Holm family (Holm over ten tests) rather than being tested on
-  sets 1–2.
+- **S9 fallback.** If set 3 is not frozen, S9 leaves the Holm family (Holm over the remaining nine tests) rather than
+  being tested on sets 1–2.
 
 ## 13. Budget
 
