@@ -48,7 +48,7 @@ def unrecorded_change(text: str) -> bool:
         return False
     deviations = section(text, "12. Deviations")
     entries = [line for line in deviations.splitlines() if re.search(r"\d{4}-\d{2}-\d{2}", line)]
-    return not any(re.search(r"primary hypothesis|section 1\b|\bH1\b", e, flags=re.I) for e in entries)
+    return not any(re.search(r"§1\b|section 1\b", e, flags=re.I) for e in entries)
 
 
 def test_primary_hypothesis_unchanged_or_deviation_recorded():
@@ -62,7 +62,8 @@ def test_guard_catches_an_edit():
     edited = text.replace("α = 0.05; no correction", "α = 0.10; no correction")
     assert edited != text
     assert unrecorded_change(edited)
-    recorded = edited.replace("None yet.", "- 2026-10-01, section 1: H1 alpha changed (reason).")
+    heading = "## 12. Deviations\n"
+    recorded = edited.replace(heading, heading + "\n- 2026-10-01, section 1: H1 alpha changed (reason).\n")
     assert not unrecorded_change(recorded)
 
 

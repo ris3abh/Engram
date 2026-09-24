@@ -143,8 +143,10 @@ table marks exploratory results as such.
 ## 7. Judges
 
 - **Primary judge:** gpt-4o-mini with mem0's LoCoMo judge prompt (kept for comparability with published tables).
-- **Robustness judges:** gpt-4o and claude-sonnet-4-6 (a different model family from the answerer), same prompt, run on
-  every held-out answer, not a sample.
+- **Robustness judges:** gpt-4o (same prompt) on every held-out answer. claude-sonnet-4-6 (a different model family
+  from the answerer, same prompt) on every answer of the systems in H1 and S1–S6 on the five fresh conversations, and on
+  the S10–S11 LongMemEval answers (the scope is budgeted in section 13). S12 covers conversations claude-sonnet-4-6 does
+  not judge, so its robustness is assessed under the two OpenAI judges.
 - H1 and the secondary family are reported under all three judges. A result is called robust only if its sign and
   significance hold under all three. Agreement among the judges (pairwise Cohen's κ, and the share of answers on which
   all three agree) is reported on all held-out answers.
@@ -225,7 +227,9 @@ claims. Update sets 1–2 and the 50 contradiction pairs were drafted and labele
 Record every change to this plan after its first commit here: date, section, what changed, why. The paper reports each
 one.
 
-None yet.
+- 2026-09-24, §7: claude-sonnet-4-6 judges the answers of the systems in H1 and S1–S6 on the five fresh
+  conversations and the S10–S11 LongMemEval answers, not every held-out answer (budget, §13); gpt-4o still judges
+  every held-out answer.
 
 ### Where this plan differs from the phase-3 brief
 
@@ -237,3 +241,36 @@ Recorded at registration, not deviations: the plan wins where the two disagree.
   run under the $40 cap (section 10).
 - **S9 fallback.** If set 3 is not frozen, S9 leaves the Holm family (Holm over ten tests) rather than being tested on
   sets 1–2.
+
+## 13. Budget
+
+- **Hard cap:** $40 of non-OpenAI spend (Jev plus Anthropic) for all of phase 3. `bench/v2_spend.py` keeps a running
+  total in `bench/results/v2/spend.jsonl`; a charge that takes the total over $40 stops its run, and no run starts once
+  the cap is reached. The per-run caps of section 11 ($40 OpenAI, $10 Jev, $15 Anthropic) apply as well. OpenAI spend
+  has no phase-wide cap.
+- **Estimate** (`bench/v2_budget.py`, output in `bench/results/v2/budget_estimate.json`): volumes counted from the
+  data (conv-26: 419 messages, 199 questions; the nine held-out conversations: 5,463 messages, 1,787 questions; the
+  selected LongMemEval questions: 18,907 knowledge-update and 14,541 temporal-reasoning user turns) and v1's measured
+  rates (Jev $0.00037 per ingested message for writes plus $0.00004 for hygiene and $0.00019 per retrieval, over 2,341
+  v1 held-out messages; extraction 9,580 input and 84 output tokens per message; claude-sonnet-4-6 $0.0028 per
+  judgment over 4,275 v1 judge calls). OpenAI at list prices (gpt-4o-mini $0.15 / $0.60, gpt-4o $2.50 / $10 per million tokens); Graphiti's ingestion assumed at 1.5× mem0's
+  until Stage 3 measures it; Stage 2 allows one re-run.
+
+| stage | Jev (USD) | Anthropic (USD) | OpenAI (USD) |
+|---|---|---|---|
+| 1 stack port (smoke) | 0.04 | 0.00 | 0.24 |
+| 2 engram on conv-26 | 0.68 | 0.00 | 2.35 |
+| 3 baselines on dev | 0.00 | 0.00 | 0.30 |
+| 4 controlled experiments | 0.18 | 0.00 | 1.13 |
+| 5 LongMemEval knowledge-update | 7.84 | 0.00 | 98.64 |
+| 5 LongMemEval temporal | 6.03 | 0.00 | 75.86 |
+| 6 LoCoMo held-out | 2.61 | 0.00 | 35.87 |
+| 8 robustness judges | 0.00 | 25.47 | 39.86 |
+| **total** | **17.37** | **25.47** | **254.26** |
+
+- **The estimate exceeds the cap:** $42.83 of non-OpenAI spend as specified. Before Stage 1 the author chooses a cut,
+  recorded under Deviations. Proposed: claude-sonnet-4-6 judges only the four scored categories of the five fresh
+  conversations (every test uses only those), which brings non-OpenAI spend to $37.58 (7,236 Claude judgments). A
+  further option is to drop the exploratory LongMemEval temporal-reasoning sample ($6.03 Jev, $75.86 OpenAI).
+- **OpenAI per-run cap:** at the assumed Graphiti factor, one Graphiti run over all 78 knowledge-update haystacks would
+  exceed $40, so LongMemEval runs are split by question halves.

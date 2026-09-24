@@ -1,0 +1,136 @@
+{
+ "assumptions": {
+  "prices_usd_per_million": {
+   "gpt-4o-mini": [
+    0.15,
+    0.6
+   ],
+   "gpt-4o": [
+    2.5,
+    10.0
+   ],
+   "text-embedding-3-small": [
+    0.02,
+    0.0
+   ]
+  },
+  "graphiti_ingest_factor_vs_mem0": 1.5,
+  "stage2_rerun_allowance": 2,
+  "answer_prompt_tokens": 465,
+  "judge_prompt_tokens": 378,
+  "memory_tokens_per_question": {
+   "3": 290,
+   "20": 1461
+  }
+ },
+ "v1_rates": {
+  "jev_write_per_message": 0.00037018363135411916,
+  "jev_hygiene_per_message": 4.359225082565638e-05,
+  "jev_per_retrieval": 0.0001945497147540984,
+  "extract_in_tokens": 9580.054677488253,
+  "extract_out_tokens": 83.8210166595472,
+  "claude_judge_per_call": 0.002793321403508772,
+  "v1_messages": 2341,
+  "v1_judge_calls": 4275
+ },
+ "volumes": {
+  "conv26_messages": 419,
+  "conv26_questions": 199,
+  "dev_messages": 76,
+  "dev_questions": 35,
+  "dev_updates_messages": 134,
+  "update_questions": 50,
+  "heldout_messages": 5463,
+  "heldout_questions": 1787,
+  "fresh_questions_all": 987,
+  "fresh_questions_scored": 778,
+  "lme_ku_questions": 78,
+  "lme_tr_questions": 60,
+  "lme_ku_user_turns": 18907,
+  "lme_tr_user_turns": 14541
+ },
+ "as_planned": {
+  "stages": {
+   "1 stack port (smoke)": {
+    "openai": 0.24458122336608284,
+    "jev": 0.03825620706205638
+   },
+   "2 engram on conv-26": {
+    "openai": 2.346686497650577,
+    "jev": 0.6764076415859138
+   },
+   "3 baselines on dev": {
+    "openai": 0.3010986542076036
+   },
+   "4 controlled experiments": {
+    "openai": 1.1281326098675781,
+    "jev": 0.1767369981952773
+   },
+   "5 LongMemEval knowledge-update": {
+    "openai": 98.64120715847929,
+    "jev": 7.838435482123836
+   },
+   "5 LongMemEval temporal": {
+    "openai": 75.86303585612987,
+    "jev": 6.028388085661362
+   },
+   "6 LoCoMo held-out": {
+    "openai": 35.87189984356045,
+    "jev": 2.6081179846136875
+   },
+   "8 robustness judges": {
+    "openai": 39.86112,
+    "anthropic": 25.466711235789475
+   }
+  },
+  "totals": {
+   "openai": 254.25776184326145,
+   "jev": 17.366342399242132,
+   "anthropic": 25.466711235789475
+  },
+  "non_openai_total": 42.833053635031604,
+  "claude_judge_calls": 9117
+ },
+ "claude_on_scored_categories_only": {
+  "stages": {
+   "1 stack port (smoke)": {
+    "openai": 0.24458122336608284,
+    "jev": 0.03825620706205638
+   },
+   "2 engram on conv-26": {
+    "openai": 2.346686497650577,
+    "jev": 0.6764076415859138
+   },
+   "3 baselines on dev": {
+    "openai": 0.3010986542076036
+   },
+   "4 controlled experiments": {
+    "openai": 1.1281326098675781,
+    "jev": 0.1767369981952773
+   },
+   "5 LongMemEval knowledge-update": {
+    "openai": 98.64120715847929,
+    "jev": 7.838435482123836
+   },
+   "5 LongMemEval temporal": {
+    "openai": 75.86303585612987,
+    "jev": 6.028388085661362
+   },
+   "6 LoCoMo held-out": {
+    "openai": 35.87189984356045,
+    "jev": 2.6081179846136875
+   },
+   "8 robustness judges": {
+    "openai": 39.86112,
+    "anthropic": 20.212473675789475
+   }
+  },
+  "totals": {
+   "openai": 254.25776184326145,
+   "jev": 17.366342399242132,
+   "anthropic": 20.212473675789475
+  },
+  "non_openai_total": 37.57881607503161,
+  "claude_judge_calls": 7236
+ }
+}
