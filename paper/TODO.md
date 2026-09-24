@@ -86,7 +86,7 @@ Decisions made along the way:
 `make arxiv` regenerates the paper, then writes `paper/arxiv/` (main.tex, references.bib, the generated main.bbl, the
 8 figure PDFs, and `acl.sty` and `acl_natbib.bst`, which are not in TeX Live) and
 `paper/arxiv/engram-arxiv.zip`, then unzips it into an empty directory inside the TeX image and runs pdflatex
-twice with no bibtex, as arXiv does when a .bbl is supplied: 16 pages, no undefined references or citations.
+twice with no bibtex, as arXiv does when a .bbl is supplied: 19 pages, no undefined references or citations.
 Every other package is in TeX Live (inconsolata and xurl load only if present).
 Upload the zip; arXiv processes it with pdflatex.
 
@@ -105,15 +105,57 @@ Upload the zip; arXiv processes it with pdflatex.
   (`bench/results/perconv_diffs.json`). The text says "point estimate ahead in every conversation", not "holds in
   every conversation".
 
+## Conference-level items (reviewer pass, 2026-09-24)
+
+- [ ] **Frozen-extraction ablation.** The E2 arms share extraction model, prompt construction and implementation, not
+  extraction state: 26 of 76 dev messages produced different extraction outputs (`bench/results/e2_extraction_diff.json`).
+  Replaying one arm's extraction outputs into the other decision layer would isolate the decision layer completely.
+- [ ] **More held-out conversations.** Four conversations give four bootstrap clusters; the bootstrap is a robustness
+  check only.
+- [ ] **A second baseline** (Zep/Graphiti or Letta) under the same protocol.
+- [ ] **Human audit of the discordant token-matched cases** (86 engram-only, 33 mem0-only), and of the judge on them.
+- [ ] **A gpt-4o-mini answer/judge run** for comparability with published LoCoMo leaderboards.
+
+## Reviewer pass (2026-09-24), status
+
+Part A wording (every "held identical" gone; comparator-specific ratios; pipeline wording for the held-out claim;
+"0/8 authored no-close trap items were closed" with the wrong close and the unlabeled close; Laya out of the abstract
+and contributions; stale-facts negative scoped everywhere; Jev latency sentence; token-matched bootstrap; Brier and NLL;
+accuracy-vs-tokens as points with 95% intervals) · Part B (§3.1 setup and notation; write path equations 1–14, read
+path 15–19, cost 20–21, one sentence each; `tests/test_paper_thresholds.py`; thresholds moved into `config.py`;
+Figure 1 boxes numbered) · Part C (held-out no-rerank arm) · Part D (adversarial, Table 3) · Part E checks. Build:
+19 pages, 0 undefined references or citations, 0 "??", largest overfull box 1.0pt; 160 tests pass.
+
+Decisions and corrections made along the way:
+- **Phase-2 cap raised to $105** (user, 2026-09-24). Spend now $101.79.
+- **No temperature on the write path.** The earlier text said the belief update rescales by a per-question T; the
+  code never does. §3.1 now says τ_Q is fitted for calibration only, and equation 10 has no temperature.
+- **Equations follow the code where the brief's sketch differed:** candidates are cosine top 10 plus up to 10 graph
+  candidates; update may close a single-valued relation or a multi-valued sibling; the recheck is required for the
+  first against-evidence and for every update on a multi-valued relation; plans include facts stored as planned; the
+  read path scores a 30-fact shortlist, orders by relevance × belief, then floor, relation pull, history and a one-hop
+  neighbour expansion (the brief omitted the expansion).
+- **Symbols.** $T(k)$ is retrieved tokens as briefed, so the temperature is $\tau_Q$ and message times are
+  $\operatorname{date}(m_t)$; the read-path context is $K^{+}(q)$ so it does not collide with $E(\theta)$. Primitive
+  symbols are defined in §3.1; derived ones by the equation that introduces them.
+- **Part C's "relation pull unchanged".** With `retrieval_rerank=False` the code skips Jev on the read path entirely,
+  so there is no relation pull; it does not change what the answer model sees at k=3 (pulled and history facts come
+  after the 30-fact shortlist), so the existing switch was used and §3.3 says so.
+- **Store copies.** The no-rerank and adversarial runs read copies of the frozen stores; the copies reproduce the frozen
+  k=3 context for 607 of 610 questions (3 differ slightly in the lines shown). Engram k=3 keeps its frozen labels.
+- **Adversarial gold.** LoCoMo's `adversarial_answer` field is the tempting wrong answer; the judge gets the abstention
+  "Not mentioned in the conversation" as gold.
+- **Five-category table replaces the per-category table** (it contains every number of the old Table 3 plus the new
+  rows and the adversarial column), so the body keeps six tables.
+- **Commits** in this pass are authored by Rishabh Sharma with no co-author trailer.
+
 ## Claims that want a number we do not have
 
 - [ ] **ε_L**, the LLM's error on the gold pairs: never measured. Figure 5 plots ε_L ∈ {0, 0.1} as an assumption.
-- [ ] **Held-out rerank ablation:** §5.2's attribution of the non-context share to reranking rests on a dev-slice
-  ablation.
 - [ ] **Smaller LLM decider:** the E2 ratio is Jev against claude-sonnet-4-6 only.
 - [ ] **Judge agreement with humans:** not measured.
 - [ ] **mem0 accuracy at k=4, 5, 7, 8:** only token counts were measured at those k (the token-matching sweep).
-  Accuracy exists at k=3, 6 and 20, which is what the accuracy-vs-tokens figure plots.
+  Accuracy exists at k=3, 6 and 20, which is what the accuracy-vs-tokens figure plots (now points with 95% intervals).
 - [ ] **Laya fine-tuned checkpoint** and fine-tuning on our escalation labels: not tested (stated in §5.4).
 - [ ] **Belief v3 on held-out:** deliberately not run.
 - [ ] **Build-phase spend:** not ledgered; §4.1 says "roughly $10 by the author's estimate".
