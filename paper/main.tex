@@ -177,9 +177,9 @@ The three arms in Table~\ref{tab:1} share extraction. The two engram arms differ
 
 \begin{table*}[tbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{4.5pt}
 \caption{The two decision layers answer the same number of questions, while the Jev layer costs 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} less and decides 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} faster. Dev slice, conv-26 sessions 1--4, 76\src{bench/results/e2\_jev\_\_dev.json} messages, 35\src{bench/results/e2\_jev\_\_dev.json} questions, all retrieved memories (default k). Extraction claude-haiku-4-5 for all arms; answers and judge claude-sonnet-4-6; E2 LLM decides with claude-sonnet-4-6. Costs are per 1,000 messages written. Decision p50: median time after extraction, per message, over messages that produced at least one fact. Write p50: median end-to-end write time per message over all messages, including those that produced no facts.}\label{tab:1}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{211.0pt}>{\raggedleft\arraybackslash}p{38.8pt}>{\raggedleft\arraybackslash}p{35.2pt}>{\raggedleft\arraybackslash}p{35.8pt}>{\raggedleft\arraybackslash}p{27.6pt}>{\raggedleft\arraybackslash}p{29.1pt}>{\raggedleft\arraybackslash}p{23.5pt}@{}}
 \toprule
 \textbf{system} & \textbf{accuracy} & \textbf{decision \$/1k} & \textbf{decision p50} & \textbf{total \$/1k} & \textbf{write p50} & \textbf{facts} \\
 \midrule
@@ -187,7 +187,7 @@ mem0 2.1.0 (one LLM call per write) & 30/35\src{bench/results/mem0\_\_dev.json} 
 engram E2, LLM decision layer (mem0 update prompt) & 31/35\src{bench/results/e2\_llm\_\_dev.json} & \$8.782\src{bench/results/e2\_llm\_\_dev.json} & 7,675 ms\src{bench/results/e2\_llm\_\_dev.json} & \$18.70\src{bench/results/e2\_llm\_\_dev.json} & 918 ms\src{bench/results/e2\_llm\_\_dev.json} & 18\src{bench/results/e2\_llm\_\_dev.json} \\
 engram E2, Jev decision layer & 31/35\src{bench/results/e2\_jev\_\_dev.json} & \$0.125\src{bench/results/e2\_jev\_\_dev.json} & 278 ms\src{bench/results/e2\_jev\_\_dev.json} & \$9.90\src{bench/results/e2\_jev\_\_dev.json} & 895 ms\src{bench/results/e2\_jev\_\_dev.json} & 47\src{bench/results/e2\_jev\_\_dev.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table*}
 The two decision layers answer the same number of questions and mem0 one fewer, within noise. The Jev decision layer costs 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} less and has 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower median decision latency. The LLM decision layer stores fewer facts (18\src{bench/results/e2\_llm\_\_dev.json} against 47\src{bench/results/e2\_jev\_\_dev.json}) because mem0's UPDATE event rewrites an existing memory instead of adding one.
 
@@ -206,9 +206,9 @@ At $k{=}$3 engram shows the answer model 290\src{bench/results/heldout\_report.j
 
 \begin{table*}[tbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{3.5pt}
 \caption{Read the $\Delta$ column: engram leads mem0 at $k{=}$3 even when mem0 gets as many context tokens ($k{=}$6\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}), and the systems tie at $k{=}$20. Held-out LoCoMo accuracy, pooled over conv-30, 41, 42 and 43 (610\src{bench/results/heldout\_report.json} questions, adversarial category excluded), with each mem0 row's paired difference against engram at the same budget (engram $k{=}$3 for the $k{=}$3 and token-matched rows, engram $k{=}$20 for the $k{=}$20 row). Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6; one ingestion per system per conversation. Tokens: mean retrieved-context tokens per question. 95\% CI: per-question normal approximation; bootstrap: resampling the four conversations. Discordant: questions only engram / only mem0 answered correctly.}\label{tab:2}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{91.1pt}>{\raggedright\arraybackslash}p{19.9pt}>{\raggedleft\arraybackslash}p{35.0pt}>{\raggedleft\arraybackslash}p{38.8pt}>{\raggedleft\arraybackslash}p{23.6pt}>{\raggedleft\arraybackslash}p{54.9pt}>{\raggedleft\arraybackslash}p{50.4pt}>{\raggedleft\arraybackslash}p{44.2pt}>{\raggedleft\arraybackslash}p{41.0pt}@{}}
 \toprule
 \textbf{system} & \textbf{k} & \textbf{tokens/q} & \textbf{accuracy} & \textbf{$\Delta$ (pts)} & \textbf{95\% CI} & \textbf{95\% CI, bootstrap} & \textbf{discordant} & \textbf{McNemar p} \\
 \midrule
@@ -218,7 +218,7 @@ mem0 (token-matched) & 6\src{bench/results/mem0\_token\_matched\_\_heldout\_pool
 engram & 20 & 1,461\src{bench/results/heldout\_report.json} & 79.0\%\src{bench/results/heldout\_report.json} & -- & -- & -- & -- & -- \\
 mem0 & 20 & 1,024\src{bench/results/heldout\_report.json} & 78.2\%\src{bench/results/heldout\_report.json} & +0.8\src{bench/results/heldout\_report.json} & [-2.3\src{bench/results/heldout\_report.json},~+3.9\src{bench/results/heldout\_report.json}] & [-4.5\src{bench/results/heldout\_report.json},~+5.4\src{bench/results/heldout\_report.json}] & 49\src{bench/results/heldout\_report.json} / 44\src{bench/results/heldout\_report.json} & 0.679\src{bench/results/heldout\_report.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table*}
 Table~\ref{tab:2} has the pooled results. At $k{=}$3 engram is ahead of mem0 by +14.9\src{bench/results/heldout\_report.json} points (95\% CI +11.2\src{bench/results/heldout\_report.json} to +18.7\src{bench/results/heldout\_report.json}). Against token-matched mem0 the difference is +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points (95\% CI +5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} to +12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}; McNemar $p$ = 1.3e-06\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}; 86\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} questions only engram answered against 33\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} only mem0 answered).
 
@@ -228,9 +228,9 @@ engram's point estimate is ahead in every category at matched context (Table~\re
 
 \begin{table*}[tbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{4.5pt}
 \caption{At $k{=}$3 engram is ahead of token-matched mem0 in every category, most in multi-hop and open-domain. Held-out accuracy by LoCoMo category, 610\src{bench/results/heldout\_report.json} questions, k as labeled. Models as in Table~\ref{tab:2}.}\label{tab:3}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{154.6pt}>{\raggedleft\arraybackslash}p{28.2pt}>{\raggedleft\arraybackslash}p{44.4pt}>{\raggedleft\arraybackslash}p{38.1pt}>{\raggedleft\arraybackslash}p{53.1pt}>{\raggedleft\arraybackslash}p{44.4pt}>{\raggedleft\arraybackslash}p{38.1pt}@{}}
 \toprule
 \textbf{category} & \textbf{Q} & \textbf{engram $k{=}$3} & \textbf{mem0 $k{=}$3} & \textbf{mem0 $k{=}$6 (matched)} & \textbf{engram $k{=}$20} & \textbf{mem0 $k{=}$20} \\
 \midrule
@@ -239,7 +239,7 @@ temporal & 119\src{bench/results/heldout\_report.json} & 84.0\%\src{bench/result
 open-domain & 33\src{bench/results/heldout\_report.json} & 51.5\%\src{bench/results/heldout\_report.json} & 30.3\%\src{bench/results/heldout\_report.json} & 33.3\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 51.5\%\src{bench/results/heldout\_report.json} & 57.6\%\src{bench/results/heldout\_report.json} \\
 single-hop & 348\src{bench/results/heldout\_report.json} & 79.3\%\src{bench/results/heldout\_report.json} & 64.9\%\src{bench/results/heldout\_report.json} & 71.8\%\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 82.2\%\src{bench/results/heldout\_report.json} & 83.3\%\src{bench/results/heldout\_report.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table*}
 \textbf{Attribution.} Matching context removes 41.8\%\src{bench/results/heldout\_report.json and bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json: (Δk3 − Δtoken-matched) / Δk3} of the $k{=}$3 difference. The other 58.2\%\src{bench/results/heldout\_report.json and bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json: 1 − context share} is what remains once context is matched.
 
@@ -248,9 +248,9 @@ We attribute that remainder to which memories reach the top three, which rests o
 \subsection{Store safety and calibration}\label{sec:5.3}
 \begin{table*}[tbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{3.5pt}
 \caption{No arm over-closes a no\_close item, and closing stale facts lowers the stale counts without moving update-question accuracy at default k, which is at or near ceiling for every arm that answered. Store safety and update-question accuracy on the dev slice with update sets 1 and 2 (extraction claude-haiku-4-5, decisions Jev jev-1.13.0, answers and judge claude-sonnet-4-6). Closes are on dev + set 1, split by whether (closed fact's message, closing message) is a labeled update or superseded pair. Over-closed: set-1 no\_close items whose fact was closed by their own update message, over those stored. Stale: close items whose old fact is still active, over close items stored. Every arm kept the one set-2 keep item. Accuracy is at default k (all retrieved memories) unless marked; ``--'': run without answering or not run.}\label{tab:4}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{105.2pt}>{\raggedleft\arraybackslash}p{26.8pt}>{\raggedleft\arraybackslash}p{29.5pt}>{\raggedleft\arraybackslash}p{38.5pt}>{\raggedleft\arraybackslash}p{47.8pt}>{\raggedleft\arraybackslash}p{22.1pt}>{\raggedleft\arraybackslash}p{26.4pt}>{\raggedleft\arraybackslash}p{22.1pt}>{\raggedleft\arraybackslash}p{22.1pt}>{\raggedleft\arraybackslash}p{22.3pt}>{\raggedleft\arraybackslash}p{22.1pt}@{}}
 \toprule
 \textbf{arm} & \textbf{closes} & \textbf{labeled} & \textbf{unlabeled} & \textbf{over-closed} & \textbf{set-1 stale} & \textbf{set-2 stale} & \textbf{set-1 acc.} & \textbf{set-1 acc. $k{=}$3} & \textbf{set-1 acc. no dates} & \textbf{set-2 acc.} \\
 \midrule
@@ -261,7 +261,7 @@ E4: belief v1 & 3\src{bench/results/e4\_belief\_\_dev\_updates.json} & 2\src{ben
 E4: belief v2 (frozen) & 4\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & 3\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & 1\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & 0/8\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & 14/18\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & 10/16\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_\_k3.json} & 30/30\src{bench/results/e4\_belief\_v2\_full\_\_dev\_updates.json} & 30/30\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} & -- & 20/20\src{bench/results/e4\_belief\_v2\_full\_\_dev\_updates2.json} \\
 E4: belief v3 & 4\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} & 2\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} & 2\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} & 0/8\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} & 14/18\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_noanswer.json} & 10/16\src{bench/results/e4\_belief\_v3\_\_dev\_updates2\_\_k3\_\_noanswer.json} & -- & -- & -- & -- \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table*}
 Table~\ref{tab:4} lists, for each arm, its closes, over-closes and stale items together with its accuracy on the update questions, and Figure~\ref{fig:4} plots the store outcomes.
 
@@ -288,9 +288,9 @@ Table~\ref{tab:4} lists, for each arm, its closes, over-closes and stale items t
 
 \begin{table*}[tbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{3.5pt}
 \caption{Jev's relation accuracy is about 80\% on both label sets with an ECE near 0.15; Laya's is 10--28\%, and a fitted temperature repairs its calibration but not its accuracy. Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last column is out of sample (2-fold). Relation probabilities fold \texttt{negates} into \texttt{contradiction}, since the pairs predate \texttt{negates}.}\label{tab:5}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{70.9pt}>{\raggedright\arraybackslash}p{90.1pt}>{\raggedright\arraybackslash}p{66.9pt}>{\raggedleft\arraybackslash}p{18.6pt}>{\raggedleft\arraybackslash}p{32.8pt}>{\raggedleft\arraybackslash}p{30.3pt}>{\raggedleft\arraybackslash}p{29.1pt}>{\raggedleft\arraybackslash}p{31.2pt}>{\raggedleft\arraybackslash}p{29.1pt}@{}}
 \toprule
 \textbf{labels} & \textbf{question} & \textbf{backend} & \textbf{n} & \textbf{top-1 acc.} & \textbf{mean conf.} & \textbf{ECE} & \textbf{fitted T} & \textbf{ECE at T} \\
 \midrule
@@ -301,13 +301,13 @@ gold pairs & relation & laya & 50\src{bench/results/calibration.json} & 28.0\%\s
 gold pairs & temporal status & jev & 50\src{bench/results/calibration.json} & 94.0\%\src{bench/results/calibration.json} & 0.95\src{bench/results/calibration.json} & 0.04\src{bench/results/calibration.json} & 1.13\src{bench/results/calibration.json} & 0.04\src{bench/results/calibration.json} \\
 gold pairs & temporal status & laya & 50\src{bench/results/calibration.json} & 76.0\%\src{bench/results/calibration.json} & 0.72\src{bench/results/calibration.json} & 0.06\src{bench/results/calibration.json} & 0.74\src{bench/results/calibration.json} & 0.07\src{bench/results/calibration.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table*}
 \begin{table*}[tbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{6.0pt}
 \caption{Jev chooses an accepted relation for 90.0\%\src{bench/results/jev\_regression\_v2.json} of the pairs with no false close; the Laya base checkpoint chooses one for at most 48.0\%\src{bench/results/laya\_regression\_jev\_wording.json} and never closes. Contradiction regression (50\src{bench/results/tradeoff.json} gold pairs), relation\_to\_candidate and temporal\_status in one request. Laya: convaiinnovations/laya\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} base checkpoint, zero-shot, fp16, on the local MLX server.}\label{tab:6}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{192.0pt}>{\raggedleft\arraybackslash}p{43.3pt}>{\raggedleft\arraybackslash}p{47.8pt}>{\raggedleft\arraybackslash}p{36.0pt}>{\raggedleft\arraybackslash}p{37.9pt}>{\raggedleft\arraybackslash}p{37.9pt}@{}}
 \toprule
 \textbf{backend} & \textbf{relation exact} & \textbf{temporal} & \textbf{close rule} & \textbf{closes} & \textbf{false closes} \\
 \midrule
@@ -315,7 +315,7 @@ Jev (jev-1.13.0) & 90.0\%\src{bench/results/jev\_regression\_v2.json} & 94.0\%\s
 Laya, Jev wording (truncated) & 48.0\%\src{bench/results/laya\_regression\_jev\_wording.json} & 76.0\%\src{bench/results/laya\_regression\_jev\_wording.json} & 32.0\%\src{bench/results/laya\_regression\_jev\_wording.json} & 0\src{bench/results/laya\_regression\_jev\_wording.json} & 0\src{bench/results/laya\_regression\_jev\_wording.json} \\
 Laya, native wording (fits) & 38.0\%\src{bench/results/laya\_regression\_native.json} & 76.0\%\src{bench/results/laya\_regression\_native.json} & 32.0\%\src{bench/results/laya\_regression\_native.json} & 0\src{bench/results/laya\_regression\_native.json} & 0\src{bench/results/laya\_regression\_native.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table*}
 \textbf{Cost/error tradeoff.} The 29\src{bench/results/calibration.json} escalation labels are too few for a curve, so Figure~\ref{fig:5} uses the 50\src{bench/results/tradeoff.json} gold pairs. The Jev cost $c_J$ = \$0.000016\src{bench/results/tradeoff.json} is the mean cost of one relation decision over 36,429\src{bench/results/tradeoff.json} held-out decisions, and the escalation cost $c_L$ = \$0.0073\src{bench/results/tradeoff.json} is the mean over 148\src{bench/results/tradeoff.json} logged escalations. No LLM run on the gold pairs is saved, so $\varepsilon_L$ is an assumption, plotted at 0 and 0.1. With Jev alone the error is 10.0\%\src{bench/results/tradeoff.json}. At $\theta$ = 0.85, 32.0\%\src{bench/results/tradeoff.json} of decisions escalate, the cost is \$0.002368\src{bench/results/tradeoff.json} per decision, and $E$ is 6.0\%\src{bench/results/tradeoff.json} ($\varepsilon_L$ = 0) or 9.2\%\src{bench/results/tradeoff.json} ($\varepsilon_L$ = 0.1). At the production threshold of 0.60\src{src/engram/config.py}, 8.0\%\src{bench/results/tradeoff.json} escalate and $E$ is 10.0\%\src{bench/results/tradeoff.json} or 10.8\%\src{bench/results/tradeoff.json}.
 
@@ -416,9 +416,9 @@ N01 & set 2, no temporal cue & My favorite coffee spot is Blue Door Caf\'{e}. & 
 \section{Per-conversation and systems tables}\label{app:C}
 \begin{table}[!htbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{4.5pt}
 \caption{Held-out accuracy per conversation, $k{=}$3. Q per row; models as in Table~\ref{tab:2}.}\label{tab:9}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{140.7pt}>{\raggedleft\arraybackslash}p{28.5pt}>{\raggedleft\arraybackslash}p{44.7pt}>{\raggedleft\arraybackslash}p{44.5pt}>{\raggedleft\arraybackslash}p{57.9pt}>{\raggedleft\arraybackslash}p{44.7pt}>{\raggedleft\arraybackslash}p{40.2pt}@{}}
 \toprule
 \textbf{conv.} & \textbf{Q} & \textbf{engram} & \textbf{mem0} & \textbf{$\Delta$ (questions)} & \textbf{engram tokens / q} & \textbf{mem0 tokens / q} \\
 \midrule
@@ -427,13 +427,13 @@ conv-41 & 152\src{bench/results/heldout\_report.json} & 113/152\src{bench/result
 conv-42 & 199\src{bench/results/heldout\_report.json} & 150/199\src{bench/results/heldout\_report.json} & 111/199\src{bench/results/heldout\_report.json} & 39\src{bench/results/heldout\_report.json} & 292\src{bench/results/heldout\_report.json} & 163\src{bench/results/heldout\_report.json} \\
 conv-43 & 178\src{bench/results/heldout\_report.json} & 125/178\src{bench/results/heldout\_report.json} & 101/178\src{bench/results/heldout\_report.json} & 24\src{bench/results/heldout\_report.json} & 283\src{bench/results/heldout\_report.json} & 153\src{bench/results/heldout\_report.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 \begin{table}[!htbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{6.0pt}
 \caption{Held-out accuracy per conversation, engram $k{=}$3 against token-matched mem0 ($k{=}$6). Q per row; models as in Table~\ref{tab:2}.}\label{tab:10}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{184.0pt}>{\raggedleft\arraybackslash}p{40.3pt}>{\raggedleft\arraybackslash}p{56.5pt}>{\raggedleft\arraybackslash}p{56.3pt}>{\raggedleft\arraybackslash}p{69.7pt}@{}}
 \toprule
 \textbf{conv.} & \textbf{Q} & \textbf{engram $k{=}$3} & \textbf{mem0 $k{=}$6} & \textbf{$\Delta$ (questions)} \\
 \midrule
@@ -442,13 +442,13 @@ conv-41 & 152\src{bench/results/heldout\_report.json} & 113/152\src{bench/result
 conv-42 & 199\src{bench/results/heldout\_report.json} & 150/199\src{bench/results/heldout\_report.json} & 119/199\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 31\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} \\
 conv-43 & 178\src{bench/results/heldout\_report.json} & 125/178\src{bench/results/heldout\_report.json} & 112/178\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} & 13\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 \begin{table}[!htbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{4.5pt}
 \caption{Held-out accuracy per conversation, $k{=}$20. Q per row; models as in Table~\ref{tab:2}.}\label{tab:11}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{140.7pt}>{\raggedleft\arraybackslash}p{28.5pt}>{\raggedleft\arraybackslash}p{44.7pt}>{\raggedleft\arraybackslash}p{44.5pt}>{\raggedleft\arraybackslash}p{57.9pt}>{\raggedleft\arraybackslash}p{44.7pt}>{\raggedleft\arraybackslash}p{40.2pt}@{}}
 \toprule
 \textbf{conv.} & \textbf{Q} & \textbf{engram} & \textbf{mem0} & \textbf{$\Delta$ (questions)} & \textbf{engram tokens / q} & \textbf{mem0 tokens / q} \\
 \midrule
@@ -457,13 +457,13 @@ conv-41 & 152\src{bench/results/heldout\_report.json} & 128/152\src{bench/result
 conv-42 & 199\src{bench/results/heldout\_report.json} & 156/199\src{bench/results/heldout\_report.json} & 146/199\src{bench/results/heldout\_report.json} & 10\src{bench/results/heldout\_report.json} & 1,491\src{bench/results/heldout\_report.json} & 1,043\src{bench/results/heldout\_report.json} \\
 conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/results/heldout\_report.json} & 133/178\src{bench/results/heldout\_report.json} & 3\src{bench/results/heldout\_report.json} & 1,389\src{bench/results/heldout\_report.json} & 995\src{bench/results/heldout\_report.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 \begin{table}[!htbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{6.0pt}
 \caption{Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory at $k{=}$3 (write and retrieval decisions; n per row). Jev jev-1.13.0; Laya base checkpoint, zero-shot. Same action: both choose the same label at p $\geq$ 0.85\src{src/engram/config.py}, or neither reaches it. Acts: share of decisions at p $\geq$ 0.85\src{src/engram/config.py}.}\label{tab:12}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{215.4pt}>{\raggedleft\arraybackslash}p{32.2pt}>{\raggedleft\arraybackslash}p{41.7pt}>{\raggedleft\arraybackslash}p{35.4pt}>{\raggedleft\arraybackslash}p{35.2pt}>{\raggedleft\arraybackslash}p{35.2pt}@{}}
 \toprule
 \textbf{question} & \textbf{n} & \textbf{same answer} & \textbf{same action} & \textbf{Jev acts} & \textbf{Laya acts} \\
 \midrule
@@ -480,13 +480,13 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/result
 \texttt{query\_\allowbreak{}relation} & 48\src{bench/results/laya\_agreement.json} & 54.2\%\src{bench/results/laya\_agreement.json} & 47.9\%\src{bench/results/laya\_agreement.json} & 39.6\%\src{bench/results/laya\_agreement.json} & 75.0\%\src{bench/results/laya\_agreement.json} \\
 \texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck} & 34\src{bench/results/laya\_agreement.json} & 29.4\%\src{bench/results/laya\_agreement.json} & 41.2\%\src{bench/results/laya\_agreement.json} & 35.3\%\src{bench/results/laya\_agreement.json} & 26.5\%\src{bench/results/laya\_agreement.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 \begin{table}[!htbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{6.0pt}
 \caption{Hybrid against all-Jev: dev slice with update sets (Q per row: 35\src{bench/results/e2\_jev\_\_dev.json} LoCoMo, 30\src{bench/updates\_conv26.json} set 1, 20\src{bench/updates2\_conv26.json} set 2), k as labeled, extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6.}\label{tab:13}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{195.6pt}>{\raggedleft\arraybackslash}p{54.5pt}>{\raggedleft\arraybackslash}p{51.3pt}>{\raggedleft\arraybackslash}p{54.5pt}>{\raggedleft\arraybackslash}p{51.3pt}@{}}
 \toprule
 \textbf{questions} & \textbf{all-Jev $k{=}$3} & \textbf{hybrid $k{=}$3} & \textbf{all-Jev $k{=}$20} & \textbf{hybrid $k{=}$20} \\
 \midrule
@@ -494,13 +494,13 @@ update set 1 & 30/30\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\
 LoCoMo dev & 29/35\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k3.json} & 29/35\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates\_\_k3.json} & 31/35\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k20.json} & 31/35\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates\_\_k20.json} \\
 update set 2 & 19/20\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_\_k3.json} & 17/20\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates2\_\_k3.json} & 20/20\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_\_k20.json} & 20/20\src{bench/results/e4\_belief\_v2\_hybrid\_\_dev\_updates2\_\_k20.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 \begin{table}[!htbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{6.0pt}
 \caption{Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices), from the decision logs (\texttt{bench/\allowbreak{}results/\allowbreak{}jev\_\allowbreak{}latency.json}). Client-measured, after the rate limiter, retries included.}\label{tab:14}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{185.8pt}>{\raggedleft\arraybackslash}p{59.8pt}>{\raggedleft\arraybackslash}p{50.8pt}>{\raggedleft\arraybackslash}p{51.9pt}>{\raggedleft\arraybackslash}p{58.6pt}@{}}
 \toprule
 \textbf{questions} & \textbf{requests} & \textbf{input tokens} & \textbf{p50} & \textbf{p90} \\
 \midrule
@@ -514,13 +514,13 @@ update set 2 & 19/20\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_
 31--50 & 505\src{bench/results/jev\_latency.json} & 6,903\src{bench/results/jev\_latency.json} & 269 ms\src{bench/results/jev\_latency.json} & 472 ms\src{bench/results/jev\_latency.json} \\
 51--80 & 739\src{bench/results/jev\_latency.json} & 9,187\src{bench/results/jev\_latency.json} & 371 ms\src{bench/results/jev\_latency.json} & 2,290 ms\src{bench/results/jev\_latency.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 \begin{table}[!htbp]
 \centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
+\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000\setlength{\tabcolsep}{3.5pt}
 \caption{Held-out write side (conv-30, 41, 42, 43; writes only). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus escalations.}\label{tab:15}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{88.4pt}>{\raggedleft\arraybackslash}p{36.6pt}>{\raggedleft\arraybackslash}p{39.3pt}>{\raggedleft\arraybackslash}p{31.7pt}>{\raggedleft\arraybackslash}p{39.9pt}>{\raggedleft\arraybackslash}p{39.9pt}>{\raggedleft\arraybackslash}p{39.9pt}>{\raggedleft\arraybackslash}p{36.6pt}>{\raggedleft\arraybackslash}p{46.5pt}@{}}
 \toprule
 \textbf{conv.} & \textbf{engram \$/1k} & \textbf{decision \$/1k} & \textbf{mem0 \$/1k} & \textbf{decision p50} & \textbf{engram write p50} & \textbf{mem0 write p50} & \textbf{engram facts} & \textbf{mem0 memories} \\
 \midrule
@@ -529,7 +529,7 @@ conv-41 & \$10.54\src{bench/results/heldout\_report.json} & \$0.47\src{bench/res
 conv-42 & \$10.55\src{bench/results/heldout\_report.json} & \$0.50\src{bench/results/heldout\_report.json} & \$10.04\src{bench/results/heldout\_report.json} & 981 ms\src{bench/results/heldout\_report.json} & 1,824 ms\src{bench/results/heldout\_report.json} & 1,300 ms\src{bench/results/heldout\_report.json} & 708\src{bench/results/heldout\_report.json} & 695\src{bench/results/heldout\_report.json} \\
 conv-43 & \$10.45\src{bench/results/heldout\_report.json} & \$0.50\src{bench/results/heldout\_report.json} & \$9.96\src{bench/results/heldout\_report.json} & 868 ms\src{bench/results/heldout\_report.json} & 1,819 ms\src{bench/results/heldout\_report.json} & 1,210 ms\src{bench/results/heldout\_report.json} & 628\src{bench/results/heldout\_report.json} & 636\src{bench/results/heldout\_report.json} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 \begin{figure*}[tbp]
 \centering

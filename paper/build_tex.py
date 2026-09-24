@@ -26,6 +26,9 @@ OPEN, SEP, CLOSE = "\x00", "\x01", "\x02"  # sourced-number markers inside the i
 WIDE_FIGS = {"pipeline", "calibration"}  # figure*: the pipeline, and the three-panel reliability diagram
 COLUMN_PT = 219.0  # one column in acl.sty: A4, 2.5 cm margins, 0.6 cm column sep
 CHAR_PT = 4.2  # average character width at \footnotesize (9 pt Times in acl.sty)
+TT_PT = 4.75  # typewriter (inconsolata) at \footnotesize
+TEXT_PT = 455.0  # \textwidth in acl.sty: A4 less 2.5 cm margins
+TABCOLSEP = 6.0
 ONECOLUMN_FROM = "Appendix A"  # appendices in one column: wide tables then sit next to their text
 FORCE_COLUMN: set[str] = set()  # tables kept in one column (\small, wrapped) even though their natural width is larger
 
@@ -188,7 +191,8 @@ def plain(cell: str) -> str:
 
 
 def numeric_col(body: list[list[str]], j: int) -> bool:
-    return sum(OPEN in r[j] for r in body) * 2 >= max(1, len(body))
+    cells = [r[j] for r in body if r[j].strip() not in ("–", "")]  # a dash marks a missing value, not text
+    return sum(OPEN in c for c in cells) * 2 >= max(1, len(cells))
 
 
 def natural_width(header: list[str], body: list[list[str]]) -> float:
@@ -211,6 +215,91 @@ def is_unnumbered_caption(lines: list[str], i: int) -> bool:
     while j < len(lines) and not lines[j].strip():
         j += 1
     return j < len(lines) and lines[j].strip().startswith("|")
+
+
+# Advance widths of Times Roman / Bold (Adobe metrics, 1/1000 em) for the characters tables use; others fall back
+# to an average lowercase letter. Scaled to \\footnotesize (9 pt) in acl.sty.
+TIMES = {
+    **dict.fromkeys("0123456789$", 500),
+    " ": 250,
+    ".": 250,
+    ",": 250,
+    ":": 278,
+    ";": 278,
+    "%": 833,
+    "/": 278,
+    "+": 564,
+    "-": 333,
+    "–": 500,
+    "−": 564,
+    "×": 564,
+    "[": 333,
+    "]": 333,
+    "(": 333,
+    ")": 333,
+    "=": 564,
+    "Δ": 612,
+    "≥": 549,
+    "ijlt": 0,
+}
+TIMES_BOLD = {**TIMES, "%": 1000, "(": 333, ")": 333}
+
+
+def text_pt(text: str, bold: bool = False) -> float:
+    table = TIMES_BOLD if bold else TIMES
+    total = 0.0
+    for ch in text:
+        if ch in table:
+            total += table[ch]
+        elif ch in "ijlt":
+            total += 278 if not bold else 300
+        elif ch in "mw":
+            total += 722 if not bold else 800
+        elif ch.isupper():
+            total += 667 if not bold else 722
+        else:
+            total += 444 if not bold else 500
+    return total * 9 / 1000
+
+
+def cell_pt(cell: str) -> float:
+    """Estimated width of a cell that does not wrap, at \\footnotesize; code (typewriter) runs wider than text."""
+    tt = "".join(re.findall(r"`([^`]*)`", cell))
+    rest = plain(re.sub(r"`[^`]*`", "", cell))
+    return text_pt(rest) + TT_PT * len(tt) + 1.0
+
+
+def column_widths(header: list[str], body: list[list[str]], total: float, sep: float = TABCOLSEP) -> list[float]:
+    """Column widths in pt that sum to `total` less the column gaps.
+
+    Numeric columns get the width of their longest cell, which never wraps; text columns want their longest cell
+    but may wrap. Headers wrap only between words, so each column is at least as wide as its longest header word.
+    Spare width goes to the text columns, and text columns shrink first when the table is too wide.
+    """
+    ncol = len(header)
+    avail = total - 2 * sep * (ncol - 1)
+    floor, want, text = [], [], []
+    for j in range(ncol):
+        head = max((text_pt(w, bold=True) for w in plain(header[j]).split()), default=4.0) + 1.0
+        cells = max((cell_pt(r[j]) for r in body), default=0.0)
+        is_text = j == 0 or not numeric_col(body, j)
+        text.append(is_text)
+        floor.append(max(head, min(cells, 60.0) if is_text else cells))
+        want.append(max(head, cells))
+    widths = want[:]
+    if sum(widths) > avail:  # shrink text columns toward their floor, then scale everything
+        over = sum(widths) - avail
+        slack = sum(w - f for w, f, t in zip(widths, floor, text, strict=True) if t)
+        if slack > 0:
+            k = min(1.0, over / slack)
+            widths = [w - k * (w - f) if t else w for w, f, t in zip(widths, floor, text, strict=True)]
+        if sum(widths) > avail:
+            widths = [w * avail / sum(widths) for w in widths]
+    else:  # spread the spare width: half to the text columns, half evenly
+        spare = avail - sum(widths)
+        ntext = sum(text)
+        widths = [w + spare / 2 / ncol + (spare / 2 / ntext if t else 0) for w, t in zip(widths, text, strict=True)]
+    return widths
 
 
 def table_tex(
@@ -240,14 +329,11 @@ def table_tex(
         return "\n".join(lines)
     forced = label in FORCE_COLUMN
     wide = not onecolumn and not forced and natural_width(header, body) > COLUMN_PT
-    first = max(len(plain(r[0])) for r in [header, *body])
-    cap_share = 0.34 if ncol > 3 else 0.5  # a two- or three-column table can give its label column half the width
-    share = min(cap_share, max(0.14, first * CHAR_PT / (COLUMN_PT * (2.05 if wide or onecolumn else 1))))
-    if forced:
-        share = 0.40
-    spec = rf">{{\raggedright\arraybackslash}}p{{{share:.2f}\linewidth}}" + "".join(
-        r">{\raggedleft\arraybackslash}X" if numeric_col(body, j) else r">{\raggedright\arraybackslash}X"
-        for j in range(1, ncol)
+    sep = TABCOLSEP if ncol <= 6 else (4.5 if ncol <= 8 else 3.5)  # dense tables: narrower gaps, wider text columns
+    widths = column_widths(header, body, TEXT_PT if wide or onecolumn else COLUMN_PT, sep)
+    spec = "".join(
+        rf">{{\{'raggedleft' if j and numeric_col(body, j) else 'raggedright'}\arraybackslash}}p{{{w:.1f}pt}}"
+        for j, w in enumerate(widths)
     )
     body_tex = [
         " & ".join(inline(c.replace(", ", ",\x06") if c.startswith("[") else c) for c in r) + r" \\" for r in body
@@ -257,15 +343,17 @@ def table_tex(
         [
             rf"\begin{{{env}}}[{'!htbp' if onecolumn or (here and not wide) else 'tbp'}]",
             r"\centering",
-            (r"\small" if forced else r"\footnotesize") + r"\hyphenpenalty=10000\exhyphenpenalty=10000",
+            (r"\small" if forced else r"\footnotesize")
+            + r"\hyphenpenalty=10000\exhyphenpenalty=10000"
+            + rf"\setlength{{\tabcolsep}}{{{sep}pt}}",
             cap,
-            rf"\begin{{tabularx}}{{\linewidth}}{{{spec}}}",
+            rf"\begin{{tabular}}{{@{{}}{spec}@{{}}}}",
             r"\toprule",
             " & ".join(r"\textbf{" + inline(h) + "}" for h in header) + r" \\",
             r"\midrule",
             *body_tex,
             r"\bottomrule",
-            r"\end{tabularx}",
+            r"\end{tabular}",
             rf"\end{{{env}}}",
         ]
     )
