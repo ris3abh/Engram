@@ -3708,15 +3708,6 @@
   "source": "bench/results/e4_belief_v3__dev_updates2__k3__noanswer.json"
  },
  "figures": {
-  "retrieval": {
-   "sources": [
-    "tests/test_retrieval_regression.py",
-    "src/engram/pipeline/retrieve.py"
-   ],
-   "values": {
-    "note": "illustrative; the test asserts Paris is retrieved and Acme is not, not which stage adds Paris"
-   }
-  },
   "belief_trace": {
    "sources": [
     "bench/results/e4_belief_v2__dev_updates__k3__noanswer.json",
@@ -3889,30 +3880,6 @@
     ]
    }
   },
-  "cost_breakdown": {
-   "sources": [
-    "bench/results/mem0__dev.json",
-    "bench/results/e2_llm__dev.json",
-    "bench/results/e2_jev__dev.json"
-   ],
-   "values": {
-    "mem0": {
-     "extraction": 9.800802631578948,
-     "decision": 0.0,
-     "total": 9.800802631578948
-    },
-    "E2 LLM": {
-     "extraction": 9.913499999999999,
-     "decision": 8.7820861875,
-     "total": 18.6955861875
-    },
-    "E2 Jev": {
-     "extraction": 9.778565789473685,
-     "decision": 0.12544515789473684,
-     "total": 9.904010947368421
-    }
-   }
-  },
   "acc_vs_tokens": {
    "sources": [
     "bench/results/heldout_report.json",
@@ -3948,119 +3915,6 @@
       0.7901639344262295
      ]
     ]
-   }
-  },
-  "perconv_diffs": {
-   "sources": [
-    "bench/results/perconv_diffs.json"
-   ],
-   "values": {
-    "conv-30": {
-     "k3": {
-      "n": 81,
-      "diff": 0.04938271604938271,
-      "lo": -0.0474074074074074,
-      "hi": 0.14617283950617282
-     },
-     "k3_vs_k6": {
-      "n": 81,
-      "diff": 0.06172839506172839,
-      "lo": -0.025012243764722095,
-      "hi": 0.1484690338881789
-     },
-     "k20": {
-      "n": 81,
-      "diff": -0.012345679012345678,
-      "lo": -0.1000930127268117,
-      "hi": 0.07540165470212035
-     }
-    },
-    "conv-41": {
-     "k3": {
-      "n": 152,
-      "diff": 0.15789473684210525,
-      "lo": 0.0800439112776048,
-      "hi": 0.2357455624066057
-     },
-     "k3_vs_k6": {
-      "n": 152,
-      "diff": 0.02631578947368421,
-      "lo": -0.04201350524758919,
-      "hi": 0.09464508419495761
-     },
-     "k20": {
-      "n": 152,
-      "diff": -0.046052631578947366,
-      "lo": -0.10196484768106112,
-      "hi": 0.00985958452316639
-     }
-    },
-    "conv-42": {
-     "k3": {
-      "n": 199,
-      "diff": 0.19597989949748743,
-      "lo": 0.13096311784076192,
-      "hi": 0.26099668115421293
-     },
-     "k3_vs_k6": {
-      "n": 199,
-      "diff": 0.15577889447236182,
-      "lo": 0.09165747359271588,
-      "hi": 0.21990031535200777
-     },
-     "k20": {
-      "n": 199,
-      "diff": 0.05025125628140704,
-      "lo": -0.008578323345525586,
-      "hi": 0.10908083590833967
-     }
-    },
-    "conv-43": {
-     "k3": {
-      "n": 178,
-      "diff": 0.1348314606741573,
-      "lo": 0.06608125824693968,
-      "hi": 0.20358166310137493
-     },
-     "k3_vs_k6": {
-      "n": 178,
-      "diff": 0.07303370786516854,
-      "lo": 0.012501608708440852,
-      "hi": 0.13356580702189622
-     },
-     "k20": {
-      "n": 178,
-      "diff": 0.016853932584269662,
-      "lo": -0.038301693972933835,
-      "hi": 0.07200955914147317
-     }
-    }
-   }
-  },
-  "per_category_k3": {
-   "sources": [
-    "bench/results/heldout_report.json",
-    "bench/results/mem0_token_matched__heldout_pooled__k6.json"
-   ],
-   "values": {
-    "engram k=3": {
-     "multi-hop": 0.4909090909090909,
-     "temporal": 0.8403361344537815,
-     "open-domain": 0.5151515151515151,
-     "single-hop": 0.7931034482758621
-    },
-    "mem0 k=6 (matched)": {
-     "multi-hop": 0.4090909090909091,
-     "temporal": 0.7394957983193278,
-     "open-domain": 0.3333333333333333,
-     "single-hop": 0.7183908045977011
-    },
-    "mem0 k=3": {
-     "multi-hop": 0.3181818181818182,
-     "temporal": 0.7142857142857143,
-     "open-domain": 0.30303030303030304,
-     "single-hop": 0.6494252873563219
-    }
    }
   },
   "store_outcomes": {

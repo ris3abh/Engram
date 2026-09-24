@@ -1,4 +1,4 @@
-"""Paper figures, regenerated from files in bench/results/ (no API calls). Two diagrams are generated as SVG.
+"""Paper figures, regenerated from files in bench/results/ (no API calls). The pipeline diagram is generated as SVG.
 
 Every figure is saved as SVG (for main.md) and PDF (for main.tex) in paper/figures/, at print size: 3.4 in wide
 for one column, 7 in for figure*. The values each figure plots, with their source files, are written to
@@ -181,48 +181,6 @@ def belief_trace() -> None:
 # ---------------------------------------------------------------- write-cost breakdown (§5.1)
 
 
-def cost_breakdown() -> None:
-    names = {"mem0": "mem0__dev.json", "E2 LLM": "e2_llm__dev.json", "E2 Jev": "e2_jev__dev.json"}
-    rows = {}
-    for label, fn in names.items():
-        r = load(fn)
-        dec = r["decision_cost_per_1k"] or 0.0
-        rows[label] = (r["cost_per_1k"] - dec, dec, r["cost_per_1k"])
-    fig, ax = plt.subplots(figsize=(COL, 1.55))
-    labels = list(rows)
-    for i, lab in enumerate(labels):
-        ext, dec, total = rows[lab]
-        ax.barh(i, ext, color=ORANGE_L, edgecolor="white", height=0.56, label="extraction (LLM)" if i == 0 else None)
-        dcolor = BLUE if lab == "E2 Jev" else ORANGE
-        ax.barh(i, dec, left=ext, color=dcolor, edgecolor="white", height=0.56)
-        if dec:
-            share = dec / total
-            txt = (
-                f"decisions ${dec:.3f} ({100 * share:.1f}%)"
-                if dec < 1
-                else f"decisions ${dec:.2f} ({100 * share:.0f}%)"
-            )
-            ax.text(total + 0.25, i, txt, va="center", fontsize=6.5, color=dcolor)
-        else:
-            ax.text(total + 0.25, i, "one call: extract + dedupe", va="center", fontsize=6.5, color=SLATE)
-    ax.set_yticks(range(len(labels)))
-    ax.set_yticklabels(labels)
-    ax.invert_yaxis()
-    ax.set_xlim(0, 30)
-    ax.set_xlabel("write cost, USD per 1,000 messages (dev slice)")
-    ax.grid(axis="y", visible=False)
-    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), fontsize=6.5, handlelength=1.2)
-    save(fig, "cost_breakdown.svg")
-    record(
-        "cost_breakdown",
-        [f"bench/results/{f}" for f in names.values()],
-        {k: {"extraction": v[0], "decision": v[1], "total": v[2]} for k, v in rows.items()},
-    )
-
-
-# ---------------------------------------------------------------- accuracy vs retrieved tokens (§5.2)
-
-
 def acc_vs_tokens() -> None:
     h = load("heldout_report.json")
     t = load("mem0_token_matched__heldout_pooled__k6.json")
@@ -269,86 +227,6 @@ def acc_vs_tokens() -> None:
 
 
 # ---------------------------------------------------------------- per-conversation paired differences (§5.2)
-
-
-def perconv_diffs() -> None:
-    d = load("perconv_diffs.json")
-    convs = list(d)
-    series = [
-        ("k3", "vs mem0 k=3", BLUE, "o"),
-        ("k3_vs_k6", "vs mem0 k=6 (matched)", BLUE_D, "s"),
-        ("k20", "k=20 vs k=20", SLATE, "^"),
-    ]
-    fig, ax = plt.subplots(figsize=(COL, 2.2))
-    ax.axvline(0, color=INK, lw=0.8)
-    for j, (key, lab, color, marker) in enumerate(series):
-        for i, conv in enumerate(convs):
-            r = d[conv][key]
-            y = i + (j - 1) * 0.22
-            ax.plot([100 * r["lo"], 100 * r["hi"]], [y, y], color=color, lw=1.3)
-            ax.plot(
-                100 * r["diff"],
-                y,
-                marker,
-                color=color,
-                ms=4.2,
-                mfc=color if key != "k20" else "white",
-                label=lab if i == 0 else None,
-            )
-    ax.set_yticks(range(len(convs)))
-    ax.set_yticklabels([f"{c}\nQ={d[c]['k3']['n']}" for c in convs], fontsize=6.8)
-    ax.invert_yaxis()
-    ax.set_xlabel("engram − mem0 accuracy (points), 95% CI per question")
-    ax.grid(axis="y", visible=False)
-    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=3, fontsize=6.3, handletextpad=0.3, columnspacing=1.0)
-    save(fig, "perconv_diffs.svg")
-    record("perconv_diffs", ["bench/results/perconv_diffs.json"], d)
-
-
-# ---------------------------------------------------------------- per-category accuracy (§5.2)
-
-
-def per_category() -> None:
-    h = load("heldout_report.json")
-    t = load("mem0_token_matched__heldout_pooled__k6.json")
-    cats = list(h["k3"]["per_category"])
-    q = {c: h["k3"]["per_category"][c]["q"] for c in cats}
-    series = [
-        ("engram k=3", BLUE, [h["k3"]["per_category"][c]["e4_belief_v2"] / q[c] for c in cats]),
-        ("mem0 k=6 (matched)", ORANGE, [t["per_category"][c]["mem0"] / q[c] for c in cats]),
-        ("mem0 k=3", ORANGE_L, [h["k3"]["per_category"][c]["mem0"] / q[c] for c in cats]),
-    ]
-    fig, ax = plt.subplots(figsize=(COL, 2.2))
-    w = 0.26
-    for i, (name, color, vals) in enumerate(series):
-        xs = [j + (i - 1) * (w + 0.02) for j in range(len(cats))]
-        bars = ax.bar(xs, [100 * v for v in vals], w, color=color, label=name, zorder=3)
-        for b, v in zip(bars, vals, strict=True):
-            ax.text(
-                b.get_x() + b.get_width() / 2,
-                b.get_height() + 1.2,
-                f"{100 * v:.0f}",
-                ha="center",
-                va="bottom",
-                fontsize=5.8,
-                color=INK,
-            )
-    ax.set_xticks(range(len(cats)))
-    ax.set_xticklabels([f"{c}\nQ={q[c]}" for c in cats], fontsize=6.8)
-    ax.set_ylim(0, 100)
-    ax.set_ylabel("accuracy")
-    pct(ax)
-    ax.grid(axis="x", visible=False)
-    ax.legend(ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.0), handlelength=1.0, columnspacing=1.2)
-    save(fig, "per_category_k3.svg")
-    record(
-        "per_category_k3",
-        ["bench/results/heldout_report.json", "bench/results/mem0_token_matched__heldout_pooled__k6.json"],
-        {name: dict(zip(cats, vals, strict=True)) for name, _, vals in series},
-    )
-
-
-# ---------------------------------------------------------------- store outcomes (§5.3)
 
 
 def store_outcomes() -> None:
@@ -580,63 +458,7 @@ def latency() -> None:
     )
 
 
-# ---------------------------------------------------------------- retrieval mechanics diagram (§3.1)
-
-
-def retrieval_diagram() -> None:
-    """Stages of the read path with the "before Berlin" fixture from tests/test_retrieval_regression.py."""
-    W, H = 420, 560
-    stages = [
-        ("code", "1  Cosine recall", "top-k by embedding, over all facts", "closed facts such as Paris can enter here"),
-        ("jev", "2  Listwise relevance (Jev)", "one yes/no relevance question per candidate", "ranks the candidates"),
-        (
-            "jev",
-            "3  Query-relation pull (Jev)",
-            "query_relation at p ≥ 0.85 adds same-relation facts",
-            "query_relation = lives_in (asserted by the test)",
-        ),
-        ("store", "4  History expansion", "adds each hit's superseded chain", "Berlin's chain adds Paris"),
-        ("llm", "5  Compact rendering → answer", "date said · fact · source quote", "Paris shown as no longer true"),
-    ]
-    fills = {
-        "code": ("#F5F7FA", "#8A94A6", "#4B5566"),
-        "jev": ("#EEF0FF", BLUE, BLUE_D),
-        "store": ("#E9F7F0", GREEN, "#1D7350"),
-        "llm": ("#FFF3EA", ORANGE, "#B8561A"),
-    }
-    s = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
-        '<defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" '
-        'orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7A8496"/></marker></defs>',
-        "<style>text{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}.t{font-size:14px;font-weight:700}"
-        ".b{font-size:12px}.e{font-size:12px;font-style:italic}.q{font-size:13px;font-weight:700}</style>",
-        f'<rect width="{W}" height="{H}" fill="white"/>',
-        '<rect x="10" y="8" width="400" height="40" rx="10" fill="#FAFBFE" stroke="#D5DAE3"/>',
-        '<text x="22" y="33" class="q" fill="#1F2430">Query: "where did the user live before Berlin"</text>',
-    ]
-    y = 64
-    for kind, title, what, example in stages:
-        fill, stroke, accent = fills[kind]
-        s.append(
-            f'<rect x="10" y="{y}" width="400" height="82" rx="12" fill="{fill}" stroke="{stroke}" stroke-width="1.6"/>'
-        )
-        s.append(f'<text x="24" y="{y + 24}" class="t" fill="#1F2430">{escape(title)}</text>')
-        s.append(f'<text x="24" y="{y + 45}" class="b" fill="{accent}">{escape(what)}</text>')
-        s.append(f'<text x="24" y="{y + 67}" class="e" fill="#4B5566">e.g. {escape(example)}</text>')
-        if y + 82 < H - 40:
-            s.append(
-                f'<path d="M210,{y + 82} L210,{y + 96}" stroke="#7A8496" stroke-width="1.8" marker-end="url(#a)"/>'
-            )
-        y += 98
-    s.append("</svg>")
-    (OUT / "retrieval.svg").write_text("\n".join(s))
-    svg_to_pdf(OUT / "retrieval.svg", TEX_FIGS / "retrieval.pdf", W, H)
-    record(
-        "retrieval",
-        ["tests/test_retrieval_regression.py", "src/engram/pipeline/retrieve.py"],
-        {"note": "illustrative; the test asserts Paris is retrieved and Acme is not, not which stage adds Paris"},
-    )
-
+# ---------------------------------------------------------------- diagram helpers (Figure 1)
 
 C = {  # fill, stroke, accent text
     "llm": ("#FFF3EA", "#E8762C", "#B8561A"),
@@ -915,12 +737,8 @@ def pipeline() -> None:
 
 if __name__ == "__main__":
     pipeline()
-    retrieval_diagram()
     belief_trace()
-    cost_breakdown()
     acc_vs_tokens()
-    perconv_diffs()
-    per_category()
     store_outcomes()
     calibration()
     tradeoff()

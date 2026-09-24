@@ -1,4 +1,4 @@
-# make paper: numbers -> figures -> main.md + main.tex -> main.pdf (pdflatex, bibtex, pdflatex x2).
+# make paper: figures -> numbers -> main.md + main.tex -> main.pdf (pdflatex, bibtex, pdflatex x2).
 # Uses a local pdflatex if there is one, otherwise the texlive/texlive Docker image.
 ROOT := $(abspath ..)
 UV := cd $(ROOT) && uv run
@@ -11,7 +11,7 @@ endif
 
 .PHONY: paper numbers figures tex pdf check clean image arxiv
 
-paper: numbers figures tex pdf check
+paper: figures numbers tex pdf check  # figures first: numbers.json folds in figures/manifest.json
 
 numbers:
 	$(UV) python paper/build.py

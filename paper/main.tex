@@ -54,12 +54,22 @@ Typed decisions cut an agent memory system's decision cost and latency and impro
 \section{Introduction}\label{sec:1}
 \textbf{The cost problem.} A memory system for an LLM agent turns conversation into facts it can retrieve later. Each write has two parts. Extraction asks what facts a message states. Decisions ask, for each fact, whether it is new, a duplicate, a refinement or a change to something already stored, whether it is worth keeping, and whether it is sensitive. In current open-source systems both parts are LLM calls. mem0 2.1.0's default \texttt{add()} makes a single LLM call per message with its additive extraction prompt, and has no separate update or delete step (\texttt{mem0/\allowbreak{}memory/\allowbreak{}main.py}, \texttt{Memory.\_\allowbreak{}add\_\allowbreak{}to\_\allowbreak{}vector\_\allowbreak{}store}). An LLM call per decision is expensive enough that nothing re-examines the store afterwards. Facts that stopped being true stay in it.
 
-\textbf{The observation.} The decisions are choices among options fixed in advance. That is the setting typed decision models are built for. They return a probability over a fixed option set in one short request, and they cost far less than generating text.
+\textbf{The observation.} The decisions are choices among options fixed in advance. That is the setting typed decision models are built for. They return a probability over a fixed option set in one short request, and they cost far less than generating text. engram is built on that observation: an LLM extracts facts, and every decision after extraction is a typed question (Figure~\ref{fig:1}).
 
+\begin{figure*}[tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/pipeline.pdf}
+\caption{engram's write and read paths. Orange boxes are LLM calls, blue boxes are typed Jev decisions.}\label{fig:1}
+\end{figure*}
 \textbf{Concurrent work.} The architectural idea of routing memory decisions to a typed decision model was reached independently by Jev-Mem \citep{jiang2026jevmem}, which uses Jev for typing, relation construction, query routing, budget allocation, traversal, candidate scoring and stopping. It reports a LoCoMo judge score of 0.777\src{jiang2026jevmem (reported LoCoMo judge score)} with a 158\src{jiang2026jevmem (reported build time, s)} s build and 0.93\src{jiang2026jevmem (reported query time, s)} s query against A-MEM \citep{xu2025amem}, MAGMA \citep{jiang2026magma} and two further systems reported in that paper. It does not isolate the decision layer, evaluate updates or closes, measure calibration, or use a held-out split or confidence intervals. Separately, a community article reranked AtMem's top-10 with Jev on 1,986\src{taghia2026atmem (LoCoMo questions)} LoCoMo questions and measured the effect at the ranking level: MRR@5 rose from 0.4259\src{taghia2026atmem (MRR@5, AtMem)} to 0.5868\src{taghia2026atmem (MRR@5, AtMem + Jev)} and Recall@1 from 0.3399\src{taghia2026atmem (Recall@1, AtMem)} to 0.5423\src{taghia2026atmem (Recall@1, AtMem + Jev)} \citep{taghia2026atmem}. This paper's contribution is the controlled measurement: an identical-extraction ablation of the decision layer, its calibration, the safety of the store it drives, the rerank effect on answers with a matched-context control, and the negatives.
 
-\textbf{Contributions.} The paper makes four. First, with extraction held identical, typed decisions replace an LLM decision layer at 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower cost and 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower median latency with no measured accuracy loss (\cref{sec:5.1}). Second, a belief-state store policy with reversible, gated closes over-closes no labeled keep item, and its v3 rule removes a weak-evidence failure that closes true facts (\cref{sec:3.3}, \cref{sec:5.3}). Third, under a three-memory budget a listwise Jev rerank puts engram +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points ahead of mem0 at matched context on 610\src{bench/results/heldout\_report.json} held-out questions, while at $k{=}$20 the systems tie (\cref{sec:5.2}). Fourth, two results are negative: closing stale facts does not change answers on current benchmarks, and a zero-shot base checkpoint of an open-weights decision model does not make the relational decisions (\cref{sec:5.4}).
+\textbf{Contributions.} The paper makes four. First, with extraction held identical, typed decisions replace an LLM decision layer at 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower cost and 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower median latency with no measured accuracy loss (\cref{sec:5.1}). Second, a belief-state store policy with reversible, gated closes over-closes no labeled keep item, and its v3 rule removes a weak-evidence failure that closes true facts (\cref{sec:3.3}, \cref{sec:5.3}). Third, under a three-memory budget a listwise Jev rerank puts engram +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points ahead of mem0 at matched context on 610\src{bench/results/heldout\_report.json} held-out questions, while at $k{=}$20 the systems tie (\cref{sec:5.2}). Fourth, two results are negative: closing stale facts does not change answers on current benchmarks, and a zero-shot base checkpoint of an open-weights decision model does not make the relational decisions (\cref{sec:5.4}). Figure~\ref{fig:2} plots the third against the context each system shows the answer model.
 
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/acc_vs_tokens.pdf}
+\caption{Pooled held-out accuracy (610\src{bench/results/heldout\_report.json} questions) against mean retrieved tokens per question. mem0 accuracy was measured at three settings, $k{=}$3\src{bench/results/heldout\_report.json (k=3 run)}, 6\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} and 20\src{bench/results/heldout\_report.json (20 run)}; the token-matching sweep counted tokens at the other k without answering. Models as in Table~\ref{tab:3}.}\label{fig:2}
+\end{figure}
 \textbf{Scope.} We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development conversation and four held-out conversations, scoring four of its five question categories; adversarial is excluded, following mem0's evaluation protocol). We use update sets written by the system's author, and one hosted decision model (Jev, \texttt{jev-1.13.0}). We did not test Zep/Graphiti or Letta, LongMemEval, other extraction, answer or judge models, multi-user stores, or non-English text.
 
 \section{Background and Related Work}\label{sec:2}
@@ -93,22 +103,12 @@ LoCoMo \citep{maharana2024locomo} contains long multi-session conversations with
 
 \section{engram}\label{sec:3}
 \subsection{Pipeline}\label{sec:3.1}
-\begin{figure*}[tbp]
-\centering
-\includegraphics[width=\textwidth]{figures/pipeline.pdf}
-\caption{engram's write and read paths. Orange boxes are LLM calls, blue boxes are typed Jev decisions.}\label{fig:1}
-\end{figure*}
+Figure~\ref{fig:1} shows both paths.
+
 \textbf{Write path.} An LLM extracts facts from a message; in the experiments it uses mem0's prompt and inputs (\cref{sec:4.2}). Each fact then goes to Jev as a single request that carries the fact questions and one \texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} question for each of up to 10\src{src/engram/config.py} candidate facts. A policy layer and a belief state (\crefrange{sec:3.2}{sec:3.3}) turn the answers into store operations. The store is SQLite plus NetworkX: facts are edges with validity windows, and every decision is logged with its probabilities.
 
 \textbf{Read path.} The question is embedded and the cosine top-k taken. Jev reranks these candidates with one yes/no relevance question per candidate, plus a \texttt{query\_\allowbreak{}relation} question that can pull in facts by relation type. History is added next, meaning the facts that each retrieved fact superseded. The answer model sees compact lines, each with the date the fact was said, the fact, and the verbatim source quote.
 
-Figure~\ref{fig:2} walks through these stages on a question from the retrieval regression test.
-
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=\columnwidth]{figures/retrieval.pdf}
-\caption{The read path on ``where did the user live before Berlin'' (fixture in \texttt{tests/\allowbreak{}test\_\allowbreak{}retrieval\_\allowbreak{}regression.py}). Cosine recall searches closed facts too, so Paris can enter at stage 1 or through Berlin's superseded chain at stage 4; the test asserts that Paris is retrieved and that Acme, another closed chain, is not, but no stored run records which stage added Paris.}\label{fig:2}
-\end{figure}
 \subsection{Decision chain and policy layer}\label{sec:3.2}
 The current chain has 12\src{src/engram/decide/questions.py (ALL\_QUESTIONS)} questions, listed in \hyperref[app:A]{Appendix~A}. Choice questions carry a rubric per option. When a question's wording changes, its version number is bumped and old arms keep the old version.
 
@@ -194,13 +194,8 @@ The two decision layers answer the same number of questions and mem0 one fewer, 
 
 The two latency columns are medians over different messages. In the E2 LLM arm only 30\src{bench/results/e2\_latency.json} of 76\src{bench/results/e2\_latency.json} messages made an LLM decision call, so the write median falls on an extraction-only message (median extraction 869 ms\src{bench/results/e2\_latency.json}); on the messages with decisions, the logged median of the slowest decision call is 7,892 ms\src{bench/results/e2\_latency.json} (\texttt{bench/\allowbreak{}e2\_\allowbreak{}latency.py}).
 
-Figure~\ref{fig:4} shows where each system's write cost goes: extraction dominates, and the decision layer is 1.3\%\src{bench/results/e2\_jev\_\_dev.json: decision $/1k ÷ total $/1k} of the Jev arm's cost against 47.0\%\src{bench/results/e2\_llm\_\_dev.json: decision $/1k ÷ total $/1k} of the LLM arm's.
+In Table~\ref{tab:2} the decision layer is 1.3\%\src{bench/results/e2\_jev\_\_dev.json: decision $/1k ÷ total $/1k} of the Jev arm's end-to-end write cost and 47.0\%\src{bench/results/e2\_llm\_\_dev.json: decision $/1k ÷ total $/1k} of the LLM arm's; with typed decisions, extraction is almost the whole cost of a write.
 
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=\columnwidth]{figures/cost_breakdown.pdf}
-\caption{Write cost per thousand messages on the dev slice (76\src{bench/results/e2\_jev\_\_dev.json} messages), split into extraction and decision layer. mem0 makes one call per message that extracts and deduplicates.}\label{fig:4}
-\end{figure}
 These ratios compare Jev against \texttt{claude-sonnet-4-6} as the decider. We have no measurement with a smaller LLM decider. On the stress slice the Jev arm scored 67/80\src{bench/results/e2\_jev\_\_stress.json} and mem0 64/80\src{bench/results/mem0\_\_stress.json}; the LLM arm was not run there.
 
 \textbf{Held-out parity at default k.} The held-out runs compare the frozen full system (E4 belief v2, \cref{sec:3.3}) with mem0, not the E2 arms. At $k{=}$20 engram answers 482/610\src{bench/results/heldout\_report.json} and mem0 477/610\src{bench/results/heldout\_report.json}. The difference is +0.8\src{bench/results/heldout\_report.json} points (95\% CI -2.3\src{bench/results/heldout\_report.json} to +3.9\src{bench/results/heldout\_report.json}; conversation bootstrap -4.5\src{bench/results/heldout\_report.json} to +5.4\src{bench/results/heldout\_report.json}; McNemar $p$ = 0.679\src{bench/results/heldout\_report.json}), within noise.
@@ -243,20 +238,10 @@ engram $k{=}$20 $-$ mem0 $k{=}$20 & +0.8\src{bench/results/heldout\_report.json}
 \end{table*}
 At $k{=}$3 engram is ahead of mem0 by +14.9\src{bench/results/heldout\_report.json} points (95\% CI +11.2\src{bench/results/heldout\_report.json} to +18.7\src{bench/results/heldout\_report.json}). Against token-matched mem0 the difference is +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points (95\% CI +5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} to +12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}; McNemar $p$ = 1.3e-06\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}; 86\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} questions only engram answered against 33\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} only mem0 answered).
 
-Figure~\ref{fig:5} places the three measured mem0 settings and the two engram settings on one axis of retrieved tokens. engram at $k{=}$3 sits above the line through mem0's points, and the two systems meet at $k{=}$20.
+Figure~\ref{fig:2} places the three measured mem0 settings and the two engram settings on one axis of retrieved tokens. engram at $k{=}$3 sits above the line through mem0's points, and the two systems meet at $k{=}$20.
 
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=\columnwidth]{figures/acc_vs_tokens.pdf}
-\caption{Pooled held-out accuracy (610\src{bench/results/heldout\_report.json} questions) against mean retrieved tokens per question. mem0 accuracy was measured at three settings, $k{=}$3\src{bench/results/heldout\_report.json (k=3 run)}, 6\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} and 20\src{bench/results/heldout\_report.json (20 run)}; the token-matching sweep counted tokens at the other k without answering. Models as in Table~\ref{tab:3}.}\label{fig:5}
-\end{figure}
-engram's point estimate is ahead in every conversation and in every category at matched context (Figure~\ref{fig:6}, Table~\ref{tab:5}, Figure~\ref{fig:7}). Per conversation, the matched-context interval excludes zero in 2\src{bench/results/perconv\_diffs.json: conversations whose matched-context interval excludes zero} of four conversations (conv-42 and conv-43); conv-30 and conv-41 are within noise on their own.
+engram's point estimate is ahead in every category at matched context (Table~\ref{tab:5}) and in every conversation (\hyperref[app:C]{Appendix~C}). Per conversation, the matched-context interval excludes zero in 2\src{bench/results/perconv\_diffs.json: conversations whose matched-context interval excludes zero} of four conversations (conv-42 and conv-43); conv-30 and conv-41 are within noise on their own.
 
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=\columnwidth]{figures/perconv_diffs.pdf}
-\caption{engram minus mem0 accuracy per held-out conversation, with per-question 95\% intervals: engram $k{=}$3 against mem0 $k{=}$3, against token-matched mem0 $k{=}$6, and both at $k{=}$20. Source: \texttt{bench/\allowbreak{}results/\allowbreak{}perconv\_\allowbreak{}diffs.json}.}\label{fig:6}
-\end{figure}
 \begin{table*}[tbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
@@ -272,11 +257,6 @@ single-hop & 348\src{bench/results/heldout\_report.json} & 79.3\%\src{bench/resu
 \bottomrule
 \end{tabularx}
 \end{table*}
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=\columnwidth]{figures/per_category_k3.pdf}
-\caption{held-out accuracy by category at $k{=}$3, for engram, token-matched mem0 ($k{=}$6) and mem0 ($k{=}$3).}\label{fig:7}
-\end{figure}
 \textbf{Attribution.} Matching context removes 41.8\%\src{bench/results/heldout\_report.json and bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json: (Δk3 − Δtoken-matched) / Δk3} of the $k{=}$3 difference. The other 58.2\%\src{bench/results/heldout\_report.json and bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json: 1 − context share} is what remains once context is matched.
 
 We attribute that remainder to which memories reach the top three, which rests on a dev-slice ablation, not a held-out one. On dev + set 1 at $k{=}$3 the frozen arm answered 30/30\src{bench/results/e4\_belief\_v2\_\_dev\_updates\_\_k3.json} update questions. It answered 26/30\src{bench/results/e4\_belief\_v2\_norerank\_\_dev\_updates\_\_k3.json} with Jev reranking off, 30/30\src{bench/results/e4\_belief\_v2\_nohist\_\_dev\_updates\_\_k3.json} with history expansion off, and mem0 answered 25/30\src{bench/results/mem0\_\_dev\_updates\_\_k3.json}. We did not run a held-out no-rerank arm.
@@ -299,12 +279,12 @@ E4: belief v3 & 0/8\src{bench/results/e4\_belief\_v3\_\_dev\_updates\_\_k3\_\_no
 \bottomrule
 \end{tabularx}
 \end{table*}
-Figure~\ref{fig:8} shows the same outcomes per arm.
+Figure~\ref{fig:4} shows the same outcomes per arm.
 
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=\columnwidth]{figures/store_outcomes.pdf}
-\caption{Store outcomes on the update sets: set-1 close items left stale, set-2 stale values, closes on dev + set 1 split by whether they match a labeled pair, and no\_close items over-closed. E3 was not run on set 2.}\label{fig:8}
+\caption{Store outcomes on the update sets: set-1 close items left stale, set-2 stale values, closes on dev + set 1 split by whether they match a labeled pair, and no\_close items over-closed. E3 was not run on set 2.}\label{fig:4}
 \end{figure}
 \textbf{Over-closes.} No labeled keep item was over-closed by any arm.
 
@@ -334,7 +314,7 @@ Laya, native wording (fits) & 38.0\%\src{bench/results/laya\_regression\_native.
 \bottomrule
 \end{tabularx}
 \end{table*}
-\textbf{Calibration error.} We measure expected calibration error (ECE) on two label sets: the 50\src{bench/results/tradeoff.json} gold pairs, and 29\src{bench/results/calibration.json} escalation labels, where Sonnet decided a relation Jev was unsure of. On the gold pairs Jev's relation ECE is 0.14\src{bench/results/calibration.json} (fitted $T$ = 1.48\src{bench/results/calibration.json}) and its temporal ECE is 0.04\src{bench/results/calibration.json}. On the escalation labels, which are by construction the cases Jev was unsure of, relation ECE is 0.15\src{bench/results/calibration.json}. Table~\ref{tab:7} has the full comparison, with Laya.
+\textbf{Calibration error.} We measure expected calibration error (ECE) on two label sets: the 50\src{bench/results/tradeoff.json} gold pairs, and 29\src{bench/results/calibration.json} escalation labels, where Sonnet decided a relation Jev was unsure of. On the gold pairs Jev's relation ECE is 0.14\src{bench/results/calibration.json} (fitted $T$ = 1.48\src{bench/results/calibration.json}) and its temporal ECE is 0.04\src{bench/results/calibration.json}. On the escalation labels, which are by construction the cases Jev was unsure of, relation ECE is 0.15\src{bench/results/calibration.json}. Table~\ref{tab:7} has the full comparison, with Laya, and Figure~\ref{fig:6} in \hyperref[app:C]{Appendix~C} the reliability diagrams.
 
 \begin{table*}[tbp]
 \centering
@@ -353,17 +333,12 @@ gold pairs & temporal status & laya & 50\src{bench/results/calibration.json} & 7
 \bottomrule
 \end{tabularx}
 \end{table*}
-\begin{figure*}[tbp]
-\centering
-\includegraphics[width=\textwidth]{figures/calibration.pdf}
-\caption{reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.}\label{fig:9}
-\end{figure*}
-\textbf{Cost/error tradeoff.} The 29\src{bench/results/calibration.json} escalation labels are too few for a curve, so Figure~\ref{fig:10} uses the 50\src{bench/results/tradeoff.json} gold pairs. The Jev cost $c_J$ = \$0.000016\src{bench/results/tradeoff.json} is the mean cost of one relation decision over 36,429\src{bench/results/tradeoff.json} held-out decisions, and the escalation cost $c_L$ = \$0.0073\src{bench/results/tradeoff.json} is the mean over 148\src{bench/results/tradeoff.json} logged escalations. No LLM run on the gold pairs is saved, so $\varepsilon_L$ is an assumption, plotted at 0 and 0.1. With Jev alone the error is 10.0\%\src{bench/results/tradeoff.json}. At $\theta$ = 0.85, 32.0\%\src{bench/results/tradeoff.json} of decisions escalate, the cost is \$0.002368\src{bench/results/tradeoff.json} per decision, and $E$ is 6.0\%\src{bench/results/tradeoff.json} ($\varepsilon_L$ = 0) or 9.2\%\src{bench/results/tradeoff.json} ($\varepsilon_L$ = 0.1). At the production threshold of 0.60\src{src/engram/config.py}, 8.0\%\src{bench/results/tradeoff.json} escalate and $E$ is 10.0\%\src{bench/results/tradeoff.json} or 10.8\%\src{bench/results/tradeoff.json}.
+\textbf{Cost/error tradeoff.} The 29\src{bench/results/calibration.json} escalation labels are too few for a curve, so Figure~\ref{fig:5} uses the 50\src{bench/results/tradeoff.json} gold pairs. The Jev cost $c_J$ = \$0.000016\src{bench/results/tradeoff.json} is the mean cost of one relation decision over 36,429\src{bench/results/tradeoff.json} held-out decisions, and the escalation cost $c_L$ = \$0.0073\src{bench/results/tradeoff.json} is the mean over 148\src{bench/results/tradeoff.json} logged escalations. No LLM run on the gold pairs is saved, so $\varepsilon_L$ is an assumption, plotted at 0 and 0.1. With Jev alone the error is 10.0\%\src{bench/results/tradeoff.json}. At $\theta$ = 0.85, 32.0\%\src{bench/results/tradeoff.json} of decisions escalate, the cost is \$0.002368\src{bench/results/tradeoff.json} per decision, and $E$ is 6.0\%\src{bench/results/tradeoff.json} ($\varepsilon_L$ = 0) or 9.2\%\src{bench/results/tradeoff.json} ($\varepsilon_L$ = 0.1). At the production threshold of 0.60\src{src/engram/config.py}, 8.0\%\src{bench/results/tradeoff.json} escalate and $E$ is 10.0\%\src{bench/results/tradeoff.json} or 10.8\%\src{bench/results/tradeoff.json}.
 
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=\columnwidth]{figures/tradeoff.pdf}
-\caption{$C(\theta)$ and $E(\theta)$ on the 50\src{bench/results/tradeoff.json} gold pairs. $\varepsilon_L$ is assumed, not measured; the 29\src{bench/results/calibration.json} escalation labels were too few for a curve.}\label{fig:10}
+\caption{$C(\theta)$ and $E(\theta)$ on the 50\src{bench/results/tradeoff.json} gold pairs. $\varepsilon_L$ is assumed, not measured; the 29\src{bench/results/calibration.json} escalation labels were too few for a curve.}\label{fig:5}
 \end{figure}
 \subsection{Negative results}\label{sec:5.4}
 \textbf{Closes do not change answers.}
@@ -393,13 +368,8 @@ Set 2, which asks about chains of changes and past moments, is at its ceiling fo
 
 On the 50\src{bench/results/tradeoff.json} regression pairs (Table~\ref{tab:9}), Laya chooses an accepted relation for 48.0\%\src{bench/results/laya\_regression\_jev\_wording.json} with Jev's question wording and 38.0\%\src{bench/results/laya\_regression\_native.json} with wording rewritten to fit its 192\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json}-token question budget. Jev scores 90.0\%\src{bench/results/jev\_regression\_v2.json}. Laya never reaches the action threshold, so it closes nothing. Its gold-pair relation accuracy is 28.0\%\src{bench/results/calibration.json} (Table~\ref{tab:7}). A temperature lowers its ECE but not its accuracy.
 
-With the frozen Jev arm replayed from cache and Laya answering every request on the side, the two gave the same answer on 44.8\%\src{bench/results/laya\_agreement.json} of 6,764\src{bench/results/laya\_agreement.json} decisions and the same action at the 0.85\src{src/engram/config.py} threshold on 31.2\%\src{bench/results/laya\_agreement.json}. On \texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} they agreed on 5.9\%\src{bench/results/laya\_agreement.json} (Table~\ref{tab:10}, Figure~\ref{fig:11}).
+With the frozen Jev arm replayed from cache and Laya answering every request on the side, the two gave the same answer on 44.8\%\src{bench/results/laya\_agreement.json} of 6,764\src{bench/results/laya\_agreement.json} decisions and the same action at the 0.85\src{src/engram/config.py} threshold on 31.2\%\src{bench/results/laya\_agreement.json}. On \texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} they agreed on 5.9\%\src{bench/results/laya\_agreement.json} (Table~\ref{tab:10} and Figure~\ref{fig:7}, \hyperref[app:C]{Appendix~C}).
 
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=\columnwidth]{figures/laya_agreement.pdf}
-\caption{Agreement between the Laya base checkpoint (zero-shot) and Jev on identical requests, per question, sorted by same answer. Dev + update sets 1 and 2, frozen arm's trajectory.}\label{fig:11}
-\end{figure}
 When Laya decided every question, on dev + set 1 at $k{=}$3 it scored 24/35\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} LoCoMo and 26/30\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} update questions. Jev scored 29/35\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k3.json} and 30/30\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates\_\_k3.json}. It made 23\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} closes, of which 23\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} match no labeled pair, and left 43\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} of 66\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} facts active. Most of these closes came from weak \texttt{duplicate} and \texttt{refinement} answers below 0.5 lowering belief, the failure belief v3 removes (\cref{sec:3.3}).
 
 \textbf{Hybrid.} In a hybrid arm Laya answered the two high-volume yes/no questions (\texttt{relevant\_\allowbreak{}to\_\allowbreak{}query}, \texttt{same\_\allowbreak{}fact}) and Jev the rest. On the routed questions the two models gave the same answer on 86.9\%\src{bench/results/hybrid\_report.json} and the same action on 34.1\%\src{bench/results/hybrid\_report.json}. Writes were identical to the all-Jev arm, but at $k{=}$3 only 51.8\%\src{bench/results/hybrid\_report.json} of Jev's top-3 lines survived the change of reranker. The hybrid saved 42.6\%\src{bench/results/hybrid\_report.json} of Jev's cost on dev + set 1 (\$0.025\src{bench/results/hybrid\_report.json} per run); Table~\ref{tab:11} has its accuracy.
@@ -419,13 +389,8 @@ update set 2 & 19/20\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_
 \end{tabularx}
 \end{table}
 \subsection{Systems notes}\label{sec:5.5}
-\textbf{Jev latency is flat in request size.} Across 9,446\src{bench/results/jev\_latency.json} live Jev requests from 25\src{bench/results/jev\_latency.json} runs, median latency is between 222 ms\src{bench/results/jev\_latency.json} and 269 ms\src{bench/results/jev\_latency.json} for requests of 1 to 50 questions, and 371 ms\src{bench/results/jev\_latency.json} for 51--80. A least-squares fit gives 380 ms\src{bench/results/jev\_latency.json} plus 7.19\src{bench/results/jev\_latency.json} ms per question (Figure~\ref{fig:12}; Table~\ref{tab:12} in \hyperref[app:C]{Appendix~C}). Variation over time is larger than variation over size. For requests of 16--20 questions, the per-run median was between 212 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests} and 267 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests} in 12\src{bench/results/jev\_latency.json: runs with ≥30 16–20-question requests, excluding conv-30 and conv-41} runs, and 793 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests} and 607 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests} in the two held-out runs made during one slower period.
+\textbf{Jev latency is flat in request size.} Across 9,446\src{bench/results/jev\_latency.json} live Jev requests from 25\src{bench/results/jev\_latency.json} runs, median latency is between 222 ms\src{bench/results/jev\_latency.json} and 269 ms\src{bench/results/jev\_latency.json} for requests of 1 to 50 questions, and 371 ms\src{bench/results/jev\_latency.json} for 51--80. A least-squares fit gives 380 ms\src{bench/results/jev\_latency.json} plus 7.19\src{bench/results/jev\_latency.json} ms per question (Figure~\ref{fig:8} and Table~\ref{tab:12}, \hyperref[app:C]{Appendix~C}). Variation over time is larger than variation over size. For requests of 16--20 questions, the per-run median was between 212 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests} and 267 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests} in 12\src{bench/results/jev\_latency.json: runs with ≥30 16–20-question requests, excluding conv-30 and conv-41} runs, and 793 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests} and 607 ms\src{bench/results/jev\_latency.json: per-run median, 16–20-question requests} in the two held-out runs made during one slower period.
 
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=\columnwidth]{figures/latency.pdf}
-\caption{Jev request latency: distribution over all logged requests, and median and p90 by request size.}\label{fig:12}
-\end{figure}
 \textbf{Extraction dominates write cost.} On the held-out set, engram's write cost is \$10.22\src{bench/results/heldout\_report.json} to \$10.55\src{bench/results/heldout\_report.json} per 1,000 messages and mem0's is \$9.92\src{bench/results/heldout\_report.json} to \$10.16\src{bench/results/heldout\_report.json}. The decision layer is 3.3\%\src{bench/results/heldout\_report.json: decision $/1k ÷ write $/1k} to 4.8\%\src{bench/results/heldout\_report.json: decision $/1k ÷ write $/1k} of engram's (Table~\ref{tab:13}, \hyperref[app:C]{Appendix~C}).
 
 \section{Discussion and Limitations}\label{sec:6}
@@ -592,6 +557,21 @@ conv-43 & \$10.45\src{bench/results/heldout\_report.json} & \$0.50\src{bench/res
 \bottomrule
 \end{tabularx}
 \end{table*}
+\begin{figure*}[tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/calibration.pdf}
+\caption{reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.}\label{fig:6}
+\end{figure*}
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/laya_agreement.pdf}
+\caption{Agreement between the Laya base checkpoint (zero-shot) and Jev on identical requests, per question, sorted by same answer. Dev + update sets 1 and 2, frozen arm's trajectory.}\label{fig:7}
+\end{figure}
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/latency.pdf}
+\caption{Jev request latency: distribution over all logged requests, and median and p90 by request size.}\label{fig:8}
+\end{figure}
 \FloatBarrier
 \section{Reproduction}\label{app:D}
 Each table and figure was produced by the command below, run from the root of the engram codebase. With the call cache (\texttt{bench/\allowbreak{}.cache/\allowbreak{}calls.sqlite}) in place, every command replays at no API cost.
@@ -600,17 +580,17 @@ Each table and figure was produced by the command below, run from the root of th
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}X}
 \toprule
 \textbf{table / figure} & \textbf{command} \\
 \midrule
-Table~\ref{tab:2}; Fig.~\ref{fig:4} & \texttt{python -m bench.run -{}-arm \{e2\_\allowbreak{}jev,e2\_\allowbreak{}llm,mem0\} -{}-slice dev} \\
-Tables~\ref{tab:3}--\ref{tab:5}, D; Figs.~\ref{fig:5}--\ref{fig:7} & \texttt{python -m bench.run -{}-arm \{e4\_\allowbreak{}belief\_\allowbreak{}v2,mem0\} -{}-slice heldout:\textless{}conv\textgreater{} -{}-top-k 3 -{}-also-top-k 20}, then \texttt{python -m bench.heldout\_\allowbreak{}report} and \texttt{python -m bench.token\_\allowbreak{}match} \\
-Tables~\ref{tab:6}, \ref{tab:8}; Figs.~\ref{fig:3}, \ref{fig:8} & \texttt{python -m bench.run -{}-arm \textless{}arm\textgreater{} -{}-slice dev\_\allowbreak{}updates[2] [-{}-top-k 3] [-{}-no-dates]} \\
-Tables~\ref{tab:7}, \ref{tab:9}; Figs.~\ref{fig:9}, \ref{fig:11} & \texttt{python bench/\allowbreak{}test\_\allowbreak{}contradictions.py -{}-backend laya [-{}-native] -{}-save \ldots{}}, \texttt{python -m bench.calibration}, \texttt{python -m bench.jev\_\allowbreak{}regression} (the Laya rows need \texttt{bench/\allowbreak{}laya\_\allowbreak{}server.py} running) \\
-Fig.~\ref{fig:10} & \texttt{python -m bench.tradeoff} \\
+Table~\ref{tab:2} & \texttt{python -m bench.run -{}-arm \{e2\_\allowbreak{}jev,e2\_\allowbreak{}llm,mem0\} -{}-slice dev} \\
+Tables~\ref{tab:3}--\ref{tab:5} and the per-conversation tables; Fig.~\ref{fig:2} & \texttt{python -m bench.run -{}-arm \{e4\_\allowbreak{}belief\_\allowbreak{}v2,mem0\} -{}-slice heldout:\textless{}conv\textgreater{} -{}-top-k 3 -{}-also-top-k 20}, then \texttt{python -m bench.heldout\_\allowbreak{}report} and \texttt{python -m bench.token\_\allowbreak{}match} \\
+Tables~\ref{tab:6}, \ref{tab:8}; Figs.~\ref{fig:3}, \ref{fig:4} & \texttt{python -m bench.run -{}-arm \textless{}arm\textgreater{} -{}-slice dev\_\allowbreak{}updates[2] [-{}-top-k 3] [-{}-no-dates]} \\
+Tables~\ref{tab:7}, \ref{tab:9}; Figs.~\ref{fig:6}, \ref{fig:7} & \texttt{python bench/\allowbreak{}test\_\allowbreak{}contradictions.py -{}-backend laya [-{}-native] -{}-save \ldots{}}, \texttt{python -m bench.calibration}, \texttt{python -m bench.jev\_\allowbreak{}regression} (the Laya rows need \texttt{bench/\allowbreak{}laya\_\allowbreak{}server.py} running) \\
+Fig.~\ref{fig:5} & \texttt{python -m bench.tradeoff} \\
 Tables~\ref{tab:10}--\ref{tab:11} & \texttt{python -m bench.laya\_\allowbreak{}report}, \texttt{python -m bench.hybrid\_\allowbreak{}report} \\
-Table~\ref{tab:12}, Fig.~\ref{fig:12} & \texttt{python -m bench.jev\_\allowbreak{}latency} \\
+Table~\ref{tab:12}, Fig.~\ref{fig:8} & \texttt{python -m bench.jev\_\allowbreak{}latency} \\
 this paper & \texttt{python paper/\allowbreak{}build.py}, \texttt{python paper/\allowbreak{}figures.py} \\
 \bottomrule
 \end{tabularx}
