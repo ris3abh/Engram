@@ -3,7 +3,7 @@
 import json
 import threading
 from collections import Counter
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -54,7 +54,7 @@ class DecisionLog:
         return summarize(r for r in self.read() if since is None or r["ts"] >= since)
 
 
-def summarize(records) -> Stats:
+def summarize(records: Iterable[dict[str, Any]]) -> Stats:
     stats = Stats()
     backends: Counter[str] = Counter()
     questions: Counter[str] = Counter()

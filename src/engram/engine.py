@@ -12,7 +12,7 @@ from .flags import Flags
 from .llm.base import LLMBackend, UsageLog
 from .pipeline.answer import Answer, answer
 from .pipeline.retrieve import Retriever
-from .pipeline.write import WritePipeline
+from .pipeline.write import IngestResult, WritePipeline
 from .store import Store
 
 
@@ -37,7 +37,7 @@ class Engram:
             rerank=self.flags.retrieval_rerank,
         )
 
-    async def ingest(self, text: str, **kw):
+    async def ingest(self, text: str, **kw) -> IngestResult:
         return await self.writer.ingest(text, **kw)
 
     async def ask(self, question: str) -> Answer:

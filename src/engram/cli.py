@@ -8,6 +8,7 @@ import typer
 from . import config
 from .decide.log import DecisionLog
 from .engine import build
+from .models import Decision
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 
@@ -27,7 +28,7 @@ def read_messages(path: Path) -> list[tuple[str, str]]:
     return messages
 
 
-def explain(decisions) -> str:
+def explain(decisions: list[Decision]) -> str:
     """The probabilities behind a write: worth, temporal, and the relation that was acted on."""
     by_q = {}
     for d in decisions:

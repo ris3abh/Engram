@@ -39,7 +39,7 @@ class ShadowBackend(DecisionBackend):
         self._seq = 0
         self._pending: set[asyncio.Future] = set()
 
-    def __getattr__(self, attr):  # model, cache, http_statuses, truncation, ... come from the primary
+    def __getattr__(self, attr: str):  # model, cache, http_statuses, truncation, ... come from the primary
         if attr == "primary":
             raise AttributeError(attr)
         return getattr(self.primary, attr)

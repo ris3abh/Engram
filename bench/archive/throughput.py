@@ -1,7 +1,7 @@
 """Measure Jev throughput with realistic write-path requests, and probe where the API starts refusing.
 
-    uv run --env-file .env python -m bench.archive.throughput                 # 15 rps, 20 rps, unthrottled burst
-    uv run --env-file .env python -m bench.archive.throughput --sustained 60  # also hold 30 rps for 60 s (--sustained-rps)
+    uv run --env-file .env python -m bench.archive.throughput                 # 15 rps, 20 rps, burst
+    uv run --env-file .env python -m bench.archive.throughput --sustained 60  # also 30 rps for 60 s
 
 One write-path request = one extracted fact = 16 questions (6 per-fact + 10 relation_to_candidate).
 Retries are disabled (attempts=1) so every 429/529/timeout is visible instead of being absorbed.
