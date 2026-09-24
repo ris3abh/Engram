@@ -186,7 +186,9 @@ Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with a
 `bench/update_set_3/AUTHORING_GUIDE.md`, without seeing engram's code, results or paper. Target: 30 items (10 easy
 closes, 10 subtle no-close traps, 5 fulfilled plans, 5 chain or point-in-time items) over conv-26 sessions 1–4.
 `bench/update_set_3/validate.py` checks the filled `template.csv`, converts it to the sets-1–2 JSON format and writes
-its SHA-256 to `FROZEN_HASH`; after that, `tests/test_update_set_3.py` fails if the set changes.
+its SHA-256 to `FROZEN_HASH`; after that, `tests/test_update_set_3.py` fails if the set changes. **Seal:** experiment
+code reads set 3 only through `bench/update_sets.py`, which refuses to load it unless the `v2-frozen` tag exists and
+the set matches its frozen hash (`tests/test_update_set_3_seal.py`), so set 3 cannot influence tuning.
 
 The store-correctness experiment's primary contrast (S9) is evaluated on set 3. Sets 1–2 are reported as
 supporting evidence drafted with an AI assistant. **Validity-window gold:** for point-in-time questions the gold answer is the value
@@ -257,6 +259,8 @@ one.
 - 2026-09-24, §10 and §6: LongMemEval answers receive each question's question_date in the shared answer prompt,
   identically for every system; S10–S11 are tested on the 72 non-abstention knowledge-update questions and the 6
   abstention questions are reported separately.
+- 2026-09-24, §9: update set 3 is sealed: bench code refuses to load it unless the v2-frozen tag exists and the set
+  matches its frozen hash (bench/update_sets.py, tests/test_update_set_3_seal.py).
 
 ### Where this plan differs from the phase-3 brief
 
