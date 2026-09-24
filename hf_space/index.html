@@ -165,7 +165,7 @@ and judges with mem0's LoCoMo evaluation prompts. The baseline is mem0 OSS 2.1.0
 <li><strong>dev</strong>: LoCoMo conv-26, sessions 1–4 (76 messages, 35 questions), used for development;</li>
 <li><strong>held-out</strong>: conv-30, conv-41, conv-42 and conv-43 in full (610 scored questions), run once, after the configuration
   was frozen under a git tag;</li>
-<li><strong>update sets</strong>: two author-written sets appended to the dev slice, because LoCoMo barely tests updates. Set 1 has
+<li><strong>update sets</strong>: two sets, drafted and labeled with an AI assistant at the author's direction, appended to the dev slice, because LoCoMo barely tests updates. Set 1 has
   30 items, including 10 <em>no-close traps</em> (past-tense mentions and unrealised plans that must not close anything);
   set 2 adds 28 messages and 20 questions about chains of changes and past moments.</li>
 </ul>
@@ -311,7 +311,7 @@ without reranking. I did not test why. mem0's answer prompt, which both systems 
 context of relevant-looking memories may invite an answer. Over all five categories engram at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> scores 72.8% against 67.2% for
 token-matched mem0, and at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>20</mn></mrow></math> 76.4% against 77.5%.</p>
 <h2>7. Result 3: what the store does, and how calibrated the decisions are</h2>
-<p><strong>Trap items.</strong> The frozen arm stored 8 of the 10 authored no-close traps and closed <strong>none of them (0/8)</strong>, with 1 wrong <code>plan_fulfilled</code> close
+<p><strong>Trap items.</strong> The frozen arm stored 8 of the 10 no-close traps and closed <strong>none of them (0/8)</strong>, with 1 wrong <code>plan_fulfilled</code> close
 and 1 close that matched no labeled pair. A simpler policy that closed whenever a superseding label cleared 0.85 made
 11 closes on the same data, 8 of them unlabeled. A relaxed plan heuristic fired 25 times and was wrong 24 times; the
 dedicated yes/no question that replaced it was asked 234 times and closed 2 plans correctly and 1 wrongly.</p>
@@ -346,7 +346,8 @@ own documentation advises against, agreed with Jev on only 5.9% of relation deci
 for at most 48.0% of the contradiction pairs. Its fine-tuned checkpoint is the obvious follow-up and was not tested.</p>
 <h2>9. Limitations</h2>
 <p>One baseline (mem0 OSS 2.1.0) on one benchmark (four held-out LoCoMo conversations, so four bootstrap clusters). The
-update sets and contradiction pairs were written and labeled by the system's author. One decision model at one
+update sets and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's
+direction; the author reviewed a subset. One decision model at one
 version. The judge is an LLM whose agreement with humans I did not measure, and every score comes from one model stack,
 so none of it is comparable to leaderboards run on other stacks. Extraction shares model and implementation across
 arms but not state, and I did not run an arm with frozen extraction outputs.</p>
