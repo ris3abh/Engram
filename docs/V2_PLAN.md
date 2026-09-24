@@ -112,7 +112,7 @@ H1 (section 1). Tested once, uncorrected.
 ### 6.2 Secondary family: Holm–Bonferroni at family-wise α = 0.05
 
 Every secondary test is an exact two-sided McNemar test on paired per-question correctness under the primary judge.
-All eleven are corrected together (Holm–Bonferroni); the paper reports raw and Holm-adjusted p-values.
+All nine are corrected together (Holm–Bonferroni); the paper reports raw and Holm-adjusted p-values.
 
 | # | contrast | data split |
 |---|---|---|
@@ -122,20 +122,23 @@ All eleven are corrected together (Holm–Bonferroni); the paper reports raw and
 | S4 | engram Jev rerank vs engram cross-encoder rerank, k=3 | five fresh LoCoMo conversations, four scored categories |
 | S5 | engram Jev rerank vs engram gpt-4o-mini listwise rerank, k=3 | five fresh LoCoMo conversations, four scored categories |
 | S6 | engram Jev rerank vs engram no rerank, k=3 | five fresh LoCoMo conversations, four scored categories |
-| S7 | frozen extraction: Jev decider vs gpt-4o-mini one call per fact (mem0's update prompt) | conv-26 dev slice with update sets 1–2 (35 + 30 + 20 questions), default k |
-| S8 | frozen extraction: Jev decider vs gpt-4o-mini batched per message | conv-26 dev slice with update sets 1–2, default k |
 | S9 | store correctness: engram vs mem0, memory text without dates, k=3, validity-window gold | update set 3 questions (section 9); sets 1–2 if set 3 is not frozen, then labeled exploratory |
 | S10 | LongMemEval knowledge-update: engram k=3 vs mem0 at its token-matched k | LongMemEval-S cleaned, knowledge-update questions (78) |
 | S11 | LongMemEval knowledge-update: engram k=3 vs Graphiti at its token-matched k | LongMemEval-S cleaned, knowledge-update questions (78) |
 
-S7 and S8 run on conv-26, the tuning conversation, because the frozen-extraction ablation needs one extraction trace
-replayed identically; the paper states that caveat. For S9, if update set 3 is not frozen when Stage 4 runs, the
-store-correctness experiment runs on sets 1–2 and is labeled exploratory in the paper, not dropped; S9 then leaves the
-family and Holm is applied to the remaining ten.
+For S9, if update set 3 is not frozen when Stage 4 runs, the store-correctness experiment runs on sets 1–2 and is
+labeled exploratory in the paper, not dropped; S9 then leaves the family and Holm is applied to the remaining eight.
 
 ### 6.3 Exploratory (no significance tests)
 
-Per-category differences; the four v1 conversations (conv-30, 41, 42, 43, already evaluated on another stack); the
+**S7 and S8, the frozen-extraction ablation** (conv-26 dev slice with update sets 1–2, 35 + 30 + 20 questions,
+default k): one extraction trace replayed identically into the Jev decider (S7 and S8's reference), gpt-4o-mini one
+call per fact with mem0's update prompt (S7), and gpt-4o-mini batched per message (S8). Reported descriptively:
+accuracy, decision agreement with Jev, decision cost, decision latency and store size. They run on conv-26, the tuning
+conversation, and the slice is small, so a non-significant difference there is not evidence of equal accuracy; the
+paper says so.
+
+Also exploratory: per-category differences; the four v1 conversations (conv-30, 41, 42, 43, already evaluated on another stack); the
 pooled-nine and pooled-ten results; Zep Cloud and A-MEM; adversarial accuracy; LongMemEval temporal-reasoning and k=20;
 the store-correctness contrasts other than S9 (engram vs Graphiti, with dates); latencies, costs and store sizes. Every
 table marks exploratory results as such.
@@ -230,6 +233,9 @@ one.
 - 2026-09-24, §7: claude-sonnet-4-6 judges the answers of the systems in H1 and S1–S6 on the five fresh
   conversations and the S10–S11 LongMemEval answers, not every held-out answer (budget, §13); gpt-4o still judges
   every held-out answer.
+- 2026-09-24, §6: S7 and S8 (frozen-extraction deciders) leave the Holm family and become exploratory, reported
+  descriptively (accuracy, decision agreement with Jev, cost, latency, store size); non-significance on a small tuning
+  slice is not evidence of equal accuracy. The family has nine tests.
 
 ### Where this plan differs from the phase-3 brief
 
