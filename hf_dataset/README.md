@@ -1,5 +1,5 @@
 ---
-license: cc-by-4.0
+license: cc-by-nc-4.0
 language:
 - en
 pretty_name: "engram: update sets, contradiction pairs and per-question results for typed decisions in agent memory"
@@ -74,7 +74,8 @@ This dataset does not include LoCoMo's conversations, questions or gold answers;
 conversation and index. Get LoCoMo from [snap-research/locomo](https://github.com/snap-research/locomo)
 (`data/locomo10.json`; Maharana et al., ACL 2024), which is licensed CC BY-NC 4.0 (non-commercial). Some fields here
 derive from LoCoMo content: `update_set_1.original_fact` paraphrases conv-26 messages, and `per_question.answer` is
-model output about LoCoMo conversations. Check LoCoMo's license before using those fields commercially.
+model output about LoCoMo conversations. This dataset is therefore released under the same license, CC BY-NC 4.0:
+free to share and adapt with attribution, not for commercial use.
 
 ## Citation
 
