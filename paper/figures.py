@@ -199,10 +199,35 @@ def acc_vs_tokens() -> None:
         (3, tok("k3", "e4_belief_v2_tokens"), h["k3"]["pooled"]["e4_belief_v2_correct"] / n),
         (20, tok("k20", "e4_belief_v2_tokens"), h["k20"]["pooled"]["e4_belief_v2_correct"] / n),
     ]
+    sources = ["bench/results/heldout_report.json", "bench/results/mem0_token_matched__heldout_pooled__k6.json"]
+    norerank = []
+    if (RES / "heldout_extra.json").exists():  # engram k=3 with Jev reranking off (bench/heldout_extra.py)
+        x = load("heldout_extra.json")["norerank"]
+        norerank = [(3, x["tokens"], x["correct"] / x["q"])]
+        sources.append("bench/results/heldout_extra.json")
+
+    def half(p: float) -> float:  # per-question 95% interval, normal approximation, n = 610
+        return 100 * 1.96 * (p * (1 - p) / n) ** 0.5
+
     fig, ax = plt.subplots(figsize=(COL, 2.3))
-    ax.plot([p[1] for p in mem0], [100 * p[2] for p in mem0], "--", color=ORANGE, lw=1.3, zorder=2)
-    ax.plot([p[1] for p in mem0], [100 * p[2] for p in mem0], "o", color=ORANGE, ms=5, label="mem0", zorder=3)
-    ax.plot([p[1] for p in engram], [100 * p[2] for p in engram], "D", color=BLUE, ms=5.5, label="engram", zorder=4)
+    for pts, marker, color, label, z in (
+        (mem0, "o", ORANGE, "mem0", 3),
+        (engram, "D", BLUE, "engram", 4),
+        (norerank, "s", BLUE_L, "engram, reranking off", 4),
+    ):
+        if pts:
+            ax.errorbar(
+                [p[1] for p in pts],
+                [100 * p[2] for p in pts],
+                yerr=[half(p[2]) for p in pts],
+                fmt=marker,
+                color=color,
+                ms=5,
+                capsize=2.5,
+                elinewidth=1,
+                label=label,
+                zorder=z,
+            )
     for k, x, y in mem0:
         ax.annotate(f"k={k}", (x, 100 * y), xytext=(5, -9), textcoords="offset points", fontsize=6.5, color=ORANGE)
     for k, x, y in engram:
@@ -216,14 +241,10 @@ def acc_vs_tokens() -> None:
     ax.set_xlabel("mean retrieved tokens per question (log scale)")
     ax.set_ylabel("pooled accuracy (610 questions)")
     pct(ax)
-    ax.set_ylim(55, 82)
-    ax.legend(loc="lower right")
+    ax.set_ylim(50, 86)
+    ax.legend(loc="lower right", fontsize=6.5)
     save(fig, "acc_vs_tokens.svg")
-    record(
-        "acc_vs_tokens",
-        ["bench/results/heldout_report.json", "bench/results/mem0_token_matched__heldout_pooled__k6.json"],
-        {"mem0": mem0, "engram": engram},
-    )
+    record("acc_vs_tokens", sources, {"mem0": mem0, "engram": engram, "engram_norerank": norerank})
 
 
 # ---------------------------------------------------------------- per-conversation paired differences (§5.2)
@@ -643,14 +664,14 @@ def pipeline() -> None:
             220,
             150,
             "llm",
-            "Extraction",
+            "Extraction (1)",
             ["mem0 extraction prompt", "facts with dates", "+ verbatim source quote"],
             i_spark,
             "LLM",
         )
     )
-    s.append(box(556, y, 330, 150, "jev", "Decision chain", [], i_checklist, "JEV"))
-    chips = ["worth?", "kind", "temporal", "relation ×10", "edge type", "durability", "sensitivity", "fulfilled?"]
+    s.append(box(556, y, 330, 150, "jev", "Decision chain (2)–(4)", [], i_checklist, "JEV"))
+    chips = ["worth?", "kind", "temporal", "relation ×|C(f)|", "edge type", "durability", "sensitivity", "fulfilled?"]
     cx, cy = 576, y + 66
     for chip in chips:
         wch = 7 * len(chip) + 20
@@ -668,7 +689,7 @@ def pipeline() -> None:
             310,
             150,
             "code",
-            "Policy + belief state",
+            "Policy + belief (5)–(13)",
             ["gates · cardinality · recheck", "log-odds belief per edge", "close < 0.25 · reopen > 0.6"],
             i_shield,
         )
@@ -680,8 +701,8 @@ def pipeline() -> None:
         '<rect x="556" y="250" width="330" height="44" rx="12" fill="#FFF3EA" stroke="#E8762C" stroke-dasharray="5 4"/>'
     )
     s.append(f'<g transform="translate(570,256) scale(0.9)">{i_spark("#E8762C")}</g>')
-    s.append('<text x="610" y="270" class="note" fill="#B8561A" font-weight="700">LLM escalation</text>')
-    s.append('<text x="610" y="286" class="note" fill="#B8561A">relation p &lt; 0.6 on a superseding label</text>')
+    s.append('<text x="610" y="270" class="note" fill="#B8561A" font-weight="700">LLM escalation (5)</text>')
+    s.append('<text x="610" y="286" class="note" fill="#B8561A">relation π &lt; 0.6 on a superseding label</text>')
     s.append(arrow(721, y + 150, 721, 248, color="#E8762C", dashed=True))
     # store lane
     sy = 392
@@ -700,7 +721,7 @@ def pipeline() -> None:
     )
     s.append(box(520, sy, 250, 118, "store", "Vector index", ["MiniLM embeddings", "one per fact"], i_vector))
     s.append(box(800, sy, 250, 118, "store", "History + audit", ["superseded chains", "every decision + probs"], i_db))
-    s.append(box(46, sy, 134, 118, "jev", "Hygiene", ["same_fact", "50 / request"], i_broom))
+    s.append(box(46, sy, 134, 118, "jev", "Hygiene (13)", ["same_fact", "50 / request"], i_broom))
     s.append(arrow(180, sy + 59, 208, sy + 59))
     s.append(arrow(1081, y + 150, 1051 - 2, sy + 30, curve=(1081, 330, 1060, sy + 10)))
     s.append('<rect x="1098" y="258" width="140" height="26" rx="13" fill="white" stroke="#D5DAE3"/>')
@@ -709,10 +730,10 @@ def pipeline() -> None:
     ry = 606
     specs = [
         (46, 190, "code", "Question", ["user asks"], i_question, None),
-        (276, 200, "code", "Embed + recall", ["cosine top-k", "+ top-10 floor"], i_vector, None),
-        (516, 220, "jev", "Listwise rerank", ["relevance per memory", "+ query_relation pull"], i_rank, "JEV"),
-        (776, 200, "code", "History", ["add superseded", "facts, oldest last"], i_clock, None),
-        (1016, 220, "llm", "Answer", ["top-k compact lines:", "date · fact · quote"], i_answer, "LLM"),
+        (276, 200, "code", "Shortlist (15)", ["cosine top-30", "incl. closed facts"], i_vector, None),
+        (516, 220, "jev", "Rerank (16, 17)", ["relevance > 0.5 + floor", "+ query_relation pull"], i_rank, "JEV"),
+        (776, 200, "code", "History (18)", ["add superseded", "facts, oldest last"], i_clock, None),
+        (1016, 220, "llm", "Answer (19)", ["first k lines:", "date · fact · quote"], i_answer, "LLM"),
     ]
     for x, w, kind, title, lines, icon, tag in specs:
         s.append(box(x, ry, w, 150, kind, title, lines, icon, tag))

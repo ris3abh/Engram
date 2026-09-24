@@ -62,6 +62,8 @@ def show(v, fmt: str) -> str:
         return f"${v:.6f}"
     if fmt == "x":
         return f"{v:.1f}×"
+    if fmt == "f1":
+        return f"{v:.1f}"
     if fmt == "f2":
         return f"{v:.2f}"
     if fmt == "f3":
@@ -170,6 +172,38 @@ def numbers() -> None:
     ctx_share = (h["k3"]["pooled"]["diff"] - t["diff"]) / h["k3"]["pooled"]["diff"]
     N("tm.ctx_share", ctx_share, f"{hf} and {tf}: (Δk3 − Δtoken-matched) / Δk3", "pct")
     N("tm.rest_share", 1 - ctx_share, f"{hf} and {tf}: 1 − context share", "pct")
+
+    # --- held-out no-rerank arm and adversarial category (bench/heldout_extra.py)
+    xf = "bench/results/heldout_extra.json"
+    x = load("heldout_extra.json")
+    nr = x["norerank"]
+    N("nr.acc", nr["correct"] / nr["q"], xf, "pct")
+    N("nr.frac", (nr["correct"], nr["q"]), xf, "frac")
+    N("nr.tok", nr["tokens"], xf, "int")
+    for key, P in (("nr.vs_full", nr["vs_engram_k3"]), ("nr.vs_m0k6", nr["vs_mem0_k6"])):
+        N(f"{key}.diff", P["diff"], xf, "pp")
+        N(f"{key}.ci.lo", P["ci_per_question"][0], xf, "pp")
+        N(f"{key}.ci.hi", P["ci_per_question"][1], xf, "pp")
+        N(f"{key}.boot.lo", P["ci_cluster_bootstrap"][0], xf, "pp")
+        N(f"{key}.boot.hi", P["ci_cluster_bootstrap"][1], xf, "pp")
+        N(f"{key}.p", P["mcnemar_p"], xf, "p")
+        N(f"{key}.a_only", P["a_only"], xf, "int")
+        N(f"{key}.b_only", P["b_only"], xf, "int")
+    tmx = x["engram_k3_vs_mem0_k6"]
+    N("tm.boot.lo", tmx["ci_cluster_bootstrap"][0], xf, "pp")
+    N("tm.boot.hi", tmx["ci_cluster_bootstrap"][1], xf, "pp")
+    N("nr.repro", len(x["reproduction_mismatches"]), xf, "int")
+    five = x["five_category"]
+    N("adv.q", five["engram_k3"]["adversarial"]["q"], xf, "int")
+    N("adv.all.q", five["engram_k3"]["overall"]["q"], xf, "int")
+    for row, v in five.items():
+        N(f"adv.{row}", v["adversarial"]["correct"] / v["adversarial"]["q"], xf, "pct")
+        N(f"five.{row}", v["overall"]["correct"] / v["overall"]["q"], xf, "pct")
+    ex = load("e2_extraction_diff.json")
+    ef = "bench/results/e2_extraction_diff.json"
+    N("e2x.n", ex["messages"], ef, "int")
+    N("e2x.diff", ex["different_extraction"], ef, "int")
+    N("e2x.inputs", ex["different_existing_memories"], ef, "int")
     # write side, held-out
     for x in h["k3"]["rows"]:
         cv = x["conv"]
@@ -259,12 +293,19 @@ def numbers() -> None:
         N(f"lreg.{name}.false_closes", x["false_closes"], f"bench/results/{fn}", "int")
     cf = "bench/results/calibration.json"
     cal = load("calibration.json")["label_sets"]
+    sf = "bench/results/calibration_scores.json"
+    scores = load("calibration_scores.json")
     for sname, key in (("A: escalation labels", "esc"), ("B: contradiction pairs (gold)", "gold")):
         for q, res in cal[sname].items():
             qk = "rel" if q == "relation_to_candidate" else "tmp"
             for b in ("jev", "laya"):
                 s = res[b]
+                sc = scores[sname][q][b]
                 pre = f"cal.{key}.{qk}.{b}"
+                N(f"{pre}.brier", sc["brier"], sf, "f2")
+                N(f"{pre}.nll", sc["nll"], sf, "f2")
+                N(f"{pre}.nll.lo", sc["nll_ci"][0], sf, "f2")
+                N(f"{pre}.nll.hi", sc["nll_ci"][1], sf, "f2")
                 N(f"{pre}.n", s["n"], cf, "int")
                 N(f"{pre}.acc", s["accuracy"], cf, "pct")
                 N(f"{pre}.conf", s["mean_confidence"], cf, "f2")
@@ -532,14 +573,21 @@ def numbers() -> None:
 
     # --- design constants (from code, not measurements)
     from engram import config
-    from engram.pipeline import belief as B
 
     N("k.act", config.ACT_THRESHOLD, "src/engram/config.py", "f2")
     N("k.esc", config.ESCALATE_BELOW, "src/engram/config.py", "f2")
-    N("k.close", B.CLOSE_BELOW, "src/engram/pipeline/belief.py", "f2")
-    N("k.reopen", B.REOPEN_ABOVE, "src/engram/pipeline/belief.py", "f2")
-    N("k.bmin", B.B_MIN, "src/engram/pipeline/belief.py", "f2")
-    N("k.bmax", B.B_MAX, "src/engram/pipeline/belief.py", "f2")
+    N("k.close", config.CLOSE_BELOW, "src/engram/config.py", "f2")
+    N("k.reopen", config.REOPEN_ABOVE, "src/engram/config.py", "f2")
+    N("k.bmin", config.BELIEF_MIN, "src/engram/config.py", "f2")
+    N("k.bmax", config.BELIEF_MAX, "src/engram/config.py", "f2")
+    N("k.rel", config.RELEVANCE_THRESHOLD, "src/engram/config.py", "f1")
+    N("k.shortlist", config.RETRIEVE_K, "src/engram/config.py (RETRIEVE_K)", "int")
+    N("k.floor", config.RETRIEVAL_FLOOR, "src/engram/config.py (RETRIEVAL_FLOOR)", "int")
+    from engram.pipeline import retrieve as RT
+
+    N("k.pull", RT.MAX_RELATION_PULL, "src/engram/pipeline/retrieve.py (MAX_RELATION_PULL)", "int")
+    N("k.expand", RT.MAX_EXPANDED, "src/engram/pipeline/retrieve.py (MAX_EXPANDED)", "int")
+    N("k.hub", RT.HUB_DEGREE, "src/engram/pipeline/retrieve.py (HUB_DEGREE)", "int")
     N("k.price", config.JEV_PRICE_PER_INPUT_TOKEN * 1e6, "src/engram/config.py (USD per million input tokens)", "f3")
     N("k.cand", config.CANDIDATE_K, "src/engram/config.py", "int")
     from engram.flags import Flags
@@ -548,7 +596,9 @@ def numbers() -> None:
     N("k.rps", config.JEV_MAX_RPS, "src/engram/config.py", "int")
     from engram.pipeline import hygiene as H
 
-    N("k.hyg.drop", 1 - config.ACT_THRESHOLD, "src/engram/pipeline/hygiene.py (1 − ACT_THRESHOLD)", "f2")
+    N("k.hyg.link", config.HYGIENE_LINK, "src/engram/config.py (HYGIENE_LINK)", "f2")
+    N("k.hyg.drop", config.HYGIENE_DROP, "src/engram/config.py (HYGIENE_DROP)", "f2")
+    N("k.hyg.group", H.MAX_GROUP, "src/engram/pipeline/hygiene.py (MAX_GROUP)", "int")
     N("k.hyg.batch", H.BATCH, "src/engram/pipeline/hygiene.py", "int")
     from engram.decide import questions as Q
 
@@ -592,7 +642,7 @@ SHORT_HEADERS = {
     "not matching": "unlabeled",
     "top-1 accuracy": "top-1 acc.",
     "mean confidence": "mean conf.",
-    "ECE at T (2-fold)": "ECE at T",
+    "ECE at τ (2-fold)": "ECE at τ",
     "conversation": "conv.",
     "engram write $/1k msgs": "engram $/1k",
     "of which decision layer": "decision $/1k",
@@ -616,6 +666,9 @@ def t_heldout() -> str:
     t = load("mem0_token_matched__heldout_pooled__k6.json")
     hf = "bench/results/heldout_report.json"
     tf = "bench/results/mem0_token_matched__heldout_pooled__k6.json"
+    xf = "bench/results/heldout_extra.json"
+    x = load("heldout_extra.json")
+    nr = x["norerank"]
 
     def pooled(k: str, key: str, tokkey: str) -> tuple[str, str]:
         R = h[k]["rows"]
@@ -631,8 +684,8 @@ def t_heldout() -> str:
             if boot
             else "not computed"
         )
-        eo = P.get("engram_only_correct", P.get("engram_only"))
-        mo = P.get("mem0_only_correct", P.get("mem0_only"))
+        eo = P.get("engram_only_correct", P.get("engram_only", P.get("a_only")))
+        mo = P.get("mem0_only_correct", P.get("mem0_only", P.get("b_only")))
         return cells + [f"{c(eo, src, 'int')} / {c(mo, src, 'int')}", c(P["mcnemar_p"], src, "p")]
 
     none = ["–"] * 5
@@ -640,11 +693,18 @@ def t_heldout() -> str:
         ["engram", "3", *pooled("k3", "e4_belief_v2", "e4_belief_v2_tokens"), *none],
         ["mem0", "3", *pooled("k3", "mem0", "mem0_tokens"), *diff(h["k3"]["pooled"], hf, True)],
         [
+            "engram, reranking off",
+            "3",
+            c(nr["tokens"], xf, "int"),
+            c(nr["correct"] / nr["q"], xf, "pct"),
+            *diff(nr["vs_engram_k3"], xf, True),
+        ],
+        [
             "mem0 (token-matched)",
             c(t["k"], tf, "int"),
             c(t["mem0_tokens"], tf, "int"),
             c(t["mem0_correct"] / t["q"], tf, "pct"),
-            *diff(t, tf, False),
+            *diff({**t, "ci_cluster_bootstrap": x["engram_k3_vs_mem0_k6"]["ci_cluster_bootstrap"]}, xf, True),
         ],
         ["engram", "20", *pooled("k20", "e4_belief_v2", "e4_belief_v2_tokens"), *none],
         ["mem0", "20", *pooled("k20", "mem0", "mem0_tokens"), *diff(h["k20"]["pooled"], hf, True)],
@@ -663,6 +723,25 @@ def t_heldout() -> str:
         ],
         rows,
     )
+
+
+def t_five() -> str:
+    """LoCoMo five-category accuracy (the four scored categories plus adversarial) for the held-out rows."""
+    xf = "bench/results/heldout_extra.json"
+    five = load("heldout_extra.json")["five_category"]
+    cols = ["multi-hop", "temporal", "open-domain", "single-hop", "adversarial", "overall"]
+    rows = [["questions", *(c(five["engram_k3"][k]["q"], xf, "int") for k in cols)]]
+    for key, label in (
+        ("engram_k3", "engram k=3"),
+        ("engram_norerank_k3", "engram k=3, reranking off"),
+        ("mem0_k3", "mem0 k=3"),
+        ("mem0_k6", "mem0 k=6 (token-matched)"),
+        ("engram_k20", "engram k=20"),
+        ("mem0_k20", "mem0 k=20"),
+    ):
+        v = five[key]
+        rows.append([label, *(c(v[k]["correct"] / v[k]["q"], xf, "pct") for k in cols)])
+    return table(["method", "Multi-Hop", "Temporal", "Open-Domain", "Single-Hop", "Adversarial", "Overall"], rows)
 
 
 def t_category() -> str:
@@ -880,14 +959,22 @@ def t_regression() -> str:
     return table(["backend", "relation exact", "temporal", "close rule", "closes", "false closes"], rows)
 
 
+def with_ci(scores: dict, key: str, src: str) -> str:
+    lo, hi = scores[f"{key}_ci"]
+    return f"{c(scores[key], src, 'f2')} [{c(lo, src, 'f2')}, {c(hi, src, 'f2')}]"
+
+
 def t_calibration() -> str:
     cf = "bench/results/calibration.json"
     cal = load("calibration.json")["label_sets"]
+    sf = "bench/results/calibration_scores.json"
+    scores = load("calibration_scores.json")
     rows = []
     for sname, lab in (("A: escalation labels", "escalation"), ("B: contradiction pairs (gold)", "gold pairs")):
         for q, res in cal[sname].items():
             for b in ("jev", "laya"):
                 s = res[b]
+                sc = scores[sname][q][b]
                 rows.append(
                     [
                         lab,
@@ -899,6 +986,8 @@ def t_calibration() -> str:
                         c(s["ece_raw"], cf, "f2"),
                         c(s["temperature"], cf, "f2"),
                         c(s["ece_tempered_cross_fit"], cf, "f2"),
+                        with_ci(sc, "brier", sf),
+                        with_ci(sc, "nll", sf),
                     ]
                 )
     return table(
@@ -910,8 +999,10 @@ def t_calibration() -> str:
             "top-1 accuracy",
             "mean confidence",
             "ECE",
-            "fitted T",
-            "ECE at T (2-fold)",
+            "fitted τ",
+            "ECE at τ (2-fold)",
+            "Brier [95% CI]",
+            "NLL [95% CI]",
         ],
         rows,
     )
@@ -1068,6 +1159,7 @@ def t_update_samples() -> str:
 BLOCKS = {
     "table:heldout": t_heldout,
     "table:category": t_category,
+    "table:five": t_five,
     "table:e2": t_e2,
     "table:store": t_store,
     "table:questions": t_questions,
