@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typed Decisions in Agent Memory</title>
+<meta name="description" content="Typed decisions cut an agent memory system&#x27;s decision cost 70x and help retrieval under a small budget; closing stale facts did not change answers on LoCoMo-style questions.">
+<style>
+:root{--bg:#fbfbf9;--fg:#1d1f24;--muted:#5b6170;--rule:#e3e5ea;--accent:#3346b8;--code:#f1f2f5;--quote:#f3f4fa;
+--card:#ffffff;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#15171c;--fg:#e6e7ea;--muted:#a3a8b5;--rule:#2d313a;--accent:#9aa8ff;
+--code:#20232b;--quote:#1c1f27;--card:#ffffff;color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);overflow-wrap:break-word;
+font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+main{max-width:720px;margin:0 auto;padding:48px 20px 96px}
+h1{font-size:2.1rem;line-height:1.2;margin:0 0 .3rem;letter-spacing:-.01em}
+h1+p em{color:var(--muted);font-size:1.15rem}
+h2{font-size:1.4rem;line-height:1.3;margin:2.6rem 0 .8rem;padding-top:1.2rem;border-top:1px solid var(--rule)}
+h3{font-size:1.12rem;margin:1.8rem 0 .5rem}
+p,ul,ol{margin:0 0 1rem}
+li{margin:.25rem 0}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}
+strong{font-weight:650}
+blockquote{margin:1.4rem 0;padding:14px 18px;background:var(--quote);border-left:3px solid var(--accent);
+border-radius:6px}
+blockquote p{margin:0}
+code{font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--code);padding:1px 5px;
+border-radius:4px}
+pre{background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto}
+pre code{padding:0;background:none}
+.byline{color:var(--muted);font-size:.95rem}
+.table{overflow-x:auto;margin:1.2rem 0 1.4rem}
+table{border-collapse:collapse;width:100%;font-size:.88rem;line-height:1.45}
+th,td{padding:7px 10px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+th{font-weight:650;border-bottom:1.5px solid var(--fg)}
+td:not(:first-child),th:not(:first-child){text-align:right;white-space:nowrap}
+figure{margin:1.8rem 0}
+figure img{display:block;width:100%;height:auto;background:var(--card);border-radius:8px;padding:10px;
+border:1px solid var(--rule)}
+figcaption{color:var(--muted);font-size:.9rem;margin-top:.6rem}
+math{font-size:1.06em}
+math[display="block"]{display:block;overflow-x:auto;overflow-y:hidden;margin:1.1rem 0;padding:4px 0}
+.eq{overflow-x:auto;margin:1.1rem 0}
+.eq+.eq{margin-top:-.5rem}
+mtd{text-align:left}
+footer{margin-top:3rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--rule);padding-top:1rem}
+</style>
+</head>
+<body>
+<main>
+<h1>Typed Decisions in Agent Memory</h1>
+<p><em>Where they help, where they don't, and what it costs.</em></p>
+<p class="byline">Rishabh Sharma · independent researcher · <a href="https://doi.org/10.5281/zenodo.22941758">paper (DOI 10.5281/zenodo.22941758)</a> · <a href="https://github.com/ris3abh/Engram">code</a> · <a href="https://huggingface.co/datasets/ris3abh-11/engram-eval">data</a></p>
+<blockquote>
+<p><strong>In one paragraph.</strong> A memory system for an LLM agent makes dozens of small decisions per message: is this fact
+new, a duplicate, a change to something stored, worth keeping at all? Today those decisions are LLM calls. They are
+also choices among a handful of options fixed in advance, which is exactly what typed decision models are built
+for. engram keeps the LLM for extraction and hands every later decision to one of them (Jev). Against a
+claude-sonnet-4-6 implementation of mem0's update prompt, with the same extraction model, prompt construction and
+implementation, the decision layer got <strong>70.0× cheaper</strong> and <strong>27.6× faster</strong> at the median, with the same dev
+accuracy (31/35). On 610 held-out LoCoMo questions, at a matched retrieved-context budget, engram answered
+<strong>8.7 points</strong> more than mem0 (95% CI +5.2 to +12.1), and a held-out ablation shows the reranker is responsible for
+all of it. What typed decisions did <em>not</em> do: make answers better after facts change. On today's LoCoMo-style
+questions, a store that correctly closes stale facts scores the same as one that keeps everything.</p>
+</blockquote>
+<h2>1. Why memory decisions are expensive</h2>
+<p>An agent's memory turns conversation into facts it can look up later. Each write has two halves:</p>
+<ul>
+<li><strong>Extraction</strong>: which facts does this message state?</li>
+<li><strong>Decisions</strong>: for each extracted fact, is it new, a duplicate, a refinement, or a change to something already
+  stored? Is it worth keeping? Is it sensitive? Does it fulfil a plan we stored earlier?</li>
+</ul>
+<p>In the open-source systems I looked at, both halves are LLM calls. mem0 2.1.0's default <code>add()</code> makes one LLM call
+per message and emits only additions; its older update step, which asked an LLM to label every new fact ADD, UPDATE,
+DELETE or NONE against the most similar stored memories, still ships as <code>DEFAULT_UPDATE_MEMORY_PROMPT</code>. Zep's
+Graphiti resolves entities and invalidates edges with LLM calls; MemGPT/Letta manages memory through LLM function
+calls; A-MEM writes note attributes with an LLM.</p>
+<p>At an LLM call per decision, nothing ever goes back over the store. Facts that stopped being true stay in it, and the
+answer model is left to sort out which of "lives in Paris" and "lives in Berlin" is current.</p>
+<p>The observation this project starts from is that almost none of those decisions are open-ended. They are choices
+among a small, fixed set of labels, and there is a class of model built precisely for that.</p>
+<h2>2. Typed decisions</h2>
+<p>A <em>typed decision model</em> takes a JSON state and a list of questions and returns a probability distribution per
+question. A question is a choice among named options (each with a short rubric), a yes/no, or a score. I used
+TypeSafe's Jev (<code>jev-1.13.0</code>), billed at 0.042 USD per million input tokens; output tokens are free, and one request
+can carry many questions.</p>
+<p>Formally, a decision backend <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> answers a typed question <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Q</mi></mrow></math> with option set <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>O</mi><mi>Q</mi></msub></mrow></math>, given state <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math>, by returning</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>P</mi><mi>D</mi></msub><mo stretchy="false">&#x00028;</mo><mi>o</mi><mo>&#x02223;</mo><mi>s</mi><mo>&#x0002C;</mo><mi>Q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>o</mi><mo>&#x02208;</mo><msub><mi>O</mi><mi>Q</mi></msub><mo>&#x0002C;</mo><mspace width="2em" /><munder><mo>&#x02211;</mo><mrow><mi>o</mi><mo>&#x02208;</mo><msub><mi>O</mi><mi>Q</mi></msub></mrow></munder><msub><mi>P</mi><mi>D</mi></msub><mo stretchy="false">&#x00028;</mo><mi>o</mi><mo>&#x02223;</mo><mi>s</mi><mo>&#x0002C;</mo><mi>Q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002E;</mo></mrow></math></div>
+<p>The decision is the argmax option and its confidence is the largest probability:</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>d</mi><mo>&#x0003D;</mo><msub><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mspace width="0.167em" /><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mrow><mi>o</mi><mo>&#x02208;</mo><msub><mi>O</mi><mi>Q</mi></msub></mrow></msub><msub><mi>P</mi><mi>D</mi></msub><mo stretchy="false">&#x00028;</mo><mi>o</mi><mo>&#x02223;</mo><mi>s</mi><mo>&#x0002C;</mo><mi>Q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>&#x003C0;</mi><mo>&#x0003D;</mo><msub><mo>max</mo><mrow><mi>o</mi><mo>&#x02208;</mo><msub><mi>O</mi><mi>Q</mi></msub></mrow></msub><msub><mi>P</mi><mi>D</mi></msub><mo stretchy="false">&#x00028;</mo><mi>o</mi><mo>&#x02223;</mo><mi>s</mi><mo>&#x0002C;</mo><mi>Q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math></div>
+<p>Everything engram does with Jev's output is a rule over <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C0;</mi></mrow></math>. That is the whole trick: the model supplies
+probabilities, and a small, auditable policy decides what happens to the store.</p>
+<h2>3. engram in equations</h2>
+<figure><img src="pipeline.png" alt="engram's write and read paths. Orange boxes are LLM calls; blue boxes are typed Jev decisions. The numbers on the boxes are the equations below." loading="lazy"><figcaption>engram's write and read paths. Orange boxes are LLM calls; blue boxes are typed Jev decisions. The numbers on the boxes are the equations below.</figcaption></figure>
+<p>Five thresholds do all the work, and all of them are in one config file that a test checks against the paper:
+a decision acts at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mtext>act</mtext></mrow></msub><mo>&#x0003D;</mo><mn>0.85</mn></mrow></math>; a superseding relation below <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mtext>esc</mtext></mrow></msub><mo>&#x0003D;</mo><mn>0.60</mn></mrow></math> is
+escalated to an LLM; a retrieved fact counts as relevant above <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mtext>rel</mtext></mrow></msub><mo>&#x0003D;</mo><mn>0.5</mn></mrow></math>; belief closes a fact
+below <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mtext>close</mtext></mrow></msub><mo>&#x0003D;</mo><mn>0.25</mn></mrow></math> and reopens it above <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mtext>open</mtext></mrow></msub><mo>&#x0003D;</mo><mn>0.60</mn></mrow></math>.</p>
+<h3>3.1 The store</h3>
+<p>After message <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>m</mi><mi>t</mi></msub></mrow></math> the store is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>M</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><msub><mi>F</mi><mi>t</mi></msub><mo>&#x0002C;</mo><msub><mi>V</mi><mi>t</mi></msub><mo>&#x0002C;</mo><msub><mi>I</mi><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>: facts <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>F</mi><mi>t</mi></msub></mrow></math> as edges between entity nodes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>V</mi><mi>t</mi></msub></mrow></math>, and a
+vector index <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>I</mi><mi>t</mi></msub></mrow></math> over fact texts. Every fact <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>u</mi></mrow></math> carries its text, the verbatim quote it came from, the date it was
+said, a validity window, and a <strong>belief</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>b</mi><mi>u</mi></msub><mo>&#x02208;</mo><mo stretchy="false">[</mo><mn>0.02</mn><mo>&#x0002C;</mo><mn>0.98</mn><mo stretchy="false">]</mo></mrow></math> that it is still true.</p>
+<h3>3.2 Write path</h3>
+<p><strong>Extraction.</strong> An LLM extracts facts from the new message, seeing the last ten messages and the ten most similar
+stored facts, exactly the inputs mem0 2.1.0's <code>add()</code> builds:</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msubsup><mi>F</mi><mi>t</mi><mrow><mtext>new</mtext></mrow></msubsup><mo>&#x0003D;</mo><mi>X</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>m</mi><mi>t</mi></msub><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><msub><mi>m</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>10</mn></mrow></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>m</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><msub><mo>Top</mo><mrow><mn>10</mn></mrow></msub><mspace width="0.167em" /><msub><mi>s</mi><mrow><mi>cos</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>m</mi><mi>t</mi></msub><mo>&#x0002C;</mo><mo>&#x000B7;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math></div>
+<p><strong>Candidates.</strong> Each new fact <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>f</mi></mrow></math> is compared with the ten most similar stored facts, plus up to ten facts that cosine
+similarity tends to miss: same subject and relation, or a shared rare named entity.</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>C</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mo>Top</mo><mrow><mn>10</mn></mrow></msub><mspace width="0.167em" /><msub><mi>s</mi><mrow><mi>cos</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mo>&#x000B7;</mo><mo stretchy="false">&#x00029;</mo><mspace width="0.278em" /><mo>&#x0222A;</mo><mspace width="0.278em" /><msub><mo>Top</mo><mrow><mn>10</mn></mrow></msub><mspace width="0.167em" /><mi>G</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>G</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo stretchy="false">&#x0007B;</mo><mi>u</mi><mi>:</mi><mo>subj</mo><mo stretchy="false">&#x00028;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>subj</mo><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02227;</mo><mo>rel</mo><mo stretchy="false">&#x00028;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>rel</mo><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x0007D;</mo><mo>&#x0222A;</mo><mo stretchy="false">&#x0007B;</mo><mi>u</mi><mi>:</mi><mo>ent</mo><mo stretchy="false">&#x00028;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02229;</mo><mo>ent</mo><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02260;</mo><mo>&#x02205;</mo><mo stretchy="false">&#x0007D;</mo><mo>&#x0002E;</mo></mrow></math></div>
+<p><strong>One request per fact.</strong> Six fact questions (worth remembering, kind, temporal status, relation type, durability,
+sensitivity) and one relation question per candidate go to Jev together. The relation options and their
+superseding subset, the answers that could close an old fact, are</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>R</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x0007B;</mo><mtext>new</mtext><mo>&#x0002C;</mo><mtext>duplicate</mtext><mo>&#x0002C;</mo><mtext>refinement</mtext><mo>&#x0002C;</mo><mtext>update</mtext><mo>&#x0002C;</mo><mtext>contradiction</mtext><mo>&#x0002C;</mo><mtext>negates</mtext><mo stretchy="false">&#x0007D;</mo><mo>&#x0002C;</mo></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>S</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x0007B;</mo><mtext>update</mtext><mo>&#x0002C;</mo><mtext>contradiction</mtext><mo>&#x0002C;</mo><mtext>negates</mtext><mo stretchy="false">&#x0007D;</mo><mo>&#x02282;</mo><mi>R</mi><mo>&#x0002E;</mo></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>r</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mspace width="0.167em" /><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mrow><mi>o</mi><mo>&#x02208;</mo><mi>R</mi></mrow></msub><mspace width="0.167em" /><msub><mi>P</mi><mi>D</mi></msub><mo stretchy="false">&#x00028;</mo><mi>o</mi><mo>&#x02223;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo>&#x0002C;</mo><msub><mi>Q</mi><mrow><mtext>rel</mtext></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mi>u</mi><mrow><mo>&#x0002A;</mo></mrow></msup><mo>&#x0003D;</mo><msub><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mspace width="0.167em" /><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mrow><mi>u</mi><mo>&#x02208;</mo><mi>C</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo></mrow></msub><mspace width="0.167em" /><msub><mo>max</mo><mrow><mi>o</mi><mo>&#x02208;</mo><mi>R</mi><mi>&#x029F5;</mi><mo stretchy="false">&#x0007B;</mo><mtext>new</mtext><mo stretchy="false">&#x0007D;</mo></mrow></msub><msub><mi>P</mi><mi>D</mi></msub><mo stretchy="false">&#x00028;</mo><mi>o</mi><mo>&#x02223;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo>&#x0002C;</mo><msub><mi>Q</mi><mrow><mtext>rel</mtext></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math></div>
+<p><strong>Three zones.</strong> With <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>r</mi><mrow><mo>&#x0002A;</mo></mrow></msup></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x003C0;</mi><mrow><mo>&#x0002A;</mo></mrow></msup></mrow></math> the relation and confidence for the most likely candidate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>u</mi><mrow><mo>&#x0002A;</mo></mrow></msup></mrow></math>:</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mtext>act&#x000A0;if&#x000A0;</mtext><msup><mi>&#x003C0;</mi><mrow><mo>&#x0002A;</mo></mrow></msup><mo>&#x02265;</mo><msub><mi>&#x003B8;</mi><mrow><mtext>act</mtext></mrow></msub><mi>;</mi></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mtext>escalate,&#x000A0;</mtext><msup><mi>r</mi><mrow><mo>&#x0002A;</mo></mrow></msup><mo>&#x02190;</mo><mi>L</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><msup><mi>u</mi><mrow><mo>&#x0002A;</mo></mrow></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mtext>&#x000A0;if&#x000A0;</mtext><msup><mi>r</mi><mrow><mo>&#x0002A;</mo></mrow></msup><mo>&#x02208;</mo><mi>S</mi><mo>&#x02227;</mo><msup><mi>&#x003C0;</mi><mrow><mo>&#x0002A;</mo></mrow></msup><mo>&#x0003C;</mo><msub><mi>&#x003B8;</mi><mrow><mtext>esc</mtext></mrow></msub><mi>;</mi></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mtext>store&#x000A0;as&#x000A0;tentative&#x000A0;otherwise.</mtext></mrow></math></div>
+<p>Only uncertain <em>superseding</em> decisions, the ones that could wrongly close a true fact, pay for an LLM call.</p>
+<p><strong>Three gates on closing.</strong> A piece of evidence against a stored fact <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>u</mi></mrow></math> counts only if all three hold. The temporal
+gate stops plans and hypotheticals from closing anything (it sums current and past because Jev often splits a
+completed change between them):</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>g</mi><mi>T</mi></msub><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mrow><mn mathvariant="double-struck">1</mn></mrow><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">[</mo><msub><mi>P</mi><mi>D</mi></msub><mo stretchy="false">&#x00028;</mo><mtext>current</mtext><mo>&#x02223;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><msub><mi>P</mi><mi>D</mi></msub><mo stretchy="false">&#x00028;</mo><mtext>past</mtext><mo>&#x02223;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02265;</mo><msub><mi>&#x003B8;</mi><mrow><mtext>act</mtext></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">]</mo><mo>&#x0002E;</mo></mrow></math></div>
+<p>The cardinality gate lets a new value replace an old one only where the relation holds one value at a time, so
+"likes hiking" never closes "likes painting" (sib means same subject and relation):</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>g</mi><mi>C</mi></msub><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mi>&#x027FA;</mi><mrow><mo stretchy="true" fence="true" form="prefix">&#x0007B;</mo><mtable><mtr><mtd columnalign="left"><mi>r</mi><mo>&#x0003D;</mo><mtext>negates</mtext><mo>&#x0002C;</mo></mtd><mtd columnalign="left"><mtext>or</mtext></mtd></mtr><mtr><mtd columnalign="left"><mi>r</mi><mo>&#x0003D;</mo><mtext>update</mtext><mo>&#x02227;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mo>card</mo><mo stretchy="false">&#x00028;</mo><mo>rel</mo><mo stretchy="false">&#x00028;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mtext>one</mtext><mo>&#x02228;</mo><mo>sib</mo><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002C;</mo></mtd><mtd columnalign="left"><mtext>or</mtext></mtd></mtr><mtr><mtd columnalign="left"><mi>r</mi><mo>&#x0003D;</mo><mtext>contradiction</mtext><mo>&#x02227;</mo><mo>card</mo><mo stretchy="false">&#x00028;</mo><mo>rel</mo><mo stretchy="false">&#x00028;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mtext>one</mtext><mo>&#x02227;</mo><mo>sib</mo><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mtd></mtr></mtable></mrow></mrow></math></div>
+<p>And the first piece of evidence against a fact must be confirmed by a second phrasing of the relation question:</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>g</mi><mi>A</mi></msub><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mrow><mn mathvariant="double-struck">1</mn></mrow><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">[</mo><msup><mi>r</mi><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02208;</mo><mi>S</mi><mo>&#x02227;</mo><msup><mi>&#x003C0;</mi><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02265;</mo><msub><mi>&#x003B8;</mi><mrow><mtext>act</mtext></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">]</mo><mo>&#x0002E;</mo></mrow></math></div>
+<p><strong>Belief, not deletion.</strong> Nothing irreversible happens on one answer. Answers become evidence in log-odds,</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mrow><mo stretchy="true" fence="true" form="prefix">&#x0007B;</mo><mtable><mtr><mtd columnalign="left"><mo>&#x0002B;</mo><mo>logit</mo><mi>&#x003C0;</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="left"><mi>r</mi><mo>&#x02208;</mo><mo stretchy="false">&#x0007B;</mo><mtext>duplicate</mtext><mo>&#x0002C;</mo><mtext>refinement</mtext><mo stretchy="false">&#x0007D;</mo></mtd></mtr><mtr><mtd columnalign="left"><mo>&#x02212;</mo><mo>logit</mo><mi>&#x003C0;</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mo>logit</mo><msup><mi>&#x003C0;</mi><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="left"><mi>r</mi><mo>&#x02208;</mo><mi>S</mi><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><msub><mi>g</mi><mi>T</mi></msub><mspace width="0.167em" /><msub><mi>g</mi><mi>C</mi></msub><mspace width="0.167em" /><msub><mi>g</mi><mi>A</mi></msub><mo>&#x0003D;</mo><mn>1</mn></mtd></mtr><mtr><mtd columnalign="left"><mn>0</mn></mtd><mtd columnalign="left"><mtext>otherwise,</mtext></mtd></mtr></mtable></mrow></mrow></math></div>
+<p>and accumulate on the stored fact, while the new fact gains what the old one loses:</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>logit</mo><msub><mi>b</mi><mi>u</mi></msub><mo>&#x02190;</mo><mo>logit</mo><msub><mi>b</mi><mi>u</mi></msub><mo>&#x0002B;</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>logit</mo><msub><mi>b</mi><mi>f</mi></msub><mo>&#x02190;</mo><mo>logit</mo><msub><mi>b</mi><mi>f</mi></msub><mo>&#x02212;</mo><munder><mo>&#x02211;</mo><mrow><mi>u</mi></mrow></munder><mo>min</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo>&#x0002C;</mo><mi>u</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math></div>
+<p>A fact closes when its belief drops below <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mtext>close</mtext></mrow></msub></mrow></math> and reopens if later evidence lifts it above
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mtext>open</mtext></mrow></msub></mrow></math>; the gap between the two keeps a fact from flickering on alternating answers. Duplicates become
+reversible <code>same_as</code> links, never merged text, and a separate yes/no question closes plans when they happen.</p>
+<p><strong>A bug the equations exposed.</strong> In the first version (v2), <em>every</em> answer counted. A <code>duplicate</code> answer at
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C0;</mi><mo>&#x0003C;</mo><mn>0.5</mn></mrow></math> has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>logit</mo><mi>&#x003C0;</mi><mo>&#x0003C;</mo><mn>0</mn></mrow></math>, so weak <em>support</em> lowered belief. The fix (v3) counts an answer only
+when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C0;</mi><mo>&#x0003E;</mo><mn>0.5</mn></mrow></math>. On the dev slice with both update sets v3 ignored 36 and 39 weak answers; with Jev it closed the
+same facts, and it removes the failure that, with a weaker decision model, closed true facts.</p>
+<h3>3.3 Read path</h3>
+<p>For a question <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi></mrow></math> with a budget of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> lines:</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>A</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mo>Top</mo><mrow><mn>30</mn></mrow></msub><mspace width="0.167em" /><msub><mi>s</mi><mrow><mi>cos</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mo>&#x000B7;</mo><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>K</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">[</mo><mspace width="0.167em" /><mi>u</mi><mo>&#x02208;</mo><mi>A</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mi>:</mi><mi>&#x003C1;</mi><mo stretchy="false">&#x00028;</mo><mi>u</mi><mo>&#x0002C;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003E;</mo><msub><mi>&#x003B8;</mi><mrow><mtext>rel</mtext></mrow></msub><mspace width="0.167em" /><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">]</mo><mtext>&#x000A0;sorted&#x000A0;by&#x000A0;</mtext><mi>&#x003C1;</mi><mo stretchy="false">&#x00028;</mo><mi>u</mi><mo>&#x0002C;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>b</mi><mi>u</mi></msub><mo>&#x0002C;</mo><mspace width="2em" /><mi>&#x003C1;</mi><mo stretchy="false">&#x00028;</mo><mi>u</mi><mo>&#x0002C;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mi>P</mi><mi>D</mi></msub><mo stretchy="false">&#x00028;</mo><mtext>yes</mtext><mo>&#x02223;</mo><mi>u</mi><mo>&#x0002C;</mo><mi>q</mi><mo>&#x0002C;</mo><msub><mi>Q</mi><mrow><mtext>rlv</mtext></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math></div>
+<p>One Jev request scores all thirty shortlisted facts. The ten closest facts are kept as a floor even if Jev judges few
+relevant; a question that names a relation ("where does she live?") pulls in currently valid facts of that relation;
+and each kept fact brings the facts it superseded, so "where did she live before Berlin?" finds Paris. The answer
+model sees the first <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> lines, each with the date the fact was said, the fact, and its source quote:</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>a</mi><mo>&#x0003D;</mo><mi>L</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>q</mi><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><mo>render</mo><mo stretchy="false">&#x00028;</mo><mtext>first&#x000A0;</mtext><mi>k</mi><mtext>&#x000A0;of&#x000A0;</mtext><msup><mi>K</mi><mrow><mo>&#x0002B;</mo></mrow></msup><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math></div>
+<h3>3.4 What escalation buys</h3>
+<p>With a per-decision Jev cost <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>c</mi><mi>J</mi></msub></mrow></math>, an escalation cost <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>c</mi><mi>L</mi></msub></mrow></math> and an escalation threshold <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C0;</mi></mrow></math>:</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>C</mi><mo stretchy="false">&#x00028;</mo><mi>&#x003B8;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mi>c</mi><mi>J</mi></msub><mo>&#x0002B;</mo><mi>P</mi><mo stretchy="false">&#x00028;</mo><mi>&#x003C0;</mi><mo>&#x0003C;</mo><mi>&#x003B8;</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>c</mi><mi>L</mi></msub><mo>&#x0002C;</mo></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>E</mi><mo stretchy="false">&#x00028;</mo><mi>&#x003B8;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>P</mi><mo stretchy="false">&#x00028;</mo><mi>&#x003C0;</mi><mo>&#x02265;</mo><mi>&#x003B8;</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>&#x003B5;</mi><mi>J</mi></msub><mo stretchy="false">&#x00028;</mo><mi>&#x003B8;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>P</mi><mo stretchy="false">&#x00028;</mo><mi>&#x003C0;</mi><mo>&#x0003C;</mo><mi>&#x003B8;</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>&#x003B5;</mi><mi>L</mi></msub><mo>&#x0002E;</mo></mrow></math></div>
+<p>Raising <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> trades cost for error only if the LLM is more accurate than Jev on exactly the cases Jev is unsure
+of, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>L</mi></msub><mo>&#x0003C;</mo><msub><mi>&#x003B5;</mi><mi>J</mi></msub></mrow></math>. Section 7 puts numbers on both curves.</p>
+<h2>4. Setup</h2>
+<p>Every arm uses the same models: <strong>claude-haiku-4-5</strong> extracts facts for both systems, and <strong>claude-sonnet-4-6</strong> answers
+and judges with mem0's LoCoMo evaluation prompts. The baseline is mem0 OSS 2.1.0 in its default configuration. Data:</p>
+<ul>
+<li><strong>dev</strong>: LoCoMo conv-26, sessions 1–4 (76 messages, 35 questions), used for development;</li>
+<li><strong>held-out</strong>: conv-30, conv-41, conv-42 and conv-43 in full (610 scored questions), run once, after the configuration
+  was frozen under a git tag;</li>
+<li><strong>update sets</strong>: two author-written sets appended to the dev slice, because LoCoMo barely tests updates. Set 1 has
+  30 items, including 10 <em>no-close traps</em> (past-tense mentions and unrealised plans that must not close anything);
+  set 2 adds 28 messages and 20 questions about chains of changes and past moments.</li>
+</ul>
+<p>Both systems answer the same questions, so every comparison is paired. For question <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>,
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>i</mi></msub><mo>&#x0003D;</mo><msub><mtext>engram</mtext><mi>i</mi></msub><mo>&#x02212;</mo><msub><mtext>mem0</mtext><mi>i</mi></msub><mo>&#x02208;</mo><mo stretchy="false">&#x0007B;</mo><mo>&#x02212;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x0007D;</mo></mrow></math>, and I report the per-question interval</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover><mi>d</mi><mo stretchy="true">&#x000AF;</mo></mover><mi>&#x000B1;</mi><mn>1.96</mn><mspace width="0.167em" /><mfrac><mrow><msub><mi>s</mi><mi>d</mi></msub></mrow><mrow><msqrt><mrow><mi>n</mi></mrow></msqrt></mrow></mfrac><mo>&#x0002C;</mo></mrow></math></div>
+<p>an exact McNemar test on the discordant questions, and a cluster bootstrap that resamples the four conversations
+(with four clusters, a robustness check rather than a primary interval). Every LLM and Jev call is cached by its full
+request; the ledgered experiments cost $101.79 in API calls.</p>
+<h2>5. Result 1: the decision layer, 70× cheaper</h2>
+<p>The cleanest experiment holds extraction fixed and swaps only what decides afterwards: Jev's typed questions, or
+claude-sonnet-4-6 with mem0's update prompt, one call per extracted fact.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>dev slice, 76 messages</th>
+<th>accuracy</th>
+<th>decision cost / 1k msgs</th>
+<th>decision p50</th>
+<th>total cost / 1k msgs</th>
+<th>facts stored</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mem0 2.1.0</td>
+<td>30/35</td>
+<td>–</td>
+<td>–</td>
+<td>$9.80</td>
+<td>46</td>
+</tr>
+<tr>
+<td>engram, LLM decision layer</td>
+<td>31/35</td>
+<td>$8.782</td>
+<td>7,675 ms</td>
+<td>$18.70</td>
+<td>18</td>
+</tr>
+<tr>
+<td>engram, Jev decision layer</td>
+<td><strong>31/35</strong></td>
+<td><strong>$0.125</strong></td>
+<td><strong>278 ms</strong></td>
+<td>$9.90</td>
+<td>47</td>
+</tr>
+</tbody>
+</table></div>
+<p>Same accuracy, <strong>70.0× lower decision cost, 27.6× lower median decision latency</strong>. With typed decisions the decision
+layer is 1.3% of the cost of a write; with the LLM it is 47.0%. Extraction becomes almost the entire bill.</p>
+<p>Two honest caveats. The ratios are specific to that comparator: batching several facts per LLM call, or a smaller LLM
+decider, would narrow them, and I did not measure either. And "same extraction" means the same model, prompt
+construction and implementation, not the same <em>state</em>: extraction reads the store, the two stores diverge, and 26 of
+the 76 dev messages produced different extraction outputs between the two arms.</p>
+<h2>6. Result 2: retrieval under a small budget, and where the gain comes from</h2>
+<p>Under a three-memory budget engram beat mem0 by 14.9 points. But engram's lines are longer (each carries its source
+quote): 290 tokens per question against mem0's 159. So the fair comparison gives mem0 as many tokens. I answered the
+same 610 questions from mem0's stores at every <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> from 3 to 8 and took the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> whose token count matched: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>6</mn></mrow></math>,
+at 315 tokens, slightly <em>more</em> context than engram.</p>
+<figure><img src="acc_vs_tokens.png" alt="Held-out accuracy against retrieved tokens per question, with per-question 95% intervals. engram at k=3 sits above mem0 at k=6; with reranking off it falls below; at k=20 the systems are indistinguishable." loading="lazy"><figcaption>Held-out accuracy against retrieved tokens per question, with per-question 95% intervals. engram at k=3 sits above mem0 at k=6; with reranking off it falls below; at k=20 the systems are indistinguishable.</figcaption></figure>
+<div class="table"><table>
+<thead>
+<tr>
+<th>held-out, 610 questions</th>
+<th>k</th>
+<th>tokens / q</th>
+<th>accuracy</th>
+<th>Δ vs engram (points)</th>
+<th>95% CI</th>
+<th>McNemar p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>engram</td>
+<td>3</td>
+<td>290</td>
+<td>73.3%</td>
+<td>–</td>
+<td>–</td>
+<td>–</td>
+</tr>
+<tr>
+<td>mem0</td>
+<td>3</td>
+<td>159</td>
+<td>58.4%</td>
+<td>+14.9</td>
+<td>[+11.2, +18.7]</td>
+<td>2.4e-14</td>
+</tr>
+<tr>
+<td>engram, reranking off</td>
+<td>3</td>
+<td>282</td>
+<td>59.8%</td>
+<td>+13.4</td>
+<td>[+10.1, +16.8]</td>
+<td>1.1e-14</td>
+</tr>
+<tr>
+<td>mem0, token-matched</td>
+<td>6</td>
+<td>315</td>
+<td>64.6%</td>
+<td><strong>+8.7</strong></td>
+<td>[+5.2, +12.1]</td>
+<td>1.3e-06</td>
+</tr>
+<tr>
+<td>engram</td>
+<td>20</td>
+<td>1,461</td>
+<td>79.0%</td>
+<td>–</td>
+<td>–</td>
+<td>–</td>
+</tr>
+<tr>
+<td>mem0</td>
+<td>20</td>
+<td>1,024</td>
+<td>78.2%</td>
+<td>+0.8</td>
+<td>[−2.3, +3.9]</td>
+<td>0.679</td>
+</tr>
+</tbody>
+</table></div>
+<p>At a matched budget engram is 8.7 points ahead (conversation bootstrap +2.4 to +14.7), and ahead in every scored
+category. Matching the context removed 41.8% of the k=3 gap; the rest is <em>which</em> memories reach the top three.</p>
+<p>To attribute it, I re-answered the same 610 questions from the same frozen engram stores with Jev's reranking turned
+off, so the answer model sees the cosine top three. Accuracy fell by <strong>13.4 points</strong>, to 59.8%, which is <strong>4.8 points
+below</strong> token-matched mem0 (95% CI −8.4 to −1.1). The reranker is responsible for the entire matched-context lead;
+without it, the rest of engram's read path is worse than mem0's at the same budget. At <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>20</mn></mrow></math> the two systems are
+indistinguishable.</p>
+<p>One more result belongs here, because leaderboards include it. LoCoMo's fifth category, <em>adversarial</em>, asks about
+things the conversation never says; the right answer is to abstain. Across 190 such questions engram with reranking
+scored lowest: 71.1% at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> and 67.9% at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>20</mn></mrow></math>, against about 75% for every mem0 setting and 76.3% for engram
+without reranking. I did not test why. mem0's answer prompt, which both systems use, never asks for abstention, and a
+context of relevant-looking memories may invite an answer. Over all five categories engram at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> scores 72.8% against 67.2% for
+token-matched mem0, and at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>20</mn></mrow></math> 76.4% against 77.5%.</p>
+<h2>7. Result 3: what the store does, and how calibrated the decisions are</h2>
+<p><strong>Trap items.</strong> The frozen arm stored 8 of the 10 authored no-close traps and closed <strong>none of them (0/8)</strong>, with 1 wrong <code>plan_fulfilled</code> close
+and 1 close that matched no labeled pair. A simpler policy that closed whenever a superseding label cleared 0.85 made
+11 closes on the same data, 8 of them unlabeled. A relaxed plan heuristic fired 25 times and was wrong 24 times; the
+dedicated yes/no question that replaced it was asked 234 times and closed 2 plans correctly and 1 wrongly.</p>
+<p><strong>Contradiction regression.</strong> On 50 labeled contradiction pairs, Jev's relation is in the accepted set for 90.0%, its
+temporal status is right for 94.0%, and the write path's close rule makes <strong>no false closes</strong>.</p>
+<p><strong>Calibration.</strong> The belief update treats <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C0;</mi></mrow></math> as a likelihood, so calibration matters. With <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> items, confidence
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover accent="true"><mi>p</mi><mo>&#x0005E;</mo></mover><mi>i</mi></msub></mrow></math> on the chosen label and bins <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>B</mi><mi>m</mi></msub></mrow></math>,</p>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi mathvariant="normal">E</mi><mi mathvariant="normal">C</mi><mi mathvariant="normal">E</mi></mrow><mo>&#x0003D;</mo><munder><mo>&#x02211;</mo><mrow><mi>m</mi></mrow></munder><mfrac><mrow><mo stretchy="false">&#x0007C;</mo><msub><mi>B</mi><mi>m</mi></msub><mo stretchy="false">&#x0007C;</mo></mrow><mrow><mi>n</mi></mrow></mfrac><mspace width="0.167em" /><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">|</mo><mo>acc</mo><mo stretchy="false">&#x00028;</mo><msub><mi>B</mi><mi>m</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mo>conf</mo><mo stretchy="false">&#x00028;</mo><msub><mi>B</mi><mi>m</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">|</mo><mo>&#x0002C;</mo></mrow></math></div>
+<div class="eq"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow><mo>&#x0003D;</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munder><mo>&#x02211;</mo><mi>i</mi></munder><munder><mo>&#x02211;</mo><mrow><mi>o</mi></mrow></munder><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>p</mi><mrow><mi>i</mi><mo>&#x0002C;</mo><mi>o</mi></mrow></msub><mo>&#x02212;</mo><mrow><mn mathvariant="double-struck">1</mn></mrow><mo stretchy="false">[</mo><mi>o</mi><mo>&#x0003D;</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">]</mo><msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mn>2</mn></msup><mo>&#x0002C;</mo><mspace width="2em" /><mrow><mi mathvariant="normal">N</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi></mrow><mo>&#x0003D;</mo><mo>&#x02212;</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munder><mo>&#x02211;</mo><mi>i</mi></munder><mi>ln</mi><msub><mi>p</mi><mrow><mi>i</mi><mo>&#x0002C;</mo><msub><mi>y</mi><mi>i</mi></msub></mrow></msub><mo>&#x0002E;</mo></mrow></math></div>
+<p>On the gold pairs Jev's relation ECE is 0.14 and its NLL 0.57. The more interesting number is on the 29 decisions Jev
+was <em>unsure</em> of, labeled by claude-sonnet-4-6: there Jev's NLL is 3.18, worse than the zero-shot open model's 2.11,
+because Jev's mean confidence on them is 0.92. When Jev is wrong there, it is confidently wrong, which is exactly what
+the escalation threshold can't see.</p>
+<p><strong>The cost/error curve.</strong> On the gold pairs, Jev alone errs on 10.0% of relations at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>c</mi><mi>J</mi></msub><mo>&#x0003D;</mo><mtext>\$</mtext><mn>0.000016</mn></mrow></math> per decision;
+an escalation costs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>c</mi><mi>L</mi></msub><mo>&#x0003D;</mo><mtext>\$</mtext><mn>0.0073</mn></mrow></math>. At <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi><mo>&#x0003D;</mo><mn>0.85</mn></mrow></math>, 32.0% of decisions escalate, cost rises to $0.002368 per
+decision, and error falls to 6.0% if the LLM were perfect (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>L</mi></msub><mo>&#x0003D;</mo><mn>0</mn></mrow></math>) or 9.2% at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>L</mi></msub><mo>&#x0003D;</mo><mn>0.1</mn></mrow></math>.
+Error only drops where escalations are almost the whole cost, and how far it drops depends on an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>L</mi></msub></mrow></math> I
+did not measure.</p>
+<h2>8. The negative result: closing stale facts didn't change answers</h2>
+<p>This is the part of the design aimed at correctness, and on these LoCoMo-derived evaluations, with this extraction,
+rendering and answer setup, it made no difference to answers. mem0 never closes anything and leaves every one of the
+18 stale set-1 items active, yet answers 29/30 set-1 update questions. The arm that closes most aggressively leaves
+10/18 stale and answers 30/30. Removing every date, validity window and source quote from the answer context still
+leaves mem0 at 29/30. Only the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> budget separates the systems (25/30 against 30/30), and that is a retrieval
+effect, not a closing effect. Set 2, built around chains of changes and past moments, is at ceiling for every arm.</p>
+<p>The answer model resolves recency on its own: extraction writes dates into the memory text, and the model reads them.
+A benchmark that rewards a correct store would score answers against validity windows, use budgets small enough that a
+stale fact displaces a current one, store memories without dates, and ask about long chains of changes. <strong>Current
+LoCoMo-style questions do not reward a correct store.</strong></p>
+<p>An exploratory aside: the base checkpoint of a 421M open-weights decision model (Laya), used zero-shot, which its
+own documentation advises against, agreed with Jev on only 5.9% of relation decisions and chose an accepted relation
+for at most 48.0% of the contradiction pairs. Its fine-tuned checkpoint is the obvious follow-up and was not tested.</p>
+<h2>9. Limitations</h2>
+<p>One baseline (mem0 OSS 2.1.0) on one benchmark (four held-out LoCoMo conversations, so four bootstrap clusters). The
+update sets and contradiction pairs were written and labeled by the system's author. One decision model at one
+version. The judge is an LLM whose agreement with humans I did not measure, and every score comes from one model stack,
+so none of it is comparable to leaderboards run on other stacks. Extraction shares model and implementation across
+arms but not state, and I did not run an arm with frozen extraction outputs.</p>
+<h2>10. Reproduce it</h2>
+<pre><code class="language-bash">git clone https://github.com/ris3abh/Engram &amp;&amp; cd Engram
+uv sync --extra bench
+make reproduce-dev     # replays the decision-layer table from a shipped cache: $0, no API keys
+</code></pre>
+<p><code>make reproduce-dev</code> re-runs the three dev-slice arms with the experiment code against a 1.9 MB subset of the call
+cache and prints every cell next to the paper's; accuracy, costs and stored facts match exactly. Every other table has
+a command in the paper's Appendix D. The update sets, contradiction pairs, escalation labels and all 7,150 per-question
+answers are on the Hub as <a href="https://huggingface.co/datasets/ris3abh-11/engram-eval">ris3abh-11/engram-eval</a>.</p>
+<h2>Citation</h2>
+<pre><code class="language-bibtex">@misc{sharma2026typed,
+  author    = {Sharma, Rishabh},
+  title     = {Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.22941758},
+  url       = {https://doi.org/10.5281/zenodo.22941758}
+}
+</code></pre>
+<footer>Rishabh Sharma, 2026. Article text and figures from the paper, DOI
+<a href="https://doi.org/10.5281/zenodo.22941758">10.5281/zenodo.22941758</a>. Code MIT; data CC BY-NC 4.0.</footer>
+</main>
+</body>
+</html>

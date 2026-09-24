@@ -161,7 +161,7 @@ leaderboards run on other model stacks.
 ## Calibration: proper scores (reviewer pass)
 
 `bench/calibration_scores.py` (from the per-item probabilities in `bench/results/calibration.json`). ECE is
-exploratory at n = 29 and 50. On the escalation labels Jev's relation NLL is 3.19 against Laya's 2.12: Jev's mean
+exploratory at n = 29 and 50. On the escalation labels Jev's relation NLL is 3.18 against Laya's 2.11: Jev's mean
 confidence there is 0.92, so its errors are confident. On the gold pairs Jev is better on Brier and NLL throughout.
 
 ## Paper-text corrections found in this pass
