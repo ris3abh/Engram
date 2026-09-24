@@ -361,54 +361,61 @@ With extraction held identical, typed decisions replaced an LLM decision layer a
 
 \bibliography{references}
 \appendix
+\onecolumn
 \FloatBarrier
 \section{Decision questions}\label{app:A}
 Table~\ref{tab:7} lists the 12\src{src/engram/decide/questions.py (ALL\_QUESTIONS)} questions in the current chain with their types and options. \texttt{edge\_\allowbreak{}type} and \texttt{query\_\allowbreak{}relation} choose among 25\src{src/engram/decide/questions.py (EDGE\_TYPES)} relation types. The instructions and the rubric for every option of every version are in \texttt{src/\allowbreak{}engram/\allowbreak{}decide/\allowbreak{}questions.py}, and the reasons for each version change are in \texttt{docs/\allowbreak{}DECISIONS.md}.
 
-\begin{table}[tbp]
-\centering
-\small\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{Jev questions in the current chain (\texttt{src/\allowbreak{}engram/\allowbreak{}decide/\allowbreak{}questions.py}).}\label{tab:7}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+\begingroup\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.256\linewidth}>{\raggedright\arraybackslash}p{0.141\linewidth}>{\raggedright\arraybackslash}p{0.513\linewidth}}
+\caption{Jev questions in the current chain (\texttt{src/\allowbreak{}engram/\allowbreak{}decide/\allowbreak{}questions.py}).}\label{tab:7}\\
 \toprule
 \textbf{question} & \textbf{type} & \textbf{options} \\
 \midrule
-\texttt{worth\_\allowbreak{}remembering} & noul v1 & yes / no \\
-\texttt{fact\_\allowbreak{}kind} & choice v1 & \texttt{preference}, \texttt{bio}, \texttt{event}, \texttt{relationship}, \texttt{task}, \texttt{opinion} \\
-\texttt{temporal\_\allowbreak{}status} & choice v2 & \texttt{current}, \texttt{planned}, \texttt{past}, \texttt{hypothetical} \\
-\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate} & choice v2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
-\texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck} & choice v2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
-\texttt{edge\_\allowbreak{}type} & choice v1 & 25\src{src/engram/decide/questions.py} relation types \\
-\texttt{durability} & choice v1 & \texttt{permanent}, \texttt{long\_\allowbreak{}term}, \texttt{short\_\allowbreak{}lived} \\
+\endfirsthead
+\toprule
+\textbf{question} & \textbf{type} & \textbf{options} \\
+\midrule
+\endhead
+\texttt{worth\_\allowbreak{}\allowbreak{}remembering} & noul v1 & yes / no \\
+\texttt{fact\_\allowbreak{}\allowbreak{}kind} & choice v1 & \texttt{preference}, \texttt{bio}, \texttt{event}, \texttt{relationship}, \texttt{task}, \texttt{opinion} \\
+\texttt{temporal\_\allowbreak{}\allowbreak{}status} & choice v2 & \texttt{current}, \texttt{planned}, \texttt{past}, \texttt{hypothetical} \\
+\texttt{relation\_\allowbreak{}\allowbreak{}to\_\allowbreak{}\allowbreak{}candidate} & choice v2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
+\texttt{relation\_\allowbreak{}\allowbreak{}to\_\allowbreak{}\allowbreak{}candidate\_\allowbreak{}\allowbreak{}recheck} & choice v2 & \texttt{new}, \texttt{duplicate}, \texttt{update}, \texttt{contradiction}, \texttt{refinement}, \texttt{negates} \\
+\texttt{edge\_\allowbreak{}\allowbreak{}type} & choice v1 & 25\src{src/engram/decide/questions.py} relation types \\
+\texttt{durability} & choice v1 & \texttt{permanent}, \texttt{long\_\allowbreak{}\allowbreak{}term}, \texttt{short\_\allowbreak{}\allowbreak{}lived} \\
 \texttt{sensitivity} & choice v1 & \texttt{none}, \texttt{health}, \texttt{financial}, \texttt{relationship}, \texttt{credentials} \\
-\texttt{plan\_\allowbreak{}fulfilled} & noul v1 & yes / no \\
-\texttt{relevant\_\allowbreak{}to\_\allowbreak{}query} & noul v1 & yes / no \\
-\texttt{query\_\allowbreak{}relation} & choice v1 & 25\src{src/engram/decide/questions.py} relation types \\
-\texttt{same\_\allowbreak{}fact} & noul v1 & yes / no \\
+\texttt{plan\_\allowbreak{}\allowbreak{}fulfilled} & noul v1 & yes / no \\
+\texttt{relevant\_\allowbreak{}\allowbreak{}to\_\allowbreak{}\allowbreak{}query} & noul v1 & yes / no \\
+\texttt{query\_\allowbreak{}\allowbreak{}relation} & choice v1 & 25\src{src/engram/decide/questions.py} relation types \\
+\texttt{same\_\allowbreak{}\allowbreak{}fact} & noul v1 & yes / no \\
 \bottomrule
-\end{tabularx}
-\end{table}
+\end{longtable}
+\endgroup
 \FloatBarrier
 \section{Update sets}\label{app:B}
-\begin{table*}[tbp]
-\centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{One item of each kind from the two update sets (\texttt{bench/\allowbreak{}updates\_\allowbreak{}conv26.json}, \texttt{bench/\allowbreak{}updates2\_\allowbreak{}conv26.json}).}\label{tab:8}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+\begingroup\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.047\linewidth}>{\raggedright\arraybackslash}p{0.071\linewidth}>{\raggedright\arraybackslash}p{0.178\linewidth}>{\raggedright\arraybackslash}p{0.178\linewidth}>{\raggedright\arraybackslash}p{0.178\linewidth}>{\raggedright\arraybackslash}p{0.178\linewidth}}
+\caption{One item of each kind from the two update sets (\texttt{bench/\allowbreak{}updates\_\allowbreak{}conv26.json}, \texttt{bench/\allowbreak{}updates2\_\allowbreak{}conv26.json}).}\label{tab:8}\\
 \toprule
 \textbf{id} & \textbf{kind} & \textbf{earlier fact or message} & \textbf{update message(s)} & \textbf{question} & \textbf{gold} \\
 \midrule
+\endfirsthead
+\toprule
+\textbf{id} & \textbf{kind} & \textbf{earlier fact or message} & \textbf{update message(s)} & \textbf{question} & \textbf{gold} \\
+\midrule
+\endhead
 E01 & set 1, easy close & Melanie's main creative outlet is painting, which relaxes her after a long day. & I haven't painted in weeks, honestly. Pottery is my main creative outlet now - I go to the studio three evenings a week. & What is Melanie's main creative outlet now? & Pottery (she has stopped painting) \\
-S01 & set 1, subtle (no\_close) & Melanie has been married to her husband for 5 years. & Our first apartment after the wedding was so tiny - we still laugh about it. & Is Melanie still married? & Yes, married for 5 years \\
+S01 & set 1, subtle (no\_\allowbreak{}close) & Melanie has been married to her husband for 5 years. & Our first apartment after the wedding was so tiny - we still laugh about it. & Is Melanie still married? & Yes, married for 5 years \\
 F01 & set 1, fulfilled plan & Caroline plans to continue her education. & I did it - I enrolled in a psychology certificate program at the community college. Classes start next week! & Has Caroline enrolled in a program to continue her education? & Yes, a psychology certificate program at the community college \\
 C01q1 & set 2, chain & I just moved into a studio apartment downtown. & Moved again! I'm in a two-bedroom in Oak Park now, so there's room for a foster kid. $\rightarrow$ We finally found a house - I live in Evanston now. & Where does Caroline live now? & A house in Evanston \\
 N01 & set 2, no temporal cue & My favorite coffee spot is Blue Door Caf\'{e}. & My favorite coffee spot is Grind House. & What is Caroline's favorite coffee spot? & Grind House \\
 \bottomrule
-\end{tabularx}
-\end{table*}
+\end{longtable}
+\endgroup
 \FloatBarrier
 \section{Per-conversation and systems tables}\label{app:C}
-\begin{table*}[tbp]
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Held-out accuracy per conversation, $k{=}$3. Q per row; models as in Table~\ref{tab:2}.}\label{tab:9}
@@ -422,8 +429,8 @@ conv-42 & 199\src{bench/results/heldout\_report.json} & 150/199\src{bench/result
 conv-43 & 178\src{bench/results/heldout\_report.json} & 125/178\src{bench/results/heldout\_report.json} & 101/178\src{bench/results/heldout\_report.json} & 24\src{bench/results/heldout\_report.json} & 283\src{bench/results/heldout\_report.json} & 153\src{bench/results/heldout\_report.json} \\
 \bottomrule
 \end{tabularx}
-\end{table*}
-\begin{table}[tbp]
+\end{table}
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Held-out accuracy per conversation, engram $k{=}$3 against token-matched mem0 ($k{=}$6). Q per row; models as in Table~\ref{tab:2}.}\label{tab:10}
@@ -438,7 +445,7 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 125/178\src{bench/result
 \bottomrule
 \end{tabularx}
 \end{table}
-\begin{table*}[tbp]
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Held-out accuracy per conversation, $k{=}$20. Q per row; models as in Table~\ref{tab:2}.}\label{tab:11}
@@ -452,8 +459,8 @@ conv-42 & 199\src{bench/results/heldout\_report.json} & 156/199\src{bench/result
 conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/results/heldout\_report.json} & 133/178\src{bench/results/heldout\_report.json} & 3\src{bench/results/heldout\_report.json} & 1,389\src{bench/results/heldout\_report.json} & 995\src{bench/results/heldout\_report.json} \\
 \bottomrule
 \end{tabularx}
-\end{table*}
-\begin{table*}[tbp]
+\end{table}
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory at $k{=}$3 (write and retrieval decisions; n per row). Jev jev-1.13.0; Laya base checkpoint, zero-shot. Same action: both choose the same label at p $\geq$ 0.85\src{src/engram/config.py}, or neither reaches it. Acts: share of decisions at p $\geq$ 0.85\src{src/engram/config.py}.}\label{tab:12}
@@ -475,12 +482,12 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/result
 \texttt{relation\_\allowbreak{}to\_\allowbreak{}candidate\_\allowbreak{}recheck} & 34\src{bench/results/laya\_agreement.json} & 29.4\%\src{bench/results/laya\_agreement.json} & 41.2\%\src{bench/results/laya\_agreement.json} & 35.3\%\src{bench/results/laya\_agreement.json} & 26.5\%\src{bench/results/laya\_agreement.json} \\
 \bottomrule
 \end{tabularx}
-\end{table*}
-\begin{table}[tbp]
+\end{table}
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Hybrid against all-Jev: dev slice with update sets (Q per row: 35\src{bench/results/e2\_jev\_\_dev.json} LoCoMo, 30\src{bench/updates\_conv26.json} set 1, 20\src{bench/updates2\_conv26.json} set 2), k as labeled, extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6.}\label{tab:13}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{questions} & \textbf{all-Jev $k{=}$3} & \textbf{hybrid $k{=}$3} & \textbf{all-Jev $k{=}$20} & \textbf{hybrid $k{=}$20} \\
 \midrule
@@ -490,13 +497,13 @@ update set 2 & 19/20\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_
 \bottomrule
 \end{tabularx}
 \end{table}
-\begin{table}[tbp]
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices), from the decision logs (\texttt{bench/\allowbreak{}results/\allowbreak{}jev\_\allowbreak{}latency.json}). Client-measured, after the rate limiter, retries included.}\label{tab:14}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
-\textbf{questions / request} & \textbf{requests} & \textbf{median input tokens} & \textbf{median latency} & \textbf{p90 latency} \\
+\textbf{questions} & \textbf{requests} & \textbf{input tokens} & \textbf{p50} & \textbf{p90} \\
 \midrule
 1 & 1,305\src{bench/results/jev\_latency.json} & 564\src{bench/results/jev\_latency.json} & 229 ms\src{bench/results/jev\_latency.json} & 1,052 ms\src{bench/results/jev\_latency.json} \\
 2--3 & 1,054\src{bench/results/jev\_latency.json} & 870\src{bench/results/jev\_latency.json} & 248 ms\src{bench/results/jev\_latency.json} & 1,176 ms\src{bench/results/jev\_latency.json} \\
@@ -510,7 +517,7 @@ update set 2 & 19/20\src{bench/results/e4\_belief\_v2\_shadow\_\_dev\_updates2\_
 \bottomrule
 \end{tabularx}
 \end{table}
-\begin{table*}[tbp]
+\begin{table}[!htbp]
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Held-out write side (conv-30, 41, 42, 43; writes only). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus escalations.}\label{tab:15}
@@ -524,77 +531,83 @@ conv-42 & \$10.55\src{bench/results/heldout\_report.json} & \$0.50\src{bench/res
 conv-43 & \$10.45\src{bench/results/heldout\_report.json} & \$0.50\src{bench/results/heldout\_report.json} & \$9.96\src{bench/results/heldout\_report.json} & 868 ms\src{bench/results/heldout\_report.json} & 1,819 ms\src{bench/results/heldout\_report.json} & 1,210 ms\src{bench/results/heldout\_report.json} & 628\src{bench/results/heldout\_report.json} & 636\src{bench/results/heldout\_report.json} \\
 \bottomrule
 \end{tabularx}
-\end{table*}
+\end{table}
 \begin{figure*}[tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/calibration.pdf}
 \caption{reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.}\label{fig:6}
 \end{figure*}
-\begin{figure}[tbp]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\columnwidth]{figures/laya_agreement.pdf}
+\includegraphics[width=0.6\linewidth]{figures/laya_agreement.pdf}
 \caption{Agreement between the Laya base checkpoint (zero-shot) and Jev on identical requests, per question, sorted by same answer. Dev + update sets 1 and 2, frozen arm's trajectory.}\label{fig:7}
 \end{figure}
-\begin{figure}[tbp]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\columnwidth]{figures/latency.pdf}
+\includegraphics[width=0.6\linewidth]{figures/latency.pdf}
 \caption{Jev request latency: distribution over all logged requests, and median and p90 by request size.}\label{fig:8}
 \end{figure}
 \FloatBarrier
 \section{Reproduction}\label{app:D}
 Each table and figure was produced by the command below, run from the root of the engram codebase. With the call cache (\texttt{bench/\allowbreak{}.cache/\allowbreak{}calls.sqlite}) in place, every command in Table~\ref{tab:16} replays at no API cost.
 
-\begin{table*}[tbp]
-\centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{The command behind each table and figure.}\label{tab:16}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedright\arraybackslash}X}
+\begingroup\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.276\linewidth}>{\raggedright\arraybackslash}p{0.661\linewidth}}
+\caption{The command behind each table and figure.}\label{tab:16}\\
 \toprule
 \textbf{table / figure} & \textbf{command} \\
 \midrule
-Table~\ref{tab:1} & \texttt{python -m bench.run -{}-arm \{e2\_\allowbreak{}jev,e2\_\allowbreak{}llm,mem0\} -{}-slice dev} \\
-Tables~\ref{tab:2}, \ref{tab:3}, \ref{tab:9}--\ref{tab:11}; Fig.~\ref{fig:2} & \texttt{python -m bench.run -{}-arm \{e4\_\allowbreak{}belief\_\allowbreak{}v2,mem0\} -{}-slice heldout:\textless{}conv\textgreater{} -{}-top-k 3 -{}-also-top-k 20}, then \texttt{python -m bench.heldout\_\allowbreak{}report} and \texttt{python -m bench.token\_\allowbreak{}match} \\
-Table~\ref{tab:4}; Figs.~\ref{fig:3}, \ref{fig:4} & \texttt{python -m bench.run -{}-arm \textless{}arm\textgreater{} -{}-slice dev\_\allowbreak{}updates[2] [-{}-top-k 3] [-{}-no-dates]} \\
-Tables~\ref{tab:5}, \ref{tab:6}; Figs.~\ref{fig:6}, \ref{fig:7} & \texttt{python bench/\allowbreak{}test\_\allowbreak{}contradictions.py -{}-backend laya [-{}-native] -{}-save \ldots{}}, \texttt{python -m bench.calibration}, \texttt{python -m bench.jev\_\allowbreak{}regression} (the Laya rows need \texttt{bench/\allowbreak{}laya\_\allowbreak{}server.py} running) \\
+\endfirsthead
+\toprule
+\textbf{table / figure} & \textbf{command} \\
+\midrule
+\endhead
+Table~\ref{tab:1} & \texttt{python -m bench.run -{}-arm \{e2\_\allowbreak{}\allowbreak{}jev,e2\_\allowbreak{}\allowbreak{}llm,mem0\} -{}-slice dev} \\
+Tables~\ref{tab:2}, \ref{tab:3}, \ref{tab:9}--\ref{tab:11}; Fig.~\ref{fig:2} & \texttt{python -m bench.run -{}-arm \{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2,mem0\} -{}-slice heldout:\textless{}conv\textgreater{} -{}-top-k 3 -{}-also-top-k 20}, then \texttt{python -m bench.heldout\_\allowbreak{}\allowbreak{}report} and \texttt{python -m bench.token\_\allowbreak{}\allowbreak{}match} \\
+Table~\ref{tab:4}; Figs.~\ref{fig:3}, \ref{fig:4} & \texttt{python -m bench.run -{}-arm \textless{}arm\textgreater{} -{}-slice dev\_\allowbreak{}\allowbreak{}updates[2] [-{}-top-k 3] [-{}-no-dates]} \\
+Tables~\ref{tab:5}, \ref{tab:6}; Figs.~\ref{fig:6}, \ref{fig:7} & \texttt{python bench/\allowbreak{}test\_\allowbreak{}\allowbreak{}contradictions.py -{}-backend laya [-{}-native] -{}-save \ldots{}}, \texttt{python -m bench.calibration}, \texttt{python -m bench.jev\_\allowbreak{}\allowbreak{}regression} (the Laya rows need \texttt{bench/\allowbreak{}laya\_\allowbreak{}\allowbreak{}server.py} running) \\
 Fig.~\ref{fig:5} & \texttt{python -m bench.tradeoff} \\
-Tables~\ref{tab:12}, \ref{tab:13} & \texttt{python -m bench.laya\_\allowbreak{}report}, \texttt{python -m bench.hybrid\_\allowbreak{}report} \\
-Table~\ref{tab:14}, Fig.~\ref{fig:8} & \texttt{python -m bench.jev\_\allowbreak{}latency} \\
+Tables~\ref{tab:12}, \ref{tab:13} & \texttt{python -m bench.laya\_\allowbreak{}\allowbreak{}report}, \texttt{python -m bench.hybrid\_\allowbreak{}\allowbreak{}report} \\
+Table~\ref{tab:14}, Fig.~\ref{fig:8} & \texttt{python -m bench.jev\_\allowbreak{}\allowbreak{}latency} \\
 this paper & \texttt{python paper/\allowbreak{}build.py}, \texttt{python paper/\allowbreak{}figures.py} \\
 \bottomrule
-\end{tabularx}
-\end{table*}
+\end{longtable}
+\endgroup
 The spend ledger records cost per run, not per table; Table~\ref{tab:17} gives per-arm totals.
 
-\begin{table}[tbp]
-\centering
-\footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
-\caption{Phase 2 spend per arm, in USD (\texttt{bench/\allowbreak{}results/\allowbreak{}phase2\_\allowbreak{}spend.jsonl}).}\label{tab:17}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begingroup\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.269\linewidth}>{\raggedleft\arraybackslash}p{0.205\linewidth}>{\raggedleft\arraybackslash}p{0.205\linewidth}>{\raggedleft\arraybackslash}p{0.205\linewidth}}
+\caption{Phase 2 spend per arm, in USD (\texttt{bench/\allowbreak{}results/\allowbreak{}phase2\_\allowbreak{}spend.jsonl}).}\label{tab:17}\\
 \toprule
 \textbf{arm} & \textbf{runs} & \textbf{Jev} & \textbf{Claude} \\
 \midrule
-\texttt{mem0} & 15\src{bench/results/phase2\_spend.jsonl} & \$0.0000\src{bench/results/phase2\_spend.jsonl} & \$35.94\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e4\_\allowbreak{}belief\_\allowbreak{}v2} & 18\src{bench/results/phase2\_spend.jsonl} & \$1.0917\src{bench/results/phase2\_spend.jsonl} & \$31.80\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e2\_\allowbreak{}jev} & 2\src{bench/results/phase2\_spend.jsonl} & \$0.0636\src{bench/results/phase2\_spend.jsonl} & \$3.51\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e2\_\allowbreak{}llm} & 2\src{bench/results/phase2\_spend.jsonl} & \$0.0134\src{bench/results/phase2\_spend.jsonl} & \$3.21\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{mem0\_\allowbreak{}token\_\allowbreak{}matched} & 1\src{bench/results/phase2\_spend.jsonl} & \$0.0000\src{bench/results/phase2\_spend.jsonl} & \$2.52\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e4\_\allowbreak{}belief\_\allowbreak{}v2\_\allowbreak{}laya} & 2\src{bench/results/phase2\_spend.jsonl} & \$0.0405\src{bench/results/phase2\_spend.jsonl} & \$2.40\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e2\_\allowbreak{}jev\_\allowbreak{}v2} & 4\src{bench/results/phase2\_spend.jsonl} & \$0.0362\src{bench/results/phase2\_spend.jsonl} & \$2.35\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e1\_\allowbreak{}recall} & 4\src{bench/results/phase2\_spend.jsonl} & \$0.0653\src{bench/results/phase2\_spend.jsonl} & \$2.05\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e4\_\allowbreak{}belief} & 6\src{bench/results/phase2\_spend.jsonl} & \$0.0316\src{bench/results/phase2\_spend.jsonl} & \$1.69\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e3\_\allowbreak{}structural\_\allowbreak{}v2} & 1\src{bench/results/phase2\_spend.jsonl} & \$0.0278\src{bench/results/phase2\_spend.jsonl} & \$1.44\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e0\_\allowbreak{}baseline} & 8\src{bench/results/phase2\_spend.jsonl} & \$0.0736\src{bench/results/phase2\_spend.jsonl} & \$1.36\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{mem0\_\allowbreak{}dated} & 1\src{bench/results/phase2\_spend.jsonl} & \$0.0000\src{bench/results/phase2\_spend.jsonl} & \$0.96\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e3\_\allowbreak{}structural\_\allowbreak{}v3} & 2\src{bench/results/phase2\_spend.jsonl} & \$0.0272\src{bench/results/phase2\_spend.jsonl} & \$0.76\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e4\_\allowbreak{}belief\_\allowbreak{}v2\_\allowbreak{}hybrid} & 4\src{bench/results/phase2\_spend.jsonl} & \$0.0000\src{bench/results/phase2\_spend.jsonl} & \$0.73\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e4\_\allowbreak{}belief\_\allowbreak{}v2\_\allowbreak{}compact} & 2\src{bench/results/phase2\_spend.jsonl} & \$0.0000\src{bench/results/phase2\_spend.jsonl} & \$0.59\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e4\_\allowbreak{}belief\_\allowbreak{}v2\_\allowbreak{}norerank} & 1\src{bench/results/phase2\_spend.jsonl} & \$0.0000\src{bench/results/phase2\_spend.jsonl} & \$0.25\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e4\_\allowbreak{}belief\_\allowbreak{}v2\_\allowbreak{}shadow} & 2\src{bench/results/phase2\_spend.jsonl} & \$0.0000\src{bench/results/phase2\_spend.jsonl} & \$0.18\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e3\_\allowbreak{}structural} & 1\src{bench/results/phase2\_spend.jsonl} & \$0.0008\src{bench/results/phase2\_spend.jsonl} & \$0.04\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e4\_\allowbreak{}belief\_\allowbreak{}v2\_\allowbreak{}nohist} & 1\src{bench/results/phase2\_spend.jsonl} & \$0.0000\src{bench/results/phase2\_spend.jsonl} & \$0.01\src{bench/results/phase2\_spend.jsonl} \\
-\texttt{e4\_\allowbreak{}belief\_\allowbreak{}v3} & 3\src{bench/results/phase2\_spend.jsonl} & \$0.0004\src{bench/results/phase2\_spend.jsonl} & \$0.00\src{bench/results/phase2\_spend.jsonl} \\
+\endfirsthead
+\toprule
+\textbf{arm} & \textbf{runs} & \textbf{Jev} & \textbf{Claude} \\
+\midrule
+\endhead
+\texttt{mem0} & 15\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$35.94\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2} & 18\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.0917\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$31.80\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e2\_\allowbreak{}\allowbreak{}jev} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0636\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$3.51\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e2\_\allowbreak{}\allowbreak{}llm} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0134\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$3.21\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{mem0\_\allowbreak{}\allowbreak{}token\_\allowbreak{}\allowbreak{}matched} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$2.52\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}laya} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0405\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$2.40\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e2\_\allowbreak{}\allowbreak{}jev\_\allowbreak{}\allowbreak{}v2} & 4\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0362\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$2.35\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e1\_\allowbreak{}\allowbreak{}recall} & 4\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0653\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$2.05\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief} & 6\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0316\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.69\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e3\_\allowbreak{}\allowbreak{}structural\_\allowbreak{}\allowbreak{}v2} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0278\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.44\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e0\_\allowbreak{}\allowbreak{}baseline} & 8\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0736\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$1.36\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{mem0\_\allowbreak{}\allowbreak{}dated} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.96\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e3\_\allowbreak{}\allowbreak{}structural\_\allowbreak{}\allowbreak{}v3} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0272\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.76\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}hybrid} & 4\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.73\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}compact} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.59\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}norerank} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.25\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}shadow} & 2\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.18\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e3\_\allowbreak{}\allowbreak{}structural} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0008\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.04\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v2\_\allowbreak{}\allowbreak{}nohist} & 1\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0000\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.01\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
+\texttt{e4\_\allowbreak{}\allowbreak{}belief\_\allowbreak{}\allowbreak{}v3} & 3\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.0004\src{bench/results/phase2\_\allowbreak{}spend.jsonl} & \$0.00\src{bench/results/phase2\_\allowbreak{}spend.jsonl} \\
 \bottomrule
-\end{tabularx}
-\end{table}
+\end{longtable}
+\endgroup
 \FloatBarrier
 \end{document}

@@ -560,6 +560,10 @@ def numbers() -> None:
 
 
 SHORT_HEADERS = {
+    "questions / request": "questions",
+    "median input tokens": "input tokens",
+    "median latency": "p50",
+    "p90 latency": "p90",
     "set 1 accuracy": "set-1 acc.",
     "set 2 accuracy": "set-2 acc.",
     "set 1 stale": "set-1 stale",

@@ -26,8 +26,8 @@ OPEN, SEP, CLOSE = "\x00", "\x01", "\x02"  # sourced-number markers inside the i
 WIDE_FIGS = {"pipeline", "calibration"}  # figure*: the pipeline, and the three-panel reliability diagram
 COLUMN_PT = 219.0  # one column in acl.sty: A4, 2.5 cm margins, 0.6 cm column sep
 CHAR_PT = 4.2  # average character width at \footnotesize (9 pt Times in acl.sty)
-ONECOLUMN_FROM = None  # appendices stay in two columns (ACL); set to e.g. "Appendix B" to switch to one column
-FORCE_COLUMN = {"tab:7"}  # tables kept in one column (\small, wrapped) even though their natural width is larger
+ONECOLUMN_FROM = "Appendix A"  # appendices in one column: wide tables then sit next to their text
+FORCE_COLUMN: set[str] = set()  # tables kept in one column (\small, wrapped) even though their natural width is larger
 
 
 def marker_cite(key: str) -> str:
@@ -213,7 +213,9 @@ def is_unnumbered_caption(lines: list[str], i: int) -> bool:
     return j < len(lines) and lines[j].strip().startswith("|")
 
 
-def table_tex(rows: list[list[str]], caption: str | None, label: str | None, onecolumn: bool) -> str:
+def table_tex(
+    rows: list[list[str]], caption: str | None, label: str | None, onecolumn: bool, here: bool = False
+) -> str:
     header, body = rows[0], rows[2:]
     ncol = len(header)
     cap = (rf"\caption{{{inline(caption)}}}" + (rf"\label{{{label}}}" if label else "")) if caption else ""
@@ -231,6 +233,7 @@ def table_tex(rows: list[list[str]], caption: str | None, label: str | None, one
         lines = [r"\begingroup\scriptsize", rf"\begin{{longtable}}{{{spec}}}"]
         if cap:
             lines.append(cap + r"\\")
+        lines += [r"\toprule", head, r"\midrule", r"\endfirsthead"]  # caption and label once, on the first page
         lines += [r"\toprule", head, r"\midrule", r"\endhead"]
         lines += [" & ".join(inline(c).replace(r"\_", r"\_\allowbreak{}") for c in r) + r" \\" for r in body]
         lines += [r"\bottomrule", r"\end{longtable}", r"\endgroup"]
@@ -238,7 +241,8 @@ def table_tex(rows: list[list[str]], caption: str | None, label: str | None, one
     forced = label in FORCE_COLUMN
     wide = not onecolumn and not forced and natural_width(header, body) > COLUMN_PT
     first = max(len(plain(r[0])) for r in [header, *body])
-    share = min(0.34, max(0.14, first * CHAR_PT / (COLUMN_PT * (2.05 if wide or onecolumn else 1))))
+    cap_share = 0.34 if ncol > 3 else 0.5  # a two- or three-column table can give its label column half the width
+    share = min(cap_share, max(0.14, first * CHAR_PT / (COLUMN_PT * (2.05 if wide or onecolumn else 1))))
     if forced:
         share = 0.40
     spec = rf">{{\raggedright\arraybackslash}}p{{{share:.2f}\linewidth}}" + "".join(
@@ -251,7 +255,7 @@ def table_tex(rows: list[list[str]], caption: str | None, label: str | None, one
     env = "table*" if wide else "table"
     return "\n".join(
         [
-            rf"\begin{{{env}}}[{'!htbp' if onecolumn else 'tbp'}]",
+            rf"\begin{{{env}}}[{'!htbp' if onecolumn or (here and not wide) else 'tbp'}]",
             r"\centering",
             (r"\small" if forced else r"\footnotesize") + r"\hyphenpenalty=10000\exhyphenpenalty=10000",
             cap,
@@ -267,13 +271,14 @@ def table_tex(rows: list[list[str]], caption: str | None, label: str | None, one
     )
 
 
-def figure_tex(path: str, caption: str, label: str | None) -> str:
+def figure_tex(path: str, caption: str, label: str | None, here: bool = False, onecolumn: bool = False) -> str:
     stem = Path(path).stem
     env = "figure*" if stem in WIDE_FIGS else "figure"
-    width = r"\textwidth" if env == "figure*" else r"\columnwidth"
+    # a one-column figure keeps roughly its two-column size when the page is set in one column
+    width = r"\textwidth" if env == "figure*" else (r"0.6\linewidth" if onecolumn else r"\columnwidth")
     return "\n".join(
         [
-            rf"\begin{{{env}}}[tbp]",
+            rf"\begin{{{env}}}[{'!htbp' if here and env == 'figure' else 'tbp'}]",
             r"\centering",
             rf"\includegraphics[width={width}]{{figures/{stem}.pdf}}",
             rf"\caption{{{inline(caption)}}}" + (rf"\label{{{label}}}" if label else ""),
@@ -382,7 +387,7 @@ def convert(md: str) -> tuple[str, str, str, str]:
                 m = re.match(r"^Table (\d+)\.\s*(.*)$", cap, flags=re.S)
                 if m:
                     label, cap = f"tab:{m.group(1)}", m.group(2)
-            cur.append(table_tex(rows, cap, label, onecolumn))
+            cur.append(table_tex(rows, cap, label, onecolumn, here=cur is appendix))  # appendix floats stay near text
             pending_caption = None
             continue
         img = re.match(r"^!\[(.*?)\]\((.*?)\)$", s)
@@ -401,7 +406,7 @@ def convert(md: str) -> tuple[str, str, str, str]:
                     j += 1
                 cap = re.sub(r"^Figure \d+\.\s*", "", " ".join(capl).strip().strip("*"))
                 i = j - 1
-            cur.append(figure_tex(path, cap, label))
+            cur.append(figure_tex(path, cap, label, here=cur is appendix, onecolumn=onecolumn))
             i += 1
             continue
         if re.match(r"^\*Table \d+\.", s) or is_unnumbered_caption(lines, i):  # caption paragraph for the next table
