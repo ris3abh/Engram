@@ -5,13 +5,25 @@ is printed with its line, so each can be reviewed: an experimental setting (k=3)
 reference, or a number that should have been sourced. Appendices are skipped (generated from data files).
 
     python paper/check.py
+    python paper/check.py --v2   # the v2 paper: refuses to pass until the human audit is graded
+
+With --v2 the check first enforces the human-audit gate (docs/V2_PLAN.md, section 8): bench/human_audit/graded.csv
+must exist and grade every row of the audit set, so the v2 paper cannot be built before the human grading is done.
 """
 
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
+if "--v2" in sys.argv:
+    sys.path.insert(0, str(ROOT))
+    from bench.human_audit.common import audit_problems
+
+    if problems := audit_problems():
+        print("v2 paper blocked by the human-audit gate:", *(f"  - {p}" for p in problems), sep="\n")
+        sys.exit(1)
 text = (ROOT / "paper" / "main.md").read_text()
 numbers = json.loads((ROOT / "paper" / "numbers.json").read_text())
 body = text.split("## Appendix A.")[0]
