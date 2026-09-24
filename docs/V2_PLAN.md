@@ -124,8 +124,8 @@ primary judge; S3 is an equivalence test (below). All ten are corrected together
 | S5 | engram Jev rerank vs engram gpt-4o-mini listwise rerank, k=3 | five fresh LoCoMo conversations, four scored categories |
 | S6 | engram Jev rerank vs engram no rerank, k=3 | five fresh LoCoMo conversations, four scored categories |
 | S9 | store correctness: engram vs mem0, memory text without dates, k=3, validity-window gold | update set 3 questions (section 9); sets 1–2 if set 3 is not frozen, then labeled exploratory |
-| S10 | LongMemEval knowledge-update: engram k=3 vs mem0 at its token-matched k | LongMemEval-S cleaned, knowledge-update questions (78) |
-| S11 | LongMemEval knowledge-update: engram k=3 vs Graphiti at its token-matched k | LongMemEval-S cleaned, knowledge-update questions (78) |
+| S10 | LongMemEval knowledge-update: engram k=3 vs mem0 at its token-matched k | LongMemEval-S cleaned, the 72 non-abstention knowledge-update questions |
+| S11 | LongMemEval knowledge-update: engram k=3 vs Graphiti at its token-matched k | LongMemEval-S cleaned, the 72 non-abstention knowledge-update questions |
 | S12 | H1's contrast: engram k=3 vs mem0 at its token-matched k (the token-matched k chosen on the nine conversations) | pooled nine held-out LoCoMo conversations (conv-30, 41, 42, 43, 44, 47, 48, 49, 50), four scored categories, 1,388 questions |
 
 **S3 equivalence test.** Two one-sided tests on the paired per-question difference d̄ (engram minus mem0, k=20)
@@ -202,8 +202,14 @@ valid at the time the question asks about, as the set's author writes it; the an
   `bench/longmemeval.py`. The selected ids and their hash are committed in `bench/slices/longmemeval_ids.json`.
 - **Protocol:** each question's haystack (about 47 sessions) is ingested per question, in order, with each session's
   date as reference time. Every system ingests the same stream: the user turns, one at a time; assistant turns are not
-  stored. This differs from LongMemEval's full-history setting and is stated in every caption. Abstention questions
-  stay in the subset; an answer is correct on them if it abstains.
+  stored. This differs from LongMemEval's full-history setting and is stated in every caption.
+- **Question date:** every system answers with the question's `question_date`. The `{question}` slot of the shared
+  answer prompt (mem0's LoCoMo answer prompt) receives `(Current date: <question_date>) <question>`, with
+  `question_date` verbatim from the dataset (for example `2023/06/25 (Sun) 13:22`); nothing else in the prompt changes,
+  and the retrieval query is the question text alone.
+- **Abstention questions:** S10–S11 are tested on the 72 non-abstention knowledge-update questions. The 6 abstention
+  questions (ids ending `_abs`) are answered and reported separately, as exploratory; an answer is correct on them if
+  it abstains.
 - **k:** engram at k=3 against each baseline at its token-matched k (section 5.3, swept on the same questions) for
   S10–S11; k=20 for every system as an exploratory setting.
 - **Systems:** engram (`v2-frozen`), mem0, Graphiti.
@@ -248,6 +254,9 @@ one.
   conversations, Holm-corrected with the family (ten tests). H1 stays on the five fresh conversations.
 - 2026-09-24, §6: S3's difference test is replaced by a TOST equivalence test for engram k=20 vs mem0 k=20 on the five
   fresh conversations, margin ±5 points, α = 0.05 (Holm-adjusted); "equivalent within 5 points" only if it passes.
+- 2026-09-24, §10 and §6: LongMemEval answers receive each question's question_date in the shared answer prompt,
+  identically for every system; S10–S11 are tested on the 72 non-abstention knowledge-update questions and the 6
+  abstention questions are reported separately.
 
 ### Where this plan differs from the phase-3 brief
 
