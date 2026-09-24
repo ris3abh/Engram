@@ -1,11 +1,12 @@
-"""Build the two-column arXiv preprint: paper/main.tex, from paper/main.src.md and the result files.
+"""Build the paper in ACL format: paper/main.tex, from paper/main.src.md and the result files.
 
 Numbers come from the same computation as paper/main.md (paper/build.py). Each is written as `display\\src{path}`;
 `\\src` expands to nothing, so the PDF shows the number and the .tex keeps its source for the audit. The output
-compiles with pdflatex (arXiv's default): pdflatex -> bibtex -> pdflatex x2 (`make paper` in paper/).
+compiles with pdflatex (arXiv's default): pdflatex -> bibtex -> pdflatex x2 (`make paper` in paper/). The style
+files paper/acl.sty and paper/acl_natbib.bst are from github.com/acl-org/acl-style-files (commit d5adc82).
 
 Markdown conventions the converter understands, beyond the basics:
-- `[@key]`, `[@a; @b]`: \\citep; bibliography in paper/references.bib (plainnat, numbers).
+- `[@key]`, `[@a; @b]`: \\citep (author-year, acl_natbib); a bare `@key` in running text: \\citet.
 - "Table N", "Figure N" in running text: \\ref to the label of the table/figure whose caption carries that number.
 - A table goes in table* (both columns) when its estimated width exceeds one column; figures listed in WIDE_FIGS
   go in figure*. Appendices from B on are set in one column, and only there do tables become longtables.
@@ -22,8 +23,8 @@ import build  # noqa: E402
 OUT = ROOT / "paper"
 OPEN, SEP, CLOSE = "\x00", "\x01", "\x02"  # sourced-number markers inside the intermediate Markdown
 WIDE_FIGS = {"pipeline", "calibration"}  # figure*: the pipeline, and the three-panel reliability diagram
-COLUMN_PT = 243.0  # one column at 0.75in margins, 0.25in column sep, letter paper
-CHAR_PT = 4.4  # average character width at \footnotesize
+COLUMN_PT = 219.0  # one column in acl.sty: A4, 2.5 cm margins, 0.6 cm column sep
+CHAR_PT = 4.2  # average character width at \footnotesize (9 pt Times in acl.sty)
 ONECOLUMN_FROM = "Appendix B"
 FORCE_COLUMN = {"tab:1"}  # tables kept in one column (\small, wrapped) even though their natural width is larger
 
@@ -105,6 +106,7 @@ XREF_KIND = {"Table": "tab", "Tables": "tab", "Figure": "fig", "Figures": "fig",
 TOKEN = re.compile(
     rf"(?P<num>{OPEN}(?P<nd>[^{SEP}]*){SEP}(?P<ns>[^{CLOSE}]*){CLOSE})"
     r"|(?P<cite>\[(?P<ck>@[\w-]+(?:;\s*@[\w-]+)*)\])"
+    r"|(?P<citet>(?<![\w@])@(?P<tk>[a-z]+\d{4}[a-z]+)\b)"
     r"|(?P<eqref>\[\[(?P<eqk>eq:[\w,:-]+)\]\])"
     r"|(?P<sref>§(?P<s1>\d+(?:\.\d+)?)(?:–(?P<s2>\d+(?:\.\d+)?))?)"
     r"|(?P<aref>\bAppendix (?P<ax>[A-E])\b)"
@@ -149,6 +151,8 @@ def inline(text: str) -> str:
         elif m.group("cite"):
             keys = [k.strip().lstrip("@") for k in m.group("ck").split(";")]
             out.append(r"\citep{" + ",".join(keys) + "}")
+        elif m.group("citet"):
+            out.append(r"\citet{" + m.group("tk") + "}")
         elif m.group("code"):
             inner = m.group("c")
             out.append(inline(inner) if OPEN in inner else esc_tt(inner))
@@ -337,7 +341,7 @@ def convert(md: str) -> tuple[str, str, str, str]:
                     )
                 elif text == "References":
                     cur = body
-                    cur += [r"\bibliographystyle{plainnat}", r"\bibliography{references}"]
+                    cur += [r"\bibliography{references}"]  # acl.sty sets \bibliographystyle{acl_natbib}
                 else:
                     cur = body
                     num = re.match(r"^(\d+)\.", text)
@@ -443,26 +447,27 @@ def convert(md: str) -> tuple[str, str, str, str]:
     return title, "\n".join(abstract), "\n".join(body), "\n".join(appendix)
 
 
-PREAMBLE = r"""\documentclass[10pt,twocolumn]{article}
-\usepackage[letterpaper,margin=0.75in,columnsep=0.25in]{geometry}
+PREAMBLE = r"""\documentclass[11pt]{article}
+\usepackage[table]{xcolor}
+\usepackage[final]{acl}
+\usepackage{times}
+\usepackage{latexsym}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
-\IfFileExists{inconsolata.sty}{\usepackage[scaled=0.92]{inconsolata}}{}
+\usepackage{microtype}
+\IfFileExists{inconsolata.sty}{\usepackage{inconsolata}}{}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs,longtable,array,tabularx}
 \usepackage{placeins}
-\usepackage[table]{xcolor}
-\usepackage{caption}
-\usepackage{microtype}
 \usepackage{listings}
 \usepackage{enumitem}
-\usepackage{url}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{}
-\usepackage[numbers,sort&compress]{natbib}
-\usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram,
-  pdftitle={Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}]{hyperref}
+\definecolor{engram}{HTML}{4453C4}
+\definecolor{codebg}{HTML}{F5F7FA}
+\hypersetup{linkcolor=engram,citecolor=engram,urlcolor=engram,
+  pdftitle={Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs},
+  pdfauthor={Rishabh Sharma}}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \crefname{equation}{Eq.}{Eqs.}\Crefname{equation}{Eq.}{Eqs.}
 \newcommand{\secfmt}[1]{%
@@ -471,9 +476,7 @@ PREAMBLE = r"""\documentclass[10pt,twocolumn]{article}
   \crefmultiformat{#1}{\S\S##2##1##3}{ and~##2##1##3}{, ##2##1##3}{ and~##2##1##3}%
   \Crefmultiformat{#1}{\S\S##2##1##3}{ and~##2##1##3}{, ##2##1##3}{ and~##2##1##3}}
 \secfmt{section}\secfmt{subsection}
-\definecolor{engram}{HTML}{4453C4}
-\definecolor{codebg}{HTML}{F5F7FA}
-\captionsetup{font=small,labelfont=bf,skip=5pt}
+\captionsetup{labelfont=bf,skip=5pt}
 \setlist{itemsep=1pt,topsep=2pt,leftmargin=*}
 \lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,columns=fullflexible,
   keepspaces=true,backgroundcolor=\color{codebg},frame=none,xleftmargin=4pt,xrightmargin=4pt,
@@ -488,6 +491,13 @@ PREAMBLE = r"""\documentclass[10pt,twocolumn]{article}
 """
 
 
+# ACL author block. ORCID and email are placeholders until supplied.
+AUTHOR = r"""\author{Rishabh Sharma \\
+  ORCID: \texttt{[0000-0000-0000-0000]} \\
+  Independent researcher \\
+  \texttt{[email@domain]}}"""
+
+
 def main() -> None:
     build.numbers()
     build.cite = marker_cite
@@ -496,9 +506,8 @@ def main() -> None:
     tex = "\n".join(
         [
             PREAMBLE,
-            rf"\title{{\textbf{{{inline(title)}}}}}",
-            r"\author{Rishabh Sharma\\\small Independent researcher}",
-            r"\date{}",
+            rf"\title{{{inline(title)}}}",
+            AUTHOR,
             r"\begin{document}",
             r"\maketitle",
             r"\begin{abstract}",

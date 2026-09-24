@@ -1232,7 +1232,8 @@ def md_cites(text: str) -> str:
         lambda m: "(" + ", ".join("Eq. " + k.split(":")[1] for k in m.group(1).split(",")) + ")",
         text,
     )
-    return CITE.sub(lambda m: "[" + "; ".join(k.strip().lstrip("@") for k in m.group(1).split(";")) + "]", text)
+    text = CITE.sub(lambda m: "[" + "; ".join(k.strip().lstrip("@") for k in m.group(1).split(";")) + "]", text)
+    return re.sub(r"(?<![\w@])@([a-z]+\d{4}[a-z]+)\b", r"\1", text)  # bare @key (\citet in LaTeX)
 
 
 def main() -> None:

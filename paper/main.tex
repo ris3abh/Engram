@@ -1,23 +1,24 @@
-\documentclass[10pt,twocolumn]{article}
-\usepackage[letterpaper,margin=0.75in,columnsep=0.25in]{geometry}
+\documentclass[11pt]{article}
+\usepackage[table]{xcolor}
+\usepackage[final]{acl}
+\usepackage{times}
+\usepackage{latexsym}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
-\IfFileExists{inconsolata.sty}{\usepackage[scaled=0.92]{inconsolata}}{}
+\usepackage{microtype}
+\IfFileExists{inconsolata.sty}{\usepackage{inconsolata}}{}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs,longtable,array,tabularx}
 \usepackage{placeins}
-\usepackage[table]{xcolor}
-\usepackage{caption}
-\usepackage{microtype}
 \usepackage{listings}
 \usepackage{enumitem}
-\usepackage{url}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{}
-\usepackage[numbers,sort&compress]{natbib}
-\usepackage[colorlinks=true,linkcolor=engram,citecolor=engram,urlcolor=engram,
-  pdftitle={Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}]{hyperref}
+\definecolor{engram}{HTML}{4453C4}
+\definecolor{codebg}{HTML}{F5F7FA}
+\hypersetup{linkcolor=engram,citecolor=engram,urlcolor=engram,
+  pdftitle={Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs},
+  pdfauthor={Rishabh Sharma}}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \crefname{equation}{Eq.}{Eqs.}\Crefname{equation}{Eq.}{Eqs.}
 \newcommand{\secfmt}[1]{%
@@ -26,9 +27,7 @@
   \crefmultiformat{#1}{\S\S##2##1##3}{ and~##2##1##3}{, ##2##1##3}{ and~##2##1##3}%
   \Crefmultiformat{#1}{\S\S##2##1##3}{ and~##2##1##3}{, ##2##1##3}{ and~##2##1##3}}
 \secfmt{section}\secfmt{subsection}
-\definecolor{engram}{HTML}{4453C4}
-\definecolor{codebg}{HTML}{F5F7FA}
-\captionsetup{font=small,labelfont=bf,skip=5pt}
+\captionsetup{labelfont=bf,skip=5pt}
 \setlist{itemsep=1pt,topsep=2pt,leftmargin=*}
 \lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,columns=fullflexible,
   keepspaces=true,backgroundcolor=\color{codebg},frame=none,xleftmargin=4pt,xrightmargin=4pt,
@@ -41,9 +40,11 @@
 % Every number is written as value\src{source file}; \src prints nothing. See paper/numbers.json.
 \newcommand{\src}[1]{}
 
-\title{\textbf{Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}}
-\author{Rishabh Sharma\\\small Independent researcher}
-\date{}
+\title{Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}
+\author{Rishabh Sharma \\
+  ORCID: \texttt{[0000-0000-0000-0000]} \\
+  Independent researcher \\
+  \texttt{[email@domain]}}
 \begin{document}
 \maketitle
 \begin{abstract}
@@ -327,7 +328,7 @@ At $k{=}$3 engram shows the answer model 290\src{bench/results/heldout\_report.j
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Held-out LoCoMo accuracy: conv-30, 41, 42 and 43, 610\src{bench/results/heldout\_report.json} questions, adversarial category excluded, k as labeled. Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6. One ingestion per system per conversation. Tokens are mean retrieved-context tokens per question.}\label{tab:3}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{system} & \textbf{k} & \textbf{tokens/q} & \textbf{conv-30} & \textbf{conv-41} & \textbf{conv-42} & \textbf{conv-43} & \textbf{pooled} \\
 \midrule
@@ -344,7 +345,7 @@ mem0 & 20 & 1,024\src{bench/results/heldout\_report.json} & 77.8\%\src{bench/res
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Paired differences for the rows of Table~\ref{tab:3}: held-out, Q = 610\src{bench/results/heldout\_report.json}, k as labeled, models as in Table~\ref{tab:3}. 95\% CI: per-question normal approximation. Bootstrap: resampling the four conversations. Discordant: questions only engram / only mem0 answered correctly.}\label{tab:4}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.33\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{comparison} & \textbf{$\Delta$ (pts)} & \textbf{95\% CI} & \textbf{95\% CI, bootstrap} & \textbf{discordant} & \textbf{McNemar p} \\
 \midrule
@@ -399,7 +400,7 @@ We attribute that remainder to which memories reach the top three, which rests o
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Store safety on dev + update set 1 and set 2 (storage metrics only). Extraction claude-haiku-4-5, decisions Jev (jev-1.13.0). Columns: set-1 no\_close items over-closed / stored; set-2 keep items kept / stored; closes on dev + set 1, split into those matching a labeled pair and those not. Over-closed: a labeled no\_close item whose fact was closed by its own update message. Matching a labeled pair: a close whose (closed fact's message, closing message) is a labeled update or superseded pair. The set-2 keep set has one item.}\label{tab:6}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{arm} & \textbf{set-1 over-closed} & \textbf{set-2 kept} & \textbf{closes} & \textbf{labeled} & \textbf{unlabeled} \\
 \midrule
@@ -494,7 +495,7 @@ With Jev alone the error is 10.0\%\src{bench/results/tradeoff.json}. At $\theta$
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Update sets on the dev slice (conv-26 sessions 1--4 plus the update messages). Set 1 has 30\src{bench/updates\_conv26.json} update questions and set 2 has 20\src{bench/updates2\_conv26.json}. Stale counts are close items whose old fact is still active, over close items stored. Accuracy is at default k (all retrieved memories) unless marked. Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6.}\label{tab:8}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{arm} & \textbf{set-1 stale} & \textbf{set-2 stale} & \textbf{set-1 acc.} & \textbf{set-2 acc.} & \textbf{set-1 acc. $k{=}$3} & \textbf{set-1 acc. no dates} \\
 \midrule
@@ -520,7 +521,7 @@ Everything in this section concerns the 421M\src{convai2026laya (model card)} ba
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Contradiction regression (50\src{bench/results/tradeoff.json} gold pairs), relation\_to\_candidate and temporal\_status in one request. Laya: convaiinnovations/laya\src{bench/results/e4\_belief\_v2\_laya\_\_dev\_updates\_\_k3.json} base checkpoint, zero-shot, fp16, on the local MLX server.}\label{tab:9}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{backend} & \textbf{relation exact} & \textbf{temporal} & \textbf{close rule} & \textbf{closes} & \textbf{false closes} \\
 \midrule
@@ -541,7 +542,7 @@ Laya, native wording (fits) & 38.0\%\src{bench/results/laya\_regression\_native.
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory at $k{=}$3 (write and retrieval decisions; n per row). Jev jev-1.13.0; Laya base checkpoint, zero-shot. Same action: both choose the same label at p $\geq$ 0.85\src{src/engram/config.py}, or neither reaches it. Acts: share of decisions at p $\geq$ 0.85\src{src/engram/config.py}.}\label{tab:10}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{question} & \textbf{n} & \textbf{same answer} & \textbf{same action} & \textbf{Jev acts} & \textbf{Laya acts} \\
 \midrule
@@ -574,7 +575,7 @@ Laya, native wording (fits) & 38.0\%\src{bench/results/laya\_regression\_native.
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Hybrid against all-Jev: dev slice with update sets (Q per row: 35\src{bench/results/e2\_jev\_\_dev.json} LoCoMo, 30\src{bench/updates\_conv26.json} set 1, 20\src{bench/updates2\_conv26.json} set 2), k as labeled, extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6.}\label{tab:11}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{questions} & \textbf{all-Jev $k{=}$3} & \textbf{hybrid $k{=}$3} & \textbf{all-Jev $k{=}$20} & \textbf{hybrid $k{=}$20} \\
 \midrule
@@ -649,7 +650,6 @@ Update set 2 targets these, and every arm is at its ceiling on it.
 \section{Conclusion}\label{sec:8}
 With extraction held identical, typed decisions replaced an LLM decision layer at 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower cost and 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower median decision latency, with no measured accuracy loss. On 610\src{bench/results/heldout\_report.json} held-out questions, a cheap listwise rerank gave +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points over mem0 at matched context under a three-memory budget, and the systems tied at $k{=}$20. Closing stale facts, the part of the design aimed at correctness, did not change answers on current benchmarks. The base checkpoint of a small open-weights decision model, used zero-shot, did not make the relational decisions.
 
-\bibliographystyle{plainnat}
 \bibliography{references}
 \appendix
 \FloatBarrier
@@ -1229,7 +1229,7 @@ conv-43 & 178\src{bench/results/heldout\_report.json} & 136/178\src{bench/result
 \centering
 \footnotesize\hyphenpenalty=10000\exhyphenpenalty=10000
 \caption{Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices), from the decision logs (\texttt{bench/\allowbreak{}results/\allowbreak{}jev\_\allowbreak{}latency.json}). Client-measured, after the rate limiter, retries included.}\label{tab:12}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
 \toprule
 \textbf{questions / request} & \textbf{requests} & \textbf{median input tokens} & \textbf{median latency} & \textbf{p90 latency} \\
 \midrule
