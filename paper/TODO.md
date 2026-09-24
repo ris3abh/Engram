@@ -4,8 +4,8 @@ Build: `make paper` (in `paper/`). Edit `paper/main.src.md`, never `main.md` or 
 
 ## Before submission
 
-- [ ] **ORCID and email.** The ACL author block (`AUTHOR` in `build_tex.py`) has placeholders
-  `[0000-0000-0000-0000]` and `[email@domain]`. Name and affiliation (Rishabh Sharma, independent researcher) are set.
+- **Author block (resolved).** Rishabh Sharma, Independent Researcher, rishabh.sharma1103@gmail.com; no ORCID line.
+  pdfauthor is "Rishabh Sharma".
 - [ ] **Code paths without released code.** The code is not released with the paper, but the text cites paths in it:
   Appendix A points to `src/engram/decide/questions.py` and `docs/DECISIONS.md` for the full option text, §4.2 to
   `src/engram/llm/prompts_mem0.py` and `tests/test_prompts_mem0.py` for the pinned mem0 prompts (both as the

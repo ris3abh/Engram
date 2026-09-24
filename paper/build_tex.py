@@ -497,11 +497,10 @@ PREAMBLE = r"""\documentclass[11pt]{article}
 """
 
 
-# ACL author block. ORCID and email are placeholders until supplied.
+# ACL author block.
 AUTHOR = r"""\author{Rishabh Sharma \\
-  ORCID: \texttt{[0000-0000-0000-0000]} \\
-  Independent researcher \\
-  \texttt{[email@domain]}}"""
+  Independent Researcher \\
+  \texttt{rishabh.sharma1103@gmail.com}}"""
 
 
 def main() -> None:
