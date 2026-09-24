@@ -588,7 +588,8 @@ PREAMBLE = r"""\documentclass[11pt]{article}
 
 
 # ACL author block.
-AUTHOR = r"""\author{Rishabh Sharma \\
+AUTHOR = r"""\author{Rishabh Sharma\thanks{Preprint. DOI:
+  \href{https://doi.org/10.5281/zenodo.22941758}{10.5281/zenodo.22941758}} \\
   Independent Researcher \\
   \texttt{rishabh.sharma1103@gmail.com}}"""
 
