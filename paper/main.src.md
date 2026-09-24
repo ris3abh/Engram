@@ -817,7 +817,7 @@ cache (`bench/.cache/calls.sqlite`) in place, every command in Table 16 replays 
 | table / figure | command |
 |---|---|
 | Table 1 | `python -m bench.run --arm {e2_jev,e2_llm,mem0} --slice dev` |
-| Tables 2, 3, 9–11; Fig. 2 | `python -m bench.run --arm {e4_belief_v2,mem0} --slice heldout:<conv> --top-k 3 --also-top-k 20`, then `python -m bench.heldout_report`, `python -m bench.token_match` and `python -m bench.heldout_extra` (reranking off, adversarial) |
+| Tables 2, 3, 9–11; Fig. 2 | `python -m bench.run --arm {e4_belief_v2,mem0} --slice heldout:<conv> --top-k 3 --also-top-k 20`, then `python -m bench.heldout_report`, `python -m bench.token_match`, `python -m bench.perconv` and `python -m bench.heldout_extra` (reranking off, adversarial) |
 | §4.2 | `python -m bench.e2_extraction_diff` |
 | Table 4; Figs. 3, 4 | `python -m bench.run --arm <arm> --slice dev_updates[2] [--top-k 3] [--no-dates]` |
 | Tables 5, 6; Figs. 6, 7 | `python bench/test_contradictions.py --backend laya [--native] --save …`, `python -m bench.calibration`, `python -m bench.calibration_scores`, `python -m bench.jev_regression` (the Laya rows need `bench/laya_server.py` running) |

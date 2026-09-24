@@ -212,7 +212,7 @@ Median request latency 177 ms, total cost $0.00156 for 50 decisions.
 <!-- throughput:start -->
 ## Jev throughput
 
-Write-path requests (16 questions each: one extracted fact against 10 candidates), retries disabled. Regenerate with `python -m bench.throughput`.
+Write-path requests (16 questions each: one extracted fact against 10 candidates), retries disabled. Regenerate with `python -m bench.archive.throughput`.
 
 | scenario | sent | ok | refused (HTTP) | invalid answers | wall s | facts/s | decisions/s | p50 ms | p95 ms | µ$/fact |
 |---|---|---|---|---|---|---|---|---|---|---|

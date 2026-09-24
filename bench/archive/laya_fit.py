@@ -13,7 +13,7 @@ from pathlib import Path
 import laya_mlx as laya
 from laya_mlx.common import build_prefix, render_options
 
-ROOT = Path(__file__).parents[1]
+ROOT = Path(__file__).parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 from engram.decide import laya_questions as N  # noqa: E402
 from engram.decide import questions as Q  # noqa: E402

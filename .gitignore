@@ -8,6 +8,7 @@ logs/
 .ruff_cache/
 bench/data/
 bench/.cache/
+# Results: ignored by default; the files the paper builds from are force-added (git add -f).
 bench/results/*.json
 paper/main.aux
 paper/main.pdf
@@ -16,3 +17,13 @@ paper/main.blg
 paper/main.log
 paper/main.out
 paper/__pycache__/
+
+# OS, editors, build artifacts
+.DS_Store
+*.egg-info/
+build/
+dist/
+.mypy_cache/
+paper/docker/*.log
+# release archives made with git archive
+/engram-*.zip

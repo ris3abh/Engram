@@ -1,7 +1,7 @@
 """Measure Jev throughput with realistic write-path requests, and probe where the API starts refusing.
 
-    uv run --env-file .env python -m bench.throughput                 # 15 rps, 20 rps, unthrottled burst
-    uv run --env-file .env python -m bench.throughput --sustained 60  # also hold 30 rps for 60 s (--sustained-rps)
+    uv run --env-file .env python -m bench.archive.throughput                 # 15 rps, 20 rps, unthrottled burst
+    uv run --env-file .env python -m bench.archive.throughput --sustained 60  # also hold 30 rps for 60 s (--sustained-rps)
 
 One write-path request = one extracted fact = 16 questions (6 per-fact + 10 relation_to_candidate).
 Retries are disabled (attempts=1) so every 429/529/timeout is visible instead of being absorbed.
@@ -30,7 +30,7 @@ from engram.decide.questions import (
 
 from .test_contradictions import load_pairs
 
-BENCHMARK = Path(__file__).parents[1] / "docs" / "BENCHMARK.md"
+BENCHMARK = Path(__file__).parents[2] / "docs" / "BENCHMARK.md"
 
 
 def write_requests(n: int) -> list[tuple[dict, list[Ask]]]:
@@ -131,7 +131,7 @@ async def main() -> None:
         "## Jev throughput",
         "",
         "Write-path requests (16 questions each: one extracted fact against 10 candidates), retries disabled. "
-        "Regenerate with `python -m bench.throughput`.",
+        "Regenerate with `python -m bench.archive.throughput`.",
         "",
         "| scenario | sent | ok | refused (HTTP) | invalid answers | wall s | facts/s | decisions/s | p50 ms | p95 ms "
         "| µ$/fact |",
