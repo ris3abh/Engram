@@ -65,7 +65,7 @@ make the relational decisions (§5.4). Figure 2 plots the third against the cont
 
 *Figure 2. Pooled held-out accuracy (610<!-- src: bench/results/heldout_report.json --> questions) against mean retrieved tokens per question. mem0
 accuracy was measured at three settings, k=3<!-- src: bench/results/heldout_report.json (k=3 run) -->, 6<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> and 20<!-- src: bench/results/heldout_report.json (k=20 run) -->; the token-matching sweep counted
-tokens at the other k without answering. Models as in Table 3.*
+tokens at the other k without answering. Models as in Table 2.*
 
 
 **Scope.** We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development
@@ -298,10 +298,10 @@ interval only.
 
 ### 5.1 Replacing the decision layer
 
-The three arms in Table 2 share extraction. The two engram arms differ only in what decides after it: Jev's
+The three arms in Table 1 share extraction. The two engram arms differ only in what decides after it: Jev's
 typed questions in E2 Jev, and `claude-sonnet-4-6` with mem0's update prompt, one call per extracted fact, in E2 LLM.
 
-*Table 2. Dev slice, conv-26 sessions 1–4, 76<!-- src: bench/results/e2_jev__dev.json --> messages, 35<!-- src: bench/results/e2_jev__dev.json --> questions, all retrieved memories
+*Table 1. Dev slice, conv-26 sessions 1–4, 76<!-- src: bench/results/e2_jev__dev.json --> messages, 35<!-- src: bench/results/e2_jev__dev.json --> questions, all retrieved memories
 (default k). Extraction claude-haiku-4-5 for all arms; answers and judge claude-sonnet-4-6; E2 LLM decides with
 claude-sonnet-4-6. Costs are per 1,000 messages written. Decision p50: median time after extraction, per message,
 over messages that produced at least one fact. Write p50: median end-to-end write time per message over all
@@ -323,7 +323,7 @@ The two latency columns are medians over different messages. In the E2 LLM arm o
 (median extraction 869 ms<!-- src: bench/results/e2_latency.json -->); on the messages with decisions, the logged median of the slowest
 decision call is 7,892 ms<!-- src: bench/results/e2_latency.json --> (`bench/e2_latency.py`).
 
-In Table 2 the decision layer is 1.3%<!-- src: bench/results/e2_jev__dev.json: decision $/1k ÷ total $/1k --> of the Jev arm's end-to-end write cost and 47.0%<!-- src: bench/results/e2_llm__dev.json: decision $/1k ÷ total $/1k --> of
+In Table 1 the decision layer is 1.3%<!-- src: bench/results/e2_jev__dev.json: decision $/1k ÷ total $/1k --> of the Jev arm's end-to-end write cost and 47.0%<!-- src: bench/results/e2_llm__dev.json: decision $/1k ÷ total $/1k --> of
 the LLM arm's; with typed decisions, extraction is almost the whole cost of a write.
 
 These ratios compare Jev against `claude-sonnet-4-6` as the decider. We have no measurement with a smaller LLM
@@ -346,27 +346,20 @@ difference is the source quote on each engram line. To separate context size fro
 tokens came closest to engram's 290<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->: k=6<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->, at 315<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> tokens. That gives mem0 slightly more
 context than engram. The run cost $2.52<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->.
 
-*Table 3. Held-out LoCoMo accuracy: conv-30, 41, 42 and 43, 610<!-- src: bench/results/heldout_report.json --> questions, adversarial category excluded, k as labeled.
-Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6. One ingestion per system per conversation.
-Tokens are mean retrieved-context tokens per question.*
+*Table 2. Held-out LoCoMo accuracy, pooled over conv-30, 41, 42 and 43 (610<!-- src: bench/results/heldout_report.json --> questions, adversarial category
+excluded), with each mem0 row's paired difference against engram at the same budget (engram k=3 for the k=3 and
+token-matched rows, engram k=20 for the k=20 row). Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6;
+one ingestion per system per conversation. Tokens: mean retrieved-context tokens per question. 95% CI: per-question
+normal approximation; bootstrap: resampling the four conversations. Discordant: questions only engram / only mem0
+answered correctly.*
 
-| system | k | tokens/q | conv-30 | conv-41 | conv-42 | conv-43 | pooled |
-|---|---|---|---|---|---|---|---|
-| Q |  |  | 81<!-- src: bench/results/heldout_report.json --> | 152<!-- src: bench/results/heldout_report.json --> | 199<!-- src: bench/results/heldout_report.json --> | 178<!-- src: bench/results/heldout_report.json --> | 610<!-- src: bench/results/heldout_report.json --> |
-| engram | 3 | 290<!-- src: bench/results/heldout_report.json --> | 72.8%<!-- src: bench/results/heldout_report.json --> | 74.3%<!-- src: bench/results/heldout_report.json --> | 75.4%<!-- src: bench/results/heldout_report.json --> | 70.2%<!-- src: bench/results/heldout_report.json --> | 447/610<!-- src: bench/results/heldout_report.json --> |
-| mem0 | 3 | 159<!-- src: bench/results/heldout_report.json --> | 67.9%<!-- src: bench/results/heldout_report.json --> | 58.6%<!-- src: bench/results/heldout_report.json --> | 55.8%<!-- src: bench/results/heldout_report.json --> | 56.7%<!-- src: bench/results/heldout_report.json --> | 356/610<!-- src: bench/results/heldout_report.json --> |
-| mem0 (token-matched) | 6<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 315<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 66.7%<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 71.7%<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 59.8%<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 62.9%<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 394/610<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> |
-| engram | 20 | 1,461<!-- src: bench/results/heldout_report.json --> | 76.5%<!-- src: bench/results/heldout_report.json --> | 84.2%<!-- src: bench/results/heldout_report.json --> | 78.4%<!-- src: bench/results/heldout_report.json --> | 76.4%<!-- src: bench/results/heldout_report.json --> | 482/610<!-- src: bench/results/heldout_report.json --> |
-| mem0 | 20 | 1,024<!-- src: bench/results/heldout_report.json --> | 77.8%<!-- src: bench/results/heldout_report.json --> | 88.8%<!-- src: bench/results/heldout_report.json --> | 73.4%<!-- src: bench/results/heldout_report.json --> | 74.7%<!-- src: bench/results/heldout_report.json --> | 477/610<!-- src: bench/results/heldout_report.json --> |
-
-*Table 4. Paired differences for the rows of Table 3: held-out, Q = 610<!-- src: bench/results/heldout_report.json -->, k as labeled, models as in Table 3. 95% CI: per-question normal approximation. Bootstrap:
-resampling the four conversations. Discordant: questions only engram / only mem0 answered correctly.*
-
-| comparison | Δ (pts) | 95% CI | 95% CI, bootstrap | discordant | McNemar p |
-|---|---|---|---|---|---|
-| engram k=3 − mem0 k=3 | +14.9<!-- src: bench/results/heldout_report.json --> | [+11.2<!-- src: bench/results/heldout_report.json -->, +18.7<!-- src: bench/results/heldout_report.json -->] | [+8.2<!-- src: bench/results/heldout_report.json -->, +19.8<!-- src: bench/results/heldout_report.json -->] | 120<!-- src: bench/results/heldout_report.json --> / 29<!-- src: bench/results/heldout_report.json --> | 2.4e-14<!-- src: bench/results/heldout_report.json --> |
-| engram k=3 − mem0 k=6 (token-matched) | +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | [+5.2<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->, +12.1<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->] | not computed | 86<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> / 33<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 1.3e-06<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> |
-| engram k=20 − mem0 k=20 | +0.8<!-- src: bench/results/heldout_report.json --> | [-2.3<!-- src: bench/results/heldout_report.json -->, +3.9<!-- src: bench/results/heldout_report.json -->] | [-4.5<!-- src: bench/results/heldout_report.json -->, +5.4<!-- src: bench/results/heldout_report.json -->] | 49<!-- src: bench/results/heldout_report.json --> / 44<!-- src: bench/results/heldout_report.json --> | 0.679<!-- src: bench/results/heldout_report.json --> |
+| system | k | tokens/q | accuracy | Δ (pts) | 95% CI | 95% CI, bootstrap | discordant | McNemar p |
+|---|---|---|---|---|---|---|---|---|
+| engram | 3 | 290<!-- src: bench/results/heldout_report.json --> | 73.3%<!-- src: bench/results/heldout_report.json --> | – | – | – | – | – |
+| mem0 | 3 | 159<!-- src: bench/results/heldout_report.json --> | 58.4%<!-- src: bench/results/heldout_report.json --> | +14.9<!-- src: bench/results/heldout_report.json --> | [+11.2<!-- src: bench/results/heldout_report.json -->, +18.7<!-- src: bench/results/heldout_report.json -->] | [+8.2<!-- src: bench/results/heldout_report.json -->, +19.8<!-- src: bench/results/heldout_report.json -->] | 120<!-- src: bench/results/heldout_report.json --> / 29<!-- src: bench/results/heldout_report.json --> | 2.4e-14<!-- src: bench/results/heldout_report.json --> |
+| mem0 (token-matched) | 6<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 315<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 64.6%<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | [+5.2<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->, +12.1<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->] | not computed | 86<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> / 33<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 1.3e-06<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> |
+| engram | 20 | 1,461<!-- src: bench/results/heldout_report.json --> | 79.0%<!-- src: bench/results/heldout_report.json --> | – | – | – | – | – |
+| mem0 | 20 | 1,024<!-- src: bench/results/heldout_report.json --> | 78.2%<!-- src: bench/results/heldout_report.json --> | +0.8<!-- src: bench/results/heldout_report.json --> | [-2.3<!-- src: bench/results/heldout_report.json -->, +3.9<!-- src: bench/results/heldout_report.json -->] | [-4.5<!-- src: bench/results/heldout_report.json -->, +5.4<!-- src: bench/results/heldout_report.json -->] | 49<!-- src: bench/results/heldout_report.json --> / 44<!-- src: bench/results/heldout_report.json --> | 0.679<!-- src: bench/results/heldout_report.json --> |
 
 At k=3 engram is ahead of mem0 by +14.9<!-- src: bench/results/heldout_report.json --> points (95% CI +11.2<!-- src: bench/results/heldout_report.json --> to +18.7<!-- src: bench/results/heldout_report.json -->). Against
 token-matched mem0 the difference is +8.7<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> points (95% CI +5.2<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> to +12.1<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->; McNemar
@@ -375,11 +368,11 @@ $p$ = 1.3e-06<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json
 Figure 2 places the three measured mem0 settings and the two engram settings on one axis of retrieved tokens.
 engram at k=3 sits above the line through mem0's points, and the two systems meet at k=20.
 
-engram's point estimate is ahead in every category at matched context (Table 5) and in every conversation
+engram's point estimate is ahead in every category at matched context (Table 3) and in every conversation
 (Appendix C). Per conversation, the matched-context interval excludes zero in 2<!-- src: bench/results/perconv_diffs.json: conversations whose matched-context interval excludes zero --> of four
 conversations (conv-42 and conv-43); conv-30 and conv-41 are within noise on their own.
 
-*Table 5. Held-out accuracy by LoCoMo category, 610<!-- src: bench/results/heldout_report.json --> questions, k as labeled. Models as in Table 3.*
+*Table 3. Held-out accuracy by LoCoMo category, 610<!-- src: bench/results/heldout_report.json --> questions, k as labeled. Models as in Table 2.*
 
 | category | Q | engram k=3 | mem0 k=3 | mem0 k=6 (matched) | engram k=20 | mem0 k=20 |
 |---|---|---|---|---|---|---|
@@ -398,22 +391,21 @@ off, and mem0 answered 25/30<!-- src: bench/results/mem0__dev_updates__k3.json -
 
 ### 5.3 Store safety and calibration
 
-*Table 6. Store safety on dev + update set 1 and set 2 (storage metrics only). Extraction claude-haiku-4-5, decisions Jev (jev-1.13.0). Columns: set-1
-no_close items over-closed / stored; set-2 keep items kept / stored; closes on dev + set 1, split into those matching
-a labeled pair and those not.*
-- *Over-closed*: a labeled no_close item whose fact was closed by its own update message.
-- *Matching a labeled pair*: a close whose (closed fact's message, closing message) is a labeled update or
-  superseded pair.
-- The set-2 keep set has one item.
+*Table 4. Store safety and update-question accuracy on the dev slice with update sets 1 and 2 (extraction
+claude-haiku-4-5, decisions Jev jev-1.13.0, answers and judge claude-sonnet-4-6). Closes are on dev + set 1, split
+by whether (closed fact's message, closing message) is a labeled update or superseded pair. Over-closed: set-1
+no_close items whose fact was closed by their own update message, over those stored. Stale: close items whose old
+fact is still active, over close items stored. Every arm kept the one set-2 keep item. Accuracy is at default k (all
+retrieved memories) unless marked; "–": run without answering or not run.*
 
-| arm | set-1 over-closed | set-2 kept | closes | labeled | unlabeled |
-|---|---|---|---|---|---|
-| mem0 | 0/7<!-- src: bench/results/mem0__dev_updates.json --> | 1/1<!-- src: bench/results/mem0__dev_updates2.json --> | 0<!-- src: bench/results/mem0__dev_updates.json --> | 0<!-- src: bench/results/mem0__dev_updates.json --> | 0<!-- src: bench/results/mem0__dev_updates.json --> |
-| E2: Jev, replace-on-update | 0/8<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 1/1<!-- src: bench/results/e2_jev_v2__dev_updates2.json --> | 11<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 3<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 8<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> |
-| E3: structural rules | 0/8<!-- src: bench/results/e3_structural_v3__dev_updates.json --> | not run | 3<!-- src: bench/results/e3_structural_v3__dev_updates.json --> | 2<!-- src: bench/results/e3_structural_v3__dev_updates.json --> | 1<!-- src: bench/results/e3_structural_v3__dev_updates.json --> |
-| E4: belief v1 | 0/8<!-- src: bench/results/e4_belief__dev_updates.json --> | 1/1<!-- src: bench/results/e4_belief__dev_updates2.json --> | 3<!-- src: bench/results/e4_belief__dev_updates.json --> | 2<!-- src: bench/results/e4_belief__dev_updates.json --> | 1<!-- src: bench/results/e4_belief__dev_updates.json --> |
-| E4: belief v2 (frozen) | 0/8<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 1/1<!-- src: bench/results/e4_belief_v2_shadow__dev_updates2__k3.json --> | 4<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 3<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 1<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> |
-| E4: belief v3 | 0/8<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 1/1<!-- src: bench/results/e4_belief_v3__dev_updates2__k3__noanswer.json --> | 4<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 2<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 2<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> |
+| arm | closes | labeled | unlabeled | over-closed | set-1 stale | set-2 stale | set-1 acc. | set-1 acc. k=3 | set-1 acc. no dates | set-2 acc. |
+|---|---|---|---|---|---|---|---|---|---|---|
+| mem0 (add-only) | 0<!-- src: bench/results/mem0__dev_updates.json --> | 0<!-- src: bench/results/mem0__dev_updates.json --> | 0<!-- src: bench/results/mem0__dev_updates.json --> | 0/7<!-- src: bench/results/mem0__dev_updates.json --> | 18/18<!-- src: bench/results/mem0__dev_updates.json --> | 16/16<!-- src: bench/results/mem0__dev_updates2.json --> | 29/30<!-- src: bench/results/mem0__dev_updates.json --> | 25/30<!-- src: bench/results/mem0__dev_updates__k3.json --> | 29/30<!-- src: bench/results/mem0__dev_updates__nodates.json --> | 20/20<!-- src: bench/results/mem0__dev_updates2.json --> |
+| E2: Jev, replace-on-update | 11<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 3<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 8<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 0/8<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 10/18<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 15/16<!-- src: bench/results/e2_jev_v2__dev_updates2.json --> | 30/30<!-- src: bench/results/e2_jev_v2__dev_updates.json --> | 30/30<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 30/30<!-- src: bench/results/e2_jev_v2__dev_updates__nodates.json --> | 19/20<!-- src: bench/results/e2_jev_v2__dev_updates2.json --> |
+| E3: structural rules | 3<!-- src: bench/results/e3_structural_v3__dev_updates.json --> | 2<!-- src: bench/results/e3_structural_v3__dev_updates.json --> | 1<!-- src: bench/results/e3_structural_v3__dev_updates.json --> | 0/8<!-- src: bench/results/e3_structural_v3__dev_updates.json --> | 17/18<!-- src: bench/results/e3_structural_v3__dev_updates.json --> | not run | – | – | – | – |
+| E4: belief v1 | 3<!-- src: bench/results/e4_belief__dev_updates.json --> | 2<!-- src: bench/results/e4_belief__dev_updates.json --> | 1<!-- src: bench/results/e4_belief__dev_updates.json --> | 0/8<!-- src: bench/results/e4_belief__dev_updates.json --> | 17/18<!-- src: bench/results/e4_belief__dev_updates.json --> | 15/16<!-- src: bench/results/e4_belief__dev_updates2.json --> | 30/30<!-- src: bench/results/e4_belief__dev_updates.json --> | 30/30<!-- src: bench/results/e4_belief__dev_updates__k3.json --> | 29/30<!-- src: bench/results/e4_belief__dev_updates__nodates.json --> | 19/20<!-- src: bench/results/e4_belief__dev_updates2.json --> |
+| E4: belief v2 (frozen) | 4<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 3<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 1<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 0/8<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 14/18<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | 10/16<!-- src: bench/results/e4_belief_v2_shadow__dev_updates2__k3.json --> | 30/30<!-- src: bench/results/e4_belief_v2_full__dev_updates.json --> | 30/30<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | – | 20/20<!-- src: bench/results/e4_belief_v2_full__dev_updates2.json --> |
+| E4: belief v3 | 4<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 2<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 2<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 0/8<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 14/18<!-- src: bench/results/e4_belief_v3__dev_updates__k3__noanswer.json --> | 10/16<!-- src: bench/results/e4_belief_v3__dev_updates2__k3__noanswer.json --> | – | – | – | – |
 
 Figure 4 shows the same outcomes per arm.
 
@@ -457,22 +449,13 @@ versions, Jev's relation choice is in the accepted set for 90.0%<!-- src: bench/
 write path's close rule is right for 76.0%<!-- src: bench/results/jev_regression_v2.json -->, with 0<!-- src: bench/results/jev_regression_v2.json --> false closes. Jev's mean top
 probability is 0.88<!-- src: bench/results/jev_regression_v2.json --> when it is right and 0.81<!-- src: bench/results/jev_regression_v2.json --> when it is wrong.
 
-*Table 9. Contradiction regression (50<!-- src: bench/results/tradeoff.json --> gold pairs), relation_to_candidate and temporal_status in one request. Laya:
-convaiinnovations/laya<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> base checkpoint, zero-shot, fp16, on the local MLX server.*
-
-| backend | relation exact | temporal | close rule | closes | false closes |
-|---|---|---|---|---|---|
-| Jev (jev-1.13.0) | 90.0%<!-- src: bench/results/jev_regression_v2.json --> | 94.0%<!-- src: bench/results/jev_regression_v2.json --> | 76.0%<!-- src: bench/results/jev_regression_v2.json --> | 22<!-- src: bench/results/jev_regression_v2.json --> | 0<!-- src: bench/results/jev_regression_v2.json --> |
-| Laya, Jev wording (truncated) | 48.0%<!-- src: bench/results/laya_regression_jev_wording.json --> | 76.0%<!-- src: bench/results/laya_regression_jev_wording.json --> | 32.0%<!-- src: bench/results/laya_regression_jev_wording.json --> | 0<!-- src: bench/results/laya_regression_jev_wording.json --> | 0<!-- src: bench/results/laya_regression_jev_wording.json --> |
-| Laya, native wording (fits) | 38.0%<!-- src: bench/results/laya_regression_native.json --> | 76.0%<!-- src: bench/results/laya_regression_native.json --> | 32.0%<!-- src: bench/results/laya_regression_native.json --> | 0<!-- src: bench/results/laya_regression_native.json --> | 0<!-- src: bench/results/laya_regression_native.json --> |
-
 **Calibration error.** We measure expected calibration error (ECE) on two label sets: the 50<!-- src: bench/results/tradeoff.json --> gold pairs, and
 29<!-- src: bench/results/calibration.json --> escalation labels, where Sonnet decided a relation Jev was unsure of. On the gold pairs Jev's relation ECE is 0.14<!-- src: bench/results/calibration.json --> (fitted $T$ = 1.48<!-- src: bench/results/calibration.json -->) and its
 temporal ECE is 0.04<!-- src: bench/results/calibration.json -->. On the escalation labels, which are by construction the cases Jev was
-unsure of, relation ECE is 0.15<!-- src: bench/results/calibration.json -->. Table 7 has the full comparison, with Laya, and Figure 6 in
+unsure of, relation ECE is 0.15<!-- src: bench/results/calibration.json -->. Table 5 has the full comparison, with Laya, and Figure 6 in
 Appendix C the reliability diagrams.
 
-*Table 7. Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last
+*Table 5. Calibration on the escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; Jev jev-1.13.0, Laya base checkpoint zero-shot. ECE uses 10 equal-width bins on the top choice. $T$ is fitted by NLL per question. The last
 column is out of sample (2-fold). Relation probabilities fold `negates` into `contradiction`, since the pairs
 predate `negates`.*
 
@@ -484,6 +467,15 @@ predate `negates`.*
 | gold pairs | relation | laya | 50<!-- src: bench/results/calibration.json --> | 28.0%<!-- src: bench/results/calibration.json --> | 0.47<!-- src: bench/results/calibration.json --> | 0.20<!-- src: bench/results/calibration.json --> | 4.22<!-- src: bench/results/calibration.json --> | 0.02<!-- src: bench/results/calibration.json --> |
 | gold pairs | temporal status | jev | 50<!-- src: bench/results/calibration.json --> | 94.0%<!-- src: bench/results/calibration.json --> | 0.95<!-- src: bench/results/calibration.json --> | 0.04<!-- src: bench/results/calibration.json --> | 1.13<!-- src: bench/results/calibration.json --> | 0.04<!-- src: bench/results/calibration.json --> |
 | gold pairs | temporal status | laya | 50<!-- src: bench/results/calibration.json --> | 76.0%<!-- src: bench/results/calibration.json --> | 0.72<!-- src: bench/results/calibration.json --> | 0.06<!-- src: bench/results/calibration.json --> | 0.74<!-- src: bench/results/calibration.json --> | 0.07<!-- src: bench/results/calibration.json --> |
+
+*Table 6. Contradiction regression (50<!-- src: bench/results/tradeoff.json --> gold pairs), relation_to_candidate and temporal_status in one request. Laya:
+convaiinnovations/laya<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> base checkpoint, zero-shot, fp16, on the local MLX server.*
+
+| backend | relation exact | temporal | close rule | closes | false closes |
+|---|---|---|---|---|---|
+| Jev (jev-1.13.0) | 90.0%<!-- src: bench/results/jev_regression_v2.json --> | 94.0%<!-- src: bench/results/jev_regression_v2.json --> | 76.0%<!-- src: bench/results/jev_regression_v2.json --> | 22<!-- src: bench/results/jev_regression_v2.json --> | 0<!-- src: bench/results/jev_regression_v2.json --> |
+| Laya, Jev wording (truncated) | 48.0%<!-- src: bench/results/laya_regression_jev_wording.json --> | 76.0%<!-- src: bench/results/laya_regression_jev_wording.json --> | 32.0%<!-- src: bench/results/laya_regression_jev_wording.json --> | 0<!-- src: bench/results/laya_regression_jev_wording.json --> | 0<!-- src: bench/results/laya_regression_jev_wording.json --> |
+| Laya, native wording (fits) | 38.0%<!-- src: bench/results/laya_regression_native.json --> | 76.0%<!-- src: bench/results/laya_regression_native.json --> | 32.0%<!-- src: bench/results/laya_regression_native.json --> | 0<!-- src: bench/results/laya_regression_native.json --> | 0<!-- src: bench/results/laya_regression_native.json --> |
 
 **Cost/error tradeoff.** The 29<!-- src: bench/results/calibration.json --> escalation labels are too few for a curve, so Figure 5 uses
 the 50<!-- src: bench/results/tradeoff.json --> gold pairs. The Jev cost $c_J$ = $0.000016<!-- src: bench/results/tradeoff.json --> is the mean cost of one relation decision over 36,429<!-- src: bench/results/tradeoff.json -->
@@ -498,26 +490,13 @@ $0.002368<!-- src: bench/results/tradeoff.json --> per decision, and $E$ is 6.0%
 
 ### 5.4 Negative results
 
-**Closes do not change answers.** 
-
-*Table 8. Update sets on the dev slice (conv-26 sessions 1–4 plus the update messages). Set 1 has 30<!-- src: bench/updates_conv26.json --> update
-questions and set 2 has 20<!-- src: bench/updates2_conv26.json -->. Stale counts are close items whose old fact is still active, over close items
-stored. Accuracy is at default k (all retrieved memories) unless marked. Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6.*
-
-| arm | set-1 stale | set-2 stale | set-1 acc. | set-2 acc. | set-1 acc. k=3 | set-1 acc. no dates |
-|---|---|---|---|---|---|---|
-| mem0 (add-only) | 18/18<!-- src: bench/results/mem0__dev_updates.json --> | 16/16<!-- src: bench/results/mem0__dev_updates2.json --> | 29/30<!-- src: bench/results/mem0__dev_updates.json --> | 20/20<!-- src: bench/results/mem0__dev_updates2.json --> | 25/30<!-- src: bench/results/mem0__dev_updates__k3.json --> | 29/30<!-- src: bench/results/mem0__dev_updates__nodates.json --> |
-| E2: Jev, replace-on-update | 10/18<!-- src: bench/results/e2_jev_v2__dev_updates.json --> | 15/16<!-- src: bench/results/e2_jev_v2__dev_updates2.json --> | 30/30<!-- src: bench/results/e2_jev_v2__dev_updates.json --> | 19/20<!-- src: bench/results/e2_jev_v2__dev_updates2.json --> | 30/30<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> | 30/30<!-- src: bench/results/e2_jev_v2__dev_updates__nodates.json --> |
-| E4: belief v1 | 17/18<!-- src: bench/results/e4_belief__dev_updates.json --> | 15/16<!-- src: bench/results/e4_belief__dev_updates2.json --> | 30/30<!-- src: bench/results/e4_belief__dev_updates.json --> | 19/20<!-- src: bench/results/e4_belief__dev_updates2.json --> | 30/30<!-- src: bench/results/e4_belief__dev_updates__k3.json --> | 29/30<!-- src: bench/results/e4_belief__dev_updates__nodates.json --> |
-| E4: belief v2 (frozen) | 14/18<!-- src: bench/results/e4_belief_v2_full__dev_updates.json --> | 10/16<!-- src: bench/results/e4_belief_v2_full__dev_updates2.json --> | 30/30<!-- src: bench/results/e4_belief_v2_full__dev_updates.json --> | 20/20<!-- src: bench/results/e4_belief_v2_full__dev_updates2.json --> | 30/30<!-- src: bench/results/e4_belief_v2__dev_updates__k3.json --> | not run |
-
-mem0 never closes anything and leaves every set-1 close item stale (18/18<!-- src: bench/results/mem0__dev_updates.json -->), yet answers
+**Closes do not change answers.** The accuracy columns of Table 4 show it. mem0 never closes anything and leaves every set-1 close item stale (18/18<!-- src: bench/results/mem0__dev_updates.json -->), yet answers
 29/30<!-- src: bench/results/mem0__dev_updates.json --> set-1 questions at default k. The arm that closes most aggressively leaves 10/18<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> stale and
 answers 30/30<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json -->.
 
 The answer model resolves recency itself: extraction writes dates into the memory text, and the compact rendering
 adds the date each fact was said. Removing all dates, validity and source from the answer context
-(no-dates column) still leaves every arm we ran that way at 29/30<!-- src: bench/results/mem0__dev_updates__nodates.json --> or higher on set 1. Only the k=3 budget separates
+(the no-dates column) still leaves every arm we ran that way at 29/30<!-- src: bench/results/mem0__dev_updates__nodates.json --> or higher on set 1. Only the k=3 budget separates
 the systems (25/30<!-- src: bench/results/mem0__dev_updates__k3.json --> for mem0, 30/30<!-- src: bench/results/e2_jev_v2__dev_updates__k3.json --> for engram), and §5.2 attributes that to ranking, not to
 closes.
 
@@ -528,15 +507,15 @@ questions do not reward a correct store.
 advises against [convai2026laya]. The checkpoint fine-tuned for typed decisions (reported at 0.766<!-- src: convai2026laya (laya-typed-decisions, fine-tuned) --> on its
 own benchmark) and fine-tuning on our escalation labels were not tested; they are the obvious follow-up.
 
-On the 50<!-- src: bench/results/tradeoff.json --> regression pairs (Table 9), Laya chooses an accepted relation for
+On the 50<!-- src: bench/results/tradeoff.json --> regression pairs (Table 6), Laya chooses an accepted relation for
 48.0%<!-- src: bench/results/laya_regression_jev_wording.json --> with Jev's question wording and 38.0%<!-- src: bench/results/laya_regression_native.json --> with wording rewritten to fit its
 192<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json -->-token question budget. Jev scores 90.0%<!-- src: bench/results/jev_regression_v2.json -->. Laya never reaches the action threshold, so it
-closes nothing. Its gold-pair relation accuracy is 28.0%<!-- src: bench/results/calibration.json --> (Table 7). A temperature lowers its
+closes nothing. Its gold-pair relation accuracy is 28.0%<!-- src: bench/results/calibration.json --> (Table 5). A temperature lowers its
 ECE but not its accuracy.
 
 With the frozen Jev arm replayed from cache and Laya answering every request on the side,
 the two gave the same answer on 44.8%<!-- src: bench/results/laya_agreement.json --> of 6,764<!-- src: bench/results/laya_agreement.json --> decisions and the same action at the 0.85<!-- src: src/engram/config.py --> threshold on
-31.2%<!-- src: bench/results/laya_agreement.json -->. On `relation_to_candidate` they agreed on 5.9%<!-- src: bench/results/laya_agreement.json --> (Table 10 and Figure 7, Appendix C).
+31.2%<!-- src: bench/results/laya_agreement.json -->. On `relation_to_candidate` they agreed on 5.9%<!-- src: bench/results/laya_agreement.json --> (Table 12 and Figure 7, Appendix C).
 
 When Laya decided every question, on dev + set 1 at k=3 it scored 24/35<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> LoCoMo and
 26/30<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> update questions. Jev scored 29/35<!-- src: bench/results/e4_belief_v2_shadow__dev_updates__k3.json --> and
@@ -549,29 +528,20 @@ answers below 0.5 lowering belief, the failure belief v3 removes (§3.3).
 and Jev the rest. On the routed questions the two models gave the same answer on 86.9%<!-- src: bench/results/hybrid_report.json --> and the same action
 on 34.1%<!-- src: bench/results/hybrid_report.json -->. Writes were identical to the all-Jev arm, but at k=3 only 51.8%<!-- src: bench/results/hybrid_report.json --> of Jev's top-3 lines
 survived the change of reranker. The hybrid saved 42.6%<!-- src: bench/results/hybrid_report.json --> of Jev's cost on dev + set 1
-($0.025<!-- src: bench/results/hybrid_report.json --> per run); Table 11 has its accuracy.
-
-*Table 11. Hybrid against all-Jev: dev slice with update sets (Q per row: 35<!-- src: bench/results/e2_jev__dev.json --> LoCoMo, 30<!-- src: bench/updates_conv26.json --> set 1, 20<!-- src: bench/updates2_conv26.json --> set 2), k as labeled, extraction claude-haiku-4-5, answers and judge
-claude-sonnet-4-6.*
-
-| questions | all-Jev k=3 | hybrid k=3 | all-Jev k=20 | hybrid k=20 |
-|---|---|---|---|---|
-| update set 1 | 30/30<!-- src: bench/results/e4_belief_v2_shadow__dev_updates__k3.json --> | 27/30<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates__k3.json --> | 30/30<!-- src: bench/results/e4_belief_v2_shadow__dev_updates__k20.json --> | 30/30<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates__k20.json --> |
-| LoCoMo dev | 29/35<!-- src: bench/results/e4_belief_v2_shadow__dev_updates__k3.json --> | 29/35<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates__k3.json --> | 31/35<!-- src: bench/results/e4_belief_v2_shadow__dev_updates__k20.json --> | 31/35<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates__k20.json --> |
-| update set 2 | 19/20<!-- src: bench/results/e4_belief_v2_shadow__dev_updates2__k3.json --> | 17/20<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates2__k3.json --> | 20/20<!-- src: bench/results/e4_belief_v2_shadow__dev_updates2__k20.json --> | 20/20<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates2__k20.json --> |
+($0.025<!-- src: bench/results/hybrid_report.json --> per run); Table 13 in Appendix C has its accuracy.
 
 ### 5.5 Systems notes
 
 **Jev latency is flat in request size.** Across 9,446<!-- src: bench/results/jev_latency.json --> live Jev requests from 25<!-- src: bench/results/jev_latency.json --> runs, median latency
 is between 222 ms<!-- src: bench/results/jev_latency.json --> and 269 ms<!-- src: bench/results/jev_latency.json --> for requests of 1 to 50 questions, and 371 ms<!-- src: bench/results/jev_latency.json --> for
-51–80. A least-squares fit gives 380 ms<!-- src: bench/results/jev_latency.json --> plus 7.19<!-- src: bench/results/jev_latency.json --> ms per question (Figure 8 and Table 12, Appendix C).
+51–80. A least-squares fit gives 380 ms<!-- src: bench/results/jev_latency.json --> plus 7.19<!-- src: bench/results/jev_latency.json --> ms per question (Figure 8 and Table 14, Appendix C).
 Variation over time is larger than variation over size. For requests of 16–20 questions, the per-run median was
 between 212 ms<!-- src: bench/results/jev_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests --> and 267 ms<!-- src: bench/results/jev_latency.json: per-run median, 16–20-question requests, runs with ≥30 such requests --> in 12<!-- src: bench/results/jev_latency.json: runs with ≥30 16–20-question requests, excluding conv-30 and conv-41 --> runs, and 793 ms<!-- src: bench/results/jev_latency.json: per-run median, 16–20-question requests --> and 607 ms<!-- src: bench/results/jev_latency.json: per-run median, 16–20-question requests --> in the two
 held-out runs made during one slower period.
 
 **Extraction dominates write cost.** On the held-out set, engram's write cost is $10.22<!-- src: bench/results/heldout_report.json --> to
 $10.55<!-- src: bench/results/heldout_report.json --> per 1,000 messages and mem0's is $9.92<!-- src: bench/results/heldout_report.json --> to $10.16<!-- src: bench/results/heldout_report.json -->. The decision layer is
-3.3%<!-- src: bench/results/heldout_report.json: decision $/1k ÷ write $/1k --> to 4.8%<!-- src: bench/results/heldout_report.json: decision $/1k ÷ write $/1k --> of engram's (Table 13, Appendix C).
+3.3%<!-- src: bench/results/heldout_report.json: decision $/1k ÷ write $/1k --> to 4.8%<!-- src: bench/results/heldout_report.json: decision $/1k ÷ write $/1k --> of engram's (Table 15, Appendix C).
 
 ## 6. Discussion and Limitations
 
@@ -615,12 +585,12 @@ decisions.
 
 ## Appendix A. Decision questions
 
-Table 1 lists the 12<!-- src: src/engram/decide/questions.py (ALL_QUESTIONS) --> questions in the current chain with their types and options. `edge_type` and
+Table 7 lists the 12<!-- src: src/engram/decide/questions.py (ALL_QUESTIONS) --> questions in the current chain with their types and options. `edge_type` and
 `query_relation` choose among 25<!-- src: src/engram/decide/questions.py (EDGE_TYPES) --> relation types. The instructions and the rubric for every option of
 every version are in `src/engram/decide/questions.py`, and the reasons for each version change are in
 `docs/DECISIONS.md`.
 
-*Table 1. Jev questions in the current chain (`src/engram/decide/questions.py`).*
+*Table 7. Jev questions in the current chain (`src/engram/decide/questions.py`).*
 
 | question | type | options |
 |---|---|---|
@@ -639,7 +609,7 @@ every version are in `src/engram/decide/questions.py`, and the reasons for each 
 
 ## Appendix B. Update sets
 
-*Table 14. One item of each kind from the two update sets (`bench/updates_conv26.json`, `bench/updates2_conv26.json`).*
+*Table 8. One item of each kind from the two update sets (`bench/updates_conv26.json`, `bench/updates2_conv26.json`).*
 
 | id | kind | earlier fact or message | update message(s) | question | gold |
 |---|---|---|---|---|---|
@@ -651,7 +621,7 @@ every version are in `src/engram/decide/questions.py`, and the reasons for each 
 
 ## Appendix C. Per-conversation and systems tables
 
-*Held-out, per conversation, k=3. Q per row; models as in Table 3.*
+*Table 9. Held-out accuracy per conversation, k=3. Q per row; models as in Table 2.*
 
 | conv. | Q | engram | mem0 | Δ (questions) | engram tokens / q | mem0 tokens / q |
 |---|---|---|---|---|---|---|
@@ -660,7 +630,7 @@ every version are in `src/engram/decide/questions.py`, and the reasons for each 
 | conv-42 | 199<!-- src: bench/results/heldout_report.json --> | 150/199<!-- src: bench/results/heldout_report.json --> | 111/199<!-- src: bench/results/heldout_report.json --> | 39<!-- src: bench/results/heldout_report.json --> | 292<!-- src: bench/results/heldout_report.json --> | 163<!-- src: bench/results/heldout_report.json --> |
 | conv-43 | 178<!-- src: bench/results/heldout_report.json --> | 125/178<!-- src: bench/results/heldout_report.json --> | 101/178<!-- src: bench/results/heldout_report.json --> | 24<!-- src: bench/results/heldout_report.json --> | 283<!-- src: bench/results/heldout_report.json --> | 153<!-- src: bench/results/heldout_report.json --> |
 
-*Held-out, per conversation: engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table 3.*
+*Table 10. Held-out accuracy per conversation, engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table 2.*
 
 | conv. | Q | engram k=3 | mem0 k=6 | Δ (questions) |
 |---|---|---|---|---|
@@ -669,7 +639,7 @@ every version are in `src/engram/decide/questions.py`, and the reasons for each 
 | conv-42 | 199<!-- src: bench/results/heldout_report.json --> | 150/199<!-- src: bench/results/heldout_report.json --> | 119/199<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 31<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> |
 | conv-43 | 178<!-- src: bench/results/heldout_report.json --> | 125/178<!-- src: bench/results/heldout_report.json --> | 112/178<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 13<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> |
 
-*Held-out, per conversation, k=20. Q per row; models as in Table 3.*
+*Table 11. Held-out accuracy per conversation, k=20. Q per row; models as in Table 2.*
 
 | conv. | Q | engram | mem0 | Δ (questions) | engram tokens / q | mem0 tokens / q |
 |---|---|---|---|---|---|---|
@@ -678,7 +648,7 @@ every version are in `src/engram/decide/questions.py`, and the reasons for each 
 | conv-42 | 199<!-- src: bench/results/heldout_report.json --> | 156/199<!-- src: bench/results/heldout_report.json --> | 146/199<!-- src: bench/results/heldout_report.json --> | 10<!-- src: bench/results/heldout_report.json --> | 1,491<!-- src: bench/results/heldout_report.json --> | 1,043<!-- src: bench/results/heldout_report.json --> |
 | conv-43 | 178<!-- src: bench/results/heldout_report.json --> | 136/178<!-- src: bench/results/heldout_report.json --> | 133/178<!-- src: bench/results/heldout_report.json --> | 3<!-- src: bench/results/heldout_report.json --> | 1,389<!-- src: bench/results/heldout_report.json --> | 995<!-- src: bench/results/heldout_report.json --> |
 
-*Table 10. Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory at k=3 (write and retrieval decisions; n per row). Jev jev-1.13.0; Laya base checkpoint, zero-shot. Same action:
+*Table 12. Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory at k=3 (write and retrieval decisions; n per row). Jev jev-1.13.0; Laya base checkpoint, zero-shot. Same action:
 both choose the same label at p ≥ 0.85<!-- src: src/engram/config.py -->, or neither reaches it. Acts: share of decisions at p ≥ 0.85<!-- src: src/engram/config.py -->.*
 
 | question | n | same answer | same action | Jev acts | Laya acts |
@@ -696,7 +666,16 @@ both choose the same label at p ≥ 0.85<!-- src: src/engram/config.py -->, or n
 | `query_relation` | 48<!-- src: bench/results/laya_agreement.json --> | 54.2%<!-- src: bench/results/laya_agreement.json --> | 47.9%<!-- src: bench/results/laya_agreement.json --> | 39.6%<!-- src: bench/results/laya_agreement.json --> | 75.0%<!-- src: bench/results/laya_agreement.json --> |
 | `relation_to_candidate_recheck` | 34<!-- src: bench/results/laya_agreement.json --> | 29.4%<!-- src: bench/results/laya_agreement.json --> | 41.2%<!-- src: bench/results/laya_agreement.json --> | 35.3%<!-- src: bench/results/laya_agreement.json --> | 26.5%<!-- src: bench/results/laya_agreement.json --> |
 
-*Table 12. Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices), from the decision logs (`bench/results/jev_latency.json`). Client-measured,
+*Table 13. Hybrid against all-Jev: dev slice with update sets (Q per row: 35<!-- src: bench/results/e2_jev__dev.json --> LoCoMo, 30<!-- src: bench/updates_conv26.json --> set 1, 20<!-- src: bench/updates2_conv26.json --> set 2), k as labeled, extraction claude-haiku-4-5, answers and judge
+claude-sonnet-4-6.*
+
+| questions | all-Jev k=3 | hybrid k=3 | all-Jev k=20 | hybrid k=20 |
+|---|---|---|---|---|
+| update set 1 | 30/30<!-- src: bench/results/e4_belief_v2_shadow__dev_updates__k3.json --> | 27/30<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates__k3.json --> | 30/30<!-- src: bench/results/e4_belief_v2_shadow__dev_updates__k20.json --> | 30/30<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates__k20.json --> |
+| LoCoMo dev | 29/35<!-- src: bench/results/e4_belief_v2_shadow__dev_updates__k3.json --> | 29/35<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates__k3.json --> | 31/35<!-- src: bench/results/e4_belief_v2_shadow__dev_updates__k20.json --> | 31/35<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates__k20.json --> |
+| update set 2 | 19/20<!-- src: bench/results/e4_belief_v2_shadow__dev_updates2__k3.json --> | 17/20<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates2__k3.json --> | 20/20<!-- src: bench/results/e4_belief_v2_shadow__dev_updates2__k20.json --> | 20/20<!-- src: bench/results/e4_belief_v2_hybrid__dev_updates2__k20.json --> |
+
+*Table 14. Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices), from the decision logs (`bench/results/jev_latency.json`). Client-measured,
 after the rate limiter, retries included.*
 
 | questions / request | requests | median input tokens | median latency | p90 latency |
@@ -711,7 +690,7 @@ after the rate limiter, retries included.*
 | 31–50 | 505<!-- src: bench/results/jev_latency.json --> | 6,903<!-- src: bench/results/jev_latency.json --> | 269 ms<!-- src: bench/results/jev_latency.json --> | 472 ms<!-- src: bench/results/jev_latency.json --> |
 | 51–80 | 739<!-- src: bench/results/jev_latency.json --> | 9,187<!-- src: bench/results/jev_latency.json --> | 371 ms<!-- src: bench/results/jev_latency.json --> | 2,290 ms<!-- src: bench/results/jev_latency.json --> |
 
-*Table 13. Held-out write side (conv-30, 41, 42, 43; writes only). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus
+*Table 15. Held-out write side (conv-30, 41, 42, 43; writes only). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus
 escalations.*
 
 | conv. | engram $/1k | decision $/1k | mem0 $/1k | decision p50 | engram write p50 | mem0 write p50 | engram facts | mem0 memories |
@@ -734,20 +713,24 @@ question, sorted by same answer. Dev + update sets 1 and 2, frozen arm's traject
 ## Appendix D. Reproduction
 
 Each table and figure was produced by the command below, run from the root of the engram codebase. With the call
-cache (`bench/.cache/calls.sqlite`) in place, every command replays at no API cost.
+cache (`bench/.cache/calls.sqlite`) in place, every command in Table 16 replays at no API cost.
+
+*Table 16. The command behind each table and figure.*
 
 | table / figure | command |
 |---|---|
-| Table 2 | `python -m bench.run --arm {e2_jev,e2_llm,mem0} --slice dev` |
-| Tables 3–5 and the per-conversation tables; Fig. 2 | `python -m bench.run --arm {e4_belief_v2,mem0} --slice heldout:<conv> --top-k 3 --also-top-k 20`, then `python -m bench.heldout_report` and `python -m bench.token_match` |
-| Tables 6, 8; Figs. 3, 4 | `python -m bench.run --arm <arm> --slice dev_updates[2] [--top-k 3] [--no-dates]` |
-| Tables 7, 9; Figs. 6, 7 | `python bench/test_contradictions.py --backend laya [--native] --save …`, `python -m bench.calibration`, `python -m bench.jev_regression` (the Laya rows need `bench/laya_server.py` running) |
+| Table 1 | `python -m bench.run --arm {e2_jev,e2_llm,mem0} --slice dev` |
+| Tables 2, 3, 9–11; Fig. 2 | `python -m bench.run --arm {e4_belief_v2,mem0} --slice heldout:<conv> --top-k 3 --also-top-k 20`, then `python -m bench.heldout_report` and `python -m bench.token_match` |
+| Table 4; Figs. 3, 4 | `python -m bench.run --arm <arm> --slice dev_updates[2] [--top-k 3] [--no-dates]` |
+| Tables 5, 6; Figs. 6, 7 | `python bench/test_contradictions.py --backend laya [--native] --save …`, `python -m bench.calibration`, `python -m bench.jev_regression` (the Laya rows need `bench/laya_server.py` running) |
 | Fig. 5 | `python -m bench.tradeoff` |
-| Tables 10–11 | `python -m bench.laya_report`, `python -m bench.hybrid_report` |
-| Table 12, Fig. 8 | `python -m bench.jev_latency` |
+| Tables 12, 13 | `python -m bench.laya_report`, `python -m bench.hybrid_report` |
+| Table 14, Fig. 8 | `python -m bench.jev_latency` |
 | this paper | `python paper/build.py`, `python paper/figures.py` |
 
-The spend ledger records cost per run, not per table. Per-arm totals:
+The spend ledger records cost per run, not per table; Table 17 gives per-arm totals.
+
+*Table 17. Phase 2 spend per arm, in USD (`bench/results/phase2_spend.jsonl`).*
 
 | arm | runs | Jev | Claude |
 |---|---|---|---|

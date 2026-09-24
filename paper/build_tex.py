@@ -27,7 +27,7 @@ WIDE_FIGS = {"pipeline", "calibration"}  # figure*: the pipeline, and the three-
 COLUMN_PT = 219.0  # one column in acl.sty: A4, 2.5 cm margins, 0.6 cm column sep
 CHAR_PT = 4.2  # average character width at \footnotesize (9 pt Times in acl.sty)
 ONECOLUMN_FROM = None  # appendices stay in two columns (ACL); set to e.g. "Appendix B" to switch to one column
-FORCE_COLUMN = {"tab:1"}  # tables kept in one column (\small, wrapped) even though their natural width is larger
+FORCE_COLUMN = {"tab:7"}  # tables kept in one column (\small, wrapped) even though their natural width is larger
 
 
 def marker_cite(key: str) -> str:

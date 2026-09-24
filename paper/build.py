@@ -560,6 +560,11 @@ def numbers() -> None:
 
 
 SHORT_HEADERS = {
+    "set 1 accuracy": "set-1 acc.",
+    "set 2 accuracy": "set-2 acc.",
+    "set 1 stale": "set-1 stale",
+    "set 2 stale": "set-2 stale",
+    "no_close items over-closed": "over-closed",
     "Δ (points)": "Δ (pts)",
     "95% CI, per question": "95% CI",
     "95% CI, conversation bootstrap": "95% CI, bootstrap",
@@ -602,73 +607,50 @@ def table(header: list[str], rows: list[list[str]]) -> str:
 
 
 def t_heldout() -> str:
+    """Held-out accuracy per system and k, with each mem0 row's paired difference against engram at the same budget."""
     h = load("heldout_report.json")
     t = load("mem0_token_matched__heldout_pooled__k6.json")
     hf = "bench/results/heldout_report.json"
     tf = "bench/results/mem0_token_matched__heldout_pooled__k6.json"
-    rows = []
-    for sysname, k, key, tokkey in (
-        ("engram", "3", "e4_belief_v2", "e4_belief_v2_tokens"),
-        ("mem0", "3", "mem0", "mem0_tokens"),
-    ):
-        R = h["k3"]["rows"]
+
+    def pooled(k: str, key: str, tokkey: str) -> tuple[str, str]:
+        R = h[k]["rows"]
         n = sum(x["q"] for x in R)
         tok = sum(x[tokkey] * x["q"] for x in R) / n
-        rows.append(
-            [sysname, k, c(tok, hf, "int")]
-            + [c(x[f"{key}_correct"] / x["q"], hf, "pct") for x in R]
-            + [c((sum(x[f"{key}_correct"] for x in R), n), hf, "frac")]
-        )
-    per = t["per_conv"]
-    qs = {x["conv"]: x["q"] for x in h["k3"]["rows"]}
-    rows.append(
-        ["mem0 (token-matched)", c(t["k"], tf, "int"), c(t["mem0_tokens"], tf, "int")]
-        + [c(per[cv] / qs[cv], tf, "pct") for cv in CONVS]
-        + [c((t["mem0_correct"], t["q"]), tf, "frac")]
-    )
-    for sysname, key, tokkey in (("engram", "e4_belief_v2", "e4_belief_v2_tokens"), ("mem0", "mem0", "mem0_tokens")):
-        R = h["k20"]["rows"]
-        n = sum(x["q"] for x in R)
-        rows.append(
-            [sysname, "20", c(sum(x[tokkey] * x["q"] for x in R) / n, hf, "int")]
-            + [c(x[f"{key}_correct"] / x["q"], hf, "pct") for x in R]
-            + [c((sum(x[f"{key}_correct"] for x in R), n), hf, "frac")]
-        )
-    qrow = ["Q", "", ""] + [c(qs[cv], hf, "int") for cv in CONVS] + [c(sum(qs.values()), hf, "int")]
-    return table(["system", "k", "tokens/q", *CONVS, "pooled"], [qrow, *rows])
+        return c(tok, hf, "int"), c(sum(x[f"{key}_correct"] for x in R) / n, hf, "pct")
 
-
-def t_heldout_diff() -> str:
-    h = load("heldout_report.json")
-    t = load("mem0_token_matched__heldout_pooled__k6.json")
-    hf = "bench/results/heldout_report.json"
-    tf = "bench/results/mem0_token_matched__heldout_pooled__k6.json"
-    rows = []
-    for label, P in (("engram k=3 − mem0 k=3", h["k3"]["pooled"]), ("engram k=20 − mem0 k=20", h["k20"]["pooled"])):
-        rows.append(
-            [
-                label,
-                c(P["diff"], hf, "pp"),
-                f"[{c(P['ci_per_question'][0], hf, 'pp')}, {c(P['ci_per_question'][1], hf, 'pp')}]",
-                f"[{c(P['ci_cluster_bootstrap'][0], hf, 'pp')}, {c(P['ci_cluster_bootstrap'][1], hf, 'pp')}]",
-                f"{c(P['engram_only_correct'], hf, 'int')} / {c(P['mem0_only_correct'], hf, 'int')}",
-                c(P["mcnemar_p"], hf, "p"),
-            ]
+    def diff(P: dict, src: str, boot: bool) -> list[str]:
+        lo, hi = P["ci_per_question"]
+        cells = [c(P["diff"], src, "pp"), f"[{c(lo, src, 'pp')}, {c(hi, src, 'pp')}]"]
+        cells.append(
+            f"[{c(P['ci_cluster_bootstrap'][0], src, 'pp')}, {c(P['ci_cluster_bootstrap'][1], src, 'pp')}]"
+            if boot
+            else "not computed"
         )
-    rows.insert(
-        1,
+        eo = P.get("engram_only_correct", P.get("engram_only"))
+        mo = P.get("mem0_only_correct", P.get("mem0_only"))
+        return cells + [f"{c(eo, src, 'int')} / {c(mo, src, 'int')}", c(P["mcnemar_p"], src, "p")]
+
+    none = ["–"] * 5
+    rows = [
+        ["engram", "3", *pooled("k3", "e4_belief_v2", "e4_belief_v2_tokens"), *none],
+        ["mem0", "3", *pooled("k3", "mem0", "mem0_tokens"), *diff(h["k3"]["pooled"], hf, True)],
         [
-            "engram k=3 − mem0 k=6 (token-matched)",
-            c(t["diff"], tf, "pp"),
-            f"[{c(t['ci_per_question'][0], tf, 'pp')}, {c(t['ci_per_question'][1], tf, 'pp')}]",
-            "not computed",
-            f"{c(t['engram_only'], tf, 'int')} / {c(t['mem0_only'], tf, 'int')}",
-            c(t["mcnemar_p"], tf, "p"),
+            "mem0 (token-matched)",
+            c(t["k"], tf, "int"),
+            c(t["mem0_tokens"], tf, "int"),
+            c(t["mem0_correct"] / t["q"], tf, "pct"),
+            *diff(t, tf, False),
         ],
-    )
+        ["engram", "20", *pooled("k20", "e4_belief_v2", "e4_belief_v2_tokens"), *none],
+        ["mem0", "20", *pooled("k20", "mem0", "mem0_tokens"), *diff(h["k20"]["pooled"], hf, True)],
+    ]
     return table(
         [
-            "comparison",
+            "system",
+            "k",
+            "tokens/q",
+            "accuracy",
             "Δ (points)",
             "95% CI, per question",
             "95% CI, conversation bootstrap",
@@ -739,11 +721,13 @@ def t_e2() -> str:
     )
 
 
-def t_updates() -> str:
-    rows = []
-    specs = (
+def t_store() -> str:
+    """Store safety (closes, over-closes, stale items) and update-question accuracy per arm, dev + update sets."""
+    specs = (  # label, set-1 storage run, set-2 run, set-1 answers (default k), set-2 answers, k=3, no dates
         (
             "mem0 (add-only)",
+            "mem0__dev_updates.json",
+            "mem0__dev_updates2.json",
             "mem0__dev_updates.json",
             "mem0__dev_updates2.json",
             "mem0__dev_updates__k3.json",
@@ -751,13 +735,18 @@ def t_updates() -> str:
         ),
         (
             "E2: Jev, replace-on-update",
+            "e2_jev_v2__dev_updates__k3.json",
+            "e2_jev_v2__dev_updates2.json",
             "e2_jev_v2__dev_updates.json",
             "e2_jev_v2__dev_updates2.json",
             "e2_jev_v2__dev_updates__k3.json",
             "e2_jev_v2__dev_updates__nodates.json",
         ),
+        ("E3: structural rules", "e3_structural_v3__dev_updates.json", None, None, None, None, None),
         (
             "E4: belief v1",
+            "e4_belief__dev_updates.json",
+            "e4_belief__dev_updates2.json",
             "e4_belief__dev_updates.json",
             "e4_belief__dev_updates2.json",
             "e4_belief__dev_updates__k3.json",
@@ -765,75 +754,53 @@ def t_updates() -> str:
         ),
         (
             "E4: belief v2 (frozen)",
+            "e4_belief_v2__dev_updates__k3.json",
+            "e4_belief_v2_shadow__dev_updates2__k3.json",
             "e4_belief_v2_full__dev_updates.json",
             "e4_belief_v2_full__dev_updates2.json",
             "e4_belief_v2__dev_updates__k3.json",
             None,
         ),
-    )
-    for label, f1, f2, fk3, fnd in specs:
-        a, b, k3 = load(f1), load(f2), load(fk3)
-        s1, s2, sk = (f"bench/results/{f}" for f in (f1, f2, fk3))
-        nd = c(correct(load(fnd), ["update"]), f"bench/results/{fnd}", "frac") if fnd else "not run"
-        rows.append(
-            [
-                label,
-                c(tuple(a["stale_on_close_items"]), s1, "frac"),
-                c(tuple(b["set2_stale_values"]), s2, "frac"),
-                c(correct(a, ["update"]), s1, "frac"),
-                c(correct(b, ["update2"]), s2, "frac"),
-                c(correct(k3, ["update"]), sk, "frac"),
-                nd,
-            ]
-        )
-    return table(
-        [
-            "arm",
-            "set 1: stale / close items stored",
-            "set 2: stale values / stored",
-            "set 1 accuracy (default k)",
-            "set 2 accuracy (default k)",
-            "set 1 accuracy (k=3)",
-            "set 1 accuracy (no dates)",
-        ],
-        rows,
-    )
-
-
-def t_safety() -> str:
-    rows = []
-    for label, f1, f2 in (
-        ("mem0", "mem0__dev_updates.json", "mem0__dev_updates2.json"),
-        ("E2: Jev, replace-on-update", "e2_jev_v2__dev_updates__k3.json", "e2_jev_v2__dev_updates2.json"),
-        ("E3: structural rules", "e3_structural_v3__dev_updates.json", None),
-        ("E4: belief v1", "e4_belief__dev_updates.json", "e4_belief__dev_updates2.json"),
-        ("E4: belief v2 (frozen)", "e4_belief_v2__dev_updates__k3.json", "e4_belief_v2_shadow__dev_updates2__k3.json"),
         (
             "E4: belief v3",
             "e4_belief_v3__dev_updates__k3__noanswer.json",
             "e4_belief_v3__dev_updates2__k3__noanswer.json",
+            None,
+            None,
+            None,
+            None,
         ),
-    ):
+    )
+    rows = []
+    for label, f1, f2, a1, a2, k3, nd in specs:
         a = load(f1)
         s1 = f"bench/results/{f1}"
-        st = a.get("storage") or {}
-        row = [label, c(tuple(a["over_close_on_no_close_items"]), s1, "frac")]
-        if f2:
-            b = load(f2)
-            s2 = f"bench/results/{f2}"
-            row.append(c(tuple(b["set2_keep_ok"]), s2, "frac"))
-        else:
-            row.append("not run")
-        row += [c(st["closes"], s1, "int"), c(st["closes_correct"], s1, "int"), c(st["closes_wrong"], s1, "int")]
+        st = a["storage"]
+        row = [
+            label,
+            c(st["closes"], s1, "int"),
+            c(st["closes_correct"], s1, "int"),
+            c(st["closes_wrong"], s1, "int"),
+            c(tuple(a["over_close_on_no_close_items"]), s1, "frac"),
+            c(tuple(a["stale_on_close_items"]), s1, "frac"),
+            c(tuple(load(f2)["set2_stale_values"]), f"bench/results/{f2}", "frac") if f2 else "not run",
+        ]
+        for fn, cats in ((a1, ["update"]), (k3, ["update"]), (nd, ["update"]), (a2, ["update2"])):
+            row.append(c(correct(load(fn), cats), f"bench/results/{fn}", "frac") if fn else "–")
         rows.append(row)
     return table(
         [
             "arm",
-            "set 1 no_close items over-closed / stored",
-            "set 2 keep items kept / stored",
-            "closes (dev + set 1)",
+            "closes",
             "matching a labeled pair",
             "not matching",
+            "no_close items over-closed",
+            "set 1 stale",
+            "set 2 stale",
+            "set 1 accuracy",
+            "set 1 accuracy (k=3)",
+            "set 1 accuracy (no dates)",
+            "set 2 accuracy",
         ],
         rows,
     )
@@ -1096,11 +1063,9 @@ def t_update_samples() -> str:
 
 BLOCKS = {
     "table:heldout": t_heldout,
-    "table:heldout_diff": t_heldout_diff,
     "table:category": t_category,
     "table:e2": t_e2,
-    "table:updates": t_updates,
-    "table:safety": t_safety,
+    "table:store": t_store,
     "table:questions": t_questions,
     "table:agreement": t_agreement,
     "table:regression": t_regression,
