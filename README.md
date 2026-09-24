@@ -29,7 +29,7 @@ From the paper (`paper/numbers.json`; extraction claude-haiku-4-5, answers and j
 | Held-out LoCoMo, 610 questions, matched context (engram k=3 vs mem0 k=6) | 73.3% | 64.6%: +8.7 points (95% CI +5.2 to +12.1) |
 | Same, engram with Jev reranking off | 59.8% | the reranker accounts for the whole lead (−13.4 points) |
 | Held-out, k=20 | 79.0% | 78.2%: +0.8 points (95% CI −2.3 to +3.9), indistinguishable |
-| Authored no-close trap items closed | 0/8 | 1 wrong plan_fulfilled close, 1 close matching no labeled pair |
+| No-close trap items closed (update set 1) | 0/8 | 1 wrong plan_fulfilled close, 1 close matching no labeled pair |
 
 Closing stale facts did not change answers on these LoCoMo-derived evaluations with this extraction, rendering and
 answer setup.

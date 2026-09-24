@@ -172,7 +172,7 @@ and judges with mem0's LoCoMo evaluation prompts. The baseline is mem0 OSS 2.1.0
 - **dev**: LoCoMo conv-26, sessions 1–4 (76 messages, 35 questions), used for development;
 - **held-out**: conv-30, conv-41, conv-42 and conv-43 in full (610 scored questions), run once, after the configuration
   was frozen under a git tag;
-- **update sets**: two author-written sets appended to the dev slice, because LoCoMo barely tests updates. Set 1 has
+- **update sets**: two sets, drafted and labeled with an AI assistant at the author's direction, appended to the dev slice, because LoCoMo barely tests updates. Set 1 has
   30 items, including 10 *no-close traps* (past-tense mentions and unrealised plans that must not close anything);
   set 2 adds 28 messages and 20 questions about chains of changes and past moments.
 
@@ -240,7 +240,7 @@ token-matched mem0, and at $k=20$ 76.4% against 77.5%.
 
 ## 7. Result 3: what the store does, and how calibrated the decisions are
 
-**Trap items.** The frozen arm stored 8 of the 10 authored no-close traps and closed **none of them (0/8)**, with 1 wrong `plan_fulfilled` close
+**Trap items.** The frozen arm stored 8 of the 10 no-close traps and closed **none of them (0/8)**, with 1 wrong `plan_fulfilled` close
 and 1 close that matched no labeled pair. A simpler policy that closed whenever a superseding label cleared 0.85 made
 11 closes on the same data, 8 of them unlabeled. A relaxed plan heuristic fired 25 times and was wrong 24 times; the
 dedicated yes/no question that replaced it was asked 234 times and closed 2 plans correctly and 1 wrongly.
@@ -287,7 +287,8 @@ for at most 48.0% of the contradiction pairs. Its fine-tuned checkpoint is the o
 ## 9. Limitations
 
 One baseline (mem0 OSS 2.1.0) on one benchmark (four held-out LoCoMo conversations, so four bootstrap clusters). The
-update sets and contradiction pairs were written and labeled by the system's author. One decision model at one
+update sets and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's
+direction; the author reviewed a subset. One decision model at one
 version. The judge is an LLM whose agreement with humans I did not measure, and every score comes from one model stack,
 so none of it is comparable to leaderboards run on other stacks. Extraction shares model and implementation across
 arms but not state, and I did not run an arm with frozen extraction outputs.

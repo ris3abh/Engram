@@ -30,8 +30,8 @@ configs:
 # engram evaluation data
 
 The evaluation data behind *Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs*
-(Rishabh Sharma, 2026, [doi:10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758)): author-written update
-sets that extend LoCoMo with fact changes, labeled contradiction pairs, the relation decisions escalated to an LLM,
+(Rishabh Sharma, 2026, [doi:10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758)): update sets
+that extend LoCoMo with fact changes, labeled contradiction pairs, the relation decisions escalated to an LLM,
 and every scored answer from the paper's runs. Code: the engram repository (`bench/make_hf_dataset.py` builds this
 directory from the repository's committed files, with no API calls).
 
@@ -62,8 +62,8 @@ directory from the repository's committed files, with no API calls).
 
 ## Bias and limitations
 
-The update sets, the contradiction pairs and their labels were written by the system's author, who also designed the
-system being evaluated. They test the failure modes the author anticipated and are small (30 + 20 items, 50 pairs).
+Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The author also designed the system being evaluated, so the sets test the failure modes its builders
+anticipated, and they are small (30 + 20 items, 50 pairs).
 The judge is an LLM whose agreement with human labels was not measured. Scores come from one model stack
 (claude-haiku-4-5 extraction, claude-sonnet-4-6 answers and judge) and are not comparable to LoCoMo leaderboards run
 on other stacks.

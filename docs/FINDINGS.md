@@ -6,6 +6,10 @@ experiments and every other table: `docs/BENCHMARK.md`.
 
 ## Claims
 
+Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. Code, experiment orchestration and paper drafting were carried out with Claude (Anthropic) via Claude Code
+under the author's direction; the author designed the study, made every methodological decision, and is
+responsible for all claims.
+
 The claims the paper makes, in the wording of the reviewer pass (2026-09-24), each backed by a section of this file
 or of `docs/BENCHMARK.md`.
 
@@ -15,7 +19,7 @@ or of `docs/BENCHMARK.md`.
    typed decisions had 70.0× lower decision cost and 27.6× lower median decision latency than our claude-sonnet-4-6
    implementation of mem0's update prompt, one call per extracted fact, with equal dev accuracy (31/35 each).
    Batching several facts per LLM call and a smaller LLM decider were not measured.
-2. **The store policy on trap items.** In the frozen arm 0/8 authored no-close trap items were closed, with 1 wrong
+2. **The store policy on trap items.** In the frozen arm 0/8 no-close trap items were closed, with 1 wrong
    plan_fulfilled close and 1 close matching no labeled pair (dev + update set 1). Belief v3 removes the
    weak-evidence failure (below).
 3. **On held-out data the reranker accounts for the matched-context lead.** At a matched mean retrieved-context

@@ -18,8 +18,8 @@ prompt, one call per extracted fact, with equal dev accuracy ({{e2_jev__dev.acc}
 {{ho.q}} held-out LoCoMo questions, at a matched mean retrieved-context budget engram was {{tm.diff}} points above
 mem0 (95% CI {{tm.ci.lo}} to {{tm.ci.hi}}); with Jev's reranking turned off it answered {{nr.vs_full.diff}} points
 fewer, so the reranker accounts for the whole difference. At k=20 the two systems are indistinguishable
-({{ho.k20.diff}}, CI {{ho.k20.ci.lo}} to {{ho.k20.ci.hi}}). On author-written update sets, {{u1.e4v2.over}} authored
-no-close trap items were closed, with {{fq.wrong}} wrong plan_fulfilled close and {{u1.e4v2.closes_wrong}} close
+({{ho.k20.diff}}, CI {{ho.k20.ci.lo}} to {{ho.k20.ci.hi}}). On update sets drafted with an AI assistant,
+{{u1.e4v2.over}} no-close trap items were closed, with {{fq.wrong}} wrong plan_fulfilled close and {{u1.e4v2.closes_wrong}} close
 matching no labeled pair. Closing stale facts did not change answers on these LoCoMo-derived evaluations with this
 extraction, rendering and answer setup.
 
@@ -58,7 +58,7 @@ matched-context control and a held-out no-rerank arm, and a negative result.
 implementation, typed decisions had {{e2.cost_ratio}} lower decision cost and {{e2.lat_ratio}} lower median decision
 latency than our claude-sonnet-4-6 implementation of mem0's update prompt, one call per extracted fact, with no
 measured accuracy loss (§5.1). Second, a belief-state store policy with reversible, gated closes closed
-{{u1.e4v2.over}} authored no-close trap items, with {{fq.wrong}} wrong plan_fulfilled close and
+{{u1.e4v2.over}} no-close trap items, with {{fq.wrong}} wrong plan_fulfilled close and
 {{u1.e4v2.closes_wrong}} close matching no labeled pair, and its v3 rule removes a weak-evidence failure that closes
 true facts (§3.2, §5.3). Third, on {{ho.q}} held-out questions at a matched mean retrieved-context budget, engram was
 {{tm.diff}} points above mem0; turning Jev's reranking off costs {{nr.vs_full.diff}} points on the same questions and leaves
@@ -77,7 +77,7 @@ answering. Models as in Table 2.*
 
 **Scope.** We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development
 conversation and four held-out conversations, scoring four of its five question categories; adversarial is
-excluded from the primary comparison, following mem0's evaluation protocol, and reported separately in Table 3). We use update sets written by the system's author, and one hosted
+excluded from the primary comparison, following mem0's evaluation protocol, and reported separately in Table 3). We use update sets drafted and labeled with an AI assistant at the author's direction (§4.3), and one hosted
 decision model (Jev, `jev-1.13.0`). We did not test Zep/Graphiti or Letta, LongMemEval, other extraction,
 answer or judge models, multi-user stores, or non-English text.
 
@@ -438,8 +438,8 @@ anything), and {{u1.n.fulfilled}} fulfilled plans. Set 2 (`bench/updates2_conv26
 {{u2.nm}} messages and {{u2.nq}} questions. Of these, {{u2.type.point_in_time}} ask about a past moment in set 1's
 items, {{u2.type.chain_current}} ask for the current value after a chain of 3–5 changes, {{u2.type.chain_point_in_time}}
 ask for a chain's value at a past moment, and {{u2.type.no_temporal_cue}} follow an update whose message has no
-temporal cue such as "now" or "anymore". Appendix B shows one item of each kind; the full sets are in the two files. The system's author wrote and labeled
-them, and this is a source of bias.
+temporal cue such as "now" or "anymore". Appendix B shows one item of each kind; the full sets are in the two files. Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset.
+This is a source of bias: the sets test failure modes the system's builders anticipated.
 
 ### 4.4 Statistics
 
@@ -549,7 +549,7 @@ of the {{ho.q}} questions (`bench/heldout_extra.py`).
 
 ### 5.3 Store behaviour and calibration
 
-*Table 4. No arm closed an authored no-close trap item (0/8 for every engram arm, 0/7 for mem0), and on these
+*Table 4. No arm closed a no-close trap item (0/8 for every engram arm, 0/7 for mem0), and on these
 LoCoMo-derived evaluations with this extraction, rendering and answer setup closing stale facts lowers the stale counts
 without moving update-question accuracy at default k, which is at or near ceiling for every arm that answered. Store
 outcomes and update-question accuracy on the dev slice with update sets 1 and 2 (extraction
@@ -570,7 +570,7 @@ questions, and Figure 4 plots the store outcomes.
 less and leave more set-1 items stale, and mem0 closes nothing. Store outcomes on the update sets: set-1 close items left stale, set-2 stale values, closes on
 dev + set 1 split by whether they match a labeled pair, and no_close items over-closed. E3 was not run on set 2.*
 
-**Trap items.** In the frozen arm {{u1.e4v2.over}} authored no-close trap items were closed, with {{fq.wrong}} wrong
+**Trap items.** In the frozen arm {{u1.e4v2.over}} no-close trap items were closed, with {{fq.wrong}} wrong
 plan_fulfilled close and {{u1.e4v2.closes_wrong}} close matching no labeled pair; no other arm closed a trap item
 either.
 
@@ -722,7 +722,7 @@ systems are indistinguishable at k=20. On adversarial questions the reranked con
 answer prompt that asks for abstention was not tested.
 
 **Limitations.** The comparison has one baseline, mem0 OSS 2.1.0, on one benchmark, four held-out LoCoMo
-conversations. The update sets and the regression pairs were written and labeled by the system's author. Jev is the
+conversations. Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. Jev is the
 only decision model evaluated as the deciding backend, at one version, and Laya was tested only as a zero-shot base
 checkpoint. Extraction shares model, prompt construction and implementation but not state: the stores it reads
 diverge (§4.2), and no arm froze extraction outputs across decision layers. mem0's open-source path gives no
@@ -730,6 +730,10 @@ observation date, so relative dates resolve against the run date; we use it as s
 session date patched in scored {{mem0_dated__dev.acc}} on dev against {{mem0__dev.acc}} unpatched, within noise.
 Adversarial questions require abstention, which mem0's answer prompt does not ask for (Table 3). Finally, the judge is an LLM (claude-sonnet-4-6), and we did not measure its
 agreement with human labels.
+
+**AI assistance.** Code, experiment orchestration and paper drafting were carried out with Claude (Anthropic) via
+Claude Code under the author's direction; the author designed the study, made every methodological decision, and is
+responsible for all claims.
 
 ## 7. Conclusion
 

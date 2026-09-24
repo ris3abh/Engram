@@ -51,7 +51,7 @@ relation is update or contradiction at p ≥ 0.85 **and** Jev says the new fact 
    numbers are below.
 
 **Correction to run 1:** the temporal status in run 1's state came from the `temporal_status` column of
-`bench/contradiction_pairs.jsonl`, which is my hand-written ground truth. That makes run 1's 87% subtle-tier
+`bench/contradiction_pairs.jsonl`, the ground-truth labels. That makes run 1's 87% subtle-tier
 number an oracle upper bound, not something an LLM extractor would reach.
 
 **Experiment: temporal answer in the relation state (two stages).** Jev answers `temporal_status` first, and
@@ -89,8 +89,8 @@ add 40% to Jev cost for no change in the graph. **Not adopted.**
 - **Cost and speed:** about $0.00003 per pair (two decisions) and 180 to 190 ms median per request.
 - **Regression test:** `tests/test_contradiction_regression.py` (`pytest -m live`) enforces floors under these
   numbers, plus zero false closes.
-- Caveat: I wrote and labeled these 50 pairs myself, on one model version. m12 and s11 are arguably
-  mislabeled.
+- Caveat: Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. They were checked against one model version. m12 and s11 are
+  arguably mislabeled.
 
 ## Throughput: findings (2026-09-23)
 
