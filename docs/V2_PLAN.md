@@ -4,7 +4,8 @@ Status: registered before any v2 run. Branch `v2`; v1 is frozen at tag `v1-prepr
 
 This plan is the source of truth for phase 3. It is committed before any v2 code, script or run. Any change after that
 commit is recorded under **Deviations** (section 12) with its date and reason, and the paper reports every deviation.
-`tests/test_v2_plan.py` fails if section 1 (the primary hypothesis) changes without a Deviations entry.
+`tests/test_v2_plan.py` hashes sections 1, 6, 7, 8, 10, 11 and 13 and fails if any of them changes without a new
+dated Deviations entry naming it.
 
 ## 1. Primary hypothesis
 
@@ -267,6 +268,8 @@ one.
   matches its frozen hash (bench/update_sets.py, tests/test_update_set_3_seal.py).
 - 2026-09-24, §8: a second grader, not the system's author, grades a random 50-row subset (seed 1) of the audit
   sheet, blinded the same way; inter-grader κ is reported alongside human–judge κ, and the gate requires both graders.
+- 2026-09-24, preamble and tests: the plan's guard now hashes the primary hypothesis, hypothesis family, judges,
+  human audit, LongMemEval, statistics and budget sections; each needs a new dated entry naming it to change.
 
 ### Where this plan differs from the phase-3 brief
 

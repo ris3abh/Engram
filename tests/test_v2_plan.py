@@ -1,8 +1,11 @@
-"""docs/V2_PLAN.md is pre-registered: its primary hypothesis may not change without a recorded deviation.
+"""docs/V2_PLAN.md is pre-registered: its guarded sections may not change without a recorded deviation.
 
-The plan's first commit is REGISTERED_COMMIT, and REGISTERED_HASH is the SHA-256 of section 1 ("Primary hypothesis")
-as committed there. If section 1 differs today, the Deviations section must contain a dated entry that names the
-primary hypothesis. When git history is available, the stored hash is also checked against the commit itself.
+REGISTERED holds, for sections 1, 6, 7, 8, 10, 11 and 13, the SHA-256 of the section as registered and the number of
+dated Deviations entries that named the section at that point. If a section's text differs from its registered hash,
+the Deviations section must contain more dated entries naming it ("§N" or "section N") than it did at registration.
+Section 1 (the primary hypothesis) was registered in the plan's first commit, REGISTERED_COMMIT; the other sections
+were registered on 2026-09-24, after the first revision of Part 1. When git history is available, section 1's hash is
+also checked against that commit.
 """
 
 import hashlib
@@ -15,7 +18,19 @@ import pytest
 ROOT = Path(__file__).parents[1]
 PLAN = ROOT / "docs" / "V2_PLAN.md"
 REGISTERED_COMMIT = "dedc949bf7aaec7cdc98718ef95a4d2e8d3a9c58"
-REGISTERED_HASH = "4a64e5da5c2682b9eb28df2b65639672ba004b1190d15d4a5682f87ac23ef180"
+REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviations entries naming it at registration)
+    "1": ("1. Primary hypothesis", "4a64e5da5c2682b9eb28df2b65639672ba004b1190d15d4a5682f87ac23ef180", 0),
+    "6": ("6. Hypothesis family", "1ee9a65ba0bbec40ab6733b32dbf6e04525316846e27b47b543f2b900b09bb0d", 4),
+    "7": ("7. Judges", "a2bfff0f00ba4d3af3530a2ae2634682adb89dcdb6d41c3e15a93a948c4149ef", 1),
+    "8": ("8. Human audit", "ca695f04a2eabdd8364253af1b6e707a58918295214502e4e6d152d8aa7ae91c", 1),
+    "10": ("10. LongMemEval", "305af19b152b6ad54bdbe3717f9338c2d6882f9a943440f5f49a764cb03a2f8b", 1),
+    "11": (
+        "11. Statistics, spend and stopping rules",
+        "703564575af41debd2ae594daee00a1505a0d554c444de9d86329cbc6e16a894",
+        0,
+    ),
+    "13": ("13. Budget", "46e6a4f789f5c05adcb39d3497099aa757aa05868d085c1f4aea5681af725726", 0),
+}
 
 
 def section(text: str, heading: str) -> str:
@@ -24,11 +39,26 @@ def section(text: str, heading: str) -> str:
     return m.group(1).strip()
 
 
-def primary_hash(text: str) -> str:
-    return hashlib.sha256(section(text, "1. Primary hypothesis").encode()).hexdigest()
+def section_hash(text: str, number: str) -> str:
+    return hashlib.sha256(section(text, REGISTERED[number][0]).encode()).hexdigest()
 
 
-def test_registered_hash_matches_registered_commit():
+def entries_naming(text: str, number: str) -> int:
+    lines = section(text, "12. Deviations").splitlines()
+    dated = [line for line in lines if re.search(r"\d{4}-\d{2}-\d{2}", line)]
+    return sum(1 for line in dated if re.search(rf"§{number}\b|section {number}\b", line, flags=re.I))
+
+
+def unrecorded_changes(text: str) -> list[str]:
+    """Guarded sections that differ from registration without a new dated Deviations entry naming them."""
+    return [
+        n
+        for n, (_, digest, count) in REGISTERED.items()
+        if section_hash(text, n) != digest and entries_naming(text, n) <= count
+    ]
+
+
+def test_section_1_matches_the_plans_first_commit():
     try:
         committed = subprocess.run(
             ["git", "show", f"{REGISTERED_COMMIT}:docs/V2_PLAN.md"],
@@ -39,35 +69,26 @@ def test_registered_hash_matches_registered_commit():
         ).stdout
     except (OSError, subprocess.CalledProcessError):
         pytest.skip("git history with the plan's first commit is not available")
-    assert primary_hash(committed) == REGISTERED_HASH
+    assert section_hash(committed, "1") == REGISTERED["1"][1]
 
 
-def unrecorded_change(text: str) -> bool:
-    """True if section 1 differs from the registered text and no dated Deviations entry names it."""
-    if primary_hash(text) == REGISTERED_HASH:
-        return False
-    deviations = section(text, "12. Deviations")
-    entries = [line for line in deviations.splitlines() if re.search(r"\d{4}-\d{2}-\d{2}", line)]
-    return not any(re.search(r"§1\b|section 1\b", e, flags=re.I) for e in entries)
+def test_guarded_sections_unchanged_or_deviation_recorded():
+    changed = unrecorded_changes(PLAN.read_text())
+    assert not changed, f"sections {', '.join('§' + n for n in changed)} changed without a dated entry under Deviations"
 
 
-def test_primary_hypothesis_unchanged_or_deviation_recorded():
-    assert not unrecorded_change(PLAN.read_text()), (
-        "section 1 (Primary hypothesis) changed after registration without a dated entry under Deviations"
-    )
-
-
-def test_guard_catches_an_edit():
+@pytest.mark.parametrize("number", sorted(REGISTERED, key=int))
+def test_guard_catches_an_edit_to_each_section(number):
     text = PLAN.read_text()
-    edited = text.replace("α = 0.05; no correction", "α = 0.10; no correction")
-    assert edited != text
-    assert unrecorded_change(edited)
+    body = section(text, REGISTERED[number][0])
+    edited = text.replace(body, body + "\n\nAn unregistered sentence.", 1)
+    assert number in unrecorded_changes(edited)
     heading = "## 12. Deviations\n"
-    recorded = edited.replace(heading, heading + "\n- 2026-10-01, section 1: H1 alpha changed (reason).\n")
-    assert not unrecorded_change(recorded)
+    recorded = edited.replace(heading, heading + f"\n- 2026-12-31, §{number}: a test edit (reason).\n", 1)
+    assert number not in unrecorded_changes(recorded)
 
 
 def test_plan_has_required_sections():
     text = PLAN.read_text()
-    for heading in ("1. Primary hypothesis", "2. Power", "6. Hypothesis family", "8. Human audit", "12. Deviations"):
+    for heading in ("2. Power", "9. Update set 3 (independent author)", "12. Deviations", "AI assistance"):
         section(text, heading)
