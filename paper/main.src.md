@@ -9,8 +9,8 @@ Every number carries a src comment naming the file it comes from; paper/numbers.
 
 ## Abstract
 
-Typed decisions cut an agent memory system's decision cost and latency and help retrieval under a small budget;
-they do not change answers after facts change, and a small zero-shot model cannot make them. Memory
+Typed decisions cut an agent memory system's decision cost and latency and improve retrieval under a small budget;
+they do not change answers after facts change, and a small model used zero-shot cannot make them. Memory
 systems make an LLM call for every write decision, which makes revisiting the store unaffordable, yet most of that
 work is choice among fixed options. In engram, an LLM extracts facts and every decision is a typed question answered
 by a hosted decision model (Jev). With extraction held identical to mem0 2.1.0's, typed decisions cut decision-layer
@@ -44,7 +44,7 @@ they cost far less than generating text.
 independently by Jev-Mem [@jiang2026jevmem], which uses Jev for typing, relation construction, query routing,
 budget allocation, traversal, candidate scoring and stopping. It reports a LoCoMo judge score of
 {{ext.jevmem.locomo}} with a {{ext.jevmem.build}} s build and {{ext.jevmem.query}} s query against A-MEM
-[@xu2025amem], Nemori, MemoryOS and MAGMA [@jiang2026magma]. It does not isolate the decision layer, evaluate
+[@xu2025amem], MAGMA [@jiang2026magma] and two further systems reported in that paper. It does not isolate the decision layer, evaluate
 updates or closes, measure calibration, or use a held-out split or confidence intervals. Separately, a community
 article reranked AtMem's top-10 with Jev on {{ext.atmem.q}} LoCoMo questions and measured the effect at the ranking
 level: MRR@5 rose from {{ext.atmem.mrr.before}} to {{ext.atmem.mrr.after}} and Recall@1 from
@@ -98,7 +98,7 @@ A typed decision model takes a shared *state* (JSON) and a set of questions. Eac
 It returns a probability distribution per question.
 
 **Jev.** We use Jev through TypeSafe's API: model `jev-1.13.0`, priced at {{k.price}} USD per million input tokens
-(`src/engram/config.py`). Its documentation gives a limit of {{ext.jev.options}} options per choice question
+as billed to our account (`src/engram/config.py`); the public documentation does not list a price. Its documentation gives a limit of {{ext.jev.options}} options per choice question
 [@typesafe2026jev]. Measured latency is flat in request size (§5.7).
 
 **Laya.** Laya is an open-weights model with the same request format. We ran checkpoint {{laya.ckpt}} locally
@@ -692,15 +692,15 @@ Generated from `src/engram/decide/questions.py`.
 
 ## Appendix D. Per-conversation held-out tables
 
-*D.1 Held-out, per conversation, k=3. Q per row; models as in Table 3.*
+*Held-out, per conversation, k=3. Q per row; models as in Table 3.*
 
 {{table:perconv_k3}}
 
-*D.2 Held-out, per conversation: engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table 3.*
+*Held-out, per conversation: engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table 3.*
 
 {{table:perconv_tm}}
 
-*D.3 Held-out, per conversation, k=20. Q per row; models as in Table 3.*
+*Held-out, per conversation, k=20. Q per row; models as in Table 3.*
 
 {{table:perconv_k20}}
 

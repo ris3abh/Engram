@@ -197,6 +197,17 @@ def natural_width(header: list[str], body: list[list[str]]) -> float:
     return width
 
 
+def is_unnumbered_caption(lines: list[str], i: int) -> bool:
+    """A one-line italic paragraph directly above a table (appendix tables without "Table N." in the source)."""
+    s = lines[i].strip()
+    if not (s.startswith("*") and s.endswith("*") and not s.startswith("**")):
+        return False
+    j = i + 1
+    while j < len(lines) and not lines[j].strip():
+        j += 1
+    return j < len(lines) and lines[j].strip().startswith("|")
+
+
 def table_tex(rows: list[list[str]], caption: str | None, label: str | None, onecolumn: bool) -> str:
     header, body = rows[0], rows[2:]
     ncol = len(header)
@@ -388,7 +399,7 @@ def convert(md: str) -> tuple[str, str, str, str]:
             cur.append(figure_tex(path, cap, label))
             i += 1
             continue
-        if re.match(r"^\*(Table \d+\.|D\.\d)", s):  # caption paragraph (and its bullets) for the next table
+        if re.match(r"^\*Table \d+\.", s) or is_unnumbered_caption(lines, i):  # caption paragraph for the next table
             flush(cur)
             capl = [s]
             j = i + 1

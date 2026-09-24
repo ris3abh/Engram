@@ -9,8 +9,8 @@ Every number carries a src comment naming the file it comes from; paper/numbers.
 
 ## Abstract
 
-Typed decisions cut an agent memory system's decision cost and latency and help retrieval under a small budget;
-they do not change answers after facts change, and a small zero-shot model cannot make them. Memory
+Typed decisions cut an agent memory system's decision cost and latency and improve retrieval under a small budget;
+they do not change answers after facts change, and a small model used zero-shot cannot make them. Memory
 systems make an LLM call for every write decision, which makes revisiting the store unaffordable, yet most of that
 work is choice among fixed options. In engram, an LLM extracts facts and every decision is a typed question answered
 by a hosted decision model (Jev). With extraction held identical to mem0 2.1.0's, typed decisions cut decision-layer
@@ -44,7 +44,7 @@ they cost far less than generating text.
 independently by Jev-Mem [jiang2026jevmem], which uses Jev for typing, relation construction, query routing,
 budget allocation, traversal, candidate scoring and stopping. It reports a LoCoMo judge score of
 0.777<!-- src: jiang2026jevmem (reported LoCoMo judge score) --> with a 158<!-- src: jiang2026jevmem (reported build time, s) --> s build and 0.93<!-- src: jiang2026jevmem (reported query time, s) --> s query against A-MEM
-[xu2025amem], Nemori, MemoryOS and MAGMA [jiang2026magma]. It does not isolate the decision layer, evaluate
+[xu2025amem], MAGMA [jiang2026magma] and two further systems reported in that paper. It does not isolate the decision layer, evaluate
 updates or closes, measure calibration, or use a held-out split or confidence intervals. Separately, a community
 article reranked AtMem's top-10 with Jev on 1,986<!-- src: taghia2026atmem (LoCoMo questions) --> LoCoMo questions and measured the effect at the ranking
 level: MRR@5 rose from 0.4259<!-- src: taghia2026atmem (MRR@5, AtMem) --> to 0.5868<!-- src: taghia2026atmem (MRR@5, AtMem + Jev) --> and Recall@1 from
@@ -98,7 +98,7 @@ A typed decision model takes a shared *state* (JSON) and a set of questions. Eac
 It returns a probability distribution per question.
 
 **Jev.** We use Jev through TypeSafe's API: model `jev-1.13.0`, priced at 0.042<!-- src: src/engram/config.py (USD per million input tokens) --> USD per million input tokens
-(`src/engram/config.py`). Its documentation gives a limit of 255<!-- src: typesafe2026jev (max options per Choice) --> options per choice question
+as billed to our account (`src/engram/config.py`); the public documentation does not list a price. Its documentation gives a limit of 255<!-- src: typesafe2026jev (max options per Choice) --> options per choice question
 [typesafe2026jev]. Measured latency is flat in request size (§5.7).
 
 **Laya.** Laya is an open-weights model with the same request format. We ran checkpoint convaiinnovations/laya<!-- src: bench/results/e4_belief_v2_laya__dev_updates__k3.json --> locally
@@ -1270,7 +1270,7 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 
 ## Appendix D. Per-conversation held-out tables
 
-*D.1 Held-out, per conversation, k=3. Q per row; models as in Table 3.*
+*Held-out, per conversation, k=3. Q per row; models as in Table 3.*
 
 | conv. | Q | engram | mem0 | Δ (questions) | engram tokens / q | mem0 tokens / q |
 |---|---|---|---|---|---|---|
@@ -1279,7 +1279,7 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 | conv-42 | 199<!-- src: bench/results/heldout_report.json --> | 150/199<!-- src: bench/results/heldout_report.json --> | 111/199<!-- src: bench/results/heldout_report.json --> | 39<!-- src: bench/results/heldout_report.json --> | 292<!-- src: bench/results/heldout_report.json --> | 163<!-- src: bench/results/heldout_report.json --> |
 | conv-43 | 178<!-- src: bench/results/heldout_report.json --> | 125/178<!-- src: bench/results/heldout_report.json --> | 101/178<!-- src: bench/results/heldout_report.json --> | 24<!-- src: bench/results/heldout_report.json --> | 283<!-- src: bench/results/heldout_report.json --> | 153<!-- src: bench/results/heldout_report.json --> |
 
-*D.2 Held-out, per conversation: engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table 3.*
+*Held-out, per conversation: engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table 3.*
 
 | conv. | Q | engram k=3 | mem0 k=6 | Δ (questions) |
 |---|---|---|---|---|
@@ -1288,7 +1288,7 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 | conv-42 | 199<!-- src: bench/results/heldout_report.json --> | 150/199<!-- src: bench/results/heldout_report.json --> | 119/199<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 31<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> |
 | conv-43 | 178<!-- src: bench/results/heldout_report.json --> | 125/178<!-- src: bench/results/heldout_report.json --> | 112/178<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> | 13<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json --> |
 
-*D.3 Held-out, per conversation, k=20. Q per row; models as in Table 3.*
+*Held-out, per conversation, k=20. Q per row; models as in Table 3.*
 
 | conv. | Q | engram | mem0 | Δ (questions) | engram tokens / q | mem0 tokens / q |
 |---|---|---|---|---|---|---|
