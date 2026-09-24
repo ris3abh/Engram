@@ -99,6 +99,7 @@ demo/              the page served by `engram serve`
 
 ## License
 
-MIT (`LICENSE`), except the LoCoMo excerpts in `bench/slices/` (CC BY-NC 4.0, from
-[snap-research/locomo](https://github.com/snap-research/locomo)) and mem0's prompts in
-`src/engram/llm/prompts_mem0.py` (Apache 2.0, © mem0.ai).
+MIT (`LICENSE`), with two exceptions. The LoCoMo excerpts in `bench/slices/` and the prompts recorded in
+`bench/cache/dev_calls.sqlite` are under LoCoMo's CC BY-NC 4.0 license
+([snap-research/locomo](https://github.com/snap-research/locomo)). mem0's prompts in `src/engram/llm/prompts_mem0.py`
+are Apache 2.0 (© mem0.ai).
