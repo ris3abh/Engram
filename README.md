@@ -4,6 +4,8 @@
 
 DOI: [10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758)
 
+Dataset: [huggingface.co/datasets/ris3abh-11/engram-eval](https://huggingface.co/datasets/ris3abh-11/engram-eval)
+
 engram is a long-term memory graph for LLM agents in which an LLM extracts facts from each message and every later
 decision (is this fact new, a duplicate, an update, worth keeping, sensitive; is this stored fact relevant to the
 question) is a typed question answered by a hosted decision model, TypeSafe's Jev. Stored facts are edges with
@@ -80,7 +82,7 @@ bench/archive/     historical one-off scripts; the paper does not depend on them
 paper/             paper source (main.src.md), build scripts, figures, PDF, arXiv bundle
 docs/              DECISIONS.md (question versions), BENCHMARK.md, FINDINGS.md, PLAN.md
 tests/             unit tests, including the paper-threshold check
-hf_dataset/        the released dataset: update sets, contradiction pairs, escalation labels, per-question results
+hf_dataset/        the released dataset (on the Hub as ris3abh-11/engram-eval, CC BY-NC 4.0)
 demo/              the page served by `engram serve`
 ```
 
