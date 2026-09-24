@@ -1073,119 +1073,25 @@ def t_spend() -> str:
 # ---------------------------------------------------------------- appendices
 
 
-def a_questions() -> str:
-    from engram.decide import questions as Q
-
-    out = []
-    seen = []
-    for name in dir(Q):
-        v = getattr(Q, name)
-        if isinstance(v, (Q.ChoiceQuestion, Q.NoulQuestion)) and all(v is not s for s in seen):
-            seen.append(v)
-    printed: list[tuple[str, dict]] = []  # (name, criteria) already listed in full
-    for q in sorted(seen, key=lambda q: (q.id, getattr(q, "version", 1))):
-        name = f"`{q.id}` version {getattr(q, 'version', 1)}"
-        out.append(f"#### `{q.id}` (version {getattr(q, 'version', 1)}, {q.type})\n")
-        out.append(f"Instructions: {q.instructions}\n")
-        if q.type == "noul":
-            out.append(f"- true: {q.true}\n- false: {q.false}\n")
-            continue
-        # A repeated option set points back to where it is listed, with only the differences spelled out.
-        base = next(
-            ((n, c) for n, c in printed if sum(c.get(k) == v for k, v in q.criteria.items()) >= len(q.criteria) - 1),
-            None,
-        )
-        if base:
-            bname, bcrit = base
-            added = [k for k in q.criteria if bcrit.get(k) != q.criteria[k]]
-            dropped = [k for k in bcrit if k not in q.criteria]
-            parts = [f"Options and rubrics as {bname}"]
-            if dropped:
-                parts.append("without " + ", ".join(f"`{k}`" for k in dropped))
-            out.append(", ".join(parts) + ("; plus:" if added else ".") + "\n")
-            out += [f"- `{k}`: {q.criteria[k]}" for k in added]
-            out.append("")
-            continue
-        out += [f"- `{k}`: {v}" for k, v in q.criteria.items()]
-        out.append("")
-        printed.append((name, q.criteria))
-    return "\n".join(out)
-
-
-def a_prompts() -> str:
-    from bench import locomo_subset as LS
-    from engram.llm import prompts_mem0 as P
-
-    parts = [
-        "Copied from the installed mem0 2.1.0 package (Apache License 2.0, © mem0.ai); pinned in "
-        "`src/engram/llm/prompts_mem0.py` and checked by `tests/test_prompts_mem0.py`. The answer and judge prompts "
-        "are mem0's LoCoMo evaluation prompts, in `bench/locomo_subset.py`.\n",
-    ]
-    head = "\n".join(P.ADDITIVE_EXTRACTION_PROMPT.strip().splitlines()[:40])
-    parts.append(
-        "#### ADDITIVE_EXTRACTION_PROMPT (extraction, both systems): first 40 lines\n\n"
-        f"````text\n{head}\n````\n\nThe remaining lines are in `src/engram/llm/prompts_mem0.py` "
-        "(`ADDITIVE_EXTRACTION_PROMPT`), verbatim from mem0 2.1.0.\n"
-    )
-    for label, text in (
-        ("DEFAULT_UPDATE_MEMORY_PROMPT (LLM decision layer and escalations)", P.DEFAULT_UPDATE_MEMORY_PROMPT),
-        ("ANSWER_PROMPT (answers)", LS.ANSWER_PROMPT),
-        ("ACCURACY_PROMPT (judge)", LS.ACCURACY_PROMPT),
-    ):
-        parts.append(f"#### {label}\n\n````text\n{text.strip()}\n````\n")
-    return "\n".join(parts)
-
-
-def a_updates() -> str:
-    out = []
+def t_update_samples() -> str:
+    """One item of each kind: set-1 tiers easy, subtle, fulfilled; set-2 chains and changes with no temporal cue."""
     u1 = json.loads((ROOT / "bench" / "updates_conv26.json").read_text())
-    out.append(
-        f"**Set 1** (`bench/updates_conv26.json`, {len(u1['items'])} items). Columns: id, tier, label, the "
-        "original fact (and its message), the update message, the question and the gold answer.\n"
-    )
-    rows = []
-    for i in u1["items"]:
-        rows.append(
-            [
-                i["id"],
-                i["tier"],
-                i["expected"],
-                f"{i['original']['fact']} ({i['original']['message_id']})",
-                i["update"]["text"].replace("|", "/"),
-                (i.get("question") or "").replace("|", "/"),
-                str(i.get("gold") or "").replace("|", "/"),
-            ]
-        )
-    out.append(table(["id", "tier", "label", "original", "update", "question", "gold"], rows))
     u2 = json.loads((ROOT / "bench" / "updates2_conv26.json").read_text())
-    out.append("\n**Set 2** (`bench/updates2_conv26.json`). Messages and questions as stored:\n")
-    msgs = u2.get("messages") or []
-    if msgs:
-        out.append(
-            table(
-                ["message", "speaker", "date", "text"],
-                [[m["id"], m["speaker"], m.get("session_date", ""), m["text"].replace("|", "/")] for m in msgs],
-            )
-        )
-    qs = u2.get("questions") or []
-    if qs:
-        out.append("")
-        out.append(
-            table(
-                ["id", "type", "question", "gold", "evidence"],
-                [
-                    [
-                        q.get("id", ""),
-                        q.get("type", ""),
-                        q.get("question", "").replace("|", "/"),
-                        str(q.get("gold", "")).replace("|", "/"),
-                        str(q.get("evidence", "")).replace("|", "/"),
-                    ]
-                    for q in qs
-                ],
-            )
-        )
-    return "\n".join(out)
+    rows = []
+    for tier, kind in (
+        ("easy", "set 1, easy close"),
+        ("subtle", "set 1, subtle (no_close)"),
+        ("fulfilled", "set 1, fulfilled plan"),
+    ):
+        i = next(x for x in u1["items"] if x["tier"] == tier)
+        rows.append([i["id"], kind, i["original"]["fact"], i["update"]["text"], i["question"], str(i["gold"])])
+    msgs = {m["id"]: m["text"] for m in u2["messages"]}
+    for qtype, kind in (("chain_current", "set 2, chain"), ("no_temporal_cue", "set 2, no temporal cue")):
+        q = next(x for x in u2["questions"] if x["type"] == qtype)
+        first, *rest = (msgs[m] for m in q["chain"])
+        rows.append([q["id"], kind, first, " → ".join(rest), q["question"], str(q["gold"])])
+    rows = [[c.replace("|", "/") for c in r] for r in rows]
+    return table(["id", "kind", "earlier fact or message", "update message(s)", "question", "gold"], rows)
 
 
 BLOCKS = {
@@ -1206,9 +1112,7 @@ BLOCKS = {
     "table:perconv_k20": lambda: t_perconv("k20"),
     "table:perconv_tm": t_perconv_tm,
     "table:spend": t_spend,
-    "appendix:questions": a_questions,
-    "appendix:prompts": a_prompts,
-    "appendix:updates": a_updates,
+    "table:update_samples": t_update_samples,
 }
 
 

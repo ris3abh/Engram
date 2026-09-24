@@ -9,7 +9,8 @@ Markdown conventions the converter understands, beyond the basics:
 - `[@key]`, `[@a; @b]`: \\citep (author-year, acl_natbib); a bare `@key` in running text: \\citet.
 - "Table N", "Figure N" in running text: \\ref to the label of the table/figure whose caption carries that number.
 - A table goes in table* (both columns) when its estimated width exceeds one column; figures listed in WIDE_FIGS
-  go in figure*. Appendices from B on are set in one column, and only there do tables become longtables.
+  go in figure*. If ONECOLUMN_FROM names an appendix, appendices from it on are set in one column, and only there do
+  tables become longtables.
 """
 
 import re
@@ -25,7 +26,7 @@ OPEN, SEP, CLOSE = "\x00", "\x01", "\x02"  # sourced-number markers inside the i
 WIDE_FIGS = {"pipeline", "calibration"}  # figure*: the pipeline, and the three-panel reliability diagram
 COLUMN_PT = 219.0  # one column in acl.sty: A4, 2.5 cm margins, 0.6 cm column sep
 CHAR_PT = 4.2  # average character width at \footnotesize (9 pt Times in acl.sty)
-ONECOLUMN_FROM = "Appendix B"
+ONECOLUMN_FROM = None  # appendices stay in two columns (ACL); set to e.g. "Appendix B" to switch to one column
 FORCE_COLUMN = {"tab:1"}  # tables kept in one column (\small, wrapped) even though their natural width is larger
 
 
@@ -327,7 +328,7 @@ def convert(md: str) -> tuple[str, str, str, str]:
                     cur = abstract
                 elif text.startswith("Appendix"):
                     cur = appendix
-                    if text.startswith(ONECOLUMN_FROM) and not onecolumn:
+                    if ONECOLUMN_FROM and text.startswith(ONECOLUMN_FROM) and not onecolumn:
                         cur.append(r"\onecolumn")
                         onecolumn = True
                     letter = re.match(r"^Appendix ([A-E])", text).group(1)
