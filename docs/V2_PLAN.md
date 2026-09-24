@@ -112,14 +112,14 @@ H1 (section 1). Tested once, uncorrected.
 
 ### 6.2 Secondary family: Holm–Bonferroni at family-wise α = 0.05
 
-Every secondary test is an exact two-sided McNemar test on paired per-question correctness under the primary judge.
-All ten are corrected together (Holm–Bonferroni); the paper reports raw and Holm-adjusted p-values.
+Every secondary test except S3 is an exact two-sided McNemar test on paired per-question correctness under the
+primary judge; S3 is an equivalence test (below). All ten are corrected together (Holm–Bonferroni); the paper reports raw and Holm-adjusted p-values.
 
 | # | contrast | data split |
 |---|---|---|
 | S1 | engram k=3 vs Graphiti at its token-matched k | five fresh LoCoMo conversations, four scored categories |
 | S2 | engram k=20 vs Graphiti k=20 | five fresh LoCoMo conversations, four scored categories |
-| S3 | engram k=20 vs mem0 k=20 | five fresh LoCoMo conversations, four scored categories |
+| S3 | equivalence (TOST, margin ±5 points): engram k=20 vs mem0 k=20 | five fresh LoCoMo conversations, four scored categories |
 | S4 | engram Jev rerank vs engram cross-encoder rerank, k=3 | five fresh LoCoMo conversations, four scored categories |
 | S5 | engram Jev rerank vs engram gpt-4o-mini listwise rerank, k=3 | five fresh LoCoMo conversations, four scored categories |
 | S6 | engram Jev rerank vs engram no rerank, k=3 | five fresh LoCoMo conversations, four scored categories |
@@ -127,6 +127,12 @@ All ten are corrected together (Holm–Bonferroni); the paper reports raw and Ho
 | S10 | LongMemEval knowledge-update: engram k=3 vs mem0 at its token-matched k | LongMemEval-S cleaned, knowledge-update questions (78) |
 | S11 | LongMemEval knowledge-update: engram k=3 vs Graphiti at its token-matched k | LongMemEval-S cleaned, knowledge-update questions (78) |
 | S12 | H1's contrast: engram k=3 vs mem0 at its token-matched k (the token-matched k chosen on the nine conversations) | pooled nine held-out LoCoMo conversations (conv-30, 41, 42, 43, 44, 47, 48, 49, 50), four scored categories, 1,388 questions |
+
+**S3 equivalence test.** Two one-sided tests on the paired per-question difference d̄ (engram minus mem0, k=20)
+with its per-question standard error s = sd(dᵢ)/√n: p₁ = 1 − Φ((d̄ + 0.05)/s) tests d̄ ≤ −5 points, p₂ =
+Φ((d̄ − 0.05)/s) tests d̄ ≥ +5 points, and p_TOST = max(p₁, p₂) enters the Holm family. The paper may call the two
+systems "equivalent within 5 points" at k=20 only if S3 is rejected after Holm adjustment; otherwise it reports the
+difference and its interval without an equivalence claim.
 
 For S9, if update set 3 is not frozen when Stage 4 runs, the store-correctness experiment runs on sets 1–2 and is
 labeled exploratory in the paper, not dropped; S9 then leaves the family and Holm is applied to the remaining nine.
@@ -153,7 +159,7 @@ table marks exploratory results as such.
   the S10–S11 LongMemEval answers (the scope is budgeted in section 13). S12 covers conversations claude-sonnet-4-6 does
   not judge, so its robustness is assessed under the two OpenAI judges.
 - H1 and the secondary family are reported under all three judges. A result is called robust only if its sign and
-  significance hold under all three. Agreement among the judges (pairwise Cohen's κ, and the share of answers on which
+  significance hold under all three; for S3, only if equivalence holds under every judge that scores its answers. Agreement among the judges (pairwise Cohen's κ, and the share of answers on which
   all three agree) is reported on all held-out answers.
 - For LongMemEval the same three judges and the same judge prompt are used; LongMemEval's own evaluation prompt is
   reported as an exploratory cross-check.
@@ -240,6 +246,8 @@ one.
   slice is not evidence of equal accuracy. The family has nine tests.
 - 2026-09-24, §6 and §2: S12 added, H1's contrast (engram k=3 vs mem0 token-matched) on the pooled nine held-out
   conversations, Holm-corrected with the family (ten tests). H1 stays on the five fresh conversations.
+- 2026-09-24, §6: S3's difference test is replaced by a TOST equivalence test for engram k=20 vs mem0 k=20 on the five
+  fresh conversations, margin ±5 points, α = 0.05 (Holm-adjusted); "equivalent within 5 points" only if it passes.
 
 ### Where this plan differs from the phase-3 brief
 
