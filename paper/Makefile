@@ -1,7 +1,9 @@
-# make paper: figures -> numbers -> main.md + main.tex -> main.pdf (pdflatex, bibtex, pdflatex x2).
+# make paper: figures -> numbers -> main.md + main.tex -> main.pdf (pdflatex, bibtex, pdflatex x2), copied to $(PDF_NAME).
 # Uses a local pdflatex if there is one, otherwise the texlive/texlive Docker image.
 ROOT := $(abspath ..)
 UV := cd $(ROOT) && uv run
+# The PDF to read and share; main.pdf is the build output (arXiv builds from main.tex).
+PDF_NAME := typed-decisions-in-agent-memory.pdf
 LATEX_IMAGE ?= engram-paper-tex  # docker/Dockerfile: TeX Live medium + placeins, inconsolata
 ifeq ($(shell command -v pdflatex 2>/dev/null),)
 TEX := docker run --rm -v $(CURDIR):/w -w /w $(LATEX_IMAGE)
@@ -28,6 +30,7 @@ pdf:
 	$(TEX) pdflatex -interaction=nonstopmode -halt-on-error main.tex > /dev/null
 	$(TEX) pdflatex -interaction=nonstopmode -halt-on-error main.tex > /dev/null
 	@grep -E "undefined|Citation .* undefined|multiply defined" main.log || echo "all references and citations resolved"
+	cp main.pdf $(PDF_NAME)
 
 check:
 	$(UV) python paper/check.py | head -3
