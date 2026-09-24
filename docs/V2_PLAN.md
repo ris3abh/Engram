@@ -93,7 +93,7 @@ changes.
 - LoCoMo held-out conversations: conv-30, 41, 42, 43 (evaluated in v1 on the Anthropic stack) and conv-44, 47, 48, 49,
   50 (never evaluated). All five categories are answered; the four scored categories carry every test.
 - LongMemEval-S, cleaned release (section 10).
-- Update sets 1 and 2 (author-written) and update set 3 (independently written, section 9).
+- Update sets 1 and 2 (drafted with an AI assistant, section 9) and update set 3 (independently written, section 9).
 
 ### 5.3 k settings and token matching
 
@@ -169,14 +169,14 @@ table marks exploratory results as such.
 
 ## 9. Update set 3 (independent author)
 
-Update sets 1 and 2 were written and labeled by the system's author. Set 3 is written by someone else, following
+Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. Set 3 is written by someone else, following
 `bench/update_set_3/AUTHORING_GUIDE.md`, without seeing engram's code, results or paper. Target: 30 items (10 easy
 closes, 10 subtle no-close traps, 5 fulfilled plans, 5 chain or point-in-time items) over conv-26 sessions 1–4.
 `bench/update_set_3/validate.py` checks the filled `template.csv`, converts it to the sets-1–2 JSON format and writes
 its SHA-256 to `FROZEN_HASH`; after that, `tests/test_update_set_3.py` fails if the set changes.
 
 The store-correctness experiment's primary contrast (S9) is evaluated on set 3. Sets 1–2 are reported as
-author-written supporting evidence. **Validity-window gold:** for point-in-time questions the gold answer is the value
+supporting evidence drafted with an AI assistant. **Validity-window gold:** for point-in-time questions the gold answer is the value
 valid at the time the question asks about, as the set's author writes it; the answer is judged against that gold.
 
 ## 10. LongMemEval
@@ -214,6 +214,12 @@ valid at the time the question asks about, as the set's author writes it; the an
 - **Keys:** from `.env` (`OPENAI_API_KEY`, `TYPESAFE_API_KEY`, `ANTHROPIC_API_KEY` for the second-family judge,
   optional `ZEP_API_KEY`).
 
+## AI assistance
+
+Code, experiment orchestration and paper drafting were carried out with Claude (Anthropic) via Claude Code under the
+author's direction; the author designed the study, made every methodological decision, and is responsible for all
+claims. Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. Set 3 and the human audit are the parts written without AI assistance.
+
 ## 12. Deviations
 
 Record every change to this plan after its first commit here: date, section, what changed, why. The paper reports each
@@ -230,4 +236,4 @@ Recorded at registration, not deviations: the plan wins where the two disagree.
 - **LongMemEval ingestion and sampling.** User turns only, and a 60-question temporal-reasoning sample, to keep each
   run under the $40 cap (section 10).
 - **S9 fallback.** If set 3 is not frozen, S9 leaves the Holm family (Holm over ten tests) rather than being tested on
-  author-written sets.
+  sets 1–2.
