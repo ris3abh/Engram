@@ -35,7 +35,7 @@ check:
 # arXiv bundle: main.tex, references.bib, the generated main.bbl, figure PDFs (every package is in TeX Live, so no
 # .sty files). The zip is then compiled alone, pdflatex only (as arXiv does with a .bbl), in an empty directory.
 FIGS := $(shell grep -o 'figures/[a-z_0-9]*\.pdf' main.tex | sort -u)
-arxiv: pdf
+arxiv: paper
 	rm -rf arxiv && mkdir -p arxiv/figures
 	cp main.tex references.bib main.bbl arxiv/ && cp $(FIGS) arxiv/figures/
 	cd arxiv && rm -f engram-arxiv.zip && zip -qrX engram-arxiv.zip main.tex references.bib main.bbl figures

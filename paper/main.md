@@ -5,7 +5,7 @@ Every number carries a src comment naming the file it comes from; paper/numbers.
 
 <!-- Repo tagline: Decide, Don't Generate. -->
 
-*Author(s): [TBD]. Code: [REPO URL PLACEHOLDER].*
+*Author: Rishabh Sharma, independent researcher.*
 
 ## Abstract
 
@@ -20,8 +20,7 @@ retrieval budget, engram answers +8.7<!-- src: bench/results/mem0_token_matched_
 +12.1<!-- src: bench/results/mem0_token_matched__heldout_pooled__k6.json -->); at k=20 the systems tie (+0.8<!-- src: bench/results/heldout_report.json -->, CI -2.3<!-- src: bench/results/heldout_report.json --> to +3.9<!-- src: bench/results/heldout_report.json -->). A belief-state
 store policy over-closed no labeled keep item. Two results are negative: closing stale facts does not change answers
 on current benchmarks, and the 421M<!-- src: convai2026laya (model card) --> base checkpoint of the open-weights decision model Laya, used
-zero-shot as its documentation advises against, does not make the relational decisions. Code, prompts and
-per-question results are released.
+zero-shot as its documentation advises against, does not make the relational decisions.
 
 ## 1. Introduction
 
@@ -738,13 +737,6 @@ systems tied at k=20. Closing stale facts, the part of the design aimed at corre
 current benchmarks. The base checkpoint of a small open-weights decision model, used zero-shot, did not make the relational
 decisions.
 
-**Release.** [REPO URL PLACEHOLDER] contains:
-- engram's code (MIT license)
-- mem0's prompts as used (Apache-2.0, with attribution)
-- the update sets and regression pairs
-- every per-question result file in `bench/results/`
-- the call cache needed to reproduce each table without API spend
-
 ## References
 
 ---
@@ -1324,8 +1316,8 @@ escalations.*
 
 ## Appendix E. Reproduction
 
-All commands run from the repository root. With the call cache (`bench/.cache/calls.sqlite`) in place, every
-command below replays at no API cost.
+Each table and figure was produced by the command below, run from the root of the engram codebase. With the call
+cache (`bench/.cache/calls.sqlite`) in place, every command replays at no API cost.
 
 | table / figure | command |
 |---|---|

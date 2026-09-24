@@ -42,12 +42,12 @@
 \newcommand{\src}[1]{}
 
 \title{\textbf{Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs}}
-\author{[Author(s) TBD]\\\small Code: [REPO URL PLACEHOLDER]}
+\author{Rishabh Sharma\\\small Independent researcher}
 \date{}
 \begin{document}
 \maketitle
 \begin{abstract}
-Typed decisions cut an agent memory system's decision cost and latency and improve retrieval under a small budget; they do not change answers after facts change, and a small model used zero-shot cannot make them. Memory systems make an LLM call for every write decision, which makes revisiting the store unaffordable, yet most of that work is choice among fixed options. In engram, an LLM extracts facts and every decision is a typed question answered by a hosted decision model (Jev). With extraction held identical to mem0 2.1.0's, typed decisions cut decision-layer cost by 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} and median decision latency by 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json}, with equal dev accuracy (31/35\src{bench/results/e2\_jev\_\_dev.json} against 31/35\src{bench/results/e2\_llm\_\_dev.json}). On 610\src{bench/results/heldout\_report.json} held-out LoCoMo questions under a three-memory retrieval budget, engram answers +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points more than mem0 at matched context tokens (95\% CI +5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} to +12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}); at $k{=}$20 the systems tie (+0.8\src{bench/results/heldout\_report.json}, CI -2.3\src{bench/results/heldout\_report.json} to +3.9\src{bench/results/heldout\_report.json}). A belief-state store policy over-closed no labeled keep item. Two results are negative: closing stale facts does not change answers on current benchmarks, and the 421M\src{convai2026laya (model card)} base checkpoint of the open-weights decision model Laya, used zero-shot as its documentation advises against, does not make the relational decisions. Code, prompts and per-question results are released.
+Typed decisions cut an agent memory system's decision cost and latency and improve retrieval under a small budget; they do not change answers after facts change, and a small model used zero-shot cannot make them. Memory systems make an LLM call for every write decision, which makes revisiting the store unaffordable, yet most of that work is choice among fixed options. In engram, an LLM extracts facts and every decision is a typed question answered by a hosted decision model (Jev). With extraction held identical to mem0 2.1.0's, typed decisions cut decision-layer cost by 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} and median decision latency by 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json}, with equal dev accuracy (31/35\src{bench/results/e2\_jev\_\_dev.json} against 31/35\src{bench/results/e2\_llm\_\_dev.json}). On 610\src{bench/results/heldout\_report.json} held-out LoCoMo questions under a three-memory retrieval budget, engram answers +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points more than mem0 at matched context tokens (95\% CI +5.2\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} to +12.1\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json}); at $k{=}$20 the systems tie (+0.8\src{bench/results/heldout\_report.json}, CI -2.3\src{bench/results/heldout\_report.json} to +3.9\src{bench/results/heldout\_report.json}). A belief-state store policy over-closed no labeled keep item. Two results are negative: closing stale facts does not change answers on current benchmarks, and the 421M\src{convai2026laya (model card)} base checkpoint of the open-weights decision model Laya, used zero-shot as its documentation advises against, does not make the relational decisions.
 
 \end{abstract}
 \section{Introduction}\label{sec:1}
@@ -649,15 +649,6 @@ Update set 2 targets these, and every arm is at its ceiling on it.
 \section{Conclusion}\label{sec:8}
 With extraction held identical, typed decisions replaced an LLM decision layer at 70.0$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower cost and 27.6$\times$\src{bench/results/e2\_llm\_\_dev.json ÷ bench/results/e2\_jev\_\_dev.json} lower median decision latency, with no measured accuracy loss. On 610\src{bench/results/heldout\_report.json} held-out questions, a cheap listwise rerank gave +8.7\src{bench/results/mem0\_token\_matched\_\_heldout\_pooled\_\_k6.json} points over mem0 at matched context under a three-memory budget, and the systems tied at $k{=}$20. Closing stale facts, the part of the design aimed at correctness, did not change answers on current benchmarks. The base checkpoint of a small open-weights decision model, used zero-shot, did not make the relational decisions.
 
-\textbf{Release.} [REPO URL PLACEHOLDER] contains:
-
-\begin{itemize}
-\item engram's code (MIT license)
-\item mem0's prompts as used (Apache-2.0, with attribution)
-\item the update sets and regression pairs
-\item every per-question result file in \texttt{bench/\allowbreak{}results/\allowbreak{}}
-\item the call cache needed to reproduce each table without API spend
-\end{itemize}
 \bibliographystyle{plainnat}
 \bibliography{references}
 \appendix
@@ -1271,7 +1262,7 @@ conv-43 & \$10.45\src{bench/results/heldout\_report.json} & \$0.50\src{bench/res
 \end{table}
 \FloatBarrier
 \section{Reproduction}\label{app:E}
-All commands run from the repository root. With the call cache (\texttt{bench/\allowbreak{}.cache/\allowbreak{}calls.sqlite}) in place, every command below replays at no API cost.
+Each table and figure was produced by the command below, run from the root of the engram codebase. With the call cache (\texttt{bench/\allowbreak{}.cache/\allowbreak{}calls.sqlite}) in place, every command replays at no API cost.
 
 \begingroup\scriptsize
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.268\linewidth}>{\raggedright\arraybackslash}p{0.669\linewidth}}

@@ -497,7 +497,7 @@ def main() -> None:
         [
             PREAMBLE,
             rf"\title{{\textbf{{{inline(title)}}}}}",
-            r"\author{[Author(s) TBD]\\\small Code: [REPO URL PLACEHOLDER]}",
+            r"\author{Rishabh Sharma\\\small Independent researcher}",
             r"\date{}",
             r"\begin{document}",
             r"\maketitle",

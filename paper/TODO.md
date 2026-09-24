@@ -4,8 +4,10 @@ Build: `make paper` (in `paper/`). Edit `paper/main.src.md`, never `main.md` or 
 
 ## Before submission
 
-- [ ] **Author names.** The title block reads "[Author(s) TBD]".
-- [ ] **Repo URL.** "[REPO URL PLACEHOLDER]" appears in the title block and in §8 (Release).
+- **Author (resolved).** Rishabh Sharma, independent researcher, sole author.
+- **Code (not released with the paper).** No repo URL in the paper; the abstract's release sentence and the §8
+  Release list are removed. Appendix E still names the command behind each table, run from the engram codebase.
+  If the code is released later, add the URL to the title block (`build_tex.py`, `\author`) and to §8.
 
 ## Citations
 
@@ -50,7 +52,7 @@ without "D.n" prefixes; Jev pricing sentence; venue items removed (confirmed); a
 
 ## arXiv upload
 
-`make arxiv` writes `paper/arxiv/` (main.tex, references.bib, the generated main.bbl, the 12 figure PDFs) and
+`make arxiv` regenerates the paper, then writes `paper/arxiv/` (main.tex, references.bib, the generated main.bbl, the 12 figure PDFs) and
 `paper/arxiv/engram-arxiv.zip`, then unzips it into an empty directory inside the TeX image and runs pdflatex
 twice with no bibtex, as arXiv does when a .bbl is supplied: 23 pages, no undefined references or citations.
 Every package used is in TeX Live, so no .sty files are bundled (inconsolata and xurl load only if present).
