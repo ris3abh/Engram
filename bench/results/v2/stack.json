@@ -1,0 +1,78 @@
+{
+ "tag": "v2-frozen",
+ "stack": {
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "jev_model": "jev-1.13.0",
+ "v2_system": {
+  "arm": "e4_frozen_sameattr",
+  "hygiene": true,
+  "flags": {
+   "retrieval_floor": 10,
+   "extract_prompt": "mem0",
+   "store_source_text": true,
+   "worth_filter": false,
+   "merge_policy": "same_as",
+   "extract_last_k": 10,
+   "extract_recent": 0,
+   "extract_observation_date": "session",
+   "extract_current_date": "2026-09-23",
+   "escalation_prompt": "mem0_update",
+   "relation_decider": "jev",
+   "cardinality_rule": true,
+   "close_agreement": true,
+   "candidate_source": "cosine+graph",
+   "fulfills_rule": "question",
+   "belief": true,
+   "belief_w": 1.0,
+   "belief_evidence": "all",
+   "temporal_gate": "not_planned_mass",
+   "update_multi_sibling": true,
+   "retrieval_history": true,
+   "retrieval_rerank": true,
+   "render": "compact",
+   "relation_version": 2,
+   "temporal_version": 2,
+   "edge_type_version": 1,
+   "same_attribute_gate": true
+  }
+ },
+ "thresholds": {
+  "ACT_THRESHOLD": 0.85,
+  "ESCALATE_BELOW": 0.6,
+  "RELEVANCE_THRESHOLD": 0.5,
+  "BELIEF_MIN": 0.02,
+  "BELIEF_MAX": 0.98,
+  "CLOSE_BELOW": 0.25,
+  "REOPEN_ABOVE": 0.6,
+  "HYGIENE_LINK": 0.85,
+  "HYGIENE_DROP": 0.15000000000000002,
+  "CANDIDATE_K": 10,
+  "RETRIEVE_K": 30,
+  "RETRIEVAL_FLOOR": 10
+ },
+ "packages": {
+  "openai": "3.19.0",
+  "anthropic": "1.8.0",
+  "mem0ai": "2.1.0",
+  "tiktoken": "0.14.0",
+  "sentence-transformers": "6.1.0",
+  "qdrant-client": "1.19.1",
+  "numpy": "2.5.3"
+ },
+ "python": "3.12.11",
+ "prompts_sha256": {
+  "answer": "8199fb9abf65ec3de00a7a0fc6967911260dfc72f93fa976f07908fe976933c2",
+  "judge": "230f61d81ae50974ffd2db298339f15e8bf130bce7761a5e9355f900d99951a7"
+ },
+ "data_sha256": {
+  "locomo10.json": "79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4",
+  "longmemeval_ids.json": "c646483ce194bdce636047015d50c540656ffa4f6133e7cbc23660de8e12204d"
+ }
+}

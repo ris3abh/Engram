@@ -1007,6 +1007,8 @@ async def run_arm(
     result["options"] = {"top_k": top_k, "no_dates": no_dates, "no_answer": no_answer}
     if spec["system"] == "engram":
         result["backend"] = decider_report(system.engine.backend)
+        if system.engine.flags.same_attribute_gate:
+            result["same_attribute_report"] = same_attribute_report(system)
     if hygiene is not None:
         from dataclasses import asdict as _asdict
 
@@ -1062,6 +1064,36 @@ async def run_arm(
     if spec["system"] == "engram" and hasattr(system.engine.backend, "drain"):
         await system.engine.backend.drain()
     return result
+
+
+def same_attribute_report(system) -> dict:
+    """Exploratory (V2_PLAN Deviations 2026-09-25): evidence that passed the cardinality gate only through the
+    same_attribute Noul (belief-trace events marked via=same_attribute), the facts whose belief it lowered, how many of
+    those facts are closed at the end of the run, and every close that happened on such an event."""
+    trace = [e for e in system.engine.writer.belief_trace if e.get("via") == "same_attribute"]
+    applied = [e for e in trace if e["event"] == "applied"]
+    facts = {f.id: f for f in system.engine.store.list_facts()}
+    lowered = sorted({e["fact"] for e in applied if e["after"] < e["before"]})
+    closes = []
+    for e in applied:
+        if e.get("closed") and (old := facts.get(e["fact"])):
+            new = facts.get(old.closed_by)
+            closes.append(
+                {
+                    "closed_fact": old.text,
+                    "closed_fact_message": old.source_message_id,
+                    "closing_fact": new.text if new else None,
+                    "closing_message": e["message"],
+                }
+            )
+    return {
+        "evidence_events": len(trace),
+        "evidence_applied": len(applied),
+        "evidence_unconfirmed": sum(e["event"] == "unconfirmed" for e in trace),
+        "facts_lowered": len(lowered),
+        "facts_lowered_closed": sum(1 for f in lowered if f in facts and not facts[f].is_valid),
+        "closes_via_same_attribute": closes,
+    }
 
 
 def decider_report(backend) -> dict:

@@ -69,6 +69,13 @@ async def test_same_attribute_update_passes_the_gate_on_mismatched_multi_valued_
     old, p, _ = await run(store, "update", 0.90, gate=True)
     assert old.predicate == "hobby" and not old.is_valid and old.closed_reason == "belief"
     assert p.stats["same_attribute_allowed"] == 1 and p.stats["against_blocked_structure"] == 0
+    via = [e for e in p.belief_trace if e.get("via") == "same_attribute"]
+    assert [e["event"] for e in via] == ["applied"] and via[0]["closed"] and via[0]["fact"] == old.id
+
+
+async def test_flag_off_marks_nothing(store):
+    _, p, _ = await run(store, "update", 0.99, gate=False)
+    assert not any("via" in e for e in p.belief_trace)
 
 
 @pytest.mark.parametrize("p_same", [0.84, 0.50, 0.10])

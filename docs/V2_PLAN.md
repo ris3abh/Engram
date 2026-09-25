@@ -362,6 +362,13 @@ one.
   wrong). All four keep criteria hold, so the v2 system is the frozen arm with the gate on (arm e4_frozen_sameattr:
   E4_FROZEN plus same_attribute_gate, threshold 0.85, edge_type v1). E4_FROZEN itself is unchanged, so v1 reproduces.
   This was the last change before v2-frozen.
+- 2026-09-25, exploratory reporting (no behaviour change), added before v2-frozen: every engram run with the
+  same_attribute gate reports how many evidence events passed the cardinality gate only through the same_attribute
+  path, how many facts had their belief lowered by them, how many of those facts are closed at the end of the run, and
+  every close that happened on such an event (the closed fact, the closing fact and the closing message), in the
+  result file's same_attribute_report. Reported for every held-out run, exploratory, with no test. Checked by
+  replaying update sets 1 and 2 from the call cache with the gate off and on: answers, stores and belief traces are
+  unchanged apart from the new marker on those events.
 
 ### Where this plan differs from the phase-3 brief
 

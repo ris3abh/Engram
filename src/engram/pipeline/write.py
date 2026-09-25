@@ -534,13 +534,13 @@ class WritePipeline:
                     self.stats["against_blocked"] += 1
                     self.belief_trace.append({**ev, "event": "blocked_temporal"})
                     continue
-                if not B.against_allowed(label, c, fact, ums) and not (
-                    label == "update" and self._same_attribute(d, candidates, c)
-                ):
-                    self.stats["against_blocked_structure"] += 1
-                    self.stats["against_blocked"] += 1
-                    self.belief_trace.append({**ev, "event": "blocked_structure"})
-                    continue
+                if not B.against_allowed(label, c, fact, ums):
+                    if not (label == "update" and self._same_attribute(d, candidates, c)):
+                        self.stats["against_blocked_structure"] += 1
+                        self.stats["against_blocked"] += 1
+                        self.belief_trace.append({**ev, "event": "blocked_structure"})
+                        continue
+                    ev["via"] = "same_attribute"  # reporting only: allowed through Flags.same_attribute_gate
                 ps = [p]
                 multi_update = label == "update" and not B.is_single(c)  # always needs the second phrasing
                 first = c.against_count == 0
