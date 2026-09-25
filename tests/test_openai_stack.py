@@ -114,8 +114,8 @@ def test_mem0_gets_the_session_date_as_observation_date_on_the_openai_stack(tmp_
 
 
 def test_gpt_5_5_pricing_cached_input_and_long_context():
-    assert cost("gpt-5.5", 1_000_000, 1_000_000) == pytest.approx(35.0)
-    assert cost("gpt-5.5", 1_000_000, 0, cached_in=400_000) == pytest.approx(600_000 * 5e-6 + 400_000 * 0.5e-6)
+    assert cost("gpt-5.5", 200_000, 100_000) == pytest.approx(200_000 * 5e-6 + 100_000 * 30e-6)
+    assert cost("gpt-5.5", 200_000, 0, cached_in=80_000) == pytest.approx(120_000 * 5e-6 + 80_000 * 0.5e-6)
     long_prompt = 300_000
     assert cost("gpt-5.5", long_prompt, 1_000) == pytest.approx(long_prompt * 10e-6 + 1_000 * 45e-6)
     assert cost("gpt-4o-mini", 1_000_000, 0, cached_in=500_000) == pytest.approx(0.15)  # no cached rate listed
