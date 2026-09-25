@@ -1,8 +1,13 @@
 # engram
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22948964.svg)](https://doi.org/10.5281/zenodo.22948964)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22941757.svg)](https://doi.org/10.5281/zenodo.22941757)
 
-DOI: [10.5281/zenodo.22948964](https://doi.org/10.5281/zenodo.22948964) (v1.1). Version 1: [10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758).
+Paper (all versions): [10.5281/zenodo.22941757](https://doi.org/10.5281/zenodo.22941757)
+- v1.1: [10.5281/zenodo.22948964](https://doi.org/10.5281/zenodo.22948964)
+- v1: [10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758)
+
+Pre-registered v2 analysis plan, `docs/V2_PLAN.md` (all versions):
+[10.5281/zenodo.22948854](https://doi.org/10.5281/zenodo.22948854)
 
 Dataset: [huggingface.co/datasets/ris3abh-11/engram-eval](https://huggingface.co/datasets/ris3abh-11/engram-eval)
 

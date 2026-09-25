@@ -369,6 +369,9 @@ one.
   result file's same_attribute_report. Reported for every held-out run, exploratory, with no test. Checked by
   replaying update sets 1 and 2 from the call cache with the gate off and on: answers, stores and belief traces are
   unchanged apart from the new marker on those events.
+- 2026-09-25, external timestamp: this plan at the v2-frozen tag (commit dcb9670) is deposited on Zenodo as
+  doi:10.5281/zenodo.22953496 (published 2026-09-25). The plan's concept DOI, resolving to its latest version, is
+  doi:10.5281/zenodo.22948854.
 
 ### Where this plan differs from the phase-3 brief
 
