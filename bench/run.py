@@ -38,6 +38,7 @@ import shutil
 import statistics
 import time
 from collections import Counter
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -93,6 +94,10 @@ STACKS = {
         "decide": "gpt-4o-mini",  # escalations and the LLM decider arms
         "embed": "text-embedding-3-small",
         "tokenizer": "o200k_base",
+        # V2_PLAN deviation 2026-09-25: extraction gets each message's session date as its observation date, for
+        # engram (extract_observation_date="session") and mem0 (the v1 mem0_dated mechanism), so relative dates
+        # resolve to the conversation's time; Graphiti gets session dates as reference time. v1 ran mem0 as shipped.
+        "observation_date": "session",
     },
 }
 
@@ -422,6 +427,7 @@ class EngramArm:
             decider = ShadowBackend(decider, make_backend(shadow, None, cache), arm_dir / "shadow.jsonl")
         if stack == "openai":
             s = STACKS["openai"]
+            flags = replace(flags, extract_observation_date=s["observation_date"])
             llm = OpenAILLM(
                 model=s["decide"],
                 extract_model=s["extract"],
@@ -533,6 +539,7 @@ class Mem0Arm:
         self.user_id = "conv-26"
         if stack == "openai":  # mem0's default provider: its OpenAI LLM and embedder, on the shared models
             s = STACKS["openai"]
+            dated = dated or s["observation_date"] == "session"
             llm = {"provider": "openai", "config": {"model": s["extract"]}}
             embedder, dims = {"provider": "openai", "config": {"model": s["embed"]}}, 1536
         else:
@@ -950,7 +957,7 @@ async def run_arm(
     result = {
         "arm": name,
         "system": spec["system"],
-        "flags": spec["flags"].describe() if "flags" in spec else None,
+        "flags": system.engine.flags.describe() if spec["system"] == "engram" else None,  # as run (stack-adjusted)
         "slice": {"name": slice_name, "sessions": sl["sessions"], "messages": n_msgs, "questions": len(answers)},
         "store_size_buckets": buckets,
         "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in answers),

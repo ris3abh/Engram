@@ -68,6 +68,12 @@ Every system shares the extraction LLM (where it takes one), the embedder, the a
 judges and the k settings. Anything a baseline cannot share is stated in the caption of every table it appears in.
 Model identifiers, SDK versions and the Jev version are recorded in `bench/results/v2/stack.json` at `v2-frozen`.
 
+**Dates.** Extraction receives each message's session date as its observation date, for engram
+(`extract_observation_date="session"`) and for mem0 (the session date passed as mem0's Observation Date, v1's
+`mem0_dated` mechanism), so relative dates ("yesterday", "last month") resolve to the conversation's time rather than
+the run date. Graphiti receives session dates as reference time (section 4), so all three systems resolve relative
+dates the same way. v1 ran mem0's extraction as shipped, with no observation date; v2 differs from v1 here.
+
 ## 4. Systems
 
 - **engram** at the `v2-frozen` tag, with read-path variants for the reranker arms: Jev listwise rerank (the
@@ -287,6 +293,13 @@ one.
   matches §7 and §13 (gpt-4o on every held-out answer; claude-sonnet-4-6 on the four scored categories of the five
   fresh conversations and the S10–S11 answers). A correction of the table, no change to the analysis. The stack
   section is now hashed by the plan's guard as well.
+- 2026-09-25, §3: extraction receives each message's session date as its observation date for engram and for mem0
+  (v1's mem0_dated mechanism), so relative dates resolve to the conversation's time; Graphiti already receives
+  session dates as reference time, so the three systems are consistent. Reason: in Stage 2, gpt-4o-mini resolved
+  relative dates against the pinned run date under mem0's prompt as shipped (15 of 106 facts on the dev slice with
+  update set 1 carried 2026 dates, against 1 of 97 on v1's stack), which broke point-in-time and fulfilled-plan
+  answers for engram and mem0 alike. v2 differs from v1 here (v1 ran mem0 as shipped). Stage 2 is re-run on conv-26
+  with the change; no threshold or question wording changes.
 
 ### Where this plan differs from the phase-3 brief
 

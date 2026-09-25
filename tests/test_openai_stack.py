@@ -94,4 +94,5 @@ def test_openai_stack_records_the_plan_models():
     s = R.STACKS["openai"]
     assert {s["extract"], s["answer"], s["judge"], s["decide"]} == {"gpt-4o-mini"}
     assert s["embed"] == "text-embedding-3-small" and s["tokenizer"] == "o200k_base"
+    assert s["observation_date"] == "session"  # V2_PLAN section 3, Dates
     assert R.STACKS["anthropic"] == {"extract": R.EXTRACT_MODEL, "answer": R.ANSWER_MODEL, "judge": R.JUDGE_MODEL}
