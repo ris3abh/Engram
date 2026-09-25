@@ -5,7 +5,8 @@
 - Frozen-extraction ablation (S7, S8; exploratory) on the dev slice with update sets 1 and 2: the v2 system's Jev
   decider against gpt-4o-mini one call per fact and one call per message, on one extraction trace: accuracy (dev
   LoCoMo, set 1, set 2), decision cost per 1,000 messages (Jev and LLM parts), decision latency, store size, closes,
-  and per-fact agreement with Jev (same action; same action and same target).
+  traps over-closed, and per-fact agreement with Jev (both call a superseding relation or both do not; where both
+  do, the same existing fact; exact actions too, which differ by design since mem0's prompt has no refinement).
 - Store correctness (S9 fallback: set 3 is not frozen, so sets 1 and 2, exploratory): engram, mem0 and Graphiti with
   memory text without dates at k=3; update-question accuracy, set-2 accuracy by type (point-in-time questions judged
   against their validity-window gold), stale values.
@@ -50,17 +51,27 @@ def rerankers() -> dict:
     return out
 
 
+SUPERSEDING = {"updated", "contradicted", "negated", "rewritten", "disputed"}  # the fact is judged to replace another
+
+
 def agreement(ref: dict, other: dict) -> dict:
-    """Per extracted fact (same trace, so the same texts per message): same action; same action and same target."""
+    """Per extracted fact (same trace, so the same texts per message). Exact actions are reported but differ by design:
+    Jev can answer `refinement`, which mem0's update prompt has no event for. The main measure is whether both call a
+    superseding relation or both do not, and, where both do, whether they name the same existing fact."""
     base = {(o["message"], o["text"]): o for o in ref.get("write_outcomes", [])}
     pairs = [(base[k], o) for o in other.get("write_outcomes", []) if (k := (o["message"], o["text"])) in base]
     if not pairs:
         return {}
+    sup = [(a["action"] in SUPERSEDING, b["action"] in SUPERSEDING) for a, b in pairs]
+    both = [(a, b) for (a, b), (x, y) in zip(pairs, sup, strict=True) if x and y]
     return {
         "facts": len(pairs),
-        "same_action": sum(a["action"] == b["action"] for a, b in pairs) / len(pairs),
-        "same_action_and_target": sum(a["action"] == b["action"] and a["target"] == b["target"] for a, b in pairs)
-        / len(pairs),
+        "same_superseding_call": sum(x == y for x, y in sup) / len(pairs),
+        "superseding_jev": sum(x for x, _ in sup),
+        "superseding_other": sum(y for _, y in sup),
+        "superseding_both": len(both),
+        "superseding_both_same_target": sum(a["target"] == b["target"] for a, b in both),
+        "same_action_exact": sum(a["action"] == b["action"] for a, b in pairs) / len(pairs),
     }
 
 
@@ -82,6 +93,7 @@ def ablation() -> dict:
             "closes_set1": s1.get("storage"),
             "closes_set2": s2.get("storage") if s2 else None,
             "set2_stale_values": s2.get("set2_stale_values") if s2 else None,
+            "set1_over_closed": s1.get("over_close_on_no_close_items"),
         }
         ref1, ref2 = load("fx_jev__dev_updates.json"), load("fx_jev__dev_updates2.json")
         if arm != "fx_jev" and ref1:
