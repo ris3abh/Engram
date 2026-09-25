@@ -4,7 +4,7 @@ Status: registered before any v2 run. Branch `v2`; v1 is frozen at tag `v1-prepr
 
 This plan is the source of truth for phase 3. It is committed before any v2 code, script or run. Any change after that
 commit is recorded under **Deviations** (section 12) with its date and reason, and the paper reports every deviation.
-`tests/test_v2_plan.py` hashes sections 1, 6, 7, 8, 10, 11 and 13 and fails if any of them changes without a new
+`tests/test_v2_plan.py` hashes sections 1, 3, 6, 7, 8, 10, 11 and 13 and fails if any of them changes without a new
 dated Deviations entry naming it.
 
 ## 1. Primary hypothesis
@@ -59,7 +59,7 @@ section.
 | extraction (every system that takes an extraction LLM) | gpt-4o-mini |
 | answers | gpt-4o-mini, temperature 0, mem0's LoCoMo answer prompt (single memory list, as in v1) |
 | primary judge | gpt-4o-mini, temperature 0, mem0's LoCoMo judge prompt |
-| robustness judges | gpt-4o and claude-sonnet-4-6, same prompt, every held-out answer |
+| robustness judges | same prompt: gpt-4o on every held-out answer; claude-sonnet-4-6 on the four scored categories of the five fresh conversations and the S10–S11 LongMemEval answers (section 7) |
 | embeddings | text-embedding-3-small, for every system |
 | engram decisions | Jev; the pinned model version is recorded at `v2-frozen` |
 | LLM decider and LLM reranker arms | gpt-4o-mini |
@@ -281,6 +281,12 @@ one.
   conversations (plus the S10–S11 LongMemEval answers), bringing the non-OpenAI estimate from $42.83 to $37.58 under
   the $40 cap; adversarial answers there are judged by gpt-4o-mini and gpt-4o only. The LongMemEval temporal sample
   is kept.
+- 2026-09-25, external timestamp: this plan, as of commit 23b9427, is deposited on Zenodo as
+  doi:10.5281/zenodo.22948855 (published 2026-09-25).
+- 2026-09-25, §3: the stack table's robustness-judges row still said both judges run on every held-out answer; it now
+  matches §7 and §13 (gpt-4o on every held-out answer; claude-sonnet-4-6 on the four scored categories of the five
+  fresh conversations and the S10–S11 answers). A correction of the table, no change to the analysis. The stack
+  section is now hashed by the plan's guard as well.
 
 ### Where this plan differs from the phase-3 brief
 

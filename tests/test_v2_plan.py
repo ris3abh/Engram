@@ -1,12 +1,12 @@
 """docs/V2_PLAN.md is pre-registered: its guarded sections may not change without a recorded deviation.
 
-REGISTERED holds, for sections 1, 6, 7, 8, 10, 11 and 13, the SHA-256 of the section as registered and the number of
+REGISTERED holds, for sections 1, 3, 6, 7, 8, 10, 11 and 13, the SHA-256 of the section as registered and the number of
 dated Deviations entries that named the section at that point. If a section's text differs from its registered hash,
 the Deviations section must contain more dated entries naming it ("§N" or "section N") than it did at registration.
 Section 1 (the primary hypothesis) was registered in the plan's first commit, REGISTERED_COMMIT; the other sections
 were registered on 2026-09-24, after the first revision of Part 1; sections 7 and 13 were re-registered the same
-day, after the budget cut was recorded under Deviations. When git history is available, section 1's hash is also
-checked against that commit.
+day, after the budget cut was recorded under Deviations; section 3 was registered on 2026-09-25, after its correction.
+When git history is available, section 1's hash is also checked against that commit.
 """
 
 import hashlib
@@ -21,6 +21,7 @@ PLAN = ROOT / "docs" / "V2_PLAN.md"
 REGISTERED_COMMIT = "dedc949bf7aaec7cdc98718ef95a4d2e8d3a9c58"
 REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviations entries naming it at registration)
     "1": ("1. Primary hypothesis", "4a64e5da5c2682b9eb28df2b65639672ba004b1190d15d4a5682f87ac23ef180", 0),
+    "3": ("3. Stack", "6f2b460a143bca58016cfdedb3e70d7c7108a797a3a210381f571045c927a92e", 1),
     "6": ("6. Hypothesis family", "1ee9a65ba0bbec40ab6733b32dbf6e04525316846e27b47b543f2b900b09bb0d", 4),
     "7": ("7. Judges", "d83675c04d11264b68ec24da1c4807935ba0c457e397d178836ac0a6a57ccabd", 2),
     "8": ("8. Human audit", "ca695f04a2eabdd8364253af1b6e707a58918295214502e4e6d152d8aa7ae91c", 1),
