@@ -136,6 +136,7 @@ class WritePipeline:
         self._context: list[Message] = []
         self._mem0_history: list[dict] = []  # mem0-format message log for extract_prompt="mem0"
         self.stats: Counter[str] = Counter()  # E3 diagnostics: graph candidates, agreement checks, blocked closes
+        self._batches: dict[str, _MessageBatch] = {}  # relation_decider="llm_batched": one LLM call per message
         self._recent: list[str] = []  # recently extracted memory texts (extract_recent)
 
     async def ingest(
@@ -170,7 +171,10 @@ class WritePipeline:
                     text=union_text(drafts[i].text, drafts[j].text),
                     source_text=union_text(drafts[i].source_text, drafts[j].source_text, sep=" … "),
                 )
+        if self.flags.relation_decider == "llm_batched":
+            self._batches[message.id] = _MessageBatch(self, len(keep))
         results = await asyncio.gather(*(self._write_fact(message, drafts[i]) for i in keep))
+        self._batches.pop(message.id, None)
         by_index = dict(zip(keep, (o for o, _ in results), strict=True))
         outcomes = []
         for j in range(len(drafts)):
@@ -258,6 +262,7 @@ class WritePipeline:
         try:
             d = await self.backend.ask(state, asks)
         except DecisionError as e:
+            await self._skip_batch(message)
             return self._fallback(message, draft, vector, asks, str(e)), []
         graph_ids: set[str] = set()
         if self.flags.candidate_source == "cosine+graph" and self.flags.relation_decider == "jev":
@@ -295,6 +300,7 @@ class WritePipeline:
             decisions.append(self._rule("worth_remembering", "yes", "user explicitly asked to remember this"))
             p_worth = 1.0
         elif self.flags.worth_filter and worth.backend != "fallback" and p_worth < config.ESCALATE_BELOW:
+            await self._skip_batch(message)
             return WriteOutcome(draft.text, "dropped", decisions=decisions), []
         tentative = (worth.backend == "fallback" and not draft.user_requested) or p_worth < config.ACT_THRESHOLD
 
@@ -305,6 +311,10 @@ class WritePipeline:
         escalated = False
         if self.flags.relation_decider == "llm_update":
             relation = await self._llm_relation(draft, candidates, decisions, usages)
+        elif self.flags.relation_decider == "llm_per_fact":
+            relation = await self._llm_relation_v2(draft, candidates, decisions, usages)
+        elif self.flags.relation_decider == "llm_batched":
+            relation = await self._batches[message.id].decide(draft, candidates, decisions, usages)
         else:
             relation = _pick_relation(d, candidates)
         if relation.label in SUPERSEDE and relation.p < config.ESCALATE_BELOW and relation.target:
@@ -516,6 +526,9 @@ class WritePipeline:
             dec = d.get(f"relation_to_candidate__{i}")
             if escalated and target and c.id == target.id:
                 dec = relation.decision  # the LLM's answer replaces Jev's for this pair
+            if self.flags.relation_decider in ("llm_per_fact", "llm_batched"):
+                # Stage 4 ablation: the LLM decider's label for its target is the only relation evidence
+                dec = relation.decision if (relation.decision is not None and target and c.id == target.id) else None
             if dec is None or dec.backend == "fallback":
                 continue
             label = dec.chosen
@@ -544,13 +557,19 @@ class WritePipeline:
                 ps = [p]
                 multi_update = label == "update" and not B.is_single(c)  # always needs the second phrasing
                 first = c.against_count == 0
-                if (first or multi_update) and self.flags.close_agreement and dec.backend != "llm_escalation":
+                if (
+                    (first or multi_update)
+                    and self.flags.close_agreement
+                    and dec.backend not in ("llm_escalation", "llm_decider")
+                ):
                     ok, p2 = await self._recheck(state, c, decisions)
                     if not ok:
                         self.stats["against_unconfirmed"] += 1
                         self.belief_trace.append({**ev, "event": "unconfirmed"})
                         continue
                     ps.append(p2)
+                elif (first or multi_update) and self.flags.close_agreement and dec.backend == "llm_decider":
+                    ps.append(p)  # Stage 4 ablation: the LLM decider's answer stands as its own confirmation
                 delta, pieces = -w * sum(B.logit(x) for x in ps), len(ps)
                 mirror += -delta
                 self.stats["against_applied"] += pieces
@@ -588,6 +607,11 @@ class WritePipeline:
             "negates": "negated",
         }.get(relation.label, "inserted")
         return outcome(action, fact.id, target.id if target else None, closed_target, fact.tentative)
+
+    async def _skip_batch(self, message: Message) -> None:
+        """A fact that leaves before the relation decision must not hold up its message's batched LLM call."""
+        if (batch := self._batches.get(message.id)) is not None:
+            await batch.skip()
 
     def _same_attribute(self, d: dict[str, Decision], candidates: list[Fact], c: Fact) -> bool:
         """Flags.same_attribute_gate: Jev says `c` and the new fact are the same attribute of the same subject."""
@@ -863,6 +887,44 @@ class WritePipeline:
             self.log.write([decision])
         return _Relation(label, 1.0, target, decision, merged)
 
+    async def _llm_relation_v2(
+        self, draft: ExtractedFact, candidates: list[Fact], decisions: list[Decision], usages: list[LLMUsage]
+    ) -> "_Relation":
+        """Stage 4 frozen-extraction ablation, one call per fact: mem0's update prompt on the LLM, its events mapped to
+        engram relations as registered in v1 (DELETE -> contradiction, UPDATE -> update, ADD -> new, NONE ->
+        duplicate), so the label enters the belief policy as a relation would."""
+        if not candidates:
+            return _Relation("new", 1.0, None, None)
+        old = [{"id": str(i), "text": c.text} for i, c in enumerate(candidates)]
+        try:
+            events, usage = await self.llm.update_decision(old, [draft.text])
+        except LLMError:
+            return _Relation("new", 0.0, None, None)
+        usages.append(usage)
+        label, index, _ = map_update_events(events, len(candidates))
+        return self._llm_decided(MEM0_TO_RELATION.get(label, label), candidates, index, usage, decisions)
+
+    def _llm_decided(
+        self, label: str, candidates: list[Fact], index: int | None, usage: LLMUsage, decisions: list[Decision]
+    ) -> "_Relation":
+        target = candidates[index] if index is not None else None
+        decision = Decision(
+            question=self.rel_q.id,
+            options=self.rel_q.options,
+            probs={label: 1.0},
+            chosen=label,
+            backend="llm_decider",
+            latency_ms=usage.latency_ms,
+            cost_usd=usage.cost_usd,
+            model=usage.model,
+            target=target.id if target else None,
+            request_id=new_id(),
+        )
+        decisions.append(decision)
+        if self.log:
+            self.log.write([decision])
+        return _Relation(label, 1.0, target, decision)
+
     # rules
 
     def _rule(self, question: str, chosen: str, reason: str, target: str | None = None) -> Decision:
@@ -995,6 +1057,85 @@ def mem0_date(when: datetime) -> str:
     """LoCoMo's session-date format, e.g. "1:56 pm on 8 May, 2023", as the mem0 arm receives it."""
     hour = when.hour % 12 or 12
     return f"{hour}:{when.minute:02d} {'am' if when.hour < 12 else 'pm'} on {when.day} {when:%B}, {when.year}"
+
+
+MEM0_TO_RELATION = {"rewrite": "update"}  # map_update_events' labels -> engram relations (Stage 4 ablation)
+
+
+class _MessageBatch:
+    """Stage 4 ablation, one LLM call per message: every fact of the message registers its candidates; the last one
+    to arrive makes a single call to mem0's update prompt with all the message's facts against the union of their
+    candidates, and each fact gets its own relation back. An UPDATE or DELETE event goes to the fact whose candidates
+    include that memory and whose text is closest to the event's text; a fact no event names is `new` if the LLM added
+    anything, otherwise a duplicate of its closest candidate. The call's cost is split evenly across the facts."""
+
+    def __init__(self, writer: "WritePipeline", expected: int):
+        self.writer, self.expected = writer, expected
+        self.facts: list[tuple[ExtractedFact, list[Fact]]] = []
+        self.done = asyncio.Event()
+        self.result: dict[int, tuple[str, int | None]] = {}
+        self.usage: LLMUsage | None = None
+        self.union: list[Fact] = []
+
+    async def skip(self) -> None:
+        self.expected -= 1
+        if self.facts and len(self.facts) == self.expected:
+            await self._call()
+            self.done.set()
+        elif self.expected == 0:
+            self.done.set()
+
+    async def decide(self, draft, candidates, decisions, usages) -> "_Relation":
+        me = len(self.facts)
+        self.facts.append((draft, candidates))
+        if len(self.facts) == self.expected:
+            await self._call()
+            self.done.set()
+        await self.done.wait()
+        label, index = self.result.get(me, ("new", None))
+        if self.usage is None:
+            return _Relation("new", 0.0, None, None)
+        share = replace(self.usage, cost_usd=self.usage.cost_usd / self.expected)
+        usages.append(share)
+        local = candidates.index(self.union[index]) if index is not None and self.union[index] in candidates else None
+        return self.writer._llm_decided(label, candidates, local, share, decisions)
+
+    async def _call(self) -> None:
+        seen: dict[str, Fact] = {}
+        for _, cands in self.facts:
+            for c in cands:
+                seen.setdefault(c.id, c)
+        self.union = list(seen.values())
+        if not self.union:
+            self.result = {i: ("new", None) for i in range(len(self.facts))}
+            return
+        old = [{"id": str(i), "text": c.text} for i, c in enumerate(self.union)]
+        try:
+            events, self.usage = await self.writer.llm.update_decision(old, [d.text for d, _ in self.facts])
+        except LLMError:
+            return
+        ids = {c.id: i for i, c in enumerate(self.union)}
+        for e in events:
+            if e.get("event") not in ("UPDATE", "DELETE") or str(e.get("id")) not in {str(i) for i in ids.values()}:
+                continue
+            j = int(e["id"])
+            text = e.get("text") or self.union[j].text
+            owners = [i for i, (_, cands) in enumerate(self.facts) if any(c.id == self.union[j].id for c in cands)]
+            if not owners:
+                continue
+            best = max(owners, key=lambda i: (_overlap(self.facts[i][0].text, text), -i))
+            label = "contradiction" if e["event"] == "DELETE" else "update"
+            if best not in self.result or (label == "contradiction" and self.result[best][0] == "update"):
+                self.result[best] = (label, j)
+        added = any(e.get("event") == "ADD" for e in events)
+        for i, (_, cands) in enumerate(self.facts):
+            if i not in self.result:
+                self.result[i] = ("new", None) if added or not cands else ("duplicate", ids[cands[0].id])
+
+
+def _overlap(a: str, b: str) -> float:
+    x, y = set(re.findall(r"[a-z0-9]+", a.lower())), set(re.findall(r"[a-z0-9]+", b.lower()))
+    return len(x & y) / max(1, len(x | y))
 
 
 def map_update_events(events: list[dict], n_candidates: int) -> tuple[str, int | None, str | None]:

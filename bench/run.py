@@ -234,6 +234,24 @@ ARMS: dict[str, dict] = {
         "hygiene": True,
         "flags": Flags(**{**E4_FROZEN, "edge_type_version": 2}),
     },
+    # V2 Stage 4 frozen-extraction ablation (S7, S8; V2_PLAN section 6.3): the v2 system records one extraction trace
+    # per slice (fx_jev), and gpt-4o-mini decides relations on the same trace, one call per fact (fx_llm, mem0's update
+    # prompt) or one call per message (fx_batched). Only the relation decider differs.
+    "fx_jev": {
+        "system": "engram",
+        "hygiene": True,
+        "extraction_trace": "record",
+        "flags": Flags(**{**E4_FROZEN, "same_attribute_gate": True}),
+    },
+    **{
+        f"fx_{name}": {
+            "system": "engram",
+            "hygiene": True,
+            "extraction_trace": "replay",
+            "flags": Flags(**{**E4_FROZEN, "same_attribute_gate": True, "relation_decider": decider}),
+        }
+        for name, decider in (("llm", "llm_per_fact"), ("batched", "llm_batched"))
+    },
     # V2 Stage 4 reranker arms (V2_PLAN section 4): the v2 system's frozen store (copied, nothing written), only the
     # shortlist's scorer differs. Run on the slice and k the source store was built with (conv26, --top-k 3).
     **{
@@ -476,6 +494,40 @@ class EngramArm:
             embedder = SentenceEmbedder()
         self.engine = Engram(Store(arm_dir / "engram.db"), decider, llm, embedder, log, usage, flags)
         self.embedder = embedder
+        self.trace: dict | None = None  # Stage 4 frozen-extraction ablation: {message id: {"memories", "usage"}}
+
+    def use_extraction_trace(self, path: Path, mode: str) -> None:
+        """record: save every extraction's output and usage to `path`; replay: return them for the same message
+        ids instead of calling the extraction LLM, so every decider sees one identical extraction trace."""
+        from engram.llm.base import LLMUsage
+
+        llm = self.engine.llm
+        self.trace_path = path
+        if mode == "record":
+            self.trace, original = {}, llm.extract_mem0
+
+            async def record(user_prompt: str, message_id: str):
+                memories, usage = await original(user_prompt, message_id)
+                self.trace[message_id] = {"memories": memories, "usage": {**usage.__dict__, "cached": False}}
+                return memories, usage
+
+            llm.extract_mem0 = record
+        else:
+            trace = json.loads(path.read_text())
+
+            async def replay(user_prompt: str, message_id: str):
+                entry = trace[message_id]
+                usage = LLMUsage(**{**entry["usage"], "cached": True})
+                if llm.usage_log:
+                    llm.usage_log.write(usage)
+                return entry["memories"], usage
+
+            llm.extract_mem0 = replay
+
+    def save_trace(self) -> None:
+        if self.trace is not None:
+            self.trace_path.parent.mkdir(parents=True, exist_ok=True)
+            self.trace_path.write_text(json.dumps(self.trace, indent=1))
 
     async def write(self, m: dict) -> dict:
         embedded = getattr(self.embedder, "cost_usd", 0.0)
@@ -493,7 +545,20 @@ class EngramArm:
                         "by_source": m["id"],
                     }
                 )
+        facts = {
+            f.id: f
+            for f in (self.engine.store.get_fact(o.target_id, with_decisions=False) for o in r.outcomes if o.target_id)
+            if f
+        }
         return {
+            "outcomes": [
+                {
+                    "text": o.text,
+                    "action": o.action,
+                    "target": facts[o.target_id].text if o.target_id in facts else None,
+                }
+                for o in r.outcomes
+            ],
             "closed": closed,
             "latency_ms": r.latency_ms,
             "decision_ms": r.decide_ms,
@@ -1052,6 +1117,9 @@ async def run_arm(
         shutil.copy(arms_dir / frozen_store / (slice_name.replace(":", "_") + suffix) / "engram.db", arm_dir)
     if spec["system"] == "engram":
         system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"), stack)
+        if spec.get("extraction_trace"):  # Stage 4 frozen-extraction ablation
+            trace = arms_dir / "fx_trace" / f"{slice_name.replace(':', '_')}.json"
+            system.use_extraction_trace(trace, spec["extraction_trace"])
     elif spec["system"] == "graphiti":
         if stack != "openai":
             raise ValueError("Graphiti runs on the OpenAI stack only (V2_PLAN section 4)")
@@ -1162,9 +1230,12 @@ async def run_arm(
     from engram.embed import SentenceEmbedder
 
     last_of_session = {m["session"]: m["id"] for m in sl["messages"]}
+    outcome_log: list[tuple[str, list[dict]]] = []
     for n, m in enumerate(sl["messages"], 1):
         if not frozen_store:
             writes.append(await system.write(m))
+            if "outcomes" in writes[-1]:
+                outcome_log.append((m["id"], writes[-1]["outcomes"]))
         if n % 20 == 0:
             print(
                 f"[{name}/{slice_name}] {n}/{len(sl['messages'])} messages, real spend ${budget.run_total:.3f}",
@@ -1264,6 +1335,9 @@ async def run_arm(
     result["options"] = {"top_k": top_k, "no_dates": no_dates, "no_answer": no_answer}
     if frozen_store:
         result["store_from"] = frozen_store
+    if spec["system"] == "engram" and stack != "anthropic":
+        result["write_outcomes"] = [{"message": m_id, **o} for m_id, w in outcome_log for o in w]
+        system.save_trace()
     if stack != "anthropic" and answers:
         result["retrieve_ms_p50"] = statistics.median(a["retrieve_ms"] for a in answers)
         result["retrieve_cost_per_query"] = statistics.fmean(a["retrieve_cost"] for a in answers)
