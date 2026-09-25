@@ -1,0 +1,81 @@
+{
+ "requests": 50,
+ "billed_requests": 50,
+ "billed_input_tokens": 100873,
+ "jev_usd": 0.004236666000000001,
+ "by_operation": {
+  "memory_type": {
+   "requests": 20,
+   "questions_mean": 4.0,
+   "state_tokens_mean": 32.0,
+   "question_tokens_mean": 277.0,
+   "billed_mean": 584.8
+  },
+  "relations": {
+   "requests": 19,
+   "questions_mean": 24.263157894736842,
+   "state_tokens_mean": 735.578947368421,
+   "question_tokens_mean": 1937.9473684210527,
+   "billed_mean": 3289.315789473684
+  },
+  "consolidation": {
+   "requests": 1,
+   "questions_mean": 50.0,
+   "state_tokens_mean": 944.0,
+   "question_tokens_mean": 4612.0,
+   "billed_mean": 6605.0
+  },
+  "routing": {
+   "requests": 5,
+   "questions_mean": 6.0,
+   "state_tokens_mean": 13.8,
+   "question_tokens_mean": 342.0,
+   "billed_mean": 623.8
+  },
+  "stopping": {
+   "requests": 5,
+   "questions_mean": 4.0,
+   "state_tokens_mean": 2085.2,
+   "question_tokens_mean": 284.0,
+   "billed_mean": 3391.2
+  }
+ },
+ "fit_state_once": {
+  "intercept": 242.2943542909164,
+  "per_state_token": 1.358491578364816,
+  "per_question_token": 1.0650616572093279,
+  "r2": 0.9997060075407838
+ },
+ "fit_state_per_question": {
+  "intercept": 1113.4406640388297,
+  "per_state_token_x_questions": 0.2078504692886275,
+  "per_question_token": -1.0748682414297228,
+  "r2": 0.9159093592163828
+ },
+ "billed_over_o200k": {
+  "state_once": [
+   1.1888048956083512,
+   1.9326599326599327
+  ],
+  "state_per_question": [
+   0.12614749553323887,
+   1.607843137254902
+  ]
+ },
+ "billing_model": "state billed once per request",
+ "projection": {
+  "billed_tokens_per_evidence_node": 154.43612446762754,
+  "billed_tokens_per_traversal_candidate": 456.91363511507666,
+  "usd": {
+   "write_per_message": 0.00021202650000000004,
+   "read_per_query_min": 0.0002983563445528072,
+   "read_per_query_max": 0.005554852194148415
+  },
+  "heldout_nine": {
+   "writes": 1.1583007695000003,
+   "reads_one_retrieval_min": 0.5331627877158664,
+   "reads_one_retrieval_max": 9.926520870943218
+  },
+  "assumptions": "writes: probe turns with 10 write candidates; reads: min = routing + one stopping check over 40 evidence nodes; max = 16 requests (7 traversal rounds over 40 evidence nodes, 80 candidate expansions, a stopping check per round); 5463 messages and 1787 questions (all five categories)"
+ }
+}
