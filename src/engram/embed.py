@@ -41,7 +41,9 @@ class SentenceEmbedder:
 class OpenAIEmbedder:
     """OpenAI embeddings (text-embedding-3-small by default), cached per text so a re-run only pays for new texts.
 
-    The API returns unit-length vectors; rows are renormalized anyway so cosine stays a dot product.
+    The API returns unit-length vectors; rows are renormalized anyway so cosine stays a dot product. `cost_usd` is the
+    running nominal cost (a cached text counts what it cost when first embedded), like LLMUsage.cost_usd, so write
+    costs stay comparable between fresh and cached runs.
     """
 
     PRICE_PER_TOKEN = {"text-embedding-3-small": 0.02 / 1_000_000, "text-embedding-3-large": 0.13 / 1_000_000}
@@ -53,6 +55,7 @@ class OpenAIEmbedder:
         self.cache = cache  # engram.cache.CallCache or None
         self._client = None
         self._lock = threading.Lock()
+        self.cost_usd = 0.0
 
     def _key(self, text: str) -> str:
         from .cache import call_key
@@ -65,6 +68,7 @@ class OpenAIEmbedder:
             for i, t in enumerate(texts):
                 if hit := self.cache.get(self._key(t)):
                     found[i] = hit["vector"]
+                    self.cost_usd += hit.get("cost", len(t) / 4 * self.PRICE_PER_TOKEN.get(self.model, 0.0))
         missing = [i for i in range(len(texts)) if i not in found]
         for start in range(0, len(missing), self.BATCH):
             batch = missing[start : start + self.BATCH]
@@ -77,10 +81,12 @@ class OpenAIEmbedder:
                     model=self.model, input=[texts[i] for i in batch], encoding_format="float"
                 )
             usd = response.usage.prompt_tokens * self.PRICE_PER_TOKEN.get(self.model, 0.0)
+            chars = sum(len(texts[i]) for i in batch) or 1
+            self.cost_usd += usd
             for i, item in zip(batch, response.data, strict=True):
                 found[i] = item.embedding
-                if self.cache:
-                    self.cache.put(self._key(texts[i]), {"vector": item.embedding})
+                if self.cache:  # each text's share of the batch cost, by length
+                    self.cache.put(self._key(texts[i]), {"vector": item.embedding, "cost": usd * len(texts[i]) / chars})
             if self.cache:
                 self.cache.spend("openai", usd)
         if not texts:

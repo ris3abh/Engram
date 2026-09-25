@@ -222,6 +222,13 @@ ARMS: dict[str, dict] = {
         "hygiene": True,
         "flags": Flags(**{**E4_V2, "retrieval_rerank": False}),
     },
+    # v2 Stage 2: the frozen arm with Jev's reranking off (read path only; ingestion identical, so its writes replay
+    # from the cache). E4_V2 above predates the frozen flags, so it is not this arm.
+    "e4_frozen_norerank": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_FROZEN, "retrieval_rerank": False}),
+    },
     # mem0 with the session date passed as its Observation Date (mem0 2.1.0's OSS add() cannot pass one, so the
     # default arm resolves "yesterday" against the current date). Not mem0's default config; reported alongside.
     "mem0_dated": {"system": "mem0", "dated": True},
@@ -286,6 +293,8 @@ def load_heldout(conv_id: str) -> dict:
 def load_slice(name: str) -> dict:
     if name.startswith("heldout:"):
         return load_heldout(name.split(":", 1)[1])
+    if name == "conv26":  # the whole tuning conversation (v2 Stage 2), loaded like a held-out one
+        return load_heldout("conv-26")
     path, checkpoints = SLICES[name]
     s = json.loads(path.read_text())
     if name in ("dev_updates", "dev_updates2"):
@@ -427,9 +436,12 @@ class EngramArm:
             )
             embedder = SentenceEmbedder()
         self.engine = Engram(Store(arm_dir / "engram.db"), decider, llm, embedder, log, usage, flags)
+        self.embedder = embedder
 
     async def write(self, m: dict) -> dict:
+        embedded = getattr(self.embedder, "cost_usd", 0.0)
         r = await self.engine.ingest(m["text"], speaker=m["speaker"], created_at=m["at"], message_id=m["id"])
+        embed_cost = getattr(self.embedder, "cost_usd", 0.0) - embedded
         closed = []
         for o in r.outcomes:
             if o.closed_target and o.target_id:
@@ -446,7 +458,14 @@ class EngramArm:
             "closed": closed,
             "latency_ms": r.latency_ms,
             "decision_ms": r.decide_ms,
-            "cost": r.extract_cost + r.decision_cost,
+            "cost": r.extract_cost + r.decision_cost + embed_cost,
+            "cost_parts": {
+                "extraction": r.extract_cost,
+                "jev": r.jev_cost,
+                "escalations": sum(u.cost_usd for u in r.llm_usage if u.purpose == "escalate"),
+                "llm_decisions": sum(u.cost_usd for u in r.llm_usage if u.purpose == "decide"),
+                "embeddings": embed_cost,
+            },
             "decision_cost": r.decision_cost,
             "extracted": len(r.outcomes),
             "actions": [o.action for o in r.outcomes],
@@ -602,6 +621,7 @@ class Mem0Arm:
                 "response": response.model_dump(),
                 "latency_ms": (time.perf_counter() - started) * 1000,
                 "cost": cost(kwargs["model"], u.prompt_tokens, u.completion_tokens),
+                "kind": "llm",
             }
             cache.put(key, record)
             cache.spend("openai", record["cost"])
@@ -624,6 +644,7 @@ class Mem0Arm:
                 "response": response.model_dump(),
                 "latency_ms": (time.perf_counter() - started) * 1000,
                 "cost": response.usage.prompt_tokens * OpenAIEmbedder.PRICE_PER_TOKEN[kwargs["model"]],
+                "kind": "embed",
             }
             cache.put(key, record)
             cache.spend("openai", record["cost"])
@@ -650,6 +671,10 @@ class Mem0Arm:
             "latency_ms": (time.perf_counter() - started) * 1000,
             "decision_ms": None,
             "cost": sum(c["cost"] for c in self.calls),
+            "cost_parts": {
+                "extraction": sum(c["cost"] for c in self.calls if c.get("kind") != "embed"),
+                "embeddings": sum(c["cost"] for c in self.calls if c.get("kind") == "embed"),
+            },
             "decision_cost": None,
             "extracted": len(events),
             "actions": [e.get("event", "ADD") for e in events],
@@ -984,6 +1009,10 @@ async def run_arm(
         ]
     if stack != "anthropic":  # v1 result files keep their exact v1 shape
         result["stack"] = {"name": stack, **STACKS[stack]}
+        parts = sorted({p for w in writes for p in w["cost_parts"]})
+        result["write_cost_per_1k_parts"] = {
+            p: 1000 * statistics.fmean(w["cost_parts"].get(p, 0.0) for w in writes) for p in parts
+        }
     results.mkdir(parents=True, exist_ok=True)
     out_name = slice_name.replace(":", "_")
     (results / f"{name}__{out_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))

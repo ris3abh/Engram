@@ -66,8 +66,11 @@ def test_embedder_normalizes_caches_and_charges(tmp_path):
     v = emb.embed(["a", "b"])
     assert v.shape == (2, 1536) and np.allclose(np.linalg.norm(v, axis=1), 1.0)
     assert cache.budget.spent["openai"] == pytest.approx(20 * 0.02 / 1_000_000)
-    emb.embed(["a", "c"])  # only the new text is sent
+    first = emb.cost_usd
+    assert first == pytest.approx(20 * 0.02 / 1_000_000)
+    emb.embed(["a", "c"])  # only the new text is sent; the cached one still counts its nominal cost
     assert fake.inputs == [["a", "b"], ["c"]]
+    assert emb.cost_usd == pytest.approx(first + 10 * 0.02 / 1_000_000 + first / 2)
     assert emb.embed([]).shape == (0, 1536)
 
 
