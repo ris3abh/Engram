@@ -85,6 +85,19 @@ dates the same way. v1 ran mem0's extraction as shipped, with no observation dat
   hybrid search, Neo4j via Docker; the top-k facts are rendered into the shared answer prompt.
 - **Exploratory only:** Zep Cloud (if `ZEP_API_KEY` is set; hosted, with its own internal models, stated in every
   caption, excluded from cost comparisons) and A-MEM (if it installs cleanly).
+- **Jev-Mem** (exploratory; github.com/libingzheren/Jev-Mem at `81574eb`, arXiv:2609.23986): LoCoMo only, on the five
+  fresh conversations only (conv-44, 47, 48, 49, 50); no significance test, not in the Holm family. It runs its default
+  profile (`config/jev_mem.json`) with only `jev_model` pinned to `jev-1.13.0`, text-embedding-3-small and one node per
+  turn; none of its limits is lowered. It is queried through `QueryEngine.query` at k=40 (its `answer_top_k`) and at
+  its token-matched k=7 (below); its returned turns are rendered `[date] speaker: text` into the shared answer prompt
+  and judged by the shared judges, and its category prompts, best-of-3 selection and own judge are not used. Its
+  embedding timeouts are caught and retried; failures and Jev fallbacks are counted and reported, along with its Jev
+  calls, traversal depth and stop reason per query. Captions state that its memory unit is a raw turn and that its store
+  is never updated or closed. **Token-matched k**, chosen from the data without retrieval (it replaces section 5.3's
+  sweep for Jev-Mem only): the mean o200k_base tokens of its rendered turn line over the 3,122 turns of the five fresh
+  conversations is 36.9 (turn lengths only; no question or answer is read), and 7 × 36.9 = 258 is closest to engram's
+  k=3 tokens per question on conv-26 (265, Stage 2 with dated extraction); a tie would go to the larger k
+  (`bench/v2_budget.py`, `jevmem_token_match`).
 
 ## 5. Data, tuning and k
 
@@ -154,7 +167,7 @@ conversation, and the slice is small, so a non-significant difference there is n
 paper says so.
 
 Also exploratory: per-category differences; the four v1 conversations on their own (conv-30, 41, 42, 43, already evaluated on
-another stack); pooled-nine results other than S12, and pooled-ten results; Zep Cloud and A-MEM; adversarial accuracy; LongMemEval temporal-reasoning and k=20;
+another stack); pooled-nine results other than S12, and pooled-ten results; Zep Cloud, A-MEM and Jev-Mem (section 4); adversarial accuracy; LongMemEval k=20;
 the store-correctness contrasts other than S9 (engram vs Graphiti, with dates); latencies, costs and store sizes. Every
 table marks exploratory results as such.
 
@@ -210,9 +223,9 @@ valid at the time the question asks about, as the set's author writes it; the an
 - **Source:** `xiaowu0162/longmemeval-cleaned` on the Hugging Face Hub (the release its authors recommend; the original
   is deprecated), revision `98d7416c24c778c2fee6e6f3006e7a073259d48f`, file `longmemeval_s_cleaned.json`, license
   MIT. Downloaded into `bench/data/` (not committed) by `bench/longmemeval.py`, which records the file's SHA-256.
-- **Subsets:** knowledge-update (all 78 questions, 6 of them abstention questions) is primary within this contrast;
-  temporal-reasoning is secondary and exploratory: a fixed sample of 60 of its 133 questions (seed 0), drawn by
-  `bench/longmemeval.py`. The selected ids and their hash are committed in `bench/slices/longmemeval_ids.json`.
+- **Subset:** knowledge-update (all 78 questions, 6 of them abstention questions). The exploratory temporal-reasoning
+  sample registered with it (60 of 133 questions, seed 0) was dropped on 2026-09-25 to fund Jev-Mem (Deviations); its
+  ids stay in `bench/slices/longmemeval_ids.json`, unused. The selected ids and their hash are committed there.
 - **Protocol:** each question's haystack (about 47 sessions) is ingested per question, in order, with each session's
   date as reference time. Every system ingests the same stream: the user turns, one at a time; assistant turns are not
   stored. This differs from LongMemEval's full-history setting and is stated in every caption.
@@ -227,8 +240,7 @@ valid at the time the question asks about, as the set's author writes it; the an
   S10–S11; k=20 for every system as an exploratory setting.
 - **Systems:** engram (`v2-frozen`), mem0, Graphiti.
 - **Cost estimate:** about 242 user turns per question; at mem0's extraction prompt (about 10k input tokens per turn)
-  and gpt-4o-mini's list price, about $29 per system for the knowledge-update subset and $22 for the temporal
-  sample, before prompt-cache discounts. Graphiti's cost is measured on the dev slice (Stage 3) before it runs here.
+  and gpt-4o-mini's list price, about $29 per system for the knowledge-update subset, before prompt-cache discounts. Graphiti's cost is measured on the dev slice (Stage 3) before it runs here.
 
 ## 11. Statistics, spend and stopping rules
 
@@ -300,6 +312,20 @@ one.
   update set 1 carried 2026 dates, against 1 of 97 on v1's stack), which broke point-in-time and fulfilled-plan
   answers for engram and mem0 alike. v2 differs from v1 here (v1 ran mem0 as shipped). Stage 2 is re-run on conv-26
   with the change; no threshold or question wording changes.
+- 2026-09-25, §4, §6, §10 and §13: Jev-Mem (github.com/libingzheren/Jev-Mem at 81574eb; arXiv:2609.23986) is added as
+  an exploratory system on LoCoMo only, on the five fresh conversations only (conv-44, 47, 48, 49, 50), with no
+  significance test and outside the Holm family: its default profile with only jev_model pinned (jev-1.13.0),
+  text-embedding-3-small, none of its limits lowered, at k=40 and at its token-matched k=7. k was chosen from the data
+  without retrieval, before any Jev-Mem run: the mean o200k_base tokens of its rendered turn line over the 3,122 turns
+  of the five fresh conversations (36.9; turn lengths only, no question or answer read, nothing that can inform
+  engram's configuration) against engram's k=3 tokens per question on conv-26 (265, Stage 2 with dated extraction).
+  Its returned turns go into the shared answer prompt and to the shared judges; its category prompts, best-of-3
+  selection and own judge are not used; its embedding timeouts are caught and retried, with failures counted and
+  reported. It is funded by dropping the exploratory LongMemEval temporal-reasoning sample ($6.03 Jev, $75.86 OpenAI):
+  the adopted estimate becomes $35.27 of non-OpenAI spend (Jev $15.06, Anthropic $20.21) against the $40 cap, with
+  Jev-Mem at $3.54 of Jev from probe 2's measured rates. Reason: the closest concurrent design, compared on the same
+  stack and prompts; the nine held-out conversations did not fit under the cap (probe 2, about $21 with the section 5.3
+  sweep).
 
 ### Where this plan differs from the phase-3 brief
 
@@ -308,7 +334,7 @@ Recorded at registration, not deviations: the plan wins where the two disagree.
 - **LLM-reranker arm on held-out data.** The brief runs the gpt-4o-mini listwise reranker on conv-26 only; S5 needs it
   on the five fresh conversations, so it is added to the held-out arms.
 - **LongMemEval ingestion and sampling.** User turns only, and a 60-question temporal-reasoning sample, to keep each
-  run under the $40 cap (section 10).
+  run under the $40 cap (section 10); the sample was later dropped (Deviations, 2026-09-25).
 - **S9 fallback.** If set 3 is not frozen, S9 leaves the Holm family (Holm over the remaining nine tests) rather than
   being tested on sets 1–2.
 
@@ -319,12 +345,15 @@ Recorded at registration, not deviations: the plan wins where the two disagree.
   the cap is reached. The per-run caps of section 11 ($40 OpenAI, $10 Jev, $15 Anthropic) apply as well. OpenAI spend
   has no phase-wide cap.
 - **Estimate** (`bench/v2_budget.py`, output in `bench/results/v2/budget_estimate.json`): volumes counted from the
-  data (conv-26: 419 messages, 199 questions; the nine held-out conversations: 5,463 messages, 1,787 questions; the
-  selected LongMemEval questions: 18,907 knowledge-update and 14,541 temporal-reasoning user turns) and v1's measured
+  data (conv-26: 419 messages, 199 questions; the nine held-out conversations: 5,463 messages, 1,787 questions, of
+  which the five fresh ones have 3,122 messages and 987 questions; the selected LongMemEval knowledge-update questions:
+  18,907 user turns) and v1's measured
   rates (Jev $0.00037 per ingested message for writes plus $0.00004 for hygiene and $0.00019 per retrieval, over 2,341
   v1 held-out messages; extraction 9,580 input and 84 output tokens per message; claude-sonnet-4-6 $0.0028 per
   judgment over 4,275 v1 judge calls). OpenAI at list prices (gpt-4o-mini $0.15 / $0.60, gpt-4o $2.50 / $10 per million tokens); Graphiti's ingestion assumed at 1.5× mem0's
-  until Stage 3 measures it; Stage 2 allows one re-run. The table is the adopted scope (`adopted` in the output file).
+  until Stage 3 measures it; Stage 2 allows one re-run. Jev-Mem's Jev cost uses its probe-2 rates on conv-26
+  ($0.00021 per message; $0.00172 per query at k=40 and $0.00121 at k=7; `bench/results/v2/jevmem_probe2.json`). The
+  table is the adopted scope (`adopted` in the output file).
 
 | stage | Jev (USD) | Anthropic (USD) | OpenAI (USD) |
 |---|---|---|---|
@@ -333,14 +362,20 @@ Recorded at registration, not deviations: the plan wins where the two disagree.
 | 3 baselines on dev | 0.00 | 0.00 | 0.30 |
 | 4 controlled experiments | 0.18 | 0.00 | 1.13 |
 | 5 LongMemEval knowledge-update | 7.84 | 0.00 | 98.64 |
-| 5 LongMemEval temporal | 6.03 | 0.00 | 75.86 |
 | 6 LoCoMo held-out | 2.61 | 0.00 | 35.87 |
-| 8 robustness judges | 0.00 | 20.21 | 39.86 |
-| **total** | **17.37** | **20.21** | **254.26** |
+| 7 Jev-Mem (five fresh, k=40 and k=7) | 3.54 | 0.00 | 4.49 |
+| 7 Jev-Mem probes (spent) | 0.18 | 0.00 | 0.00 |
+| 8 robustness judges | 0.00 | 20.21 | 38.94 |
+| **total** | **15.06** | **20.21** | **181.96** |
 
 - **Adopted scope (2026-09-24):** claude-sonnet-4-6 judges only the four scored categories of the five fresh
   conversations (every test uses only those): 7,236 Claude judgments and $37.58 of non-OpenAI spend, under the cap.
   The first-proposed scope (every question of the five fresh conversations, 9,117 judgments) came to $42.83. The
-  exploratory LongMemEval temporal-reasoning sample is kept.
+  exploratory LongMemEval temporal-reasoning sample was kept then.
+- **Adopted scope (2026-09-25):** the LongMemEval temporal-reasoning sample is dropped ($6.03 Jev, $75.86 OpenAI) and
+  Jev-Mem is added on the five fresh conversations ($3.54 Jev and $4.49 OpenAI, plus its probes' $0.18 of Jev already
+  spent): $35.27 of non-OpenAI spend (Jev $15.06, Anthropic $20.21), under the cap; OpenAI $181.96. The v1
+  claude-sonnet-4-6 judge rate is pinned in `bench/v2_budget.py` at its registered value ($0.0028 per judgment), since
+  phase 3's own judge calls now share the call cache it was measured from.
 - **OpenAI per-run cap:** at the assumed Graphiti factor, one Graphiti run over all 78 knowledge-update haystacks would
   exceed $40, so LongMemEval runs are split by question halves.

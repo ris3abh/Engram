@@ -16,7 +16,6 @@ fresh conversations) and "adopted" (their four scored categories only, the scope
 
 import glob
 import json
-import sqlite3
 import statistics
 from pathlib import Path
 
@@ -32,6 +31,9 @@ ANSWER_OUT, JUDGE_IN_EXTRA, JUDGE_OUT = 60, 150, 60  # answer length; question +
 MEMORY_TOKENS = {3: 290, 20: 1461}  # v1 engram retrieved tokens per question at k=3 and k=20
 GRAPHITI_FACTOR = 1.5
 RERUN_ALLOWANCE = 2  # Stage 2 ingests conv-26 twice (one threshold or wording change allowed)
+# claude-sonnet-4-6's cost per judgment, measured at registration (2026-09-24) over the 4,275 v1 judge calls in the call
+# cache. It is pinned: phase 3's own judge calls share that cache, so re-measuring it would mix in other models.
+V1_CLAUDE_JUDGE_PER_CALL, V1_CLAUDE_JUDGE_CALLS = 0.002793321403508772, 4275
 FRESH = ("conv-44", "conv-47", "conv-48", "conv-49", "conv-50")
 HELDOUT = ("conv-30", "conv-41", "conv-42", "conv-43", *FRESH)
 
@@ -55,21 +57,15 @@ def v1_rates() -> dict:
         messages += sum(1 for _ in open(Path(f).parent / "llm.jsonl") if '"extract"' in _)
     extract = [json.loads(x) for f in glob.glob(str(V1_ARMS / "heldout_conv-*__k3" / "llm.jsonl")) for x in open(f)]
     extract = [x for x in extract if x["purpose"] == "extract"]
-    db = sqlite3.connect(str(ROOT / "bench" / ".cache" / "calls.sqlite"))
-    judge = [
-        d["cost"]
-        for (v,) in db.execute("SELECT value FROM calls WHERE value LIKE '%\"label\"%' AND value LIKE '%\"cost\"%'")
-        if "text" not in (d := json.loads(v))
-    ]
     return {
         "jev_write_per_message": write / messages,
         "jev_hygiene_per_message": hygiene / messages,
         "jev_per_retrieval": read / retrievals,
         "extract_in_tokens": statistics.fmean(x["input_tokens"] for x in extract),
         "extract_out_tokens": statistics.fmean(x["output_tokens"] for x in extract),
-        "claude_judge_per_call": statistics.fmean(judge),
+        "claude_judge_per_call": V1_CLAUDE_JUDGE_PER_CALL,
         "v1_messages": messages,
-        "v1_judge_calls": len(judge),
+        "v1_judge_calls": V1_CLAUDE_JUDGE_CALLS,
     }
 
 
@@ -105,6 +101,7 @@ def volumes() -> dict:
         "heldout_messages": sum(turns(c) for c in HELDOUT),
         "heldout_questions": sum(questions(c) for c in HELDOUT),
         "fresh_questions_all": sum(questions(c) for c in FRESH),
+        "fresh_messages": sum(turns(c) for c in FRESH),
         "fresh_questions_scored": sum(questions(c, True) for c in FRESH),
         "lme_ku_questions": len(lme["ids"]["knowledge-update"]),
         "lme_tr_questions": len(lme["ids"]["temporal-reasoning"]),
@@ -118,7 +115,44 @@ def cost(model: str, tokens_in: float, tokens_out: float) -> float:
     return (tokens_in * pin + tokens_out * pout) / 1e6
 
 
-def estimate(r: dict, v: dict, claude_scored_only: bool = False) -> dict:
+def jevmem_token_match() -> dict:
+    """Jev-Mem's token-matched k, chosen from the data without retrieval (V2_PLAN deviation 2026-09-25).
+
+    Mean o200k_base tokens of its rendered turn line "[date] speaker: text" over every turn of the five fresh
+    conversations (turn lengths only; no question or answer is read), and engram's k=3 tokens per question T(3) from
+    the Stage 2 conv-26 run (bench/results/v2/e4_belief_v2__conv26__k3.json). k is the integer bringing k x the mean
+    closest to T(3), a tie going to the larger k.
+    """
+    import re
+    from datetime import datetime
+
+    import tiktoken
+
+    enc = tiktoken.get_encoding("o200k_base")
+    lengths = []
+    for c in json.loads((ROOT / "bench" / "data" / "locomo10.json").read_text()):
+        if c["sample_id"] not in FRESH:
+            continue
+        conv = c["conversation"]
+        for key, turns in conv.items():
+            if re.fullmatch(r"session_\d+", key):
+                when = re.sub(r"^.*? on ", "", conv[key + "_date_time"])
+                day = datetime.strptime(when, "%d %B, %Y").strftime("%Y-%m-%d")
+                lengths += [len(enc.encode(f"[{day}] {t['speaker']}: {t['text']}")) for t in turns]
+    mean = statistics.fmean(lengths)
+    engram = json.loads((ROOT / "bench" / "results" / "v2" / "e4_belief_v2__conv26__k3.json").read_text())
+    t3 = engram["retrieved_tokens_mean"]
+    k = min(range(1, 41), key=lambda k: (abs(k * mean - t3), -k))
+    return {"turns": len(lengths), "mean_line_tokens": mean, "engram_T3": t3, "k": k}
+
+
+def estimate(
+    r: dict,
+    v: dict,
+    claude_scored_only: bool = False,
+    lme_temporal: bool = True,
+    jevmem: dict | None = None,
+) -> dict:
     extract = cost("gpt-4o-mini", r["extract_in_tokens"], r["extract_out_tokens"])  # per message, one system
     jev_msg = r["jev_write_per_message"] + r["jev_hygiene_per_message"]
     answer = {k: cost("gpt-4o-mini", ANSWER_PROMPT_TOKENS + t, ANSWER_OUT) for k, t in MEMORY_TOKENS.items()}
@@ -172,10 +206,10 @@ def estimate(r: dict, v: dict, claude_scored_only: bool = False) -> dict:
         (fe_msgs + sc_msgs) * jev_msg + 2 * v["conv26_questions"] * r["jev_per_retrieval"],
     )
     # Stage 5: LongMemEval, 3 systems, user turns only; answers at k=3, k=20 and the baselines' token-matched k.
-    for sub, turns_key, q_key in (
-        ("knowledge-update", "lme_ku_user_turns", "lme_ku_questions"),
-        ("temporal", "lme_tr_user_turns", "lme_tr_questions"),
-    ):
+    subsets = [("knowledge-update", "lme_ku_user_turns", "lme_ku_questions")]
+    if lme_temporal:
+        subsets.append(("temporal", "lme_tr_user_turns", "lme_tr_questions"))
+    for sub, turns_key, q_key in subsets:
         add(
             f"5 LongMemEval {sub}",
             "openai",
@@ -195,11 +229,20 @@ def estimate(r: dict, v: dict, claude_scored_only: bool = False) -> dict:
     # Stage 8: robustness judges. gpt-4o on every held-out answer; claude-sonnet-4-6 on the 9 arms of H1 and S1-S6 on
     # the five fresh conversations (the four scored categories when claude_scored_only), plus the S10-S11 LongMemEval
     # answers (engram, mem0, Graphiti on 78 questions).
-    lme_answers = 8 * (v["lme_ku_questions"] + v["lme_tr_questions"])
+    lme_answers = 8 * (v["lme_ku_questions"] + (v["lme_tr_questions"] if lme_temporal else 0))
     add("8 robustness judges", "openai", (11 * n_q + lme_answers) * gpt4o_judge)
     fresh = v["fresh_questions_scored"] if claude_scored_only else v["fresh_questions_all"]
     claude_calls = 9 * fresh + 3 * v["lme_ku_questions"]
     add("8 robustness judges", "anthropic", claude_calls * r["claude_judge_per_call"])
+    if jevmem:  # Jev-Mem, exploratory, five fresh conversations: probe 2's measured Jev rates (jevmem_probe2.json)
+        probe, k, line = jevmem["probe"], jevmem["k"], jevmem["mean_line_tokens"]
+        n_q, n_m, per_k = v["fresh_questions_all"], v["fresh_messages"], jevmem["probe"]["reads_per_k"]
+        reads = per_k["40"]["usd_per_query_mean"] + per_k[str(k)]["usd_per_query_mean"]
+        add("7 Jev-Mem (five fresh)", "jev", n_m * probe["write_usd_per_message"] + n_q * reads)
+        answers = sum(cost("gpt-4o-mini", ANSWER_PROMPT_TOKENS + kk * line, ANSWER_OUT) for kk in (40, k))
+        embed = (n_m * line + n_q * 20) * PRICES["text-embedding-3-small"][0] / 1e6
+        add("7 Jev-Mem (five fresh)", "openai", n_q * (answers + 2 * mini_judge + 2 * gpt4o_judge) + embed)
+        add("7 Jev-Mem probes (spent)", "jev", probe["headroom"]["jevmem_probes_spent"])
     totals = {p: sum(s.get(p, 0.0) for s in stages.values()) for p in ("openai", "jev", "anthropic")}
     return {
         "stages": stages,
@@ -211,6 +254,8 @@ def estimate(r: dict, v: dict, claude_scored_only: bool = False) -> dict:
 
 def main() -> None:
     r, v = v1_rates(), volumes()
+    match = jevmem_token_match()
+    probe = json.loads((ROOT / "bench" / "results" / "v2" / "jevmem_probe2.json").read_text())
     out = {
         "assumptions": {
             "prices_usd_per_million": PRICES,
@@ -223,11 +268,14 @@ def main() -> None:
         "v1_rates": r,
         "volumes": v,
         "as_first_proposed": estimate(r, v),
-        "adopted": estimate(r, v, claude_scored_only=True),
+        "adopted_2026_09_24": estimate(r, v, claude_scored_only=True),
+        "jevmem_token_match": match,
+        "adopted": estimate(r, v, claude_scored_only=True, lme_temporal=False, jevmem={**match, "probe": probe}),
     }
     dest = ROOT / "bench" / "results" / "v2" / "budget_estimate.json"
     dest.write_text(json.dumps(out, indent=1) + "\n")
-    for name in ("as_first_proposed", "adopted"):
+    print("Jev-Mem token match:", match)
+    for name in ("as_first_proposed", "adopted_2026_09_24", "adopted"):
         e = out[name]
         print(
             f"\n{name}: non-OpenAI ${e['non_openai_total']:.2f} (Jev ${e['totals']['jev']:.2f}, "

@@ -22,16 +22,16 @@ REGISTERED_COMMIT = "dedc949bf7aaec7cdc98718ef95a4d2e8d3a9c58"
 REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviations entries naming it at registration)
     "1": ("1. Primary hypothesis", "4a64e5da5c2682b9eb28df2b65639672ba004b1190d15d4a5682f87ac23ef180", 0),
     "3": ("3. Stack", "a455c2095f82bbf4cfd1b5a017daba52afbc0a254d88cc5447c58b6579f5a97d", 2),
-    "6": ("6. Hypothesis family", "1ee9a65ba0bbec40ab6733b32dbf6e04525316846e27b47b543f2b900b09bb0d", 4),
+    "6": ("6. Hypothesis family", "1b6deead0e36af2d0e7f31c3848ba982c3174b949b7d91ccdedd6847accba511", 5),
     "7": ("7. Judges", "d83675c04d11264b68ec24da1c4807935ba0c457e397d178836ac0a6a57ccabd", 2),
     "8": ("8. Human audit", "ca695f04a2eabdd8364253af1b6e707a58918295214502e4e6d152d8aa7ae91c", 1),
-    "10": ("10. LongMemEval", "305af19b152b6ad54bdbe3717f9338c2d6882f9a943440f5f49a764cb03a2f8b", 1),
+    "10": ("10. LongMemEval", "c03449acca321b0bae70e5c2d113fd79b544cee959068714a665828a9d808e1f", 3),
     "11": (
         "11. Statistics, spend and stopping rules",
         "703564575af41debd2ae594daee00a1505a0d554c444de9d86329cbc6e16a894",
         0,
     ),
-    "13": ("13. Budget", "86352efb4a9536fc065e9df5d34d7a9627626ba5dda6972e3f3a0f0b452155cb", 1),
+    "13": ("13. Budget", "0a0194a066b02c8952b02d4993b3be9fcd5b5fe3887de83d7eedcdc9752cedff", 2),
 }
 
 
