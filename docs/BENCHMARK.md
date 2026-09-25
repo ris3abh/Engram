@@ -89,7 +89,7 @@ add 40% to Jev cost for no change in the graph. **Not adopted.**
 - **Cost and speed:** about $0.00003 per pair (two decisions) and 180 to 190 ms median per request.
 - **Regression test:** `tests/test_contradiction_regression.py` (`pytest -m live`) enforces floors under these
   numbers, plus zero false closes.
-- Caveat: Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. They were checked against one model version. m12 and s11 are
+- Caveat: Update sets 1–2 were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The 50 contradiction pairs were written and labeled by the author. They were checked against one model version. m12 and s11 are
   arguably mislabeled.
 
 ## Throughput: findings (2026-09-23)

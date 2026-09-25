@@ -62,7 +62,7 @@ directory from the repository's committed files, with no API calls).
 
 ## Bias and limitations
 
-Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The author also designed the system being evaluated, so the sets test the failure modes its builders
+Update sets 1–2 were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The 50 contradiction pairs were written and labeled by the author. The author also designed the system being evaluated, so the sets test the failure modes its builders
 anticipated, and they are small (30 + 20 items, 50 pairs).
 The judge is an LLM whose agreement with human labels was not measured. Scores come from one model stack
 (claude-haiku-4-5 extraction, claude-sonnet-4-6 answers and judge) and are not comparable to LoCoMo leaderboards run
