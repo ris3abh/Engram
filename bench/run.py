@@ -257,6 +257,8 @@ ARMS: dict[str, dict] = {
         "flags": Flags(**E2_FLAGS, extract_last_k=20, extract_recent=20, extract_observation_date="session"),
     },
     "mem0": {"system": "mem0"},
+    # v2 baseline (V2_PLAN section 4): Graphiti on the OpenAI stack's shared models; see GraphitiArm.
+    "graphiti": {"system": "graphiti"},
 }
 
 
@@ -731,6 +733,212 @@ class Mem0Arm:
         return {"stored": len(items), "active": len(items), "tentative": 0}
 
 
+class GraphitiArm:
+    """Graphiti (graphiti-core 0.30.2, V2_PLAN section 4) on the OpenAI stack's shared models: one episode per message
+    (`speaker: text`) with its session date as reference time, hybrid search (RRF, no reranker call), and the top-k
+    facts rendered into the shared answer prompt. Neo4j 5 runs in Docker on localhost:
+
+        docker run -d --name engram-neo4j -p 127.0.0.1:7687:7687 -e NEO4J_AUTH=neo4j/engram-local-bench neo4j:5.26
+
+    Every OpenAI call Graphiti makes (structured Responses calls, chat completions, embeddings) goes through the call
+    cache and is costed at list price; a hit replays its original latency. Each run gets its own graph partition
+    (group_id), cleared at the start."""
+
+    NEO4J_URI = os.environ.get("NEO4J_URI", "bolt://127.0.0.1:7687")
+    NEO4J_AUTH = ("neo4j", os.environ.get("NEO4J_PASSWORD", "engram-local-bench"))  # a local, throwaway container
+    TIMEOUT_S = 600  # per episode write or search
+
+    def __init__(self, arm_dir: Path, cache: CallCache, group_id: str):
+        import openai
+        from graphiti_core import Graphiti
+        from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
+        from graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
+        from graphiti_core.llm_client.config import LLMConfig
+        from graphiti_core.llm_client.openai_client import OpenAIClient
+
+        s = STACKS["openai"]
+        client = openai.AsyncOpenAI(max_retries=5, timeout=120)
+        self.calls: list[dict] = []
+        self._meter(client, cache)
+        llm_config = LLMConfig(model=s["extract"], small_model=s["extract"])
+        self.graphiti = Graphiti(
+            self.NEO4J_URI,
+            *self.NEO4J_AUTH,
+            llm_client=OpenAIClient(config=llm_config, client=client),
+            embedder=OpenAIEmbedder(config=OpenAIEmbedderConfig(embedding_model=s["embed"]), client=client),
+            cross_encoder=OpenAIRerankerClient(config=llm_config, client=client),  # built, not called by RRF search
+        )
+        self.group_id = re.sub(r"[^A-Za-z0-9_-]", "_", group_id)
+        self._ready = False
+        self._records: list[dict] = []
+
+    def _meter(self, client, cache: CallCache) -> None:
+        from types import SimpleNamespace
+
+        import openai.types
+        import openai.types.chat
+
+        from engram.embed import OpenAIEmbedder
+        from engram.llm.openai import cost
+
+        def wrap(target, name: str, kind: str, encode, decode, price):
+            original = getattr(target, name)
+
+            async def call(*args, **kwargs):
+                key = call_key("graphiti-openai", kind, kwargs)
+                if hit := cache.get(key):
+                    await cache.replay(hit["latency_ms"])
+                    self.calls.append({**hit, "cached": True})
+                    return decode(hit["response"])
+                started = time.perf_counter()
+                response = await original(*args, **kwargs)
+                record = {
+                    "response": encode(response),
+                    "latency_ms": (time.perf_counter() - started) * 1000,
+                    "cost": price(kwargs, response),
+                    "kind": kind,
+                }
+                cache.put(key, record)
+                cache.spend("openai", record["cost"])
+                self.calls.append(record)
+                return response
+
+            setattr(target, name, call)
+
+        wrap(  # Graphiti reads output_text, usage.input_tokens/output_tokens and refusal from a Responses call
+            client.responses,
+            "parse",
+            "llm",
+            lambda r: {
+                "output_text": r.output_text,
+                "input_tokens": r.usage.input_tokens,
+                "output_tokens": r.usage.output_tokens,
+            },
+            lambda d: SimpleNamespace(
+                output_text=d["output_text"],
+                usage=SimpleNamespace(input_tokens=d["input_tokens"], output_tokens=d["output_tokens"]),
+                refusal=None,
+            ),
+            lambda kw, r: cost(kw["model"], r.usage.input_tokens, r.usage.output_tokens),
+        )
+        wrap(
+            client.chat.completions,
+            "create",
+            "llm",
+            lambda r: r.model_dump(),
+            openai.types.chat.ChatCompletion.model_validate,
+            lambda kw, r: cost(kw["model"], r.usage.prompt_tokens, r.usage.completion_tokens),
+        )
+        wrap(
+            client.embeddings,
+            "create",
+            "embed",
+            lambda r: r.model_dump(),
+            openai.types.CreateEmbeddingResponse.model_validate,
+            lambda kw, r: r.usage.prompt_tokens * OpenAIEmbedder.PRICE_PER_TOKEN[kw["model"]],
+        )
+
+    async def _setup(self) -> None:
+        if not self._ready:
+            from graphiti_core.utils.maintenance.graph_data_operations import clear_data
+
+            await self.graphiti.build_indices_and_constraints()
+            await clear_data(self.graphiti.driver, group_ids=[self.group_id])
+            self._ready = True
+
+    async def write(self, m: dict) -> dict:
+        from graphiti_core.nodes import EpisodeType
+
+        await self._setup()
+        self.calls.clear()
+        started = time.perf_counter()
+        result = await asyncio.wait_for(  # a stalled Neo4j fails the run instead of hanging it
+            self.graphiti.add_episode(
+                name=m["id"],
+                episode_body=f"{m['speaker']}: {m['text']}",
+                source_description="conversation message",
+                reference_time=m["at"],
+                source=EpisodeType.message,
+                group_id=self.group_id,
+            ),
+            self.TIMEOUT_S,
+        )
+        closes = sum(1 for e in result.edges if e.invalid_at is not None or e.expired_at is not None)
+        return {
+            "latency_ms": (time.perf_counter() - started) * 1000,
+            "decision_ms": None,
+            "cost": sum(c["cost"] for c in self.calls),
+            "cost_parts": {
+                "extraction": sum(c["cost"] for c in self.calls if c.get("kind") != "embed"),
+                "embeddings": sum(c["cost"] for c in self.calls if c.get("kind") == "embed"),
+            },
+            "decision_cost": None,
+            "extracted": len(result.edges),
+            "actions": ["edge"] * len(result.edges),
+            "closes": closes,
+            "escalations": 0,
+            "llm_calls": sum(1 for c in self.calls if c.get("kind") != "embed"),
+        }
+
+    async def memories(
+        self, question: str, top_k: int | None = None, no_dates: bool = False
+    ) -> tuple[list[str], float]:
+        await self._setup()
+        edges = await asyncio.wait_for(
+            self.graphiti.search(question, group_ids=[self.group_id], num_results=top_k or 20), self.TIMEOUT_S
+        )
+        if no_dates:
+            return [e.fact for e in edges], 0.0
+        lines = []
+        for e in edges:
+            since = f"{e.valid_at:%Y-%m-%d}" if e.valid_at else ""
+            until = f" (until {e.invalid_at:%Y-%m-%d})" if e.invalid_at else ""
+            lines.append(f"{since}: {e.fact}{until}")
+        return lines, 0.0  # the query embedding is costed through the cache; read cost is reported per run
+
+    async def _edges(self) -> list[dict]:
+        records, _, _ = await self.graphiti.driver.execute_query(
+            "MATCH (:Entity)-[e:RELATES_TO]->(:Entity) WHERE e.group_id = $g "
+            "RETURN e.fact AS fact, e.episodes AS episodes, e.invalid_at AS invalid_at, e.expired_at AS expired_at",
+            g=self.group_id,
+        )
+        names, _, _ = await self.graphiti.driver.execute_query(
+            "MATCH (n:Episodic) WHERE n.group_id = $g RETURN n.uuid AS uuid, n.name AS name", g=self.group_id
+        )
+        episode = {r["uuid"]: r["name"] for r in names}
+        return [
+            {
+                "text": r["fact"],
+                "source": episode.get((r["episodes"] or [None])[0]),
+                "active": r["invalid_at"] is None and r["expired_at"] is None,
+            }
+            for r in records
+        ]
+
+    async def refresh(self) -> None:
+        """Snapshot the graph's edges; run_arm awaits this before the sync store accessors below."""
+        self._records = await self._edges()
+
+    def fact_records(self) -> list[tuple[str, str | None, bool]]:
+        return [(r["text"], r["source"], r["active"]) for r in self._records]
+
+    def close_records(self) -> list[dict]:
+        return [
+            {"text": r["text"], "source": r["source"], "active": r["active"], "reason": None, "closer_source": None}
+            for r in self._records
+        ]
+
+    def stored(self) -> dict:
+        return {
+            "stored": len(self._records),
+            "active": sum(r["active"] for r in self._records),
+            "invalidated": sum(not r["active"] for r in self._records),
+        }
+
+    async def close(self) -> None:
+        await self.graphiti.close()
+
+
 # ---------------------------------------------------------------- answer and grade (cached)
 
 
@@ -812,6 +1020,10 @@ async def run_arm(
     cache = CallCache(CACHE, budget=budget)
     if spec["system"] == "engram":
         system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"), stack)
+    elif spec["system"] == "graphiti":
+        if stack != "openai":
+            raise ValueError("Graphiti runs on the OpenAI stack only (V2_PLAN section 4)")
+        system = GraphitiArm(arm_dir, cache, group_id=f"{name}__{slice_name}{suffix}")
     else:
         system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False), stack=stack)
 
@@ -927,6 +1139,8 @@ async def run_arm(
                     f"{hygiene.drops} drops, ${hygiene.cost_usd:.4f}, {hygiene.wall_s:.1f} s",
                     flush=True,
                 )
+            if hasattr(system, "refresh"):  # Graphiti: snapshot the graph before the sync store accessors
+                await system.refresh()
             size = system.stored()["stored"]
             due = [q for q in sl["questions"] if q["last_evidence_session"] <= cp]
             got = await asyncio.gather(*(one(q) for q in due))
@@ -1063,6 +1277,8 @@ async def run_arm(
         print(f"[{name}/{slice_name}] k={k}: accuracy {rk['accuracy']:.1%} (Q={len(ans_k)})", flush=True)
     if spec["system"] == "engram" and hasattr(system.engine.backend, "drain"):
         await system.engine.backend.drain()
+    if spec["system"] == "graphiti":
+        await system.close()
     return result
 
 
