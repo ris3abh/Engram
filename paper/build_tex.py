@@ -11,6 +11,7 @@ Markdown conventions the converter understands, beyond the basics:
 - A table goes in table* (both columns) when its estimated width exceeds one column; figures listed in WIDE_FIGS
   go in figure*. If ONECOLUMN_FROM names an appendix, appendices from it on are set in one column, and only there do
   tables become longtables.
+- A level-2 heading without a number (`## Limitations`) is an unnumbered \\section*.
 """
 
 import re
@@ -442,7 +443,8 @@ def convert(md: str) -> tuple[str, str, str, str]:
                     cur = body
                     num = re.match(r"^(\d+)\.", text)
                     lab = rf"\label{{sec:{num.group(1)}}}" if num else ""
-                    cur.append(r"\section{" + inline(re.sub(r"^\d+\.\s*", "", text)) + "}" + lab)
+                    star = "" if num else "*"  # a heading without a number (Limitations) is unnumbered
+                    cur.append(rf"\section{star}{{" + inline(re.sub(r"^\d+\.\s*", "", text)) + "}" + lab)
             elif level == 3:
                 num = re.match(r"^(\d+\.\d+)\s", text)
                 lab = rf"\label{{sec:{num.group(1)}}}" if num else ""
