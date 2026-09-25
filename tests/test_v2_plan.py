@@ -4,8 +4,9 @@ REGISTERED holds, for sections 1, 6, 7, 8, 10, 11 and 13, the SHA-256 of the sec
 dated Deviations entries that named the section at that point. If a section's text differs from its registered hash,
 the Deviations section must contain more dated entries naming it ("§N" or "section N") than it did at registration.
 Section 1 (the primary hypothesis) was registered in the plan's first commit, REGISTERED_COMMIT; the other sections
-were registered on 2026-09-24, after the first revision of Part 1. When git history is available, section 1's hash is
-also checked against that commit.
+were registered on 2026-09-24, after the first revision of Part 1; sections 7 and 13 were re-registered the same
+day, after the budget cut was recorded under Deviations. When git history is available, section 1's hash is also
+checked against that commit.
 """
 
 import hashlib
@@ -21,7 +22,7 @@ REGISTERED_COMMIT = "dedc949bf7aaec7cdc98718ef95a4d2e8d3a9c58"
 REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviations entries naming it at registration)
     "1": ("1. Primary hypothesis", "4a64e5da5c2682b9eb28df2b65639672ba004b1190d15d4a5682f87ac23ef180", 0),
     "6": ("6. Hypothesis family", "1ee9a65ba0bbec40ab6733b32dbf6e04525316846e27b47b543f2b900b09bb0d", 4),
-    "7": ("7. Judges", "a2bfff0f00ba4d3af3530a2ae2634682adb89dcdb6d41c3e15a93a948c4149ef", 1),
+    "7": ("7. Judges", "d83675c04d11264b68ec24da1c4807935ba0c457e397d178836ac0a6a57ccabd", 2),
     "8": ("8. Human audit", "ca695f04a2eabdd8364253af1b6e707a58918295214502e4e6d152d8aa7ae91c", 1),
     "10": ("10. LongMemEval", "305af19b152b6ad54bdbe3717f9338c2d6882f9a943440f5f49a764cb03a2f8b", 1),
     "11": (
@@ -29,7 +30,7 @@ REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviatio
         "703564575af41debd2ae594daee00a1505a0d554c444de9d86329cbc6e16a894",
         0,
     ),
-    "13": ("13. Budget", "46e6a4f789f5c05adcb39d3497099aa757aa05868d085c1f4aea5681af725726", 0),
+    "13": ("13. Budget", "86352efb4a9536fc065e9df5d34d7a9627626ba5dda6972e3f3a0f0b452155cb", 1),
 }
 
 

@@ -8,6 +8,9 @@ judge's cost per judgment from the cached v1 judge calls. Prices are list prices
 Graphiti's ingestion has no v1 measurement: it is assumed to cost GRAPHITI_FACTOR times mem0's per message until
 Stage 3 measures it.
 
+Two scopes are estimated for the claude-sonnet-4-6 robustness judge: "as_first_proposed" (every question of the five
+fresh conversations) and "adopted" (their four scored categories only, the scope the plan adopted on 2026-09-24).
+
     uv run --extra bench python -m bench.v2_budget
 """
 
@@ -190,7 +193,8 @@ def estimate(r: dict, v: dict, claude_scored_only: bool = False) -> dict:
     )
     add("6 LoCoMo held-out", "jev", v["heldout_messages"] * jev_msg + n_q * r["jev_per_retrieval"])
     # Stage 8: robustness judges. gpt-4o on every held-out answer; claude-sonnet-4-6 on the 9 arms of H1 and S1-S6 on
-    # the five fresh conversations, plus the S10-S11 LongMemEval answers (engram, mem0, Graphiti on 78 questions).
+    # the five fresh conversations (the four scored categories when claude_scored_only), plus the S10-S11 LongMemEval
+    # answers (engram, mem0, Graphiti on 78 questions).
     lme_answers = 8 * (v["lme_ku_questions"] + v["lme_tr_questions"])
     add("8 robustness judges", "openai", (11 * n_q + lme_answers) * gpt4o_judge)
     fresh = v["fresh_questions_scored"] if claude_scored_only else v["fresh_questions_all"]
@@ -218,12 +222,12 @@ def main() -> None:
         },
         "v1_rates": r,
         "volumes": v,
-        "as_planned": estimate(r, v),
-        "claude_on_scored_categories_only": estimate(r, v, claude_scored_only=True),
+        "as_first_proposed": estimate(r, v),
+        "adopted": estimate(r, v, claude_scored_only=True),
     }
     dest = ROOT / "bench" / "results" / "v2" / "budget_estimate.json"
     dest.write_text(json.dumps(out, indent=1) + "\n")
-    for name in ("as_planned", "claude_on_scored_categories_only"):
+    for name in ("as_first_proposed", "adopted"):
         e = out[name]
         print(
             f"\n{name}: non-OpenAI ${e['non_openai_total']:.2f} (Jev ${e['totals']['jev']:.2f}, "
