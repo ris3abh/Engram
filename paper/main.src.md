@@ -9,19 +9,18 @@ Every number carries a src comment naming the file it comes from; paper/numbers.
 
 ## Abstract
 
-Typed decisions cut an agent memory system's decision cost and latency and improve retrieval under a small budget;
-on these LoCoMo-derived evaluations they do not change answers after facts change. In engram, an LLM extracts facts
-and every later decision is a typed question answered by a hosted decision model (Jev). Using the same extraction
-model, prompt construction and implementation as mem0 2.1.0, typed decisions had {{e2.cost_ratio}} lower decision
-cost and {{e2.lat_ratio}} lower median decision latency than our claude-sonnet-4-6 implementation of mem0's update
-prompt, one call per extracted fact, with equal dev accuracy ({{e2_jev__dev.acc}} against {{e2_llm__dev.acc}}). On
-{{ho.q}} held-out LoCoMo questions, at a matched mean retrieved-context budget engram was {{tm.diff}} points above
-mem0 (95% CI {{tm.ci.lo}} to {{tm.ci.hi}}); with Jev's reranking turned off it answered {{nr.vs_full.diff}} points
-fewer, so the reranker accounts for the whole difference. At k=20 the two systems are indistinguishable
-({{ho.k20.diff}}, CI {{ho.k20.ci.lo}} to {{ho.k20.ci.hi}}). On update sets drafted with an AI assistant,
-{{u1.e4v2.over}} no-close trap items were closed, with {{fq.wrong}} wrong plan_fulfilled close and {{u1.e4v2.closes_wrong}} close
-matching no labeled pair. Closing stale facts did not change answers on these LoCoMo-derived evaluations with this
-extraction, rendering and answer setup.
+In engram, an agent memory system, an LLM extracts facts and every later decision is a typed question answered by a
+hosted decision model (Jev). This makes re-examining the store affordable: engram writes at about the cost of
+add-only mem0 2.1.0, which never revisits what it stored ({{e2_jev__dev.cost1k}} against {{mem0__dev.cost1k}} per
+1,000 messages on the dev slice, {{ho.eng.w1k.min}}–{{ho.eng.w1k.max}} against {{ho.m0.w1k.min}}–{{ho.m0.w1k.max}}
+held out). Against an LLM decider using the same extraction, our claude-sonnet-4-6 implementation of mem0's update
+prompt, typed decisions had {{e2.cost_ratio}} lower decision cost and {{e2.lat_ratio}} lower median decision latency
+(that arm made no escalations), and equal accuracy on a {{dev.q}}-question dev slice. On {{ho.q}} held-out LoCoMo questions, at a
+matched mean retrieved-context budget, engram was {{tm.diff}} points above mem0 (95% CI {{tm.ci.lo}} to
+{{tm.ci.hi}}); with Jev's reranking turned off it was {{nr.vs_full.pts}} points lower, so the reranker accounts for
+the whole difference. At k=20 the two systems are indistinguishable ({{ho.k20.diff}}, CI {{ho.k20.ci.lo}} to
+{{ho.k20.ci.hi}}). On update sets drafted with an AI assistant, {{u1.e4v2.over}} no-close trap items were closed, and
+closing stale facts did not change answers.
 
 ## 1. Introduction
 
@@ -38,7 +37,7 @@ models are built for. They return a probability over a fixed option set in one s
 they cost far less than generating text. engram is built on that observation: an LLM extracts facts, and every
 decision after extraction is a typed question (Figure 1).
 
-![Figure 1: Only extraction, the answer and the escalation of unsure superseding relations are LLM calls (orange); every other decision on the write and read paths is a typed Jev question (blue).](figures/pipeline.svg)
+![Figure 1: engram's write and read paths. Only extraction, the answer and the escalation of unsure superseding relations are LLM calls (orange); every other decision is a typed Jev question (blue).](figures/pipeline.svg)
 
 
 **Concurrent work.** The architectural idea of routing memory decisions to a typed decision model was reached
@@ -54,32 +53,39 @@ measurement: an ablation of the decision layer using the same extraction model, 
 implementation, its calibration, the behaviour of the store it drives, the retrieval effect on answers with a
 matched-context control and a held-out no-rerank arm, and a negative result.
 
-**Contributions.** The paper makes three. First, using the same extraction model, prompt construction and
-implementation, typed decisions had {{e2.cost_ratio}} lower decision cost and {{e2.lat_ratio}} lower median decision
-latency than our claude-sonnet-4-6 implementation of mem0's update prompt, one call per extracted fact, with no
-measured accuracy loss (§5.1). Second, a belief-state store policy with reversible, gated closes closed
-{{u1.e4v2.over}} no-close trap items, with {{fq.wrong}} wrong plan_fulfilled close and
-{{u1.e4v2.closes_wrong}} close matching no labeled pair, and its v3 rule removes a weak-evidence failure that closes
-true facts (§3.2, §5.3). Third, on {{ho.q}} held-out questions at a matched mean retrieved-context budget, engram was
-{{tm.diff}} points above mem0; turning Jev's reranking off costs {{nr.vs_full.diff}} points on the same questions and leaves
-engram at {{nr.vs_m0k6.diff}} points against token-matched mem0, so on held-out data the reranker accounts for the whole
-difference (§5.2). A negative result frames all three: closing stale facts did not
-change answers on these LoCoMo-derived evaluations with this extraction, rendering and answer setup (§5.4). Figure 2 plots the third result against the context each system shows the answer model.
+**Contributions.** The paper makes three. First, typed decisions make re-examining the store affordable: engram
+writes at about add-only mem0's cost ({{e2_jev__dev.cost1k}} against {{mem0__dev.cost1k}} per 1,000 messages on the
+dev slice, {{ho.eng.w1k.min}} to {{ho.eng.w1k.max}} against {{ho.m0.w1k.min}} to {{ho.m0.w1k.max}} held out). Against
+an LLM decider using the same extraction model, prompt construction and implementation, our claude-sonnet-4-6
+implementation of mem0's update prompt with one call per extracted fact, typed decisions had {{e2.cost_ratio}} lower
+decision cost and {{e2.lat_ratio}} lower median decision latency, with equal accuracy on a {{dev.q}}-question dev
+slice (§5.1). The latency ratio excludes escalations: the Jev arm it measures made {{e2_jev__dev.esc}}.
+The frozen system escalates; on the held-out conversations its median decision latency was {{ho.eng.dlat.min}} to
+{{ho.eng.dlat.max}}, and its median end-to-end write was slower than mem0's on {{ho.slow_write}} of {{ho.nconv}}. Second,
+a belief-state store policy with reversible, gated closes closed {{u1.e4v2.over}} no-close trap items, with
+{{fq.wrong}} wrong plan_fulfilled close and {{u1.e4v2.closes_wrong}} close matching no labeled pair, and its v3 rule
+removes a weak-evidence failure that closes true facts (§3.2, §5.3). Third, on {{ho.q}} held-out questions at a
+matched mean retrieved-context budget, engram was {{tm.diff}} points above mem0; turning Jev's reranking off costs
+{{nr.vs_full.pts}} points on the same questions and leaves engram at {{nr.vs_m0k6.diff}} points against token-matched
+mem0, so on held-out data the reranker accounts for the whole difference (§5.2). A negative result frames all three:
+closing stale facts did not change answers (§5.4). Figure 2 plots the third result against the context each system
+shows the answer model.
 
 ![Figure 2: Accuracy against retrieved tokens.](figures/acc_vs_tokens.svg)
 
-*Figure 2. engram at k={{tm.k.3}} sits above mem0 at k={{tm.k}}, which shows the answer model slightly more
-tokens; with reranking off, engram falls below mem0 at the same budget; at k={{tm.k.20}} the two systems are indistinguishable. Pooled held-out accuracy ({{ho.q}}
-questions) against $T(k)$, with per-question 95% intervals. No line joins the points: mem0's accuracy was measured at
-k={{tm.k.3}}, {{tm.k}} and {{tm.k.20}} only, and the token-matching sweep counted tokens at the other k without
-answering. Models as in Table 2.*
+*Figure 2. Pooled held-out accuracy ({{ho.q}} questions) against $T(k)$, with per-question 95% intervals; models as
+in Table 2. No line joins the points: mem0's accuracy was measured at k={{tm.k.3}}, {{tm.k}} and {{tm.k.20}} only,
+and the token-matching sweep counted tokens at the other k without answering. engram at k={{tm.k.3}} sits above mem0
+at k={{tm.k}}, which shows the answer model slightly more tokens; with reranking off, engram falls below mem0 at the
+same budget; at k={{tm.k.20}} the two systems are indistinguishable.*
 
 
 **Scope.** We compare against one baseline (mem0 OSS 2.1.0) on one benchmark (LoCoMo: one development
 conversation and four held-out conversations, scoring four of its five question categories; adversarial is
 excluded from the primary comparison, following mem0's evaluation protocol, and reported separately in Table 3). We use update sets drafted and labeled with an AI assistant at the author's direction (§4.3), and one hosted
 decision model (Jev, `jev-1.13.0`). We did not test Zep/Graphiti or Letta, LongMemEval, other extraction,
-answer or judge models, multi-user stores, or non-English text.
+answer or judge models, multi-user stores, or non-English text. Every finding, the negative result in particular, is
+about these LoCoMo-derived evaluations with this extraction, rendering and answer setup.
 
 ## 2. Background and Related Work
 
@@ -108,12 +114,8 @@ question; or a score.
 as billed to our account (`src/engram/config.py`); the public documentation does not list a price. Its documentation gives a limit of {{ext.jev.options}} options per choice question
 [@typesafe2026jev]. Its latency varies modestly with request size (§5.5).
 
-**Laya.** Laya is an open-weights model with the same request format. We ran checkpoint {{laya.ckpt}} locally
-through the laya-mlx port on an {{laya.chip}} with {{laya.mem}} GB. It reads at most {{laya.max_len}} tokens per
-question, of which at most {{laya.head}} go to the instructions and options. This is the {{ext.laya.params}} base
-checkpoint. Its model card reports zero-shot typed-decision accuracy of {{ext.laya.zs}} against a {{ext.laya.random}}
-random baseline, calls it "a fast base to specialise, not a zero-shot decision engine," and offers a separate
-checkpoint fine-tuned for typed decisions [@convai2026laya]. We used the base checkpoint zero-shot.
+An open-weights model with the same request format, Laya, was tested zero-shot as an exploratory alternative; it is
+reported in Appendix D.
 
 ### 2.3 LoCoMo and its limits
 
@@ -317,12 +319,11 @@ store at that scale is what becomes unaffordable.
 
 ![Figure 3: Belief trace of one fact under v2 and v3.](figures/belief_trace.svg)
 
-*Figure 3. Look at message D2:7: a weak refinement answer lowers belief under v2 but is ignored under v3, which moves
-the close by one message. Belief in the fact "Melanie carves out daily me-time through running, reading, or playing
-violin" (message D2:5), dev + update set 1, under v2 and v3. Under v2 the refinement answer at D2:7
-($\pi$ = {{bt.p_weak}}) lowers belief slightly, so the update at U:E11 takes it below $\theta_{\text{close}}$; v3
-ignores that answer (×) and the fact closes one message later, at U:S01. Source: the belief trace in
-`bench/results/e4_belief_v2__dev_updates__k3__noanswer.json` and its v3 counterpart.*
+*Figure 3. Belief in the fact "Melanie carves out daily me-time through running, reading, or playing violin"
+(message D2:5), dev + update set 1, under v2 and v3. Source: the belief trace in
+`bench/results/e4_belief_v2__dev_updates__k3__noanswer.json` and its v3 counterpart. Under v2 the refinement answer at
+D2:7 ($\pi$ = {{bt.p_weak}}) lowers belief slightly, so the update at U:E11 takes it below $\theta_{\text{close}}$;
+v3 ignores that answer (×) and the fact closes one message later, at U:S01.*
 
 Figure 3 traces one fact through [[eq:belief,eq:hyst]] under both rules.
 
@@ -403,7 +404,7 @@ ingested once per system, and k=3 and k=20 are answered from the same store.
 
 **Caching and budget.** Every LLM and Jev call is cached by its full request, and budget guards stop any run past
 a spending limit. Phase 2 (all experiments reported here) spent {{spend.total}} over {{spend.runs}} ledgered runs.
-Jev accounts for {{spend.jev}} of it (`bench/results/phase2_spend.jsonl`; per-arm totals in Appendix D). The build
+Jev accounts for {{spend.jev}} of it (`bench/results/phase2_spend.jsonl`; per-arm totals in Appendix E). The build
 phase was not ledgered; roughly $10 by the author's estimate.
 
 ### 4.2 Shared extraction
@@ -455,17 +456,18 @@ primary interval. Intervals are computed on the four scored categories, which st
 The three arms in Table 1 share extraction. The two engram arms differ only in what decides after it: Jev's
 typed questions in E2 Jev, and `claude-sonnet-4-6` with mem0's update prompt, one call per extracted fact, in E2 LLM.
 
-*Table 1. The two decision layers answer the same number of questions, while the Jev layer has {{e2.cost_ratio}} lower
-decision cost and {{e2.lat_ratio}} lower median decision latency than our claude-sonnet-4-6 implementation of mem0's
-update prompt, one call per extracted fact. Dev slice, conv-26 sessions 1–4, {{dev.msgs}} messages, {{dev.q}} questions, all retrieved memories
+*Table 1. Dev slice, conv-26 sessions 1–4, {{dev.msgs}} messages, {{dev.q}} questions, all retrieved memories
 (default k). Extraction claude-haiku-4-5 for all arms; answers and judge claude-sonnet-4-6; E2 LLM decides with
 claude-sonnet-4-6. Costs are per 1,000 messages written. Decision p50: median time after extraction, per message,
 over messages that produced at least one fact. Write p50: median end-to-end write time per message over all
-messages, including those that produced no facts.*
+messages, including those that produced no facts. The two decision layers answer the same number of questions, while
+the Jev layer has {{e2.cost_ratio}} lower decision cost and {{e2.lat_ratio}} lower median decision latency than our
+claude-sonnet-4-6 implementation of mem0's update prompt, one call per extracted fact.*
 
 {{table:e2}}
 
-The two decision layers answer the same number of questions and mem0 one fewer, within noise. The Jev decision layer
+On the {{dev.q}}-question dev slice the two decision layers answer the same number of questions and mem0 one
+fewer, within noise. The Jev decision layer
 has {{e2.cost_ratio}} lower decision cost and {{e2.lat_ratio}} lower median decision latency than our
 claude-sonnet-4-6 implementation of mem0's update prompt, one call per extracted fact. The LLM decision layer stores fewer facts
 ({{e2_llm__dev.stored}} against {{e2_jev__dev.stored}}) because mem0's UPDATE event rewrites an existing memory
@@ -477,7 +479,16 @@ The two latency columns are medians over different messages. In the E2 LLM arm o
 decision call is {{e2lat.decide_max_p50}} (`bench/e2_latency.py`).
 
 In Table 1 the decision layer is {{e2.jev_dshare}} of the Jev arm's end-to-end write cost and {{e2.llm_dshare}} of
-the LLM arm's; with typed decisions, extraction is almost the whole cost of a write.
+the LLM arm's; with typed decisions, extraction is almost the whole cost of a write, and engram writes at about
+add-only mem0's cost ({{e2_jev__dev.cost1k}} against {{mem0__dev.cost1k}} per 1,000 messages) although mem0 never
+re-examines what it stored.
+
+**Escalations and the frozen system.** Both ratios exclude escalations: the E2 Jev arm made
+{{e2_jev__dev.esc}} on the dev slice. The frozen system (§3.2) escalates unsure superseding relations and
+asks more questions per fact; on the held-out conversations it escalated {{ho.esc}} decisions, its median decision
+latency was {{ho.eng.dlat.min}} to {{ho.eng.dlat.max}} per conversation, and its median end-to-end write was slower
+than mem0's on {{ho.slow_write}} of {{ho.nconv}} (Table 12, Appendix C). Its write cost stayed close to mem0's
+({{ho.eng.w1k.min}} to {{ho.eng.w1k.max}} against {{ho.m0.w1k.min}} to {{ho.m0.w1k.max}} per 1,000 messages).
 
 The ratios are specific to that comparator: batching several facts per LLM call and a smaller LLM decider were not
 measured. On the stress slice the Jev arm scored {{e2_jev__stress.acc}} and mem0 {{mem0__stress.acc}}; the LLM
@@ -499,13 +510,13 @@ difference is the source quote on each engram line. To separate context size fro
 tokens came closest to engram's {{tm.eng.tok}}: k={{tm.k}}, at {{tm.tok.k6}} tokens. That gives mem0 slightly more
 context than engram. The run cost {{tm.spend}}.
 
-*Table 2. Read the Δ column: engram leads token-matched mem0 at k=3, turning reranking off costs more than
-that lead, and at k=20 the two systems are indistinguishable. Held-out LoCoMo accuracy, pooled over conv-30, 41, 42 and 43 ({{ho.q}} questions,
-adversarial category excluded). Each row after an engram row carries its paired difference against engram at the same
-budget (engram k=3 for the k=3, reranking-off and token-matched rows, engram k=20 for the k=20 row); Δ is engram
-minus the row. Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6; one ingestion per system per
-conversation. Tokens: $T(k)$. 95% CI: per-question normal approximation; bootstrap: resampling the four
-conversations. Discordant: questions only the engram row / only this row answered correctly.*
+*Table 2. Held-out LoCoMo accuracy, pooled over conv-30, 41, 42 and 43 ({{ho.q}} questions, adversarial category
+excluded). Each row after an engram row carries its paired difference against engram at the same budget (engram k=3
+for the k=3, reranking-off and token-matched rows, engram k=20 for the k=20 row); Δ is engram minus the row.
+Extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6; one ingestion per system per conversation. Tokens:
+$T(k)$. 95% CI: per-question normal approximation; bootstrap: resampling the four conversations. Discordant: questions
+only the engram row / only this row answered correctly. engram leads token-matched mem0 at k=3, turning reranking off
+costs more than that lead, and at k=20 the two systems are indistinguishable.*
 
 {{table:heldout}}
 
@@ -527,18 +538,18 @@ reranking off); over all five categories engram k=3 scores {{five.engram_k3}} an
 {{five.mem0_k6}}. We did not test why; the answer prompt does not ask for abstention, and a context of relevant
 memories may invite an answer.
 
-*Table 3. engram at k=3 is ahead of token-matched mem0 in all four scored categories and behind every mem0
-setting on adversarial questions. LoCoMo, four held-out conversations, LLM-as-a-judge with mem0's judge prompt on
-claude-sonnet-4-6; extraction claude-haiku-4-5, answers claude-sonnet-4-6. Adversarial gold answers require abstention,
-which mem0's answer prompt does not instruct; both systems share that handicap. Scores are not comparable to
-leaderboards run on other model stacks.*
+*Table 3. LoCoMo, four held-out conversations, LLM-as-a-judge with mem0's judge prompt on claude-sonnet-4-6;
+extraction claude-haiku-4-5, answers claude-sonnet-4-6. Adversarial gold answers require abstention, which mem0's
+answer prompt does not instruct; both systems share that handicap. Scores are not comparable to leaderboards run on
+other model stacks. engram at k=3 is ahead of token-matched mem0 in all four scored categories and behind every mem0
+setting on adversarial questions.*
 
 {{table:five}}
 
 **Attribution.** Matching context removes {{tm.ctx_share}} of the k=3 difference. What remains is a
 question of which memories are shown, which a held-out arm with Jev's reranking off answers (Table 2). From the same
 frozen stores, with the same answer and judge models, reranking off shows the answer model $T(3)$ = {{nr.tok}} tokens,
-close to the full pipeline's, and answers {{nr.frac}} ({{nr.acc}}). The full pipeline answers {{nr.vs_full.diff}}
+close to the full pipeline's, and answers {{nr.frac}} ({{nr.acc}}). The full pipeline answers {{nr.vs_full.pts}}
 points more (95% CI {{nr.vs_full.ci.lo}} to {{nr.vs_full.ci.hi}}; conversation bootstrap {{nr.vs_full.boot.lo}} to
 {{nr.vs_full.boot.hi}}; McNemar p-value {{nr.vs_full.p}}), and reranking off is {{nr.vs_m0k6.diff}} points against
 token-matched mem0 (95% CI {{nr.vs_m0k6.ci.lo}} to {{nr.vs_m0k6.ci.hi}}; McNemar p-value {{nr.vs_m0k6.p}}). On
@@ -549,15 +560,14 @@ of the {{ho.q}} questions (`bench/heldout_extra.py`).
 
 ### 5.3 Store behaviour and calibration
 
-*Table 4. No arm closed a no-close trap item (0/8 for every engram arm, 0/7 for mem0), and on these
-LoCoMo-derived evaluations with this extraction, rendering and answer setup closing stale facts lowers the stale counts
-without moving update-question accuracy at default k, which is at or near ceiling for every arm that answered. Store
-outcomes and update-question accuracy on the dev slice with update sets 1 and 2 (extraction
+*Table 4. Store outcomes and update-question accuracy on the dev slice with update sets 1 and 2 (extraction
 claude-haiku-4-5, decisions Jev jev-1.13.0, answers and judge claude-sonnet-4-6). Closes are on dev + set 1, split
 by whether (closed fact's message, closing message) is a labeled update or superseded pair. Over-closed: set-1
 no_close items whose fact was closed by their own update message, over those stored. Stale: close items whose old
 fact is still active, over close items stored. Every arm kept the one set-2 keep item. Accuracy is at default k (all
-retrieved memories) unless marked; "–": run without answering or not run.*
+retrieved memories) unless marked; "–": run without answering or not run. No arm closed a no-close trap item (0/8 for
+every engram arm, 0/7 for mem0), and closing stale facts lowers the stale counts without moving update-question
+accuracy at default k, which is at or near ceiling for every arm that answered.*
 
 {{table:store}}
 
@@ -566,9 +576,10 @@ questions, and Figure 4 plots the store outcomes.
 
 ![Figure 4: Store outcomes per arm.](figures/store_outcomes.svg)
 
-*Figure 4. The replace-on-update arm (E2) makes most of the closes that match no labeled pair; the belief arms close
-less and leave more set-1 items stale, and mem0 closes nothing. Store outcomes on the update sets: set-1 close items left stale, set-2 stale values, closes on
-dev + set 1 split by whether they match a labeled pair, and no_close items over-closed. E3 was not run on set 2.*
+*Figure 4. Store outcomes on the update sets: set-1 close items left stale, set-2 stale values, closes on dev + set 1
+split by whether they match a labeled pair, and no_close items over-closed. E3 was not run on set 2. The
+replace-on-update arm (E2) makes most of the closes that match no labeled pair; the belief arms close less and leave
+more set-1 items stale, and mem0 closes nothing.*
 
 **Trap items.** In the frozen arm {{u1.e4v2.over}} no-close trap items were closed, with {{fq.wrong}} wrong
 plan_fulfilled close and {{u1.e4v2.closes_wrong}} close matching no labeled pair; no other arm closed a trap item
@@ -594,13 +605,13 @@ with set 2 added. It closed the same four facts as v2 on dev + set 1. One of the
 a different message (U:S01 rather than U:E11). Since that pair is not labeled, the audit scores v3 at
 {{u1.e4v3.closes_ok}} matching and {{u1.e4v3.closes_wrong}} not matching, against v2's {{u1.e4v2.closes_ok}} and
 {{u1.e4v2.closes_wrong}}. Stale and over-close counts are unchanged. v3 targets the weak-support failure that closed
-true facts under Laya (§5.4, exploratory).
+true facts under Laya (Appendix D, exploratory).
 
 **Hygiene.** One pass cost {{hyg.dev.cost}} on dev + set 1 ({{hyg.dev.decisions}} decisions). On the held-out
 conversations it cost {{hyg.conv-30.cost}}, {{hyg.conv-41.cost}}, {{hyg.conv-42.cost}} and {{hyg.conv-43.cost}},
 making {{hyg.conv-30.merges}}, {{hyg.conv-41.merges}}, {{hyg.conv-42.merges}} and {{hyg.conv-43.merges}} links.
 
-**Contradiction regression.** Table 6 scores Jev and Laya on the regression set. The set has {{tr.n}} contradiction pairs, each an old fact, a new fact and a message, labeled
+**Contradiction regression.** Table 14 (Appendix D) scores Jev on the regression set, next to Laya. The set has {{tr.n}} contradiction pairs, each an old fact, a new fact and a message, labeled
 with accepted relations and a temporal status (`bench/contradiction_pairs.jsonl`). Under the current question
 versions, Jev's relation choice is in the accepted set for {{jreg.exact}} of pairs (easy {{jreg.tier.easy}}, medium
 {{jreg.tier.medium}}, subtle {{jreg.tier.subtle}}), and its temporal status is right for {{jreg.temporal}}. The
@@ -613,26 +624,19 @@ is exploratory, so Table 5 also reports the Brier score and negative log-likelih
 intervals. On the gold pairs Jev's relation NLL is {{cal.gold.rel.jev.nll}} ({{cal.gold.rel.jev.nll.lo}} to
 {{cal.gold.rel.jev.nll.hi}}) and its relation ECE {{cal.gold.rel.jev.ece}} (fitted $\tau_Q$ = {{cal.gold.rel.jev.T}}).
 On the escalation labels Jev's relation NLL is {{cal.esc.rel.jev.nll}} ({{cal.esc.rel.jev.nll.lo}} to
-{{cal.esc.rel.jev.nll.hi}}), worse than Laya's {{cal.esc.rel.laya.nll}}: Jev's mean confidence there is
-{{cal.esc.rel.jev.conf}}, so the relations it gets wrong it gets wrong with near-certain probability. Figure 6 in
+{{cal.esc.rel.jev.nll.hi}}): its mean confidence there is {{cal.esc.rel.jev.conf}}, so the relations it gets wrong
+it gets wrong with near-certain probability. Figure 6 in
 Appendix C has the reliability diagrams.
 
-*Table 5. Jev's relation accuracy is about 80% on both label sets and its Brier score is lower than Laya's
-throughout; on the escalation labels its NLL is worse, because its errors there are confident. Calibration on the
-escalation labels (dev + update sets, labels by claude-sonnet-4-6) and the gold contradiction pairs; Jev jev-1.13.0,
-Laya base checkpoint zero-shot. ECE (exploratory at these n) uses 10 equal-width bins on the top choice; $\tau_Q$ is
+*Table 5. Calibration of Jev (jev-1.13.0) on the escalation labels (dev + update sets, labels by claude-sonnet-4-6)
+and the gold contradiction pairs. ECE (exploratory at these n) uses 10 equal-width bins on the top choice; $\tau_Q$ is
 fitted by NLL per question and "ECE at $\tau_Q$" is out of sample (2-fold). Brier: sum over options of the squared
-error, averaged over items; NLL: $-\ln$ of the probability on the label; intervals: 10,000 bootstrap resamples of
-the items. Relation probabilities fold `negates` into `contradiction`, since the pairs
-predate `negates`.*
+error, averaged over items; NLL: $-\ln$ of the probability on the label; intervals: 10,000 bootstrap resamples of the
+items. Relation probabilities fold `negates` into `contradiction`, since the pairs predate `negates`. Laya's rows are
+in Table 15 (Appendix D). Jev's relation accuracy is about 80% on both label sets; on the escalation labels its errors
+are confident, which raises its NLL.*
 
 {{table:calibration}}
-
-*Table 6. Jev chooses an accepted relation for {{jreg.exact}} of the pairs with no false close; the Laya base checkpoint
-chooses one for at most {{lreg.jev_wording.exact}} and never closes. Contradiction regression ({{tr.n}} gold pairs), relation_to_candidate and temporal_status in one request. Laya:
-{{laya.ckpt}} base checkpoint, zero-shot, fp16, on the local MLX server.*
-
-{{table:regression}}
 
 **Cost/error tradeoff.** The {{cal.esc.rel.jev.n}} escalation labels are too few for a curve, so Figure 5 uses
 the {{tr.n}} gold pairs. The Jev cost $c_J$ = {{tr.cJ}} is the mean cost of one relation decision over {{tr.cJ_n}}
@@ -643,13 +647,14 @@ run on the gold pairs is saved, so $\varepsilon_L$ is an assumption, plotted at 
 
 ![Figure 5: C(θ) and E(θ) on the gold contradiction pairs.](figures/tradeoff.svg)
 
-*Figure 5. Error drops below Jev's own {{tr.jev_err}} only where escalations make up almost all of the cost per
-decision, and how far it drops depends on an $\varepsilon_L$ we did not measure. $C(\theta)$ and $E(\theta)$ on the {{tr.n}} gold pairs. $\varepsilon_L$ is assumed, not measured; the {{cal.esc.rel.jev.n}} escalation labels were too few for a curve.*
+*Figure 5. $C(\theta)$ and $E(\theta)$ on the {{tr.n}} gold pairs. $\varepsilon_L$ is assumed, not measured; the
+{{cal.esc.rel.jev.n}} escalation labels were too few for a curve. Error drops below Jev's own {{tr.jev_err}} only
+where escalations make up almost all of the cost per decision, and how far it drops depends on an $\varepsilon_L$ we
+did not measure.*
 
-### 5.4 Negative result: closes do not change answers on these evaluations
+### 5.4 Negative result: closes do not change answers
 
-**Closes do not change answers.** On these LoCoMo-derived evaluations with this extraction, rendering and answer
-setup, the accuracy columns of Table 4 show it. mem0 never closes anything and leaves every set-1 close item stale ({{u1.mem0.stale}}), yet answers
+**Closes do not change answers.** The accuracy columns of Table 4 show it. mem0 never closes anything and leaves every set-1 close item stale ({{u1.mem0.stale}}), yet answers
 {{u1.mem0.upd}} set-1 questions at default k. The arm that closes most aggressively leaves {{u1.e2.stale}} stale and
 answers {{u1.e2.upd}}.
 
@@ -659,22 +664,166 @@ adds the date each fact was said. Removing all dates, validity and source from t
 the systems ({{u1k3.mem0.upd}} for mem0, {{u1k3.e2.upd}} for engram), which is a retrieval effect (§5.2), not a close
 effect.
 
-Set 2, which asks about chains of changes and past moments, is at its ceiling for every arm on these evaluations with
-this extraction, rendering and answer setup. Current LoCoMo-style questions do not reward a correct store.
+Set 2, which asks about chains of changes and past moments, is at its ceiling for every arm. Current LoCoMo-style
+questions do not reward a correct store.
 
-**Exploratory: an open-weights checkpoint used zero-shot.** Everything in this part concerns the {{ext.laya.params}} base checkpoint, used zero-shot as its documentation
+### 5.5 Systems notes
+
+**Jev latency varies modestly with request size below 50 questions; run-to-run variation is larger.** Across
+{{lat.n}} live Jev requests from {{lat.runs}} runs, median latency is between {{lat.p50.min50}} and {{lat.p50.max50}}
+for requests of 1 to 50 questions, and {{lat.p50.51_80}} for 51–80. A least-squares fit gives {{lat.fit.a}} plus
+{{lat.fit.b}} ms per question (Figure 7 and Table 11, Appendix C). For requests of 16–20 questions, the per-run median was
+between {{lat.run.min}} and {{lat.run.max}} in {{lat.run.n}} runs, and {{lat.conv30}} and {{lat.conv41}} in the two
+held-out runs made during one slower period.
+
+**Extraction dominates write cost.** On the held-out set, engram's write cost is {{ho.eng.w1k.min}} to
+{{ho.eng.w1k.max}} per 1,000 messages and mem0's is {{ho.m0.w1k.min}} to {{ho.m0.w1k.max}}. The decision layer is
+{{ho.dshare.min}} to {{ho.dshare.max}} of engram's (Table 12, Appendix C).
+
+**Read path.** Per held-out question, engram's read path makes one Jev request, which scores every shortlisted fact
+and classifies the question's relation. It cost {{rp.eng.cost}} per question on average, and its median latency per
+conversation was between {{rp.eng.p50.min}} and {{rp.eng.p50.max}}, following the run-to-run variation above
+(Table 13, Appendix C). mem0's read path is a local embedding and vector search with no API call; its latency was not
+logged. engram's longer memory lines also make the answer call dearer: {{rp.eng.ans}} per question against
+{{rp.m0.ans}} for mem0 at k=3.
+
+## 6. Discussion
+
+**What the decision layer buys, and what it does not.** Typed decisions buy lower cost and latency (§5.1), an
+audit trail in which every decision carries probabilities and a question version, store operations that are
+reversible and gated (§5.3), and a price at which re-examining the store is routine (§3.2). They do not buy accuracy
+at k=20, where the two systems are indistinguishable (§5.1), or accuracy on these update questions, where every arm is
+near its ceiling (§5.4).
+
+**Benchmarks do not see storage correctness.** A question about a fact that changed is answerable from a store
+that kept both versions, as long as the memories carry dates. An evaluation that rewards a correct store would
+score answers against validity windows, use small retrieval budgets in which a stale fact displaces a current one,
+store memories without dates, and ask about long chains of changes. Update set 2 targets the last of these, and every
+arm is at its ceiling on it.
+
+**The reranker, not the context size.** Under a three-memory budget engram leads token-matched mem0 by
+{{tm.diff}} points, and turning Jev's reranking off removes that lead and more ({{nr.vs_full.pts}} points). The two
+systems are indistinguishable at k=20. On adversarial questions the reranked context scores lowest (Table 3); an
+answer prompt that asks for abstention was not tested.
+
+
+## 7. Conclusion
+
+Typed decisions let engram re-examine its store at about the write cost of add-only mem0. Against an LLM decider
+using the same extraction model, prompt construction and implementation, they had {{e2.cost_ratio}} lower decision
+cost and {{e2.lat_ratio}} lower median decision latency, with equal accuracy on a {{dev.q}}-question dev slice. On
+{{ho.q}} held-out questions, at a matched mean retrieved-context budget engram was {{tm.diff}} points above mem0;
+turning Jev's reranking off removed that lead and left engram at {{nr.vs_m0k6.diff}} points against mem0, so the
+reranker accounts for it. At k=20 the two systems are indistinguishable. Closing stale facts, the part of the design
+aimed at correctness, did not change answers on our update sets: current LoCoMo-style questions do not reward a
+correct store.
+
+## Limitations
+
+We make no claim beyond these LoCoMo-derived evaluations with this extraction, rendering and answer setup. The
+comparison has one baseline, mem0 OSS 2.1.0, on one benchmark, four held-out LoCoMo conversations. Update sets 1–2
+were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The 50
+contradiction pairs were written and labeled by the author.
+
+**A closed, versioned API.** Every decision comes from Jev `jev-1.13.0`, served by TypeSafe's hosted API; its weights
+are not public. A later version may decide differently, and if this version is withdrawn our results can be replayed
+from the call cache but not recomputed. Jev is the only decision model evaluated as the deciding backend, and the
+open-weights Laya was tested only as a zero-shot base checkpoint (Appendix D).
+
+**The judge is the answer model.** claude-sonnet-4-6 both answers and judges, so the judge may favour answers
+written the way it would write them, and we did not measure its agreement with human labels.
+
+Extraction shares model, prompt construction and implementation but not state: the stores it reads diverge (§4.2),
+and no arm froze extraction outputs across decision layers. mem0's open-source path gives no observation date, so
+relative dates resolve against the run date; we use it as shipped, and a variant with the session date patched in
+scored {{mem0_dated__dev.acc}} on dev against {{mem0__dev.acc}} unpatched, within noise. Adversarial questions require
+abstention, which mem0's answer prompt does not ask for (Table 3).
+
+## AI Assistance
+
+Code, experiment orchestration and paper drafting were carried out with Claude (Anthropic) via Claude Code under the
+author's direction; the author designed the study, made every methodological decision, and is responsible for all
+claims.
+
+## References
+
+---
+
+## Appendix A. Decision questions
+
+Table 6 lists the {{k.nq}} questions in the current chain with their types and options. `edge_type` and
+`query_relation` choose among {{k.edge_types}} relation types. The instructions and the rubric for every option of
+every version are in `src/engram/decide/questions.py`, and the reasons for each version change are in
+`docs/DECISIONS.md`.
+
+*Table 6. Jev questions in the current chain (`src/engram/decide/questions.py`).*
+
+{{table:questions}}
+
+## Appendix B. Update sets
+
+*Table 7. One item of each kind from the two update sets (`bench/updates_conv26.json`, `bench/updates2_conv26.json`).*
+
+{{table:update_samples}}
+
+## Appendix C. Per-conversation and systems tables
+
+*Table 8. Held-out accuracy per conversation, k=3. Q per row; models as in Table 2.*
+
+{{table:perconv_k3}}
+
+*Table 9. Held-out accuracy per conversation, engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table 2.*
+
+{{table:perconv_tm}}
+
+*Table 10. Held-out accuracy per conversation, k=20. Q per row; models as in Table 2.*
+
+{{table:perconv_k20}}
+
+*Table 11. Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices), from the decision logs (`bench/results/jev_latency.json`). Client-measured,
+after the rate limiter, retries included.*
+
+{{table:latency}}
+
+*Table 12. Held-out write side (conv-30, 41, 42, 43; writes only). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus
+escalations.*
+
+{{table:writeside}}
+
+*Table 13. Held-out read path per question (conv-30, 41, 42, 43; k=3), from the frozen runs' decision logs
+(`bench/results/read_path.json`). engram: one Jev request per question, client-measured latency; mem0's read path is a
+local embedding and vector search with no API call, and its latency was not logged. Answer: claude-sonnet-4-6.*
+
+{{table:readside}}
+
+![Figure 6: reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.](figures/calibration.svg)
+
+![Figure 7: Jev request latency: distribution over all logged requests, and median and p90 by request size.](figures/latency.svg)
+
+
+
+## Appendix D. Laya, an open-weights checkpoint (exploratory)
+
+**Laya.** Laya is an open-weights model with the same request format. We ran checkpoint {{laya.ckpt}} locally
+through the laya-mlx port on an {{laya.chip}} with {{laya.mem}} GB. It reads at most {{laya.max_len}} tokens per
+question, of which at most {{laya.head}} go to the instructions and options. This is the {{ext.laya.params}} base
+checkpoint. Its model card reports zero-shot typed-decision accuracy of {{ext.laya.zs}} against a {{ext.laya.random}}
+random baseline, calls it "a fast base to specialise, not a zero-shot decision engine," and offers a separate
+checkpoint fine-tuned for typed decisions [@convai2026laya]. We used the base checkpoint zero-shot.
+
+Everything in this part concerns the {{ext.laya.params}} base checkpoint, used zero-shot as its documentation
 advises against [@convai2026laya]. The checkpoint fine-tuned for typed decisions (reported at {{ext.laya.ft}} on its
 own benchmark) and fine-tuning on our escalation labels were not tested; they are the obvious follow-up.
 
-On the {{tr.n}} regression pairs (Table 6), Laya chooses an accepted relation for
+On the {{tr.n}} regression pairs (Table 14), Laya chooses an accepted relation for
 {{lreg.jev_wording.exact}} with Jev's question wording and {{lreg.native.exact}} with wording rewritten to fit its
 {{laya.head}}-token question budget. Jev scores {{jreg.exact}}. Laya never reaches the action threshold, so it
-closes nothing. Its gold-pair relation accuracy is {{cal.gold.rel.laya.acc}} (Table 5). A temperature lowers its
+closes nothing. Its gold-pair relation accuracy is {{cal.gold.rel.laya.acc}} (Table 15). A temperature lowers its
 ECE but not its accuracy.
 
 With the frozen Jev arm replayed from cache and Laya answering every request on the side,
 the two gave the same answer on {{agree.all}} of {{agree.n}} decisions and the same action at the {{k.act}} threshold on
-{{agree.act}}. On `relation_to_candidate` they agreed on {{agree.rel}} (Table 12 and Figure 7, Appendix C).
+{{agree.act}}. On `relation_to_candidate` they agreed on {{agree.rel}} (Table 16 and Figure 8).
 
 When Laya decided every question, on dev + set 1 at k=3 it scored {{lay.e4_belief_v2_laya.k3.loc}} LoCoMo and
 {{lay.e4_belief_v2_laya.k3.upd}} update questions. Jev scored {{lay.e4_belief_v2_shadow.k3.loc}} and
@@ -687,151 +836,56 @@ answers below 0.5 lowering belief, the failure belief v3 removes [[eq:belief]].
 and Jev the rest. On the routed questions the two models gave the same answer on {{hyb.agree}} and the same action
 on {{hyb.act}}. Writes were identical to the all-Jev arm, but at k=3 only {{hyb.kept.k3}} of Jev's top-3 lines
 survived the change of reranker. The hybrid saved {{hyb.dev_updates.saved}} of Jev's cost on dev + set 1
-({{hyb.dev_updates.saved_usd}} per run); Table 13 in Appendix C has its accuracy.
+({{hyb.dev_updates.saved_usd}} per run); Table 17 has its accuracy.
 
-### 5.5 Systems notes
+*Table 14. Contradiction regression ({{tr.n}} gold pairs), relation_to_candidate and temporal_status in one request. Laya:
+{{laya.ckpt}} base checkpoint, zero-shot, fp16, on the local MLX server. Jev chooses an accepted relation for {{jreg.exact}} of the pairs with no false close; the Laya base checkpoint
+chooses one for at most {{lreg.jev_wording.exact}} and never closes.*
 
-**Jev latency varies modestly with request size below 50 questions; run-to-run variation is larger.** Across
-{{lat.n}} live Jev requests from {{lat.runs}} runs, median latency is between {{lat.p50.min50}} and {{lat.p50.max50}}
-for requests of 1 to 50 questions, and {{lat.p50.51_80}} for 51–80. A least-squares fit gives {{lat.fit.a}} plus
-{{lat.fit.b}} ms per question (Figure 8 and Table 14, Appendix C). For requests of 16–20 questions, the per-run median was
-between {{lat.run.min}} and {{lat.run.max}} in {{lat.run.n}} runs, and {{lat.conv30}} and {{lat.conv41}} in the two
-held-out runs made during one slower period.
+{{table:regression}}
 
-**Extraction dominates write cost.** On the held-out set, engram's write cost is {{ho.eng.w1k.min}} to
-{{ho.eng.w1k.max}} per 1,000 messages and mem0's is {{ho.m0.w1k.min}} to {{ho.m0.w1k.max}}. The decision layer is
-{{ho.dshare.min}} to {{ho.dshare.max}} of engram's (Table 15, Appendix C).
+*Table 15. Calibration of the Laya base checkpoint (zero-shot) on the same label sets and with the same measures as
+Table 5.*
 
-## 6. Discussion and Limitations
+{{table:calibration_laya}}
 
-**What the decision layer buys, and what it does not.** Typed decisions buy lower cost and latency (§5.1), an
-audit trail in which every decision carries probabilities and a question version, store operations that are
-reversible and gated (§5.3), and a price at which re-examining the store is routine (§3.2). They do not buy accuracy
-at k=20, where the two systems are indistinguishable (§5.1), or accuracy on these update questions with this
-extraction, rendering and answer setup, where every arm is near its ceiling (§5.4).
-
-**Benchmarks do not see storage correctness.** A question about a fact that changed is answerable from a store
-that kept both versions, as long as the memories carry dates. An evaluation that rewards a correct store would
-score answers against validity windows, use small retrieval budgets in which a stale fact displaces a current one,
-store memories without dates, and ask about long chains of changes. Update set 2 targets the last of these, and every
-arm is at its ceiling on it.
-
-**The reranker, not the context size.** Under a three-memory budget engram leads token-matched mem0 by
-{{tm.diff}} points, and turning Jev's reranking off removes that lead and more ({{nr.vs_full.diff}} points). The two
-systems are indistinguishable at k=20. On adversarial questions the reranked context scores lowest (Table 3); an
-answer prompt that asks for abstention was not tested.
-
-**Limitations.** The comparison has one baseline, mem0 OSS 2.1.0, on one benchmark, four held-out LoCoMo
-conversations. Update sets 1–2 were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The 50 contradiction pairs were written and labeled by the author. Jev is the
-only decision model evaluated as the deciding backend, at one version, and Laya was tested only as a zero-shot base
-checkpoint. Extraction shares model, prompt construction and implementation but not state: the stores it reads
-diverge (§4.2), and no arm froze extraction outputs across decision layers. mem0's open-source path gives no
-observation date, so relative dates resolve against the run date; we use it as shipped, and a variant with the
-session date patched in scored {{mem0_dated__dev.acc}} on dev against {{mem0__dev.acc}} unpatched, within noise.
-Adversarial questions require abstention, which mem0's answer prompt does not ask for (Table 3). Finally, the judge is an LLM (claude-sonnet-4-6), and we did not measure its
-agreement with human labels.
-
-**AI assistance.** Code, experiment orchestration and paper drafting were carried out with Claude (Anthropic) via
-Claude Code under the author's direction; the author designed the study, made every methodological decision, and is
-responsible for all claims.
-
-## 7. Conclusion
-
-Using the same extraction model, prompt construction and implementation, typed decisions had {{e2.cost_ratio}}
-lower decision cost and {{e2.lat_ratio}} lower median decision latency than our claude-sonnet-4-6 implementation of
-mem0's update prompt, one call per extracted fact, with no measured accuracy loss. On {{ho.q}} held-out questions, at
-a matched mean retrieved-context budget engram was {{tm.diff}} points above mem0; turning Jev's reranking off removed that lead and left engram at {{nr.vs_m0k6.diff}} points
-against mem0, so the reranker accounts for it. At k=20 the two
-systems are indistinguishable. Closing stale facts, the part of the design aimed at correctness, did not change answers
-on these LoCoMo-derived evaluations with this extraction, rendering and answer setup: current LoCoMo-style questions
-do not reward a correct store.
-
-## References
-
----
-
-## Appendix A. Decision questions
-
-Table 7 lists the {{k.nq}} questions in the current chain with their types and options. `edge_type` and
-`query_relation` choose among {{k.edge_types}} relation types. The instructions and the rubric for every option of
-every version are in `src/engram/decide/questions.py`, and the reasons for each version change are in
-`docs/DECISIONS.md`.
-
-*Table 7. Jev questions in the current chain (`src/engram/decide/questions.py`).*
-
-{{table:questions}}
-
-## Appendix B. Update sets
-
-*Table 8. One item of each kind from the two update sets (`bench/updates_conv26.json`, `bench/updates2_conv26.json`).*
-
-{{table:update_samples}}
-
-## Appendix C. Per-conversation and systems tables
-
-*Table 9. Held-out accuracy per conversation, k=3. Q per row; models as in Table 2.*
-
-{{table:perconv_k3}}
-
-*Table 10. Held-out accuracy per conversation, engram k=3 against token-matched mem0 (k=6). Q per row; models as in Table 2.*
-
-{{table:perconv_tm}}
-
-*Table 11. Held-out accuracy per conversation, k=20. Q per row; models as in Table 2.*
-
-{{table:perconv_k20}}
-
-*Table 12. Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory at k=3 (write and retrieval decisions; n per row). Jev jev-1.13.0; Laya base checkpoint, zero-shot. Same action:
+*Table 16. Laya against Jev on identical requests: dev + update sets 1 and 2, frozen arm's trajectory at k=3 (write and retrieval decisions; n per row). Jev jev-1.13.0; Laya base checkpoint, zero-shot. Same action:
 both choose the same label at $\pi \ge$ {{k.act}}, or neither reaches it. Acts: share of decisions at $\pi \ge$ {{k.act}}.*
 
 {{table:agreement}}
 
-*Table 13. Hybrid against all-Jev: dev slice with update sets (Q per row: {{dev.q}} LoCoMo, {{u1.n}} set 1, {{u2.nq}} set 2), k as labeled, extraction claude-haiku-4-5, answers and judge
+*Table 17. Hybrid against all-Jev: dev slice with update sets (Q per row: {{dev.q}} LoCoMo, {{u1.n}} set 1, {{u2.nq}} set 2), k as labeled, extraction claude-haiku-4-5, answers and judge
 claude-sonnet-4-6.*
 
 {{table:hybrid}}
 
-*Table 14. Jev (jev-1.13.0) latency by request size over all logged runs (dev, stress and held-out slices), from the decision logs (`bench/results/jev_latency.json`). Client-measured,
-after the rate limiter, retries included.*
+![Figure 8: Laya against Jev agreement per question.](figures/laya_agreement.svg)
 
-{{table:latency}}
-
-*Table 15. Held-out write side (conv-30, 41, 42, 43; writes only). Extraction claude-haiku-4-5 for both systems; decisions Jev jev-1.13.0 with claude-sonnet-4-6 escalations. One ingestion per system per conversation. Decision layer = Jev plus
-escalations.*
-
-{{table:writeside}}
-
-![Figure 6: reliability diagrams (accuracy against confidence) for Jev and Laya on both label sets.](figures/calibration.svg)
-
-![Figure 7: Laya against Jev agreement per question.](figures/laya_agreement.svg)
-
-*Figure 7. Agreement between the Laya base checkpoint (zero-shot) and Jev on identical requests, per
+*Figure 8. Agreement between the Laya base checkpoint (zero-shot) and Jev on identical requests, per
 question, sorted by same answer. Dev + update sets 1 and 2, frozen arm's trajectory.*
 
-![Figure 8: Jev request latency: distribution over all logged requests, and median and p90 by request size.](figures/latency.svg)
-
-
-## Appendix D. Reproduction
+## Appendix E. Reproduction
 
 Each table and figure was produced by the command below, run from the root of the engram codebase. With the call
-cache (`bench/.cache/calls.sqlite`) in place, every command in Table 16 replays at no API cost.
+cache (`bench/.cache/calls.sqlite`) in place, every command in Table 18 replays at no API cost.
 
-*Table 16. The command behind each table and figure.*
+*Table 18. The command behind each table and figure.*
 
 | table / figure | command |
 |---|---|
 | Table 1 | `python -m bench.run --arm {e2_jev,e2_llm,mem0} --slice dev` |
-| Tables 2, 3, 9–11; Fig. 2 | `python -m bench.run --arm {e4_belief_v2,mem0} --slice heldout:<conv> --top-k 3 --also-top-k 20`, then `python -m bench.heldout_report`, `python -m bench.token_match`, `python -m bench.perconv` and `python -m bench.heldout_extra` (reranking off, adversarial) |
+| Tables 2, 3, 8–10; Fig. 2 | `python -m bench.run --arm {e4_belief_v2,mem0} --slice heldout:<conv> --top-k 3 --also-top-k 20`, then `python -m bench.heldout_report`, `python -m bench.token_match`, `python -m bench.perconv` and `python -m bench.heldout_extra` (reranking off, adversarial) |
 | §4.2 | `python -m bench.e2_extraction_diff` |
 | Table 4; Figs. 3, 4 | `python -m bench.run --arm <arm> --slice dev_updates[2] [--top-k 3] [--no-dates]` |
-| Tables 5, 6; Figs. 6, 7 | `python bench/test_contradictions.py --backend laya [--native] --save …`, `python -m bench.calibration`, `python -m bench.calibration_scores`, `python -m bench.jev_regression` (the Laya rows need `bench/laya_server.py` running) |
+| Tables 5, 14, 15; Figs. 6, 8 | `python bench/test_contradictions.py --backend laya [--native] --save …`, `python -m bench.calibration`, `python -m bench.calibration_scores`, `python -m bench.jev_regression` (the Laya rows need `bench/laya_server.py` running) |
 | Fig. 5 | `python -m bench.tradeoff` |
-| Tables 12, 13 | `python -m bench.laya_report`, `python -m bench.hybrid_report` |
-| Table 14, Fig. 8 | `python -m bench.jev_latency` |
+| Tables 16, 17 | `python -m bench.laya_report`, `python -m bench.hybrid_report` |
+| Table 11, Fig. 7 | `python -m bench.jev_latency` |
+| Table 13; §5.5 read path | `python -m bench.read_path` |
 | this paper | `python paper/build.py`, `python paper/figures.py` |
 
-The spend ledger records cost per run, not per table; Table 17 gives per-arm totals.
+The spend ledger records cost per run, not per table; Table 19 gives per-arm totals.
 
-*Table 17. Phase 2 spend per arm, in USD (`bench/results/phase2_spend.jsonl`).*
+*Table 19. Phase 2 spend per arm, in USD (`bench/results/phase2_spend.jsonl`).*
 
 {{table:spend}}

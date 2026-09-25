@@ -46,6 +46,8 @@ def show(v, fmt: str) -> str:
         return f"{100 * v:.1f}%"
     if fmt == "pp":  # signed percentage points
         return f"{100 * v:+.1f}"
+    if fmt == "pts":  # unsigned percentage points, for "13.4 points lower"
+        return f"{100 * abs(v):.1f}"
     if fmt == "int":
         return f"{int(v):,}"
     if fmt == "ms":
@@ -58,6 +60,8 @@ def show(v, fmt: str) -> str:
         return f"${v:.3f}"
     if fmt == "usd4":
         return f"${v:.4f}"
+    if fmt == "usd5":
+        return f"${v:.5f}"
     if fmt == "usd6":
         return f"${v:.6f}"
     if fmt == "x":
@@ -124,6 +128,7 @@ def numbers() -> None:
         "x",
     )
     N("e2_llm__dev.llm_decisions", r["e2_llm__dev"]["llm_decisions"], f["e2_llm__dev"], "int")
+    N("e2_jev__dev.esc", r["e2_jev__dev"]["escalations"], f["e2_jev__dev"], "int")
     N("dev.msgs", r["e2_jev__dev"]["slice"]["messages"], f["e2_jev__dev"], "int")
     N("dev.q", r["e2_jev__dev"]["slice"]["questions"], f["e2_jev__dev"], "int")
     N("stress.msgs", r["e2_jev__stress"]["slice"]["messages"], f["e2_jev__stress"], "int")
@@ -182,6 +187,7 @@ def numbers() -> None:
     N("nr.tok", nr["tokens"], xf, "int")
     for key, P in (("nr.vs_full", nr["vs_engram_k3"]), ("nr.vs_m0k6", nr["vs_mem0_k6"])):
         N(f"{key}.diff", P["diff"], xf, "pp")
+        N(f"{key}.pts", P["diff"], xf, "pts")
         N(f"{key}.ci.lo", P["ci_per_question"][0], xf, "pp")
         N(f"{key}.ci.hi", P["ci_per_question"][1], xf, "pp")
         N(f"{key}.boot.lo", P["ci_cluster_bootstrap"][0], xf, "pp")
@@ -220,9 +226,38 @@ def numbers() -> None:
     N("ho.m0.w1k.max", max(m), hf, "usd2")
     N("ho.eng.d1k.min", min(d), hf, "usd2")
     N("ho.eng.d1k.max", max(d), hf, "usd2")
+    dlat = [x["engram_decision_p50_ms"] for x in h["k3"]["rows"]]
+    N("ho.nconv", len(dlat), hf, "int")
+    N("ho.eng.dlat.min", min(dlat), hf, "ms")
+    N("ho.eng.dlat.max", max(dlat), hf, "ms")
+    N(
+        "ho.slow_write",
+        sum(x["e4_belief_v2_write_p50_ms"] > x["mem0_write_p50_ms"] for x in h["k3"]["rows"]),
+        f"{hf}: conversations where engram's write p50 exceeds mem0's",
+        "int",
+    )
+    N(
+        "ho.esc",
+        sum(load(f"e4_belief_v2__heldout_{cv}__k3.json")["escalations"] for cv in CONVS),
+        "bench/results/e4_belief_v2__heldout_conv-*__k3.json",
+        "int",
+    )
     share = [dd / ww for dd, ww in zip(d, w, strict=True)]
     N("ho.dshare.min", min(share), f"{hf}: decision $/1k ÷ write $/1k", "pct")
     N("ho.dshare.max", max(share), f"{hf}: decision $/1k ÷ write $/1k", "pct")
+    # read path per query, held-out (bench/read_path.py)
+    rf = "bench/results/read_path.json"
+    rp = load("read_path.json")
+    nq = sum(x["questions"] for x in rp.values())
+
+    def per_query(field: str) -> float:
+        return sum(x[field] * x["questions"] for x in rp.values()) / nq
+
+    N("rp.eng.cost", per_query("engram_read_cost_per_query"), rf, "usd5")
+    N("rp.eng.ans", per_query("engram_answer_cost_per_query"), rf, "usd5")
+    N("rp.m0.ans", per_query("mem0_answer_cost_per_query"), rf, "usd5")
+    N("rp.eng.p50.min", min(x["engram_read_p50_ms"] for x in rp.values()), rf, "ms")
+    N("rp.eng.p50.max", max(x["engram_read_p50_ms"] for x in rp.values()), rf, "ms")
     # hygiene on held-out
     hy = []
     for cv in CONVS:
@@ -964,7 +999,7 @@ def with_ci(scores: dict, key: str, src: str) -> str:
     return f"{c(scores[key], src, 'f2')} [{c(lo, src, 'f2')}, {c(hi, src, 'f2')}]"
 
 
-def t_calibration() -> str:
+def t_calibration(backends: tuple[str, ...] = ("jev",)) -> str:
     cf = "bench/results/calibration.json"
     cal = load("calibration.json")["label_sets"]
     sf = "bench/results/calibration_scores.json"
@@ -972,7 +1007,7 @@ def t_calibration() -> str:
     rows = []
     for sname, lab in (("A: escalation labels", "escalation"), ("B: contradiction pairs (gold)", "gold pairs")):
         for q, res in cal[sname].items():
-            for b in ("jev", "laya"):
+            for b in backends:
                 s = res[b]
                 sc = scores[sname][q][b]
                 rows.append(
@@ -1003,6 +1038,34 @@ def t_calibration() -> str:
             "ECE at τ (2-fold)",
             "Brier [95% CI]",
             "NLL [95% CI]",
+        ],
+        rows,
+    )
+
+
+def t_readside() -> str:
+    rf = "bench/results/read_path.json"
+    rows = [
+        [
+            conv,
+            c(x["questions"], rf, "int"),
+            c(x["engram_read_cost_per_query"], rf, "usd5"),
+            c(x["engram_read_p50_ms"], rf, "ms"),
+            c(x["engram_read_p90_ms"], rf, "ms"),
+            c(x["engram_answer_cost_per_query"], rf, "usd5"),
+            c(x["mem0_answer_cost_per_query"], rf, "usd5"),
+        ]
+        for conv, x in load("read_path.json").items()
+    ]
+    return table(
+        [
+            "conversation",
+            "questions",
+            "engram read $/query (Jev)",
+            "engram read p50",
+            "engram read p90",
+            "engram answer $/query",
+            "mem0 answer $/query",
         ],
         rows,
     )
@@ -1166,6 +1229,8 @@ BLOCKS = {
     "table:agreement": t_agreement,
     "table:regression": t_regression,
     "table:calibration": t_calibration,
+    "table:calibration_laya": lambda: t_calibration(("laya",)),
+    "table:readside": t_readside,
     "table:hybrid": t_hybrid,
     "table:writeside": t_writeside,
     "table:latency": t_latency,
