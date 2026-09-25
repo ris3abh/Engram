@@ -6,7 +6,7 @@ experiments and every other table: `docs/BENCHMARK.md`.
 
 ## Claims
 
-Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. Code, experiment orchestration and paper drafting were carried out with Claude (Anthropic) via Claude Code
+Update sets 1–2 were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The 50 contradiction pairs were written and labeled by the author. Code, experiment orchestration and paper drafting were carried out with Claude (Anthropic) via Claude Code
 under the author's direction; the author designed the study, made every methodological decision, and is
 responsible for all claims.
 

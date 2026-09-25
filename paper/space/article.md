@@ -287,8 +287,8 @@ for at most 48.0% of the contradiction pairs. Its fine-tuned checkpoint is the o
 ## 9. Limitations
 
 One baseline (mem0 OSS 2.1.0) on one benchmark (four held-out LoCoMo conversations, so four bootstrap clusters). The
-update sets and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's
-direction; the author reviewed a subset. One decision model at one
+update sets were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a
+subset. The 50 contradiction pairs were written and labeled by the author. One decision model at one
 version. The judge is an LLM whose agreement with humans I did not measure, and every score comes from one model stack,
 so none of it is comparable to leaderboards run on other stacks. Extraction shares model and implementation across
 arms but not state, and I did not run an arm with frozen extraction outputs.

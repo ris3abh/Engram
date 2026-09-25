@@ -438,7 +438,7 @@ anything), and {{u1.n.fulfilled}} fulfilled plans. Set 2 (`bench/updates2_conv26
 {{u2.nm}} messages and {{u2.nq}} questions. Of these, {{u2.type.point_in_time}} ask about a past moment in set 1's
 items, {{u2.type.chain_current}} ask for the current value after a chain of 3–5 changes, {{u2.type.chain_point_in_time}}
 ask for a chain's value at a past moment, and {{u2.type.no_temporal_cue}} follow an update whose message has no
-temporal cue such as "now" or "anymore". Appendix B shows one item of each kind; the full sets are in the two files. Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset.
+temporal cue such as "now" or "anymore". Appendix B shows one item of each kind; the full sets are in the two files. Update sets 1–2 were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The 50 contradiction pairs were written and labeled by the author.
 This is a source of bias: the sets test failure modes the system's builders anticipated.
 
 ### 4.4 Statistics
@@ -722,7 +722,7 @@ systems are indistinguishable at k=20. On adversarial questions the reranked con
 answer prompt that asks for abstention was not tested.
 
 **Limitations.** The comparison has one baseline, mem0 OSS 2.1.0, on one benchmark, four held-out LoCoMo
-conversations. Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. Jev is the
+conversations. Update sets 1–2 were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The 50 contradiction pairs were written and labeled by the author. Jev is the
 only decision model evaluated as the deciding backend, at one version, and Laya was tested only as a zero-shot base
 checkpoint. Extraction shares model, prompt construction and implementation but not state: the stores it reads
 diverge (§4.2), and no arm froze extraction outputs across decision layers. mem0's open-source path gives no
