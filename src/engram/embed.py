@@ -38,6 +38,17 @@ class SentenceEmbedder:
         return np.asarray(vectors, dtype=np.float32)
 
 
+def fit_embedding_input(text: str, max_tokens: int = 8000) -> str:
+    """The first `max_tokens` tokens (cl100k_base, the text-embedding-3 tokenizer) of a text too long to embed whole;
+    shorter texts are returned unchanged."""
+    if len(text) <= max_tokens:  # a token is at least one character
+        return text
+    import tiktoken
+
+    tokens = tiktoken.get_encoding("cl100k_base").encode(text)
+    return text if len(tokens) <= max_tokens else tiktoken.get_encoding("cl100k_base").decode(tokens[:max_tokens])
+
+
 class OpenAIEmbedder:
     """OpenAI embeddings (text-embedding-3-small by default), cached per text so a re-run only pays for new texts.
 
@@ -78,7 +89,7 @@ class OpenAIEmbedder:
 
                     self._client = openai.OpenAI(timeout=config.LLM_TIMEOUT_S, max_retries=config.LLM_ATTEMPTS - 1)
                 response = self._client.embeddings.create(
-                    model=self.model, input=[texts[i] for i in batch], encoding_format="float"
+                    model=self.model, input=[fit_embedding_input(texts[i]) for i in batch], encoding_format="float"
                 )
             usd = response.usage.prompt_tokens * self.PRICE_PER_TOKEN.get(self.model, 0.0)
             chars = sum(len(texts[i]) for i in batch) or 1

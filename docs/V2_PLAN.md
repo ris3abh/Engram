@@ -420,6 +420,12 @@ one.
   LoCoMo sweep stays at k=3 to 10. Graphiti's LongMemEval runs go four questions in parallel, each on its own graph
   group (checked per run: every episode in the group is one of that question's turns), with request retries logged
   apart from wall time.
+- 2026-09-25, Stage 5 implementation (§10; no change to the design): one user turn in the 78 haystacks
+  (question 852ce960, turn sharegpt_FYhsZ0Q_0:0, 16,973 tokens) is longer than text-embedding-3-small accepts (8,192
+  tokens), which stopped engram's run on that question. Wherever engram or mem0 embeds a text over 8,000 tokens
+  (cl100k_base), the embedding is taken from its first 8,000 tokens; extraction still sees the whole turn, and every
+  shorter text is embedded exactly as before (same input, same cache entry). Graphiti embeds only its extracted
+  entity names and facts. The question is re-run for engram; mem0 and Graphiti had not reached it.
 
 ### Where this plan differs from the phase-3 brief
 

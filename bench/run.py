@@ -711,7 +711,7 @@ class Mem0Arm:
         import openai.types
         import openai.types.chat
 
-        from engram.embed import OpenAIEmbedder
+        from engram.embed import OpenAIEmbedder, fit_embedding_input
         from engram.llm.openai import cost
 
         chat = self.memory.llm.client.chat.completions
@@ -742,6 +742,8 @@ class Mem0Arm:
         original_emb = emb.create
 
         def embed(*args, **kwargs):
+            # a text over the embedding model's input limit is embedded from its first 8,000 tokens (as engram's)
+            kwargs["input"] = [fit_embedding_input(t) for t in kwargs["input"]]
             key = call_key("mem0-openai-embed", kwargs)
             if hit := cache.get(key):
                 cache.replay_sync(hit["latency_ms"])

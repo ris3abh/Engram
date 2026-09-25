@@ -119,3 +119,16 @@ def test_gpt_5_5_pricing_cached_input_and_long_context():
     long_prompt = 300_000
     assert cost("gpt-5.5", long_prompt, 1_000) == pytest.approx(long_prompt * 10e-6 + 1_000 * 45e-6)
     assert cost("gpt-4o-mini", 1_000_000, 0, cached_in=500_000) == pytest.approx(0.15)  # no cached rate listed
+
+
+def test_embedding_input_over_the_model_limit_keeps_its_first_8000_tokens():
+    import tiktoken
+
+    from engram.embed import fit_embedding_input
+
+    enc = tiktoken.get_encoding("cl100k_base")
+    short = "the user plays the violin"
+    assert fit_embedding_input(short) is short  # unchanged, so its cache key is unchanged
+    long = "violin " * 9000
+    assert len(enc.encode(fit_embedding_input(long))) <= 8000
+    assert long.startswith(fit_embedding_input(long).rstrip())
