@@ -42,10 +42,14 @@ decision after extraction is a typed question (Figure 1).
 
 **Concurrent work.** The architectural idea of routing memory decisions to a typed decision model was reached
 independently by Jev-Mem [jiang2026jevmem], which uses Jev for typing, relation construction, query routing,
-budget allocation, traversal, candidate scoring and stopping. It reports a LoCoMo judge score of
-0.777<!-- src: jiang2026jevmem (reported LoCoMo judge score) --> with a 158<!-- src: jiang2026jevmem (reported build time, s) --> s build and 0.93<!-- src: jiang2026jevmem (reported query time, s) --> s query against A-MEM
-[xu2025amem], MAGMA [jiang2026magma] and two further systems reported in that paper. It does not isolate the decision layer, evaluate
-updates or closes, measure calibration, or use a held-out split or confidence intervals. Separately, a community
+budget allocation, traversal, candidate scoring and stopping. In its released code the type scores are computed but
+not used downstream, and Jev supplies routing probabilities from which code allocates the traversal budgets. It
+reports a LoCoMo judge score of 0.777<!-- src: jiang2026jevmem (reported LoCoMo judge score) --> with a 158<!-- src: jiang2026jevmem (reported build time, s) --> s build and 0.93<!-- src: jiang2026jevmem (reported query time, s) --> s
+query against a Full Context baseline, A-MEM [xu2025amem], MAGMA [jiang2026magma] and two further systems reported
+in that paper; that score is a continuous partial-credit judge score with adversarial questions scored by string
+match, so it is not on our accuracy scale. It does not ablate the decision layer with extraction and node
+representation held fixed (its no-Jev ablations fall back to MAGMA's LLM-extraction pipeline), evaluate updates or
+closes, measure calibration, or use a held-out split or confidence intervals. Separately, a community
 article reranked AtMem's top-10 with Jev on 1,986<!-- src: taghia2026atmem (LoCoMo questions) --> LoCoMo questions and measured the effect at the ranking
 level: MRR@5 rose from 0.4259<!-- src: taghia2026atmem (MRR@5, AtMem) --> to 0.5868<!-- src: taghia2026atmem (MRR@5, AtMem + Jev) --> and Recall@1 from
 0.3399<!-- src: taghia2026atmem (Recall@1, AtMem) --> to 0.5423<!-- src: taghia2026atmem (Recall@1, AtMem + Jev) --> [taghia2026atmem]. This paper's contribution is the controlled
@@ -135,10 +139,13 @@ systems under one protocol.
 
 **Jev-Mem and AtMem.** Jev-Mem [jiang2026jevmem] is the closest design: Jev controls typing, relation
 construction, query routing, budget allocation, traversal, candidate scoring and stopping. The two designs differ
-in the store and in retrieval. Jev-Mem runs with admission filtering off and preserves every observation, so its
-store is never updated or closed; engram's store is governed by a close/belief policy with reversible closes and
+in the store and in retrieval. Jev-Mem stores raw conversation turns and uses no LLM on successful writes, so its
+write path avoids the extraction cost that dominates engram's and mem0's (§5.1). It runs with admission filtering
+off and preserves every observation, so its store is never updated or closed; engram's store is governed by a close/belief policy with reversible closes and
 merges (§3.2). Jev-Mem routes queries across multiple views; engram uses a single listwise rerank over cosine
-candidates plus a query-relation pull (§3.3). The AtMem–Jev article [taghia2026atmem] measured the rerank at the
+candidates plus a query-relation pull (§3.3). Its released benchmark runner (commit `81574eb`) selects the
+retrieval depth and the answer prompt from the gold question category and by default keeps the best of three answers
+as scored against the gold answer; its README advises `--best-of-n 1`. The AtMem–Jev article [taghia2026atmem] measured the rerank at the
 ranking level (Recall@10 unchanged; median batch latency 3.32<!-- src: taghia2026atmem (median batch latency, s) --> s) and reported no answer accuracy or
 intervals.
 
