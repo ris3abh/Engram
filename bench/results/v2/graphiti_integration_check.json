@@ -1,0 +1,242 @@
+{
+ "quickstart_gpt_4o_mini": {
+  "episodes": 4,
+  "edges": 4,
+  "note": "examples/quickstart/quickstart_neo4j.py at v0.30.2 with only the Graphiti constructor changed to gpt-4o-mini; entities and edges extracted normally"
+ },
+ "adapter_vs_documented_usage": "matches: 'actor: content' message episodes, one episode per message, strictly increasing reference times (session date plus message index in seconds), free-text source description",
+ "dev_slice_gpt_4o_mini": {
+  "edges_proposed": 81,
+  "edges_dropped": 40,
+  "missing_entity_is_the_other_speaker": 40,
+  "entities_per_episode_mean": 1.486842105263158,
+  "episodes_with_one_entity": 47,
+  "episodes": 76,
+  "replay": "from the call cache: 484 hits, 2 misses ($0.0003)"
+ },
+ "first_15_messages": {
+  "gpt_4o_mini": {
+   "entities_per_episode": 1.4,
+   "proposed": 15,
+   "dropped": 6
+  },
+  "shipped_defaults_gpt_5_5_and_gpt_4_1_nano": {
+   "entities_per_episode": 1.6,
+   "proposed": 8,
+   "dropped": 0
+  }
+ },
+ "conclusion": "The sparse store comes from Graphiti's entity extraction on short conversational messages (about one entity, usually the speaker, per message, with either model), not from the adapter. gpt-4o-mini additionally proposes edges to the other speaker, who is not in the episode's entity list, and Graphiti drops them; the shipped models do not propose them. Edges kept are similar (9 against 8 on the first 15 messages).",
+ "dropped_examples": [
+  {
+   "episode": "D3:16",
+   "text": "Melanie: 5 years already! Time flies- feels like just yesterday I put this dress on! Thanks, Caroline!",
+   "entities": [
+    "Melanie"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Melanie",
+    "target_entity_name": "Caroline",
+    "relation_type": "HAS_SUPPORT_SYSTEM",
+    "fact": "Melanie has support from her family and they keep her motivated.",
+    "valid_at": "2023-06-09T19:55:13Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "target_entity_name"
+   ]
+  },
+  {
+   "episode": "D3:19",
+   "text": "Caroline: Looks like you had a great day! How was it? You all look so happy!",
+   "entities": [
+    "Caroline"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Caroline",
+    "target_entity_name": "Melanie",
+    "relation_type": "ASKED_ABOUT",
+    "fact": "Caroline asked how Melanie's day was and noted how happy they all looked.",
+    "valid_at": "2023-06-09T19:55:18Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "target_entity_name"
+   ]
+  },
+  {
+   "episode": "D1:6",
+   "text": "Melanie: Wow, love that painting! So cool you found such a helpful group. What's it done for you?",
+   "entities": [
+    "Melanie"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Melanie",
+    "target_entity_name": "Caroline",
+    "relation_type": "ASKS_ABOUT",
+    "fact": "Melanie is asking Caroline about the impact of the LGBTQ support group on her.",
+    "valid_at": "2023-05-08T13:56:05Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "target_entity_name"
+   ]
+  },
+  {
+   "episode": "D3:4",
+   "text": "Melanie: Wow, Caroline, you're doing an awesome job of inspiring others with your journey. It's great to be part of it and see how you're positively affecting so many. Talking about inclusivity and acceptance is crucial, and you're so brave to speak up for the trans community. Keep up the great work!",
+   "entities": [
+    "Melanie"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Melanie",
+    "target_entity_name": "Caroline",
+    "relation_type": "IS_INSPIRED_BY",
+    "fact": "Melanie finds Caroline's journey inspiring and acknowledges how it positively affects many people by talking about inclusivity and acceptance.",
+    "valid_at": "2023-06-09T19:55:03Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "target_entity_name"
+   ]
+  },
+  {
+   "episode": "D4:7",
+   "text": "Caroline: Sounds great, Mel. Glad you made some new family mems. How was it? Anything fun?",
+   "entities": [
+    "Caroline"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Caroline",
+    "target_entity_name": "Melanie",
+    "relation_type": "IS_FRIENDS_WITH",
+    "fact": "Caroline is friends with Melanie and expressed gladness that Melanie made new family memories.",
+    "valid_at": "2023-06-27T10:37:06Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "target_entity_name"
+   ]
+  },
+  {
+   "episode": "D4:6",
+   "text": "Melanie: That sounds great, Caroline! It's awesome having stuff around that make us think of good connections and times. Actually, I just took my fam camping in the mountains last week - it was a really nice time together!",
+   "entities": [
+    "Melanie"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Melanie",
+    "target_entity_name": "Caroline",
+    "relation_type": "HAS_SHARED_EXPERIENCE",
+    "fact": "Melanie took her family camping in the mountains together with Caroline's family last week, which was a nice time for them.",
+    "valid_at": "2023-06-27T10:37:05Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "target_entity_name"
+   ]
+  },
+  {
+   "episode": "D3:16",
+   "text": "Melanie: 5 years already! Time flies- feels like just yesterday I put this dress on! Thanks, Caroline!",
+   "entities": [
+    "Melanie"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Caroline",
+    "target_entity_name": "Melanie",
+    "relation_type": "HAS_SUPPORT_SYSTEM",
+    "fact": "Caroline's friends, family, and mentors motivate her and give her the strength to push on.",
+    "valid_at": "2023-06-09T19:55:10Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "source_entity_name"
+   ]
+  },
+  {
+   "episode": "D3:7",
+   "text": "Caroline: Your words mean a lot to me. I'm grateful for the chance to share my story and give others hope. We all have unique paths, and by working together we can build a more inclusive and understanding world. I'm going to keep using my voice to make a change and lift others up. And you're part of that!",
+   "entities": [
+    "Caroline"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Caroline",
+    "target_entity_name": "Melanie",
+    "relation_type": "SUPPORTS",
+    "fact": "Caroline expresses gratitude for the opportunity to share her story and emphasizes the importance of working together for inclusivity.",
+    "valid_at": "2023-06-09T19:55:06Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "target_entity_name"
+   ]
+  },
+  {
+   "episode": "D4:1",
+   "text": "Caroline: Hey Melanie! Long time no talk! A lot's been going on in my life! Take a look at this.",
+   "entities": [
+    "Caroline"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Caroline",
+    "target_entity_name": "Melanie",
+    "relation_type": "IS_FRIENDS_WITH",
+    "fact": "Caroline is reconnecting with Melanie after not talking for a while.",
+    "valid_at": "2023-06-27T10:37:00Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "target_entity_name"
+   ]
+  },
+  {
+   "episode": "D2:13",
+   "text": "Melanie: That's great, Caroline! Loving the inclusivity and support. Anything you're excited for in the adoption process?",
+   "entities": [
+    "Melanie"
+   ],
+   "dropped_edge": {
+    "source_entity_name": "Melanie",
+    "target_entity_name": "Caroline",
+    "relation_type": "IS_EXCITED_FOR",
+    "fact": "Melanie is excited for the adoption process that Caroline is going through.",
+    "valid_at": "2023-05-25T13:14:12Z",
+    "invalid_at": null,
+    "episode_indices": [
+     0
+    ]
+   },
+   "missing": [
+    "target_entity_name"
+   ]
+  }
+ ]
+}

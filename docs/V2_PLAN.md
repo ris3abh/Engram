@@ -372,6 +372,16 @@ one.
 - 2026-09-25, external timestamp: this plan at the v2-frozen tag (commit dcb9670) is deposited on Zenodo as
   doi:10.5281/zenodo.22953496 (published 2026-09-25). The plan's concept DOI, resolving to its latest version, is
   doi:10.5281/zenodo.22948854.
+- 2026-09-25, exploratory system (section 4): Graphiti with its default models as shipped in graphiti-core 0.30.2
+  (gpt-5.5 as its main model with reasoning off, gpt-4.1-nano as its small model; text-embedding-3-small, as the shared
+  stack) on the five fresh conversations (conv-44, 47, 48, 49, 50), at k=3 and k=20. Same ingestion as the shared-stack
+  Graphiti (one episode per message, session date as reference time, hybrid RRF search), and answered and judged with
+  the shared answer model, answer prompt and judges. Exploratory: no significance test, outside the Holm family; every
+  caption states that it uses different extraction models from every other system. S1, S2 and S11 stay on the
+  shared-stack Graphiti as registered. Reason: the shared-stack Graphiti stored a sparse graph on the conv-26 dev slice
+  (32 facts against 75 for mem0 and engram, 22/35 answers), so its shipped configuration is reported alongside. Its
+  cost is measured, at list prices, on the first conversation before the other four run; runs are split per
+  conversation to stay under the $40 per-run OpenAI cap.
 
 ### Where this plan differs from the phase-3 brief
 
