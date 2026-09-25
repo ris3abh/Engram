@@ -128,7 +128,7 @@ def build() -> None:
 <main>
 {body}
 <footer>Rishabh Sharma, 2026. Article text and figures from the paper, DOI
-<a href="https://doi.org/10.5281/zenodo.22941758">10.5281/zenodo.22941758</a>. Code MIT; data CC BY-NC 4.0.</footer>
+<a href="https://doi.org/10.5281/zenodo.22948964">10.5281/zenodo.22948964</a> (version 1: <a href="https://doi.org/10.5281/zenodo.22941758">10.5281/zenodo.22941758</a>). Code MIT; data CC BY-NC 4.0.</footer>
 </main>
 </body>
 </html>

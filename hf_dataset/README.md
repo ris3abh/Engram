@@ -30,7 +30,7 @@ configs:
 # engram evaluation data
 
 The evaluation data behind *Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs*
-(Rishabh Sharma, 2026, [doi:10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758)): update sets
+(Rishabh Sharma, 2026, [doi:10.5281/zenodo.22948964](https://doi.org/10.5281/zenodo.22948964); version 1: [doi:10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758)): update sets
 that extend LoCoMo with fact changes, labeled contradiction pairs, the relation decisions escalated to an LLM,
 and every scored answer from the paper's runs. Code: the engram repository (`bench/make_hf_dataset.py` builds this
 directory from the repository's committed files, with no API calls).
@@ -85,8 +85,9 @@ free to share and adapt with attribution, not for commercial use.
   title     = {Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs},
   year      = {2026},
   publisher = {Zenodo},
-  doi       = {10.5281/zenodo.22941758},
-  url       = {https://doi.org/10.5281/zenodo.22941758}
+  doi       = {10.5281/zenodo.22948964},
+  url       = {https://doi.org/10.5281/zenodo.22948964},
+  note      = {Version 1.1. Version 1: doi:10.5281/zenodo.22941758}
 }
 ```
 

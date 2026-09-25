@@ -2,18 +2,21 @@
 
 *Where they help, where they don't, and what it costs.*
 
-Rishabh Sharma · independent researcher · [paper (DOI 10.5281/zenodo.22941758)](https://doi.org/10.5281/zenodo.22941758) · [code](https://github.com/ris3abh/Engram) · [data](https://huggingface.co/datasets/ris3abh-11/engram-eval)
+Rishabh Sharma · independent researcher · [paper (DOI 10.5281/zenodo.22948964; version 1: 10.5281/zenodo.22941758)](https://doi.org/10.5281/zenodo.22948964) · [code](https://github.com/ris3abh/Engram) · [data](https://huggingface.co/datasets/ris3abh-11/engram-eval)
 
 > **In one paragraph.** A memory system for an LLM agent makes dozens of small decisions per message: is this fact
-> new, a duplicate, a change to something stored, worth keeping at all? Today those decisions are LLM calls. They are
-> also choices among a handful of options fixed in advance, which is exactly what typed decision models are built
-> for. engram keeps the LLM for extraction and hands every later decision to one of them (Jev). Against a
-> claude-sonnet-4-6 implementation of mem0's update prompt, with the same extraction model, prompt construction and
-> implementation, the decision layer got **70.0× cheaper** and **27.6× faster** at the median, with the same dev
-> accuracy (31/35). On 610 held-out LoCoMo questions, at a matched retrieved-context budget, engram answered
-> **8.7 points** more than mem0 (95% CI +5.2 to +12.1), and a held-out ablation shows the reranker is responsible for
-> all of it. What typed decisions did *not* do: make answers better after facts change. On today's LoCoMo-style
-> questions, a store that correctly closes stale facts scores the same as one that keeps everything.
+> new, a duplicate, a change to something stored, worth keeping at all? Those decisions are choices among a handful of
+> options fixed in advance, which is exactly what typed decision models are built for. engram keeps the LLM for
+> extraction and hands every later decision to one of them (Jev). That makes **re-examining the store affordable**:
+> engram writes at about the cost of add-only mem0 2.1.0, which never revisits what it stored ($9.90 against $9.80 per
+> 1,000 messages on the dev slice, $10.22–10.55 against $9.92–10.16 held out). Against an LLM decider, a
+> claude-sonnet-4-6 implementation of mem0's update prompt with the same extraction, the decision layer is
+> **70.0× cheaper** and **27.6× faster** at the median (that arm made no escalations), with equal accuracy on a
+> 35-question dev slice. On 610 held-out LoCoMo questions, at a matched retrieved-context budget, engram answered
+> **8.7 points** more than mem0 (95% CI +5.2 to +12.1); with Jev's reranking off it is 13.4 points lower, so the
+> reranker accounts for all of it. What typed decisions did *not* do: make answers better after facts change (a store
+> that correctly closes stale facts scores the same as one that keeps everything), or beat mem0 at k=20, where the two
+> are indistinguishable.
 
 ## 1. Why memory decisions are expensive
 
@@ -185,7 +188,7 @@ an exact McNemar test on the discordant questions, and a cluster bootstrap that 
 (with four clusters, a robustness check rather than a primary interval). Every LLM and Jev call is cached by its full
 request; the ledgered experiments cost $101.79 in API calls.
 
-## 5. Result 1: the decision layer, 70× cheaper
+## 5. Result 1: re-examining the store at about mem0's write cost
 
 The cleanest experiment holds extraction fixed and swaps only what decides afterwards: Jev's typed questions, or
 claude-sonnet-4-6 with mem0's update prompt, one call per extracted fact.
@@ -196,8 +199,16 @@ claude-sonnet-4-6 with mem0's update prompt, one call per extracted fact.
 | engram, LLM decision layer | 31/35 | $8.782 | 7,675 ms | $18.70 | 18 |
 | engram, Jev decision layer | **31/35** | **$0.125** | **278 ms** | $9.90 | 47 |
 
-Same accuracy, **70.0× lower decision cost, 27.6× lower median decision latency**. With typed decisions the decision
-layer is 1.3% of the cost of a write; with the LLM it is 47.0%. Extraction becomes almost the entire bill.
+With typed decisions the decision layer is 1.3% of the cost of a write; with the LLM it is 47.0%. Extraction becomes
+almost the entire bill, so engram, which re-examines what it stores, writes at about the cost of add-only mem0, which
+never does: **$9.90 against $9.80 per 1,000 messages** here, and $10.22–10.55 against $9.92–10.16 on the four
+held-out conversations. Against the LLM decider, with equal accuracy on this 35-question slice, typed decisions are
+**70.0× cheaper and 27.6× faster at the median**.
+
+Neither ratio contains an escalation: the Jev arm made none on the dev slice. The frozen system escalates unsure
+superseding relations and asks more questions per fact; on the held-out conversations it escalated 31 decisions, its
+median decision latency was 868–1,982 ms, and its median end-to-end write was slower than mem0's on 3 of 4
+conversations.
 
 Two honest caveats. The ratios are specific to that comparator: batching several facts per LLM call, or a smaller LLM
 decider, would narrow them, and I did not measure either. And "same extraction" means the same model, prompt
@@ -288,9 +299,11 @@ for at most 48.0% of the contradiction pairs. Its fine-tuned checkpoint is the o
 
 One baseline (mem0 OSS 2.1.0) on one benchmark (four held-out LoCoMo conversations, so four bootstrap clusters). The
 update sets were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a
-subset. The 50 contradiction pairs were written and labeled by the author. One decision model at one
-version. The judge is an LLM whose agreement with humans I did not measure, and every score comes from one model stack,
-so none of it is comparable to leaderboards run on other stacks. Extraction shares model and implementation across
+subset. The 50 contradiction pairs were written and labeled by the author. One decision model, Jev, is a
+closed, versioned API (`jev-1.13.0`): its weights are not public, a later version may decide differently, and the
+results can be replayed from the call cache but not recomputed if that version is withdrawn. The judge is the answer
+model (claude-sonnet-4-6), so it may favour answers written its own way, and I did not measure its agreement with
+humans. Every score comes from one model stack, so none of it is comparable to leaderboards run on other stacks. Extraction shares model and implementation across
 arms but not state, and I did not run an arm with frozen extraction outputs.
 
 ## 10. Reproduce it
@@ -303,7 +316,7 @@ make reproduce-dev     # replays the decision-layer table from a shipped cache: 
 
 `make reproduce-dev` re-runs the three dev-slice arms with the experiment code against a 1.9 MB subset of the call
 cache and prints every cell next to the paper's; accuracy, costs and stored facts match exactly. Every other table has
-a command in the paper's Appendix D. The update sets, contradiction pairs, escalation labels and all 7,150 per-question
+a command in the paper's Appendix E. The update sets, contradiction pairs, escalation labels and all 7,150 per-question
 answers are on the Hub as [ris3abh-11/engram-eval](https://huggingface.co/datasets/ris3abh-11/engram-eval).
 
 ## Citation
@@ -314,7 +327,8 @@ answers are on the Hub as [ris3abh-11/engram-eval](https://huggingface.co/datase
   title     = {Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs},
   year      = {2026},
   publisher = {Zenodo},
-  doi       = {10.5281/zenodo.22941758},
-  url       = {https://doi.org/10.5281/zenodo.22941758}
+  doi       = {10.5281/zenodo.22948964},
+  url       = {https://doi.org/10.5281/zenodo.22948964},
+  note      = {Version 1.1. Version 1: doi:10.5281/zenodo.22941758}
 }
 ```
