@@ -247,6 +247,23 @@ EDGE_TYPE = ChoiceQuestion(
     instructions="Which relation best describes how `new_fact.subject` relates to `new_fact.object`?",
     criteria=EDGE_TYPES,
 )
+# v2 (V2 Stage 2 close attempt, 2026-09-25): type consistently by what the object is, so that a later fact replacing
+# this one about the same attribute gets the same relation and can pass the cardinality gate. Same options and rubrics.
+EDGE_TYPE_V2 = ChoiceQuestion(
+    id="edge_type",
+    instructions=(
+        "Which relation best describes how `new_fact.subject` relates to `new_fact.object`? Choose by what kind of "
+        "thing the object is, and choose consistently, so that a later fact that replaces this one about the same "
+        "attribute would get the same relation. Use `related_to` only when no other relation fits."
+    ),
+    criteria=EDGE_TYPES,
+    version=2,
+)
+
+
+def edge_type_question(version: int) -> ChoiceQuestion:
+    return {1: EDGE_TYPE, 2: EDGE_TYPE_V2}[version]
+
 
 DURABILITY = ChoiceQuestion(
     id="durability",

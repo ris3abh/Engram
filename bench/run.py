@@ -227,6 +227,12 @@ ARMS: dict[str, dict] = {
         "hygiene": True,
         "flags": Flags(**{**E4_V2, "retrieval_rerank": False}),
     },
+    # v2 Stage 2 close attempt (one round, V2_PLAN Deviations 2026-09-25): the frozen arm with edge_type v2.
+    "e4_frozen_edge2": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_FROZEN, "edge_type_version": 2}),
+    },
     # v2 Stage 2: the frozen arm with Jev's reranking off (read path only; ingestion identical, so its writes replay
     # from the cache). E4_V2 above predates the frozen flags, so it is not this arm.
     "e4_frozen_norerank": {
