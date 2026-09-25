@@ -23,12 +23,21 @@ from .base import LLMBackend, LLMError, LLMUsage, UsageLog
 PRICES = {
     "gpt-4o-mini": (0.15, 0.60),
     "gpt-4o": (2.50, 10.00),
+    "gpt-5.5": (5.00, 30.00),  # short context; given by the author 2026-09-25
+    "gpt-4.1-nano": (0.10, 0.40),  # assumed list price, to be confirmed
 }
+CACHED_INPUT = {"gpt-5.5": 0.50, "gpt-4.1-nano": 0.025}  # USD per million cached input tokens, where listed
+LONG_CONTEXT = {"gpt-5.5": (272_000, 2.0, 1.5)}  # prompts over the limit bill input x2 and output x1.5
 
 
-def cost(model: str, tokens_in: int, tokens_out: int) -> float:
+def cost(model: str, tokens_in: int, tokens_out: int, cached_in: int = 0) -> float:
+    """List-price cost of one call. `tokens_in` includes any cached input tokens (`cached_in`)."""
     price_in, price_out = PRICES.get(model, (0.0, 0.0))
-    return (tokens_in * price_in + tokens_out * price_out) / 1_000_000
+    limit, in_x, out_x = LONG_CONTEXT.get(model, (None, 1.0, 1.0))
+    if limit is not None and tokens_in > limit:
+        price_in, price_out = price_in * in_x, price_out * out_x
+    cached = min(cached_in, tokens_in) if model in CACHED_INPUT else 0
+    return ((tokens_in - cached) * price_in + cached * CACHED_INPUT.get(model, 0.0) + tokens_out * price_out) / 1e6
 
 
 class OpenAILLM(LLMBackend):

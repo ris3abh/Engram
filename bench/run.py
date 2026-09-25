@@ -259,6 +259,8 @@ ARMS: dict[str, dict] = {
     "mem0": {"system": "mem0"},
     # v2 baseline (V2_PLAN section 4): Graphiti on the OpenAI stack's shared models; see GraphitiArm.
     "graphiti": {"system": "graphiti"},
+    # exploratory (V2_PLAN Deviations 2026-09-25): Graphiti with its shipped default models (gpt-5.5, gpt-4.1-nano).
+    "graphiti_shipped": {"system": "graphiti", "models": "shipped"},
 }
 
 
@@ -748,7 +750,7 @@ class GraphitiArm:
     NEO4J_AUTH = ("neo4j", os.environ.get("NEO4J_PASSWORD", "engram-local-bench"))  # a local, throwaway container
     TIMEOUT_S = 600  # per episode write or search
 
-    def __init__(self, arm_dir: Path, cache: CallCache, group_id: str):
+    def __init__(self, arm_dir: Path, cache: CallCache, group_id: str, models: str = "shared"):
         import openai
         from graphiti_core import Graphiti
         from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
@@ -760,7 +762,9 @@ class GraphitiArm:
         client = openai.AsyncOpenAI(max_retries=5, timeout=120)
         self.calls: list[dict] = []
         self._meter(client, cache)
-        llm_config = LLMConfig(model=s["extract"], small_model=s["extract"])
+        # models="shared": the shared stack's gpt-4o-mini for both of Graphiti's models (S1, S2, S11).
+        # models="shipped": Graphiti 0.30.2's defaults (gpt-5.5 and gpt-4.1-nano; exploratory, Deviations 2026-09-25).
+        llm_config = LLMConfig(model=s["extract"], small_model=s["extract"]) if models == "shared" else LLMConfig()
         self.graphiti = Graphiti(
             self.NEO4J_URI,
             *self.NEO4J_AUTH,
@@ -819,7 +823,12 @@ class GraphitiArm:
                 usage=SimpleNamespace(input_tokens=d["input_tokens"], output_tokens=d["output_tokens"]),
                 refusal=None,
             ),
-            lambda kw, r: cost(kw["model"], r.usage.input_tokens, r.usage.output_tokens),
+            lambda kw, r: cost(
+                kw["model"],
+                r.usage.input_tokens,
+                r.usage.output_tokens,
+                getattr(getattr(r.usage, "input_tokens_details", None), "cached_tokens", 0) or 0,
+            ),
         )
         wrap(
             client.chat.completions,
@@ -827,7 +836,12 @@ class GraphitiArm:
             "llm",
             lambda r: r.model_dump(),
             openai.types.chat.ChatCompletion.model_validate,
-            lambda kw, r: cost(kw["model"], r.usage.prompt_tokens, r.usage.completion_tokens),
+            lambda kw, r: cost(
+                kw["model"],
+                r.usage.prompt_tokens,
+                r.usage.completion_tokens,
+                getattr(getattr(r.usage, "prompt_tokens_details", None), "cached_tokens", 0) or 0,
+            ),
         )
         wrap(
             client.embeddings,
@@ -1023,7 +1037,9 @@ async def run_arm(
     elif spec["system"] == "graphiti":
         if stack != "openai":
             raise ValueError("Graphiti runs on the OpenAI stack only (V2_PLAN section 4)")
-        system = GraphitiArm(arm_dir, cache, group_id=f"{name}__{slice_name}{suffix}")
+        system = GraphitiArm(
+            arm_dir, cache, group_id=f"{name}__{slice_name}{suffix}", models=spec.get("models", "shared")
+        )
     else:
         system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False), stack=stack)
 
