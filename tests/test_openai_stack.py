@@ -96,3 +96,18 @@ def test_openai_stack_records_the_plan_models():
     assert s["embed"] == "text-embedding-3-small" and s["tokenizer"] == "o200k_base"
     assert s["observation_date"] == "session"  # V2_PLAN section 3, Dates
     assert R.STACKS["anthropic"] == {"extract": R.EXTRACT_MODEL, "answer": R.ANSWER_MODEL, "judge": R.JUDGE_MODEL}
+
+
+def test_mem0_gets_the_session_date_as_observation_date_on_the_openai_stack(tmp_path, monkeypatch):
+    import mem0.configs.prompts as prompts
+
+    monkeypatch.setenv("OPENAI_API_KEY", "placeholder")  # client construction only; nothing is called
+    monkeypatch.setattr(prompts, "_resolve_dates", prompts._resolve_dates)  # undo the arm's patch after the test
+    arm = R.Mem0Arm(tmp_path / "arm", CallCache(tmp_path / "calls.sqlite", budget=Budget()), stack="openai")
+    arm.observation = "2023-05-08"  # what write() sets from the message's session date
+    prompt = prompts.generate_additive_extraction_prompt(
+        existing_memories=[], new_messages=[{"role": "user", "content": "x"}], last_k_messages=[]
+    )
+    lines = [line for line in prompt.splitlines() if line.strip()]
+    assert lines[lines.index("## Observation Date") + 1] == "2023-05-08"
+    assert lines[lines.index("## Current Date") + 1] == R.PINNED_DATE

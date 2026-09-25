@@ -8,7 +8,8 @@ Reads the Stage 2 runs (bench/results/v2/ and their stores and decision logs und
   share of each chosen option on each stack, with shifts over 10 points flagged;
 - update sets 1 and 2 (store outcomes and update-question accuracy) and the contradiction regression;
 - the write cost per 1,000 messages split into extraction, Jev, escalations, LLM decisions and embeddings, for engram
-  and mem0 on conv-26.
+  and mem0 on conv-26;
+- facts naming 2026 (the run date) or 2023 (the conversation's time), before and after the dates deviation.
 
 Output: bench/results/v2/stage2_report.json (the fact sample, which quotes LoCoMo text, goes to
 bench/results/v2/stage2_fact_sample.json like the other result files).
@@ -149,6 +150,44 @@ def update_sets() -> dict:
     return out
 
 
+def year_counts() -> dict:
+    """Stored facts (engram) and added memories (mem0) whose text names 2026 (the run date) or 2023 (the conversation's
+    time), before the dates deviation (bench/.cache/arms/openai_undated/, kept locally) and after it."""
+
+    def engram(db: Path) -> dict:
+        n, y26, y23 = (
+            sqlite3.connect(db)
+            .execute("SELECT count(*), sum(text LIKE '%2026%'), sum(text LIKE '%2023%') FROM facts")
+            .fetchone()
+        )
+        return {"facts": n, "2026": y26, "2023": y23}
+
+    def mem0(db: Path) -> dict:
+        n, y26, y23 = (
+            sqlite3.connect(db)
+            .execute(
+                "SELECT count(*), sum(new_memory LIKE '%2026%'), sum(new_memory LIKE '%2023%') FROM history "
+                "WHERE event = 'ADD'"
+            )
+            .fetchone()
+        )
+        return {"facts": n, "2026": y26, "2023": y23}
+
+    out = {}
+    for label, root in (("undated", V1_ARMS / "openai_undated"), ("dated", V2_ARMS)):
+        for name, db, count in (
+            ("engram conv-26", root / "e4_belief_v2" / "conv26__k3" / "engram.db", engram),
+            ("engram dev + set 1", root / "e4_belief_v2" / "dev_updates" / "engram.db", engram),
+            ("mem0 conv-26", root / "mem0" / "conv26__k3" / "history.db", mem0),
+        ):
+            if db.exists():
+                out[f"{name}, {label}"] = count(db)
+    v1 = V1_ARMS / "e4_belief_v2" / "dev_updates" / "engram.db"
+    if v1.exists():
+        out["engram dev + set 1, v1 stack"] = engram(v1)
+    return out
+
+
 def write_costs() -> dict:
     out = {}
     for arm in ("e4_belief_v2", "mem0"):
@@ -173,9 +212,10 @@ def main() -> None:
         "update_sets": update_sets(),
         "contradiction_regression": json.loads(regression.read_text()) if regression.exists() else None,
         "write_cost": write_costs(),
+        "dated_facts": year_counts(),
     }
     (V2 / "stage2_report.json").write_text(json.dumps(report, indent=1, default=str) + "\n")
-    print(json.dumps({k: report[k] for k in ("accuracy", "write_cost")}, indent=1))
+    print(json.dumps({k: report[k] for k in ("accuracy", "write_cost", "dated_facts")}, indent=1))
     print("flagged decision shifts:", json.dumps(report["decision_shifts"]["flagged"], indent=1))
 
 
