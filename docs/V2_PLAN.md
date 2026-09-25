@@ -187,7 +187,7 @@ table marks exploratory results as such.
 
 ## 9. Update set 3 (independent author)
 
-Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. Set 3 is written by someone else, following
+Update sets 1–2 were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The 50 contradiction pairs were written and labeled by the author. Set 3 is written by someone else, following
 `bench/update_set_3/AUTHORING_GUIDE.md`, without seeing engram's code, results or paper. Target: 30 items (10 easy
 closes, 10 subtle no-close traps, 5 fulfilled plans, 5 chain or point-in-time items) over conv-26 sessions 1–4.
 `bench/update_set_3/validate.py` checks the filled `template.csv`, converts it to the sets-1–2 JSON format and writes
@@ -244,7 +244,7 @@ valid at the time the question asks about, as the set's author writes it; the an
 
 Code, experiment orchestration and paper drafting were carried out with Claude (Anthropic) via Claude Code under the
 author's direction; the author designed the study, made every methodological decision, and is responsible for all
-claims. Update sets 1–2 and the 50 contradiction pairs were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. Set 3 and the human audit are the parts written without AI assistance.
+claims. Update sets 1–2 were drafted and labeled with an AI assistant (Claude) at the author's direction; the author reviewed a subset. The 50 contradiction pairs were written and labeled by the author. Set 3, the 50 contradiction pairs and the human audit are written without AI assistance.
 
 ## 12. Deviations
 
@@ -272,6 +272,11 @@ one.
   human audit, LongMemEval, statistics and budget sections; each needs a new dated entry naming it to change.
 - 2026-09-24, brief-differences note: the S9 fallback count now reads nine remaining tests, after S7 and S8 left
   the family and S12 joined it (a correction of the note, no change to the analysis).
+- 2026-09-24, §9 and AI assistance: the authorship statement is split by artifact. Update sets 1–2 were drafted and
+  labeled with an AI assistant (Claude) at the author's direction, and the author reviewed a subset; the 50
+  contradiction pairs were written and labeled by the author. The statement adopted earlier the same day grouped the
+  pairs with the AI-drafted sets, which was wrong; the v1 paper, the dataset card, FINDINGS and BENCHMARK are
+  corrected to match.
 
 ### Where this plan differs from the phase-3 brief
 
