@@ -1,8 +1,8 @@
 # engram
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22941758.svg)](https://doi.org/10.5281/zenodo.22941758)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22948964.svg)](https://doi.org/10.5281/zenodo.22948964)
 
-DOI: [10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758)
+DOI: [10.5281/zenodo.22948964](https://doi.org/10.5281/zenodo.22948964) (v1.1). Version 1: [10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758).
 
 Dataset: [huggingface.co/datasets/ris3abh-11/engram-eval](https://huggingface.co/datasets/ris3abh-11/engram-eval)
 
@@ -94,8 +94,9 @@ demo/              the page served by `engram serve`
   title     = {Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs},
   year      = {2026},
   publisher = {Zenodo},
-  doi       = {10.5281/zenodo.22941758},
-  url       = {https://doi.org/10.5281/zenodo.22941758}
+  doi       = {10.5281/zenodo.22948964},
+  url       = {https://doi.org/10.5281/zenodo.22948964},
+  note      = {Version 1.1. Version 1: doi:10.5281/zenodo.22941758}
 }
 ```
 
