@@ -385,6 +385,26 @@ one.
   projection from conv-44's measured cost to all five conversations exceeds $100, it runs on the first two
   conversations only (conv-44 and conv-47), and this entry records that. (A 15-message probe on conv-26 projects
   about $96: $91 of ingestion and $5.5 of answering and judging.)
+- 2026-09-25, Stage 4 (S9 fallback taken): update set 3 is not frozen when Stage 4 runs, so the store-correctness
+  experiment runs on update sets 1 and 2 (memory text without dates, k=3; engram, mem0 and Graphiti) and is labelled
+  exploratory; S9 leaves the Holm family, which is applied to the remaining nine tests, as registered.
+- 2026-09-25, Stage 4 implementation of the registered arms (clarifications, no change to the design):
+  (a) reranker arms read a copy of the v2 system's frozen conv-26 store and differ only in what scores the 30-fact
+  shortlist; Jev still classifies the query for the relation pull. The cross-encoder's sigmoid is kept above the
+  relevance threshold and ordered by probability times belief, as Jev's scores are; the gpt-4o-mini listwise reranker's
+  listed memories are kept in its order. The cross-encoder returned NaN on this machine (torch 2.14's CPU matmul on the
+  memory-mapped weights); its parameters are copied after loading, which gives its normal scores, and the first, all-NaN
+  run was discarded. Read latency is measured one query at a time (bench/v2_read_latency.py), since the arms' own
+  runs answer concurrently. (b) In the frozen-extraction ablation the LLM deciders replace only the relation decision,
+  with mem0's events mapped DELETE -> contradiction, UPDATE -> update, ADD -> new, NONE -> duplicate as in v1; the
+  label enters the unchanged belief policy, skips Jev's second phrasing and counts as its own confirmation, so a
+  confident LLM decision can close as a confirmed Jev decision can. The batched decider makes one call per message and
+  routes each UPDATE or DELETE to the fact whose candidates hold that memory and whose text is closest.
+- 2026-09-25, Stage 4 (caveat on the frozen-extraction ablation, S7 and S8): the LLM decider arms can close a fact
+  on one confident decision, while Jev needs two agreeing phrasings (its relation answer and the second phrasing, each
+  at or above 0.85). The comparison therefore slightly favours the LLM arms on closes; the paper says so. Also checked
+  before any held-out run: the cross-encoder, with its weights copied after loading, reproduces its model card's
+  example (8.607141 and -4.320079 against 8.607138 and -4.320078; tests/test_cross_encoder.py).
 
 ### Where this plan differs from the phase-3 brief
 

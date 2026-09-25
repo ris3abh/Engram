@@ -24,7 +24,7 @@ PRICES = {
     "gpt-4o-mini": (0.15, 0.60),
     "gpt-4o": (2.50, 10.00),
     "gpt-5.5": (5.00, 30.00),  # short context; given by the author 2026-09-25
-    "gpt-4.1-nano": (0.10, 0.40),  # assumed list price, to be confirmed
+    "gpt-4.1-nano": (0.10, 0.40),  # confirmed by the author 2026-09-25
 }
 CACHED_INPUT = {"gpt-5.5": 0.50, "gpt-4.1-nano": 0.025}  # USD per million cached input tokens, where listed
 LONG_CONTEXT = {"gpt-5.5": (272_000, 2.0, 1.5)}  # prompts over the limit bill input x2 and output x1.5
