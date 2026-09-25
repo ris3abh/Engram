@@ -843,7 +843,35 @@ class GraphitiArm:
         from graphiti_core.llm_client.openai_client import OpenAIClient
 
         s = STACKS["openai"]
-        client = openai.AsyncOpenAI(max_retries=5, timeout=120)
+        # Retries are logged apart from wall time: HTTP attempts that got an error status (the SDK retries them) and
+        # calls that still failed after the SDK's retries (Graphiti may retry those itself), with the time each took.
+        self.retries = {
+            "http_attempts": 0,
+            "http_errors": 0,
+            "http_error_ms": 0.0,
+            "call_errors": 0,
+            "call_error_ms": 0.0,
+        }
+        sent: dict[int, float] = {}
+
+        async def on_request(request):
+            sent[id(request)] = time.perf_counter()
+
+        async def on_response(response):
+            self.retries["http_attempts"] += 1
+            started = sent.pop(id(response.request), None)
+            if response.status_code >= 400:
+                self.retries["http_errors"] += 1
+                if started is not None:
+                    self.retries["http_error_ms"] += (time.perf_counter() - started) * 1000
+
+        client = openai.AsyncOpenAI(
+            max_retries=5,
+            timeout=120,
+            http_client=openai.DefaultAsyncHttpxClient(
+                event_hooks={"request": [on_request], "response": [on_response]}
+            ),
+        )
         self.calls: list[dict] = []
         self._meter(client, cache)
         # models="shared": the shared stack's gpt-4o-mini for both of Graphiti's models (S1, S2, S11).
@@ -860,6 +888,7 @@ class GraphitiArm:
         self.keep = keep  # reuse the graph an earlier pass built under this group id
         self._ready = False
         self._records: list[dict] = []
+        self.episode_names: list[str] = []
 
     def _meter(self, client, cache: CallCache) -> None:
         from types import SimpleNamespace
@@ -880,7 +909,12 @@ class GraphitiArm:
                     self.calls.append({**hit, "cached": True})
                     return decode(hit["response"])
                 started = time.perf_counter()
-                response = await original(*args, **kwargs)
+                try:
+                    response = await original(*args, **kwargs)
+                except Exception:
+                    self.retries["call_errors"] += 1
+                    self.retries["call_error_ms"] += (time.perf_counter() - started) * 1000
+                    raise
                 record = {
                     "response": encode(response),
                     "latency_ms": (time.perf_counter() - started) * 1000,
@@ -1006,6 +1040,7 @@ class GraphitiArm:
             "MATCH (n:Episodic) WHERE n.group_id = $g RETURN n.uuid AS uuid, n.name AS name", g=self.group_id
         )
         episode = {r["uuid"]: r["name"] for r in names}
+        self.episode_names = sorted(episode.values())
         return [
             {
                 "text": r["fact"],
@@ -1357,6 +1392,15 @@ async def run_arm(
     result["options"] = {"top_k": top_k, "no_dates": no_dates, "no_answer": no_answer}
     if frozen_store:
         result["store_from"] = frozen_store
+    if spec["system"] == "graphiti":  # the question's graph holds its own turns and nothing else
+        ids = {m["id"] for m in sl["messages"]}
+        result["graph_group"] = {
+            "group_id": system.group_id,
+            "episodes": len(system.episode_names),
+            "foreign_episodes": sum(n not in ids for n in system.episode_names),
+            "missing_turns": len(ids - set(system.episode_names)),
+        }
+        result["retries"] = system.retries
     if reuse_from:
         result["reused_store"] = reuse_from
     if sweep:  # retrieval only, no answers: o200k tokens of the memory block at each k, per final question

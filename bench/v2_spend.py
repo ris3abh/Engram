@@ -2,7 +2,8 @@
 
 Every v2 run records its spend in bench/results/v2/spend.jsonl, one line per run: stage, system, run id and the spend
 per provider (openai, jev, anthropic). A RunBudget checks, on every charge, the run's own caps ($40 OpenAI, $10 Jev,
-$15 Anthropic) and the phase-wide cap on non-OpenAI spend ($40 total over every run in the ledger, this one included).
+$15 Anthropic) and the phase-wide cap on non-OpenAI spend ($55 total over every run in the ledger, this one
+included; $40 until the 2026-09-25 Stage 5 Deviations entry).
 Crossing any cap raises SpendStop, which stops the run; the charge that crossed it is still written to the ledger when
 the run closes, so the running total stays true.
 
@@ -16,7 +17,7 @@ from pathlib import Path
 
 LEDGER = Path(__file__).parents[1] / "bench" / "results" / "v2" / "spend.jsonl"
 RUN_CAPS = {"openai": 40.0, "jev": 10.0, "anthropic": 15.0}
-NON_OPENAI_CAP = 40.0
+NON_OPENAI_CAP = 55.0
 PROVIDERS = tuple(RUN_CAPS)
 
 

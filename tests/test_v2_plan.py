@@ -25,13 +25,13 @@ REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviatio
     "6": ("6. Hypothesis family", "1b6deead0e36af2d0e7f31c3848ba982c3174b949b7d91ccdedd6847accba511", 5),
     "7": ("7. Judges", "d83675c04d11264b68ec24da1c4807935ba0c457e397d178836ac0a6a57ccabd", 2),
     "8": ("8. Human audit", "ca695f04a2eabdd8364253af1b6e707a58918295214502e4e6d152d8aa7ae91c", 1),
-    "10": ("10. LongMemEval", "c03449acca321b0bae70e5c2d113fd79b544cee959068714a665828a9d808e1f", 3),
+    "10": ("10. LongMemEval", "c03449acca321b0bae70e5c2d113fd79b544cee959068714a665828a9d808e1f", 4),
     "11": (
         "11. Statistics, spend and stopping rules",
         "703564575af41debd2ae594daee00a1505a0d554c444de9d86329cbc6e16a894",
         0,
     ),
-    "13": ("13. Budget", "0a0194a066b02c8952b02d4993b3be9fcd5b5fe3887de83d7eedcdc9752cedff", 2),
+    "13": ("13. Budget", "c91de8fb6b0b12f869ec45f4039dcc51f6b9c7b3f7880fc8c53f513bd28e8e79", 3),
 }
 
 

@@ -16,15 +16,15 @@ def test_run_caps(tmp_path):
 
 def test_phase_cap_counts_every_run(tmp_path):
     ledger = tmp_path / "spend.jsonl"
-    for i in range(3):
+    for i in range(4):
         with RunBudget("6", "engram", f"r{i}", ledger) as b:
             b.charge("anthropic", 12.0)
-    with pytest.raises(SpendStop, match="phase cap"), RunBudget("8", "judges", "r3", ledger) as b:
-        b.charge("jev", NON_OPENAI_CAP - 36.0 + 0.01)
-    with pytest.raises(SpendStop, match="already reached"), RunBudget("8", "judges", "r4", ledger):
+    with pytest.raises(SpendStop, match="phase cap"), RunBudget("8", "judges", "r4", ledger) as b:
+        b.charge("jev", NON_OPENAI_CAP - 48.0 + 0.01)  # under the $10 per-run Jev cap
+    with pytest.raises(SpendStop, match="already reached"), RunBudget("8", "judges", "r5", ledger):
         pass
     rows = [json.loads(x) for x in ledger.read_text().splitlines()]
-    assert [r["run_id"] for r in rows] == ["r0", "r1", "r2", "r3"]
+    assert [r["run_id"] for r in rows] == ["r0", "r1", "r2", "r3", "r4"]
 
 
 def test_openai_does_not_count_toward_the_phase_cap(tmp_path):

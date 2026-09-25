@@ -405,6 +405,21 @@ one.
   at or above 0.85). The comparison therefore slightly favours the LLM arms on closes; the paper says so. Also checked
   before any held-out run: the cross-encoder, with its weights copied after loading, reproduces its model card's
   example (8.607141 and -4.320079 against 8.607138 and -4.320078; tests/test_cross_encoder.py).
+- 2026-09-25, Stage 5 (§13, §10 and section 5.3), decided after one LongMemEval question (01493427), on which all
+  three systems answered correctly at every k run, so no outcome differed between systems: (1) the phase cap on
+  non-OpenAI spend rises from $40 to $55. The measured Jev cost of the v2 system on LongMemEval is $0.89 per 1,000
+  ingested turns ($0.216 over 242 turns) against the $0.37 assumed from v1 (conv-26 under the v2 system: $0.60), which
+  projects Stage 5 at about $16.9 of Jev against the $7.84 estimated and the phase at about $45 against the old cap.
+  After the first 10 engram questions the phase total is projected again from their measured Jev rate (Stage 6 at
+  the v2 conv-26 rate, Jev-Mem and the Claude judges at their estimates); if the projection exceeds $55, the engram
+  runs stop there and are reported. (2) The registered sweep range (k=3 to 10) cannot token-match engram at k=3 on
+  LongMemEval: on the first question engram's k=3 context is 489 tokens and mem0's and Graphiti's at k=10 are 429 and
+  272. For S10 and S11 each baseline's sweep is extended beyond k=10 (retrieval only, the same rule otherwise) until
+  its pooled mean reaches engram's; the closest pooled mean is chosen as before, ties to the larger k. Engram is also
+  answered at k=1 and k=2 as a conservative comparison (exploratory). Engram's memory rendering is unchanged. The
+  LoCoMo sweep stays at k=3 to 10. Graphiti's LongMemEval runs go four questions in parallel, each on its own graph
+  group (checked per run: every episode in the group is one of that question's turns), with request retries logged
+  apart from wall time.
 
 ### Where this plan differs from the phase-3 brief
 
@@ -419,8 +434,8 @@ Recorded at registration, not deviations: the plan wins where the two disagree.
 
 ## 13. Budget
 
-- **Hard cap:** $40 of non-OpenAI spend (Jev plus Anthropic) for all of phase 3. `bench/v2_spend.py` keeps a running
-  total in `bench/results/v2/spend.jsonl`; a charge that takes the total over $40 stops its run, and no run starts once
+- **Hard cap:** $55 of non-OpenAI spend (Jev plus Anthropic) for all of phase 3 ($40 until 2026-09-25, Deviations). `bench/v2_spend.py` keeps a running
+  total in `bench/results/v2/spend.jsonl`; a charge that takes the total over the cap stops its run, and no run starts once
   the cap is reached. The per-run caps of section 11 ($40 OpenAI, $10 Jev, $15 Anthropic) apply as well. OpenAI spend
   has no phase-wide cap.
 - **Estimate** (`bench/v2_budget.py`, output in `bench/results/v2/budget_estimate.json`): volumes counted from the
