@@ -332,9 +332,10 @@ one.
   superseding relation, mostly because the old and new facts were given different multi-valued relation types. The one
   change tried was the edge_type wording (v2: "Choose by what kind of thing the object is, and choose consistently, so
   that a later fact that replaces this one about the same attribute would get the same relation. Use related_to only
-  when no other relation fits."; no examples). Result: correct closes 10 against 10 (two gained, the therapist and a
-  guitar teacher; one lost, a volunteer shift, whose earlier value then closed one message late); 0 of 10 no-close
-  traps closed; conv-26 accuracy 128/152 against 130 at k=3 and 125/152 against 129 at k=20. It failed two of the
+  when no other relation fits."; no examples). Result: 8 distinct correct closes against 8 (first reported as 10
+  against 10, which counted update set 1's two closes twice, since the set-2 slice contains set 1); two gained, the
+  therapist and a guitar teacher; one lost, a volunteer shift, whose earlier value then closed one message late; 0 of
+  10 no-close traps closed; conv-26 accuracy 128/152 against 130 at k=3 and 125/152 against 129 at k=20. It failed two of the
   three keep criteria, so the frozen arm keeps edge_type v1; v2 stays importable (Flags.edge_type_version, arm
   e4_frozen_edge2) only so the recorded trial reproduces. No second round.
 - 2026-09-25, Stage 2 close attempt, second round (section 5.1), added after the edge_type round: the edge_type

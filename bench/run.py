@@ -233,6 +233,12 @@ ARMS: dict[str, dict] = {
         "hygiene": True,
         "flags": Flags(**{**E4_FROZEN, "edge_type_version": 2}),
     },
+    # v2 Stage 2 close attempt, second round (V2_PLAN Deviations 2026-09-25): the frozen arm with same_attribute_gate.
+    "e4_frozen_sameattr": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_FROZEN, "same_attribute_gate": True}),
+    },
     # v2 Stage 2: the frozen arm with Jev's reranking off (read path only; ingestion identical, so its writes replay
     # from the cache). E4_V2 above predates the frozen flags, so it is not this arm.
     "e4_frozen_norerank": {
@@ -1346,14 +1352,19 @@ class V2Budget(Budget):
 
     PROVIDER = {"claude": "anthropic", "jev": "jev", "openai": "openai"}
 
-    def __init__(self, run_budget):
+    def __init__(self, run_budget, max_jev: float | None = None):
         super().__init__()
         self.spent["openai"] = 0.0
         self.run_budget = run_budget
+        self.max_jev = max_jev  # --max-jev: a tighter Jev cap for this run than the plan's per-run cap
 
     def add(self, kind: str, usd: float) -> None:
         super().add(kind, usd)
         self.run_budget.charge(self.PROVIDER[kind], usd)
+        if self.max_jev is not None and self.spent.get("jev", 0.0) > self.max_jev:
+            from .v2_spend import SpendStop
+
+            raise SpendStop(f"Jev spend ${self.spent['jev']:.4f} passed this run's --max-jev ${self.max_jev:.2f}")
 
 
 async def run_v2(args, extra: list[int]) -> dict:
@@ -1361,7 +1372,7 @@ async def run_v2(args, extra: list[int]) -> dict:
     from .v2_spend import RunBudget, ledger_totals
 
     with RunBudget(stage=args.stage, system=args.arm, run_id=f"{args.arm}:{args.slice}") as run_budget:
-        budget = V2Budget(run_budget)
+        budget = V2Budget(run_budget, args.max_jev)
         result = await run_arm(
             args.arm,
             args.slice,
@@ -1398,6 +1409,9 @@ async def main() -> None:
     parser.add_argument("--suffix", default="", help="with --report: result-file suffix, e.g. __k3 or __nodates")
     parser.add_argument("--stack", choices=list(STACKS), default="anthropic", help="model stack (default: v1's)")
     parser.add_argument("--stage", help="with --stack openai: the V2_PLAN stage this run belongs to, for the ledger")
+    parser.add_argument(
+        "--max-jev", type=float, help="with --stack openai: stop this run once its Jev spend passes this"
+    )
     args = parser.parse_args()
     if args.report is not None:
         sl = args.slice.replace(":", "_")
