@@ -380,8 +380,11 @@ one.
   caption states that it uses different extraction models from every other system. S1, S2 and S11 stay on the
   shared-stack Graphiti as registered. Reason: the shared-stack Graphiti stored a sparse graph on the conv-26 dev slice
   (32 facts against 75 for mem0 and engram, 22/35 answers), so its shipped configuration is reported alongside. Its
-  cost is measured, at list prices, on the first conversation before the other four run; runs are split per
-  conversation to stay under the $40 per-run OpenAI cap.
+  cost is measured, at list prices (gpt-5.5 at $5 / $30 per million tokens), on the first conversation (conv-44)
+  before the other four run; runs are split per conversation to stay under the $40 per-run OpenAI cap. If the
+  projection from conv-44's measured cost to all five conversations exceeds $100, it runs on the first two
+  conversations only (conv-44 and conv-47), and this entry records that. (A 15-message probe on conv-26 projects
+  about $96: $91 of ingestion and $5.5 of answering and judging.)
 
 ### Where this plan differs from the phase-3 brief
 
