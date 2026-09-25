@@ -183,6 +183,10 @@ class MockBackend(DecisionBackend):
             query = s.get("query", "")
             hinted = next((edge for word, edge in _QUERY_HINTS.items() if word in tokens(query)), "none")
             probs = _peaked(options, hinted)
+        elif qid == "same_attribute":
+            old = ask.refs["existing_fact"]
+            same = old.get("subject") == fact.get("subject") and old.get("predicate") == fact.get("predicate")
+            probs = noul_probs(0.9 if same else 0.1)
         elif qid == "same_fact":
             probs = noul_probs(0.95 if jaccard(ask.refs["fact_a"], ask.refs["fact_b"]) >= 0.8 else 0.05)
         else:

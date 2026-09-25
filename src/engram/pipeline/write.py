@@ -31,6 +31,7 @@ from ..decide.questions import (
     EDGE_CARDINALITY,
     FACT_KIND,
     PLAN_FULFILLED,
+    SAME_ATTRIBUTE,
     SENSITIVITY,
     WORTH_REMEMBERING,
     Ask,
@@ -249,6 +250,11 @@ class WritePipeline:
                 Ask(f"relation_to_candidate__{i}", self.rel_q, {"existing_fact": _ref(c)}, target=c.id)
                 for i, c in enumerate(candidates)
             ]
+            if self.flags.same_attribute_gate:
+                asks += [
+                    Ask(f"same_attribute__{i}", SAME_ATTRIBUTE, {"existing_fact": _ref(c)}, target=c.id)
+                    for i, c in enumerate(candidates)
+                ]
         try:
             d = await self.backend.ask(state, asks)
         except DecisionError as e:
@@ -271,6 +277,11 @@ class WritePipeline:
                     )
                     for i, c in enumerate(extras)
                 ]
+                if self.flags.same_attribute_gate:
+                    more += [
+                        Ask(f"same_attribute__{offset + i}", SAME_ATTRIBUTE, {"existing_fact": _ref(c)}, target=c.id)
+                        for i, c in enumerate(extras)
+                    ]
                 try:
                     d.update(await self.backend.ask(state, more))
                     candidates = [*candidates, *extras]
@@ -421,6 +432,8 @@ class WritePipeline:
             sibling = target.subject == normalize_entity(fact.subject) and target.predicate == fact.predicate
             # negates may close any cardinality; update needs a single-valued relation; contradiction also a sibling.
             allowed = relation.label == "negates" or (single and (relation.label == "update" or sibling))
+            if not allowed and relation.label == "update" and self._same_attribute(d, candidates, target):
+                allowed = True
             if self.flags.cardinality_rule and not allowed:
                 if close:
                     self.stats["blocked_closes"] += 1
@@ -521,7 +534,9 @@ class WritePipeline:
                     self.stats["against_blocked"] += 1
                     self.belief_trace.append({**ev, "event": "blocked_temporal"})
                     continue
-                if not B.against_allowed(label, c, fact, ums):
+                if not B.against_allowed(label, c, fact, ums) and not (
+                    label == "update" and self._same_attribute(d, candidates, c)
+                ):
                     self.stats["against_blocked_structure"] += 1
                     self.stats["against_blocked"] += 1
                     self.belief_trace.append({**ev, "event": "blocked_structure"})
@@ -573,6 +588,17 @@ class WritePipeline:
             "negates": "negated",
         }.get(relation.label, "inserted")
         return outcome(action, fact.id, target.id if target else None, closed_target, fact.tentative)
+
+    def _same_attribute(self, d: dict[str, Decision], candidates: list[Fact], c: Fact) -> bool:
+        """Flags.same_attribute_gate: Jev says `c` and the new fact are the same attribute of the same subject."""
+        if not self.flags.same_attribute_gate:
+            return False
+        i = next((j for j, x in enumerate(candidates) if x.id == c.id), None)
+        dec = d.get(f"same_attribute__{i}") if i is not None else None
+        ok = dec is not None and dec.backend != "fallback" and dec.probs.get("yes", 0.0) >= config.ACT_THRESHOLD
+        if ok:
+            self.stats["same_attribute_allowed"] += 1
+        return ok
 
     async def _recheck(self, state: dict, target: Fact, decisions: list[Decision]) -> tuple[bool, float]:
         ask = Ask("relation_to_candidate_recheck", self.recheck_q, {"existing_fact": _ref(target)}, target=target.id)

@@ -53,6 +53,9 @@ class Flags:
     relation_version: int = 1  # relation_to_candidate version: 1 (E0-E3) | 2 (adds `negates`, E5 on)
     temporal_version: int = 1  # temporal_status version: 1 | 2 (completed changes never hypothetical)
     edge_type_version: int = 1  # edge_type version: 1 | 2 (type by what the object is, consistently; v2 Stage 2)
+    same_attribute_gate: bool = (
+        False  # ask same_attribute per candidate; p >= act lets an update pass the cardinality gate
+    )
 
     def describe(self) -> dict:
         return asdict(self)

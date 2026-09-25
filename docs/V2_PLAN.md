@@ -337,6 +337,19 @@ one.
   traps closed; conv-26 accuracy 128/152 against 130 at k=3 and 125/152 against 129 at k=20. It failed two of the
   three keep criteria, so the frozen arm keeps edge_type v1; v2 stays importable (Flags.edge_type_version, arm
   e4_frozen_edge2) only so the recorded trial reproduces. No second round.
+- 2026-09-25, Stage 2 close attempt, second round (section 5.1), added after the edge_type round: the edge_type
+  round showed that the cardinality gate compares two edge_type labels Jev assigns independently, one when each fact
+  is written, so no wording of that question can make them consistent (it aligned some pairs and split others). This
+  round targets the gate instead, and is the last change before v2-frozen, whatever the outcome. A new Noul,
+  same_attribute (version 1), is asked per candidate in the same request as relation_to_candidate: "Do new_fact and
+  existing_fact describe the same attribute of the same subject, so that one value would replace the other?" In the
+  cardinality gate, an update (not a contradiction) may retire a multi-valued fact when that Noul is at least 0.85,
+  regardless of edge_type; every other gate and threshold is unchanged, the second phrasing included, and edge_type
+  stays v1. It is behind Flags.same_attribute_gate (default off, so the frozen arm reproduces). Steps: offline tests;
+  a targeted replay of the gate-blocked items, the 10 no-close traps and the baseline's correct closes (Jev only, cap
+  $0.10); then, if approved, update sets 1 and 2 and the whole of conv-26. Kept only if correct closes increase, 0 of
+  10 traps close, closes matching no labelled pair do not increase, and conv-26 accuracy at k=3 and k=20 drops by no
+  more than one question each. The outcome is recorded here.
 
 ### Where this plan differs from the phase-3 brief
 

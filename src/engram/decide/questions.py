@@ -35,6 +35,7 @@ class NoulQuestion:
     instructions: str
     true: str
     false: str
+    version: int = 1  # bumped when wording changes; not part of the payload
 
     type = "noul"
 
@@ -302,6 +303,22 @@ def relation_questions(version: int) -> tuple[ChoiceQuestion, ChoiceQuestion]:
     """(relation_to_candidate, its recheck phrasing) for a question version."""
     return {1: (RELATION_TO_CANDIDATE_V1, RELATION_RECHECK_V1), 2: (RELATION_TO_CANDIDATE, RELATION_RECHECK)}[version]
 
+
+# V2 Stage 2 (2026-09-25, Flags.same_attribute_gate): asked per candidate in the relation request. At p(yes) >=
+# ACT_THRESHOLD an `update` may retire a multi-valued fact regardless of edge_type (the cardinality gate otherwise
+# compares two independently assigned edge_type labels). Contradictions are unaffected.
+SAME_ATTRIBUTE = NoulQuestion(
+    id="same_attribute",
+    instructions=(
+        "Do `new_fact` and `existing_fact` describe the same attribute of the same subject, so that one value would "
+        "replace the other?"
+    ),
+    true=(
+        "Both give a value for one and the same attribute of the same subject; the new value takes the old one's place."
+    ),
+    false="They are about different attributes or different subjects, or both values can hold at the same time.",
+    version=1,
+)
 
 # E5 (fulfills): asked only for plan/goal candidates. A plan closes as fulfilled at p >= ACT_THRESHOLD.
 PLAN_FULFILLED = NoulQuestion(
