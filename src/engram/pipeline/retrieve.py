@@ -186,9 +186,16 @@ class Retriever:
     def _cross_encode(self, pairs: list[tuple[str, str]]):
         with self._cross_encoder_lock:
             if self._cross_encoder is None:
+                import torch
                 from sentence_transformers import CrossEncoder
 
-                self._cross_encoder = CrossEncoder(CROSS_ENCODER, device=config.EMBED_DEVICE)
+                model = CrossEncoder(CROSS_ENCODER, device=config.EMBED_DEVICE)
+                # The loaded weights are memory-mapped from the model file, and torch 2.14's CPU matmul on this
+                # machine returns NaN from that memory (found in Stage 4); ordinary copies compute correctly.
+                with torch.no_grad():
+                    for param in model.model.parameters():
+                        param.data = param.data.clone()
+                self._cross_encoder = model
             return self._cross_encoder.predict(pairs, show_progress_bar=False)
 
     def _finish(self, query, results, decisions, started, shortlist, degraded, relation) -> Retrieval:
