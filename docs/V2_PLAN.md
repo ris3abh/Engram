@@ -326,6 +326,17 @@ one.
   Jev-Mem at $3.54 of Jev from probe 2's measured rates. Reason: the closest concurrent design, compared on the same
   stack and prompts; the nine held-out conversations did not fit under the cap (probe 2, about $21 with the section 5.3
   sweep).
+- 2026-09-25, Stage 2 close attempt (section 5.1), reverted: one bounded attempt to make engram close stale facts,
+  on conv-26 update sets 1 and 2 only (set 3 sealed), OpenAI stack, dated extraction. Diagnosis (no API calls,
+  `bench/v2_close_diagnosis.py`): of 31 stale old facts, 10 were stopped by the cardinality gate after Jev labelled a
+  superseding relation, mostly because the old and new facts were given different multi-valued relation types. The one
+  change tried was the edge_type wording (v2: "Choose by what kind of thing the object is, and choose consistently, so
+  that a later fact that replaces this one about the same attribute would get the same relation. Use related_to only
+  when no other relation fits."; no examples). Result: correct closes 10 against 10 (two gained, the therapist and a
+  guitar teacher; one lost, a volunteer shift, whose earlier value then closed one message late); 0 of 10 no-close
+  traps closed; conv-26 accuracy 128/152 against 130 at k=3 and 125/152 against 129 at k=20. It failed two of the
+  three keep criteria, so the frozen arm keeps edge_type v1; v2 stays importable (Flags.edge_type_version, arm
+  e4_frozen_edge2) only so the recorded trial reproduces. No second round.
 
 ### Where this plan differs from the phase-3 brief
 

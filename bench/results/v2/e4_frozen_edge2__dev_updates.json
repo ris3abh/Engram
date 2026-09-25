@@ -1,0 +1,5862 @@
+{
+ "arm": "e4_frozen_edge2",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "mem0",
+  "store_source_text": true,
+  "worth_filter": false,
+  "merge_policy": "same_as",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "mem0_update",
+  "relation_decider": "jev",
+  "cardinality_rule": true,
+  "close_agreement": true,
+  "candidate_source": "cosine+graph",
+  "fulfills_rule": "question",
+  "belief": true,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "not_planned_mass",
+  "update_multi_sibling": true,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "render": "compact",
+  "relation_version": 2,
+  "temporal_version": 2,
+  "edge_type_version": 2
+ },
+ "slice": {
+  "name": "dev_updates",
+  "sessions": [
+   1,
+   4
+  ],
+  "messages": 106,
+  "questions": 65
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 34,
+   "store_size": 102,
+   "questions": 65,
+   "accuracy": 0.9230769230769231,
+   "no_memory": 0,
+   "early_questions": 65,
+   "early_accuracy": 0.9230769230769231
+  }
+ ],
+ "accuracy": 0.8857142857142857,
+ "accuracy_by_category": {
+  "1": 1.0,
+  "2": 0.8888888888888888,
+  "3": 1.0,
+  "4": 0.8421052631578947,
+  "update": 0.9666666666666667
+ },
+ "stored": 102,
+ "active": 99,
+ "tentative": 95,
+ "disputed": 2,
+ "same_as_edges": 1,
+ "pipeline_stats": {
+  "facts_checked": 105,
+  "plan_fulfilled_asks": 309,
+  "facts_with_graph_candidates": 34,
+  "graph_candidates": 100,
+  "fulfilled": 1,
+  "belief_closes": 2,
+  "agreement_checks": 5,
+  "agreements": 1,
+  "against_applied": 2,
+  "against_blocked_structure": 14,
+  "against_blocked": 14,
+  "disagreements": 4,
+  "against_unconfirmed": 4
+ },
+ "facts_extracted": 105,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 1,
+ "closes_detail": [
+  {
+   "closed": "Caroline has a hand-painted bowl that holds sentimental value, made by a friend for her 18th birthday ten years ago. The bowl's pattern and colors remind her of art and self-expression.",
+   "closed_source": "D4:5",
+   "by": "Caroline's hand-painted bowl from her 18th birthday, which held sentimental value, fell off the shelf and shattered around July 11, 2023. She kept a shard but the bowl is now gone.",
+   "by_source": "U:E05",
+   "labeled": false
+  }
+ ],
+ "wrong_closes": 1,
+ "escalations": 4,
+ "llm_decisions": 0,
+ "actions": {
+  "inserted": 38,
+  "refined": 58,
+  "rewritten": 3,
+  "negated": 2,
+  "disputed": 1,
+  "updated": 3
+ },
+ "decision_cost_per_1k": 0.3267475807763777,
+ "cost_per_1k": 1.6420919203990192,
+ "write_latency_p50_ms": 1461.21960398159,
+ "decision_latency_p50_ms": 363.90262498753145,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 1072.5384615384614,
+ "retrieved_tokens_median": 917,
+ "memories_mean": 12.892307692307693,
+ "stale_fact_rate": 0.0,
+ "stale": {
+  "labels_in_slice": 1,
+  "claims_stored": 1,
+  "claims_stale": 0,
+  "rate": 0.0,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.005577180000000001,
+  "claude": 0.0,
+  "openai": 0.009429600000000002
+ },
+ "cache": {
+  "hits": 4791,
+  "misses": 371
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "When did Caroline go to the LGBTQ support group?",
+   "gold": "7 May 2023",
+   "category": 2,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 1,
+   "answer": "May 7, 2023.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.0005073003259176863,
+   "retrieved_tokens": 1618,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 1,
+   "question": "When did Melanie paint a sunrise?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D1:12"
+   ],
+   "last_evidence_session": 1,
+   "answer": "In 2022.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003956385543173672,
+   "retrieved_tokens": 906,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 2,
+   "question": "What fields would Caroline be likely to pursue in her educaton?",
+   "gold": "Psychology, counseling certification",
+   "category": 3,
+   "evidence": [
+    "D1:9",
+    "D1:11"
+   ],
+   "last_evidence_session": 1,
+   "answer": "Counseling and mental health.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00045712,
+   "retrieved_tokens": 1298,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 3,
+   "question": "What did Caroline research?",
+   "gold": "Adoption agencies",
+   "category": 1,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Adoption agencies.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00042628076832844575,
+   "retrieved_tokens": 1123,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 4,
+   "question": "What is Caroline's identity?",
+   "gold": "Transgender woman",
+   "category": 1,
+   "evidence": [
+    "D1:5"
+   ],
+   "last_evidence_session": 1,
+   "answer": "Caroline is transgender.",
+   "memories": 22,
+   "label": "CORRECT",
+   "query_cost": 0.0005734515413489737,
+   "retrieved_tokens": 2071,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 5,
+   "question": "When did Melanie run a charity race?",
+   "gold": "The sunday before 25 May 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 2,
+   "answer": "May 20, 2023.",
+   "memories": 21,
+   "label": "CORRECT",
+   "query_cost": 0.0005379710451612903,
+   "retrieved_tokens": 1856,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 6,
+   "question": "When is Melanie planning on going camping?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D2:7"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Next summer, 2024.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00040024516417775773,
+   "retrieved_tokens": 941,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 7,
+   "question": "What is Caroline's relationship status?",
+   "gold": "Single",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D2:14"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Single and considering adoption.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003812714011220197,
+   "retrieved_tokens": 836,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 8,
+   "question": "When did Caroline give a speech at a school?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 3,
+   "answer": "June 2-3, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00038718104516129035,
+   "retrieved_tokens": 844,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 9,
+   "question": "When did Caroline meet up with her friends, family, and mentors?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:11"
+   ],
+   "last_evidence_session": 3,
+   "answer": "June 2-3, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00039678454838709676,
+   "retrieved_tokens": 886,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 10,
+   "question": "How long has Caroline had her current group of friends for?",
+   "gold": "4 years",
+   "category": 2,
+   "evidence": [
+    "D3:13"
+   ],
+   "last_evidence_session": 3,
+   "answer": "4 years",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037393531035416196,
+   "retrieved_tokens": 775,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 11,
+   "question": "Where did Caroline move from 4 years ago?",
+   "gold": "Sweden",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Her home country.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003633443478908189,
+   "retrieved_tokens": 711,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 12,
+   "question": "How long ago was Caroline's 18th birthday?",
+   "gold": "10 years ago",
+   "category": 2,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Ten years ago.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00039141270322580647,
+   "retrieved_tokens": 881,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 13,
+   "question": "What career path has Caroline decided to persue?",
+   "gold": "counseling or mental health for Transgender people",
+   "category": 1,
+   "evidence": [
+    "D4:13",
+    "D1:11"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Counseling and mental health.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0004603967561290323,
+   "retrieved_tokens": 1303,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 14,
+   "question": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+   "gold": "Likely no",
+   "category": 3,
+   "evidence": [
+    "D4:15",
+    "D3:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "No, she attributes her motivation to support.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00042612512258064514,
+   "retrieved_tokens": 1073,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 31,
+   "question": "When did Melanie go camping in June?",
+   "gold": "The week before 27 June 2023",
+   "category": 2,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 4,
+   "answer": "June 20-26, 2023.",
+   "memories": 21,
+   "label": "CORRECT",
+   "query_cost": 0.0005427446503747149,
+   "retrieved_tokens": 1861,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 82,
+   "question": "What did the charity race raise awareness for?",
+   "gold": "mental health",
+   "category": 4,
+   "evidence": [
+    "D2:2"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Mental health",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0004123826946607342,
+   "retrieved_tokens": 1027,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 83,
+   "question": "What did Melanie realize after the charity race?",
+   "gold": "self-care is important",
+   "category": 4,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Self-care is important.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0004091801330024814,
+   "retrieved_tokens": 1026,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 84,
+   "question": "How does Melanie prioritize self-care?",
+   "gold": "by carving out some me-time each day for activities like running, reading, or playing the violin",
+   "category": 4,
+   "evidence": [
+    "D2:5"
+   ],
+   "last_evidence_session": 2,
+   "answer": "By establishing a consistent routine.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.00044082435483870966,
+   "retrieved_tokens": 1184,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 85,
+   "question": "What are Caroline's plans for the summer?",
+   "gold": "researching adoption agencies",
+   "category": 4,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 2,
+   "answer": "No specific summer plans mentioned.",
+   "memories": 16,
+   "label": "WRONG",
+   "query_cost": 0.00043821561290322583,
+   "retrieved_tokens": 1200,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 86,
+   "question": "What type of individuals does the adoption agency Caroline is considering support?",
+   "gold": "LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 2,
+   "answer": "LGBTQ+ individuals.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0004365229419354839,
+   "retrieved_tokens": 1166,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 87,
+   "question": "Why did Caroline choose the adoption agency?",
+   "gold": "because of their inclusivity and support for LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 2,
+   "answer": "They help LGBTQ+ individuals.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037284066825127337,
+   "retrieved_tokens": 754,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 88,
+   "question": "What is Caroline excited about in the adoption process?",
+   "gold": "creating a family for kids who need one",
+   "category": 4,
+   "evidence": [
+    "D2:14"
+   ],
+   "last_evidence_session": 2,
+   "answer": "The memories do not specify what Caroline is excited about in the adoption process.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003975323808149406,
+   "retrieved_tokens": 873,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 89,
+   "question": "What does Melanie think about Caroline's decision to adopt?",
+   "gold": "she thinks Caroline is doing something amazing and will be an awesome mom",
+   "category": 4,
+   "evidence": [
+    "D2:15"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Melanie thinks it's awesome.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00041584516387096777,
+   "retrieved_tokens": 1013,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 90,
+   "question": "How long have Mel and her husband been married?",
+   "gold": "Mel and her husband have been married for 5 years.",
+   "category": 4,
+   "evidence": [
+    "D3:16"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Five years.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037903864516129033,
+   "retrieved_tokens": 765,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 91,
+   "question": "What does Caroline's necklace symbolize?",
+   "gold": "love, faith, and strength",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Love, faith, and strength.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0004208062443197756,
+   "retrieved_tokens": 1031,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 92,
+   "question": "What country is Caroline's grandma from?",
+   "gold": "Sweden",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Sweden",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037557859002932553,
+   "retrieved_tokens": 784,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 93,
+   "question": "What was grandma's gift to Caroline?",
+   "gold": "necklace",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "A necklace.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00040153991225806457,
+   "retrieved_tokens": 935,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 94,
+   "question": "What is Melanie's hand-painted bowl a reminder of?",
+   "gold": "art and self-expression",
+   "category": 4,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "The memories do not mention a hand-painted bowl belonging to Melanie. They refer to Caroline's hand-painted bowl, which reminds her of art and self-expression.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0004088405806451613,
+   "retrieved_tokens": 868,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 95,
+   "question": "What did Melanie and her family do while camping?",
+   "gold": "explored nature, roasted marshmallows, and went on a hike",
+   "category": 4,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Explored nature and roasted marshmallows.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037722638511166254,
+   "retrieved_tokens": 776,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 96,
+   "question": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+   "gold": "working with trans people, helping them accept themselves and supporting their mental health",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Counseling for transgender individuals.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00045508005645161293,
+   "retrieved_tokens": 1275,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 97,
+   "question": "What workshop did Caroline attend recently?",
+   "gold": "LGBTQ+ counseling workshop",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "LGBTQ+ counseling workshop.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.0004895222064516129,
+   "retrieved_tokens": 1549,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 98,
+   "question": "What was discussed in the LGBTQ+ counseling workshop?",
+   "gold": "therapeutic methods and how to best work with trans people",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Therapeutic methods for transgender individuals.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039834500912124584,
+   "retrieved_tokens": 903,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 99,
+   "question": "What motivated Caroline to pursue counseling?",
+   "gold": "her own journey and the support she received, and how counseling improved her life",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Her own journey and support received.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00043901652387096774,
+   "retrieved_tokens": 1182,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 100,
+   "question": "What kind of place does Caroline want to create for people?",
+   "gold": "a safe and inviting place for people to grow",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 4,
+   "answer": "A safe and inviting space.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0004710884922377521,
+   "retrieved_tokens": 1425,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E01",
+   "question": "What is Melanie's main creative outlet now?",
+   "gold": "Pottery (she has stopped painting)",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E01"
+   ],
+   "last_evidence_session": 5,
+   "answer": "Pottery.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003776969290322581,
+   "retrieved_tokens": 829,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E02",
+   "question": "Which of her own paintings does Melanie consider her favorite now?",
+   "gold": "The forest-at-dusk painting",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E02"
+   ],
+   "last_evidence_session": 6,
+   "answer": "The forest-at-dusk painting.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003868878774193549,
+   "retrieved_tokens": 879,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E03",
+   "question": "Does Melanie still have a job?",
+   "gold": "No, she quit to stay home with the kids",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E03"
+   ],
+   "last_evidence_session": 7,
+   "answer": "No, she quit her job.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003685104193548387,
+   "retrieved_tokens": 769,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E04",
+   "question": "Does Caroline still have her grandmother's necklace?",
+   "gold": "No, she lost it at the beach",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E04"
+   ],
+   "last_evidence_session": 8,
+   "answer": "No, she lost it.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003909867870967742,
+   "retrieved_tokens": 909,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E05",
+   "question": "Does Caroline still have the hand-painted bowl from her 18th birthday?",
+   "gold": "No, it broke",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E05"
+   ],
+   "last_evidence_session": 9,
+   "answer": "No, it shattered on July 11, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039527127096774194,
+   "retrieved_tokens": 894,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E06",
+   "question": "Does Caroline still go to the LGBTQ support group?",
+   "gold": "No, the group disbanded",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E06"
+   ],
+   "last_evidence_session": 10,
+   "answer": "No, it disbanded.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037840674193548394,
+   "retrieved_tokens": 807,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E07",
+   "question": "Does Melanie still go swimming with her kids?",
+   "gold": "No, the pool closed; they go on bike rides instead",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E07"
+   ],
+   "last_evidence_session": 11,
+   "answer": "No, the pool closed permanently.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003930929290322581,
+   "retrieved_tokens": 891,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E08",
+   "question": "What are Melanie's two younger kids into now?",
+   "gold": "Dinosaurs",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E08"
+   ],
+   "last_evidence_session": 12,
+   "answer": "Dinosaurs.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003696706838709678,
+   "retrieved_tokens": 764,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E09",
+   "question": "What instrument does Melanie play now?",
+   "gold": "Guitar (she sold her violin)",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E09"
+   ],
+   "last_evidence_session": 13,
+   "answer": "Guitar.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037633521935483876,
+   "retrieved_tokens": 835,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E10",
+   "question": "What exercise does Melanie do now instead of running?",
+   "gold": "Swimming laps",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E10"
+   ],
+   "last_evidence_session": 14,
+   "answer": "Melanie swims laps at the gym.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003847150838709678,
+   "retrieved_tokens": 842,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E11",
+   "question": "What does Melanie do in her me-time now instead of reading?",
+   "gold": "Meditation",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E11"
+   ],
+   "last_evidence_session": 15,
+   "answer": "Meditation for twenty minutes.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00038133634838709676,
+   "retrieved_tokens": 828,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E12",
+   "question": "Which adoption agency is Caroline working with now?",
+   "gold": "Rainbow Families",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E12"
+   ],
+   "last_evidence_session": 16,
+   "answer": "Rainbow Families",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037448164516129035,
+   "retrieved_tokens": 820,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E13",
+   "question": "Is Caroline adopting right away or fostering first?",
+   "gold": "Fostering first",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E13"
+   ],
+   "last_evidence_session": 17,
+   "answer": "Fostering first.",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.0004384185161290323,
+   "retrieved_tokens": 1235,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E14",
+   "question": "Is self-care still a work in progress for Melanie?",
+   "gold": "No, she now has a routine that sticks",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E14"
+   ],
+   "last_evidence_session": 18,
+   "answer": "No, she has a routine now.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039005183870967743,
+   "retrieved_tokens": 882,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E15",
+   "question": "Where does Caroline's grandma live now?",
+   "gold": "Norway",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Norway with her aunt.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003763749032258065,
+   "retrieved_tokens": 818,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S01",
+   "question": "Is Melanie still married?",
+   "gold": "Yes, married for 5 years",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S01"
+   ],
+   "last_evidence_session": 20,
+   "answer": "Yes, Melanie is still married.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003703931096774194,
+   "retrieved_tokens": 764,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S02",
+   "question": "What career is Caroline pursuing?",
+   "gold": "Counseling / mental health, working with trans people",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S02"
+   ],
+   "last_evidence_session": 21,
+   "answer": "Counseling or mental health.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0004201608129032258,
+   "retrieved_tokens": 1096,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S03",
+   "question": "How long has Caroline had her current group of friends?",
+   "gold": "4 years",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S03"
+   ],
+   "last_evidence_session": 22,
+   "answer": "4 years",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003683339032258064,
+   "retrieved_tokens": 775,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S04",
+   "question": "Has Caroline moved back to Sweden?",
+   "gold": "No, it's only a someday idea",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S04"
+   ],
+   "last_evidence_session": 23,
+   "answer": "No, not anytime soon.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003575299225806451,
+   "retrieved_tokens": 704,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S05",
+   "question": "Has Melanie run a second charity race yet?",
+   "gold": "No, she plans one for the fall",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S05"
+   ],
+   "last_evidence_session": 24,
+   "answer": "No, she plans to run one.",
+   "memories": 21,
+   "label": "CORRECT",
+   "query_cost": 0.0005342532903225806,
+   "retrieved_tokens": 1843,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S06",
+   "question": "Where did Melanie most recently go camping with her family?",
+   "gold": "The mountains",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S06"
+   ],
+   "last_evidence_session": 25,
+   "answer": "In the mountains.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0005119368387096774,
+   "retrieved_tokens": 1701,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S07",
+   "question": "Has Caroline attended an LGBTQ+ counseling workshop?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S07"
+   ],
+   "last_evidence_session": 26,
+   "answer": "Yes, on June 23, 2023.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.0005250031612903227,
+   "retrieved_tokens": 1779,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S08",
+   "question": "Is Caroline open about being transgender?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S08"
+   ],
+   "last_evidence_session": 27,
+   "answer": "Yes, she is open.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0004582618064516129,
+   "retrieved_tokens": 1331,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S09",
+   "question": "Is Caroline planning to raise kids as a single parent?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S09"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Yes, she is.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.00045172306451612905,
+   "retrieved_tokens": 1326,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S10",
+   "question": "Does Melanie want to be courageous for her family?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yes, she does.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0005294375225806452,
+   "retrieved_tokens": 1816,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F01",
+   "question": "Has Caroline enrolled in a program to continue her education?",
+   "gold": "Yes, a psychology certificate program at the community college",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F01"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, a psychology certificate program.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003994083548387097,
+   "retrieved_tokens": 956,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F02",
+   "question": "Has Melanie's kids' summer break started?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F02"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Yes, it started on August 24, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003985965290322581,
+   "retrieved_tokens": 917,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F03",
+   "question": "Has Caroline started working with trans people?",
+   "gold": "Yes, she volunteers as a peer counselor for trans youth",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F03"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Yes, as a peer counselor.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00042936787096774194,
+   "retrieved_tokens": 1147,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F04",
+   "question": "Has Caroline submitted an adoption application?",
+   "gold": "Yes, to Rainbow Families",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F04"
+   ],
+   "last_evidence_session": 33,
+   "answer": "Yes, on August 21, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036760645161290325,
+   "retrieved_tokens": 752,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F05",
+   "question": "Has Caroline given another talk about her journey?",
+   "gold": "Yes, at a high school in the next town",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F05"
+   ],
+   "last_evidence_session": 34,
+   "answer": "Yes, on August 28, 2023.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0004226103870967742,
+   "retrieved_tokens": 1087,
+   "checkpoint": 34,
+   "store_size": 102
+  }
+ ],
+ "asked": [
+  {
+   "idx": 0,
+   "question": "When did Caroline go to the LGBTQ support group?",
+   "gold": "7 May 2023",
+   "category": 2,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 1,
+   "answer": "May 7, 2023.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.0005073003259176863,
+   "retrieved_tokens": 1618,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 1,
+   "question": "When did Melanie paint a sunrise?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D1:12"
+   ],
+   "last_evidence_session": 1,
+   "answer": "In 2022.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003956385543173672,
+   "retrieved_tokens": 906,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 2,
+   "question": "What fields would Caroline be likely to pursue in her educaton?",
+   "gold": "Psychology, counseling certification",
+   "category": 3,
+   "evidence": [
+    "D1:9",
+    "D1:11"
+   ],
+   "last_evidence_session": 1,
+   "answer": "Counseling and mental health.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00045712,
+   "retrieved_tokens": 1298,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 3,
+   "question": "What did Caroline research?",
+   "gold": "Adoption agencies",
+   "category": 1,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Adoption agencies.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00042628076832844575,
+   "retrieved_tokens": 1123,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 4,
+   "question": "What is Caroline's identity?",
+   "gold": "Transgender woman",
+   "category": 1,
+   "evidence": [
+    "D1:5"
+   ],
+   "last_evidence_session": 1,
+   "answer": "Caroline is transgender.",
+   "memories": 22,
+   "label": "CORRECT",
+   "query_cost": 0.0005734515413489737,
+   "retrieved_tokens": 2071,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 5,
+   "question": "When did Melanie run a charity race?",
+   "gold": "The sunday before 25 May 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 2,
+   "answer": "May 20, 2023.",
+   "memories": 21,
+   "label": "CORRECT",
+   "query_cost": 0.0005379710451612903,
+   "retrieved_tokens": 1856,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 6,
+   "question": "When is Melanie planning on going camping?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D2:7"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Next summer, 2024.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00040024516417775773,
+   "retrieved_tokens": 941,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 7,
+   "question": "What is Caroline's relationship status?",
+   "gold": "Single",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D2:14"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Single and considering adoption.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003812714011220197,
+   "retrieved_tokens": 836,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 8,
+   "question": "When did Caroline give a speech at a school?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 3,
+   "answer": "June 2-3, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00038718104516129035,
+   "retrieved_tokens": 844,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 9,
+   "question": "When did Caroline meet up with her friends, family, and mentors?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:11"
+   ],
+   "last_evidence_session": 3,
+   "answer": "June 2-3, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00039678454838709676,
+   "retrieved_tokens": 886,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 10,
+   "question": "How long has Caroline had her current group of friends for?",
+   "gold": "4 years",
+   "category": 2,
+   "evidence": [
+    "D3:13"
+   ],
+   "last_evidence_session": 3,
+   "answer": "4 years",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037393531035416196,
+   "retrieved_tokens": 775,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 11,
+   "question": "Where did Caroline move from 4 years ago?",
+   "gold": "Sweden",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Her home country.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003633443478908189,
+   "retrieved_tokens": 711,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 12,
+   "question": "How long ago was Caroline's 18th birthday?",
+   "gold": "10 years ago",
+   "category": 2,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Ten years ago.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00039141270322580647,
+   "retrieved_tokens": 881,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 13,
+   "question": "What career path has Caroline decided to persue?",
+   "gold": "counseling or mental health for Transgender people",
+   "category": 1,
+   "evidence": [
+    "D4:13",
+    "D1:11"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Counseling and mental health.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0004603967561290323,
+   "retrieved_tokens": 1303,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 14,
+   "question": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+   "gold": "Likely no",
+   "category": 3,
+   "evidence": [
+    "D4:15",
+    "D3:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "No, she attributes her motivation to support.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00042612512258064514,
+   "retrieved_tokens": 1073,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 31,
+   "question": "When did Melanie go camping in June?",
+   "gold": "The week before 27 June 2023",
+   "category": 2,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 4,
+   "answer": "June 20-26, 2023.",
+   "memories": 21,
+   "label": "CORRECT",
+   "query_cost": 0.0005427446503747149,
+   "retrieved_tokens": 1861,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 82,
+   "question": "What did the charity race raise awareness for?",
+   "gold": "mental health",
+   "category": 4,
+   "evidence": [
+    "D2:2"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Mental health",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0004123826946607342,
+   "retrieved_tokens": 1027,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 83,
+   "question": "What did Melanie realize after the charity race?",
+   "gold": "self-care is important",
+   "category": 4,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Self-care is important.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0004091801330024814,
+   "retrieved_tokens": 1026,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 84,
+   "question": "How does Melanie prioritize self-care?",
+   "gold": "by carving out some me-time each day for activities like running, reading, or playing the violin",
+   "category": 4,
+   "evidence": [
+    "D2:5"
+   ],
+   "last_evidence_session": 2,
+   "answer": "By establishing a consistent routine.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.00044082435483870966,
+   "retrieved_tokens": 1184,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 85,
+   "question": "What are Caroline's plans for the summer?",
+   "gold": "researching adoption agencies",
+   "category": 4,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 2,
+   "answer": "No specific summer plans mentioned.",
+   "memories": 16,
+   "label": "WRONG",
+   "query_cost": 0.00043821561290322583,
+   "retrieved_tokens": 1200,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 86,
+   "question": "What type of individuals does the adoption agency Caroline is considering support?",
+   "gold": "LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 2,
+   "answer": "LGBTQ+ individuals.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0004365229419354839,
+   "retrieved_tokens": 1166,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 87,
+   "question": "Why did Caroline choose the adoption agency?",
+   "gold": "because of their inclusivity and support for LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 2,
+   "answer": "They help LGBTQ+ individuals.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037284066825127337,
+   "retrieved_tokens": 754,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 88,
+   "question": "What is Caroline excited about in the adoption process?",
+   "gold": "creating a family for kids who need one",
+   "category": 4,
+   "evidence": [
+    "D2:14"
+   ],
+   "last_evidence_session": 2,
+   "answer": "The memories do not specify what Caroline is excited about in the adoption process.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003975323808149406,
+   "retrieved_tokens": 873,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 89,
+   "question": "What does Melanie think about Caroline's decision to adopt?",
+   "gold": "she thinks Caroline is doing something amazing and will be an awesome mom",
+   "category": 4,
+   "evidence": [
+    "D2:15"
+   ],
+   "last_evidence_session": 2,
+   "answer": "Melanie thinks it's awesome.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00041584516387096777,
+   "retrieved_tokens": 1013,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 90,
+   "question": "How long have Mel and her husband been married?",
+   "gold": "Mel and her husband have been married for 5 years.",
+   "category": 4,
+   "evidence": [
+    "D3:16"
+   ],
+   "last_evidence_session": 3,
+   "answer": "Five years.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037903864516129033,
+   "retrieved_tokens": 765,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 91,
+   "question": "What does Caroline's necklace symbolize?",
+   "gold": "love, faith, and strength",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Love, faith, and strength.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0004208062443197756,
+   "retrieved_tokens": 1031,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 92,
+   "question": "What country is Caroline's grandma from?",
+   "gold": "Sweden",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Sweden",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037557859002932553,
+   "retrieved_tokens": 784,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 93,
+   "question": "What was grandma's gift to Caroline?",
+   "gold": "necklace",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 4,
+   "answer": "A necklace.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00040153991225806457,
+   "retrieved_tokens": 935,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 94,
+   "question": "What is Melanie's hand-painted bowl a reminder of?",
+   "gold": "art and self-expression",
+   "category": 4,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 4,
+   "answer": "The memories do not mention a hand-painted bowl belonging to Melanie. They refer to Caroline's hand-painted bowl, which reminds her of art and self-expression.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0004088405806451613,
+   "retrieved_tokens": 868,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 95,
+   "question": "What did Melanie and her family do while camping?",
+   "gold": "explored nature, roasted marshmallows, and went on a hike",
+   "category": 4,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Explored nature and roasted marshmallows.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037722638511166254,
+   "retrieved_tokens": 776,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 96,
+   "question": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+   "gold": "working with trans people, helping them accept themselves and supporting their mental health",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Counseling for transgender individuals.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00045508005645161293,
+   "retrieved_tokens": 1275,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 97,
+   "question": "What workshop did Caroline attend recently?",
+   "gold": "LGBTQ+ counseling workshop",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "LGBTQ+ counseling workshop.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.0004895222064516129,
+   "retrieved_tokens": 1549,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 98,
+   "question": "What was discussed in the LGBTQ+ counseling workshop?",
+   "gold": "therapeutic methods and how to best work with trans people",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Therapeutic methods for transgender individuals.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039834500912124584,
+   "retrieved_tokens": 903,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 99,
+   "question": "What motivated Caroline to pursue counseling?",
+   "gold": "her own journey and the support she received, and how counseling improved her life",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 4,
+   "answer": "Her own journey and support received.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00043901652387096774,
+   "retrieved_tokens": 1182,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": 100,
+   "question": "What kind of place does Caroline want to create for people?",
+   "gold": "a safe and inviting place for people to grow",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 4,
+   "answer": "A safe and inviting space.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0004710884922377521,
+   "retrieved_tokens": 1425,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E01",
+   "question": "What is Melanie's main creative outlet now?",
+   "gold": "Pottery (she has stopped painting)",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E01"
+   ],
+   "last_evidence_session": 5,
+   "answer": "Pottery.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003776969290322581,
+   "retrieved_tokens": 829,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E02",
+   "question": "Which of her own paintings does Melanie consider her favorite now?",
+   "gold": "The forest-at-dusk painting",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E02"
+   ],
+   "last_evidence_session": 6,
+   "answer": "The forest-at-dusk painting.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003868878774193549,
+   "retrieved_tokens": 879,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E03",
+   "question": "Does Melanie still have a job?",
+   "gold": "No, she quit to stay home with the kids",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E03"
+   ],
+   "last_evidence_session": 7,
+   "answer": "No, she quit her job.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003685104193548387,
+   "retrieved_tokens": 769,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E04",
+   "question": "Does Caroline still have her grandmother's necklace?",
+   "gold": "No, she lost it at the beach",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E04"
+   ],
+   "last_evidence_session": 8,
+   "answer": "No, she lost it.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003909867870967742,
+   "retrieved_tokens": 909,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E05",
+   "question": "Does Caroline still have the hand-painted bowl from her 18th birthday?",
+   "gold": "No, it broke",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E05"
+   ],
+   "last_evidence_session": 9,
+   "answer": "No, it shattered on July 11, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039527127096774194,
+   "retrieved_tokens": 894,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E06",
+   "question": "Does Caroline still go to the LGBTQ support group?",
+   "gold": "No, the group disbanded",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E06"
+   ],
+   "last_evidence_session": 10,
+   "answer": "No, it disbanded.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037840674193548394,
+   "retrieved_tokens": 807,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E07",
+   "question": "Does Melanie still go swimming with her kids?",
+   "gold": "No, the pool closed; they go on bike rides instead",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E07"
+   ],
+   "last_evidence_session": 11,
+   "answer": "No, the pool closed permanently.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003930929290322581,
+   "retrieved_tokens": 891,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E08",
+   "question": "What are Melanie's two younger kids into now?",
+   "gold": "Dinosaurs",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E08"
+   ],
+   "last_evidence_session": 12,
+   "answer": "Dinosaurs.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003696706838709678,
+   "retrieved_tokens": 764,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E09",
+   "question": "What instrument does Melanie play now?",
+   "gold": "Guitar (she sold her violin)",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E09"
+   ],
+   "last_evidence_session": 13,
+   "answer": "Guitar.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037633521935483876,
+   "retrieved_tokens": 835,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E10",
+   "question": "What exercise does Melanie do now instead of running?",
+   "gold": "Swimming laps",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E10"
+   ],
+   "last_evidence_session": 14,
+   "answer": "Melanie swims laps at the gym.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003847150838709678,
+   "retrieved_tokens": 842,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E11",
+   "question": "What does Melanie do in her me-time now instead of reading?",
+   "gold": "Meditation",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E11"
+   ],
+   "last_evidence_session": 15,
+   "answer": "Meditation for twenty minutes.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00038133634838709676,
+   "retrieved_tokens": 828,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E12",
+   "question": "Which adoption agency is Caroline working with now?",
+   "gold": "Rainbow Families",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E12"
+   ],
+   "last_evidence_session": 16,
+   "answer": "Rainbow Families",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037448164516129035,
+   "retrieved_tokens": 820,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E13",
+   "question": "Is Caroline adopting right away or fostering first?",
+   "gold": "Fostering first",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E13"
+   ],
+   "last_evidence_session": 17,
+   "answer": "Fostering first.",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.0004384185161290323,
+   "retrieved_tokens": 1235,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E14",
+   "question": "Is self-care still a work in progress for Melanie?",
+   "gold": "No, she now has a routine that sticks",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E14"
+   ],
+   "last_evidence_session": 18,
+   "answer": "No, she has a routine now.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039005183870967743,
+   "retrieved_tokens": 882,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:E15",
+   "question": "Where does Caroline's grandma live now?",
+   "gold": "Norway",
+   "category": "update",
+   "tier": "easy",
+   "expected": "close",
+   "evidence": [
+    "U:E15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Norway with her aunt.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003763749032258065,
+   "retrieved_tokens": 818,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S01",
+   "question": "Is Melanie still married?",
+   "gold": "Yes, married for 5 years",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S01"
+   ],
+   "last_evidence_session": 20,
+   "answer": "Yes, Melanie is still married.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003703931096774194,
+   "retrieved_tokens": 764,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S02",
+   "question": "What career is Caroline pursuing?",
+   "gold": "Counseling / mental health, working with trans people",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S02"
+   ],
+   "last_evidence_session": 21,
+   "answer": "Counseling or mental health.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0004201608129032258,
+   "retrieved_tokens": 1096,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S03",
+   "question": "How long has Caroline had her current group of friends?",
+   "gold": "4 years",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S03"
+   ],
+   "last_evidence_session": 22,
+   "answer": "4 years",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003683339032258064,
+   "retrieved_tokens": 775,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S04",
+   "question": "Has Caroline moved back to Sweden?",
+   "gold": "No, it's only a someday idea",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S04"
+   ],
+   "last_evidence_session": 23,
+   "answer": "No, not anytime soon.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003575299225806451,
+   "retrieved_tokens": 704,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S05",
+   "question": "Has Melanie run a second charity race yet?",
+   "gold": "No, she plans one for the fall",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S05"
+   ],
+   "last_evidence_session": 24,
+   "answer": "No, she plans to run one.",
+   "memories": 21,
+   "label": "CORRECT",
+   "query_cost": 0.0005342532903225806,
+   "retrieved_tokens": 1843,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S06",
+   "question": "Where did Melanie most recently go camping with her family?",
+   "gold": "The mountains",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S06"
+   ],
+   "last_evidence_session": 25,
+   "answer": "In the mountains.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0005119368387096774,
+   "retrieved_tokens": 1701,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S07",
+   "question": "Has Caroline attended an LGBTQ+ counseling workshop?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S07"
+   ],
+   "last_evidence_session": 26,
+   "answer": "Yes, on June 23, 2023.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.0005250031612903227,
+   "retrieved_tokens": 1779,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S08",
+   "question": "Is Caroline open about being transgender?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S08"
+   ],
+   "last_evidence_session": 27,
+   "answer": "Yes, she is open.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0004582618064516129,
+   "retrieved_tokens": 1331,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S09",
+   "question": "Is Caroline planning to raise kids as a single parent?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S09"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Yes, she is.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.00045172306451612905,
+   "retrieved_tokens": 1326,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:S10",
+   "question": "Does Melanie want to be courageous for her family?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "subtle",
+   "expected": "no_close",
+   "evidence": [
+    "U:S10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yes, she does.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0005294375225806452,
+   "retrieved_tokens": 1816,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F01",
+   "question": "Has Caroline enrolled in a program to continue her education?",
+   "gold": "Yes, a psychology certificate program at the community college",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F01"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, a psychology certificate program.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003994083548387097,
+   "retrieved_tokens": 956,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F02",
+   "question": "Has Melanie's kids' summer break started?",
+   "gold": "Yes",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F02"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Yes, it started on August 24, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003985965290322581,
+   "retrieved_tokens": 917,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F03",
+   "question": "Has Caroline started working with trans people?",
+   "gold": "Yes, she volunteers as a peer counselor for trans youth",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F03"
+   ],
+   "last_evidence_session": 32,
+   "answer": "Yes, as a peer counselor.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00042936787096774194,
+   "retrieved_tokens": 1147,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F04",
+   "question": "Has Caroline submitted an adoption application?",
+   "gold": "Yes, to Rainbow Families",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F04"
+   ],
+   "last_evidence_session": 33,
+   "answer": "Yes, on August 21, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036760645161290325,
+   "retrieved_tokens": 752,
+   "checkpoint": 34,
+   "store_size": 102
+  },
+  {
+   "idx": "U:F05",
+   "question": "Has Caroline given another talk about her journey?",
+   "gold": "Yes, at a high school in the next town",
+   "category": "update",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "evidence": [
+    "U:F05"
+   ],
+   "last_evidence_session": 34,
+   "answer": "Yes, on August 28, 2023.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0004226103870967742,
+   "retrieved_tokens": 1087,
+   "checkpoint": 34,
+   "store_size": 102
+  }
+ ],
+ "options": {
+  "top_k": null,
+  "no_dates": false,
+  "no_answer": false
+ },
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "hygiene": {
+  "groups": 14,
+  "pairs": 577,
+  "decisions": 577,
+  "merges": 1,
+  "drops": 0,
+  "already_linked": 0,
+  "failed_requests": 0,
+  "cost_usd": 0.003518567345063245,
+  "jev_latency_ms": 3257.739626802504,
+  "wall_s": 3.0508855000371113,
+  "merged_pairs": [
+   [
+    "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+    "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+    0.86
+   ]
+  ]
+ },
+ "storage_before_hygiene": {
+  "storage": {
+   "closes": 3,
+   "closes_correct": 2,
+   "closes_wrong": 1,
+   "closes_by_reason": {
+    "fulfilled_correct": 1,
+    "belief_wrong": 1,
+    "belief_correct": 1
+   },
+   "reopens": 0,
+   "disputed": 2,
+   "against_blocked": 14,
+   "against_unconfirmed": 4,
+   "plan_fulfilled_asks": 309
+  },
+  "update_behavior": {
+   "stale": 17,
+   "not_stored": 1,
+   "closed": 1,
+   "kept": 10,
+   "fulfilled": 1
+  }
+ },
+ "locomo_accuracy": 0.8857142857142857,
+ "locomo_accuracy_excl": 0.90625,
+ "locomo_q": 35,
+ "locomo_q_excl": 32,
+ "update_accuracy": 0.9666666666666667,
+ "update_accuracy_by_tier": {
+  "easy": 1.0,
+  "subtle": 1.0,
+  "fulfilled": 0.8
+ },
+ "update_items": [
+  {
+   "id": "E01",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Pottery.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E02",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "The forest-at-dusk painting.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E03",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "not_stored",
+   "answer": "No, she quit her job.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E04",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "No, she lost it.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E05",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "closed",
+   "answer": "No, it shattered on July 11, 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E06",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "No, it disbanded.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E07",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "No, the pool closed permanently.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E08",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Dinosaurs.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E09",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Guitar.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E10",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Melanie swims laps at the gym.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E11",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Meditation for twenty minutes.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E12",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Rainbow Families",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E13",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Fostering first.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E14",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "No, she has a routine now.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "E15",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": "Norway with her aunt.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S01",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Yes, Melanie is still married.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S02",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Counseling or mental health.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S03",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "4 years",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S04",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "No, not anytime soon.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S05",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "No, she plans to run one.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S06",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "In the mountains.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S07",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Yes, on June 23, 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S08",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Yes, she is open.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S09",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Yes, she is.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "S10",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": "Yes, she does.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F01",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": "Yes, a psychology certificate program.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F02",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "fulfilled",
+   "answer": "Yes, it started on August 24, 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F03",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": "Yes, as a peer counselor.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F04",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": "Yes, on August 21, 2023.",
+   "label": "CORRECT"
+  },
+  {
+   "id": "F05",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": "Yes, on August 28, 2023.",
+   "label": "WRONG"
+  }
+ ],
+ "update_behavior": {
+  "stale": 17,
+  "not_stored": 1,
+  "closed": 1,
+  "kept": 10,
+  "fulfilled": 1
+ },
+ "stale_on_close_items": [
+  17,
+  19
+ ],
+ "over_close_on_no_close_items": [
+  0,
+  10
+ ],
+ "storage": {
+  "closes": 3,
+  "closes_correct": 2,
+  "closes_wrong": 1,
+  "closes_by_reason": {
+   "fulfilled_correct": 1,
+   "belief_wrong": 1,
+   "belief_correct": 1
+  },
+  "reopens": 0,
+  "disputed": 2,
+  "against_blocked": 14,
+  "against_unconfirmed": 4,
+  "plan_fulfilled_asks": 309
+ },
+ "fulfills_log": [
+  {
+   "plan": "Melanie's kids are excited about summer break, and they are considering going camping in June 2023.",
+   "plan_relation": "plans",
+   "plan_source": "D2:7",
+   "by": "Melanie took her family camping in the mountains around June 20-26, 2023, and described it as a really nice time together.",
+   "by_source": "D4:6",
+   "jev_relation": "plan_fulfilled",
+   "p": 0.94,
+   "temporal": "past"
+  }
+ ],
+ "belief_trace": [
+  {
+   "message": "D1:3",
+   "fact": "501be8757ea84012",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "fact_source": "D1:3"
+  },
+  {
+   "message": "D1:5",
+   "fact": "e5ffef4a88204961",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline found the transgender stories shared at the LGBTQ support group she attended on May 7, 2023, to be very inspiring and felt happy and thankful for all the support.",
+   "fact_source": "D1:5"
+  },
+  {
+   "message": "D1:5",
+   "fact": "501be8757ea84012",
+   "label": "refinement",
+   "p": 0.99,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "fact_source": "D1:3"
+  },
+  {
+   "message": "D1:6",
+   "fact": "17e382fb02054346",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie complimented Caroline on a painting and expressed appreciation for the helpful LGBTQ support group Caroline attended, asking how it has impacted her.",
+   "fact_source": "D1:6"
+  },
+  {
+   "message": "D1:7",
+   "fact": "27031ca67c9147ca",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline feels accepted and has gained the courage to embrace herself after attending the LGBTQ support group on May 7, 2023.",
+   "fact_source": "D1:7"
+  },
+  {
+   "message": "D1:7",
+   "fact": "501be8757ea84012",
+   "label": "refinement",
+   "p": 0.98,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "fact_source": "D1:3"
+  },
+  {
+   "message": "D1:7",
+   "fact": "e5ffef4a88204961",
+   "label": "refinement",
+   "p": 0.46,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.46,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline found the transgender stories shared at the LGBTQ support group she attended on May 7, 2023, to be very inspiring and felt happy and thankful for all the support.",
+   "fact_source": "D1:5"
+  },
+  {
+   "message": "D1:7",
+   "fact": "17e382fb02054346",
+   "label": "refinement",
+   "p": 0.88,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.8800000000000001,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie complimented Caroline on a painting and expressed appreciation for the helpful LGBTQ support group Caroline attended, asking how it has impacted her.",
+   "fact_source": "D1:6"
+  },
+  {
+   "message": "D1:8",
+   "fact": "21d461cfff064a8d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be.",
+   "fact_source": "D1:8"
+  },
+  {
+   "message": "D1:9",
+   "fact": "390cf5aa306e4f09",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline plans to continue her education and explore career options, which she finds exciting.",
+   "fact_source": "D1:9"
+  },
+  {
+   "message": "D1:10",
+   "fact": "adab777e3ad147ef",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie asked Caroline about the types of jobs she is considering and if any particular options stand out to her.",
+   "fact_source": "D1:10"
+  },
+  {
+   "message": "D1:11",
+   "fact": "a5ad19f1a6104db5",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D1:11",
+   "fact": "390cf5aa306e4f09",
+   "label": "refinement",
+   "p": 0.98,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline plans to continue her education and explore career options, which she finds exciting.",
+   "fact_source": "D1:9"
+  },
+  {
+   "message": "D1:11",
+   "fact": "adab777e3ad147ef",
+   "label": "refinement",
+   "p": 0.73,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.7299999999999999,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie asked Caroline about the types of jobs she is considering and if any particular options stand out to her.",
+   "fact_source": "D1:10"
+  },
+  {
+   "message": "D1:12",
+   "fact": "42af1105c4494144",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie believes Caroline would be a great counselor, highlighting her empathy and understanding as valuable traits for helping others.",
+   "fact_source": "D1:12"
+  },
+  {
+   "message": "D1:14",
+   "fact": "2e61a10b4ab8464b",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's favorite painting has changed; her new favorite is the forest-at-dusk piece she finished around June 27, 2023, replacing the lake sunrise painting.",
+   "fact_source": "D1:14"
+  },
+  {
+   "message": "D1:15",
+   "fact": "bb2c8850bd364b10",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline complimented Melanie on her painting, noting that the colors blend nicely and expressing that painting seems like a great outlet for self-expression.",
+   "fact_source": "D1:15"
+  },
+  {
+   "message": "D1:16",
+   "fact": "d9e20b2bb8f94ad1",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie enjoys painting as a fun way to express her feelings and get creative, finding it a great way to relax after a long day.",
+   "fact_source": "D1:16"
+  },
+  {
+   "message": "D1:17",
+   "fact": "f07ea65e4f7e443f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline agrees with Melanie that relaxing and expressing oneself is important and plans to do some research after their conversation on May 8, 2023.",
+   "fact_source": "D1:17"
+  },
+  {
+   "message": "D1:17",
+   "fact": "bb2c8850bd364b10",
+   "label": "refinement",
+   "p": 0.61,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.61,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline complimented Melanie on her painting, noting that the colors blend nicely and expressing that painting seems like a great outlet for self-expression.",
+   "fact_source": "D1:15"
+  },
+  {
+   "message": "D1:18",
+   "fact": "b5aeeb13c6354cf1",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie believes that taking care of oneself is vital and plans to go swimming with the kids after their conversation on May 8, 2023.",
+   "fact_source": "D1:18"
+  },
+  {
+   "message": "D2:1",
+   "fact": "9438d34c32e64d55",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie ran a charity race for mental health on May 20, 2023, and found the experience rewarding, prompting her to reflect on the importance of taking care of our minds.",
+   "fact_source": "D2:1"
+  },
+  {
+   "message": "D2:1",
+   "fact": "b5aeeb13c6354cf1",
+   "label": "refinement",
+   "p": 0.5,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.5,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes that taking care of oneself is vital and plans to go swimming with the kids after their conversation on May 8, 2023.",
+   "fact_source": "D1:18"
+  },
+  {
+   "message": "D2:2",
+   "fact": "4bf8f5aa71ac44d8",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed pride in Melanie for participating in the charity race for mental health that took place on May 20, 2023, highlighting the importance of making a difference and raising awareness.",
+   "fact_source": "D2:2"
+  },
+  {
+   "message": "D2:3",
+   "fact": "fafc1e652019470c",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie found the charity race for mental health on May 20, 2023, to be thought-provoking and is starting to realize the importance of self-care. She acknowledges that taking care of herself enables her to better care for her family.",
+   "fact_source": "D2:3"
+  },
+  {
+   "message": "D2:3",
+   "fact": "9438d34c32e64d55",
+   "label": "refinement",
+   "p": 0.89,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.8899999999999999,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie ran a charity race for mental health on May 20, 2023, and found the experience rewarding, prompting her to reflect on the importance of taking care of our minds.",
+   "fact_source": "D2:1"
+  },
+  {
+   "message": "D2:3",
+   "fact": "b5aeeb13c6354cf1",
+   "label": "refinement",
+   "p": 0.73,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.7299999999999999,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes that taking care of oneself is vital and plans to go swimming with the kids after their conversation on May 8, 2023.",
+   "fact_source": "D1:18"
+  },
+  {
+   "message": "D2:5",
+   "fact": "f01487d63a264975",
+   "event": "insert",
+   "after": 0.93,
+   "fact_text": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family.",
+   "fact_source": "D2:5"
+  },
+  {
+   "message": "D2:5",
+   "fact": "b5aeeb13c6354cf1",
+   "label": "refinement",
+   "p": 0.56,
+   "before": 0.7299999999999999,
+   "event": "applied",
+   "after": 0.7748294162244124,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes that taking care of oneself is vital and plans to go swimming with the kids after their conversation on May 8, 2023.",
+   "fact_source": "D1:18"
+  },
+  {
+   "message": "D2:5",
+   "fact": "fafc1e652019470c",
+   "label": "refinement",
+   "p": 0.93,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.93,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie found the charity race for mental health on May 20, 2023, to be thought-provoking and is starting to realize the importance of self-care. She acknowledges that taking care of herself enables her to better care for her family.",
+   "fact_source": "D2:3"
+  },
+  {
+   "message": "D2:7",
+   "fact": "109dc39e252946aa",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's kids are excited about summer break, and they are considering going camping in June 2023.",
+   "fact_source": "D2:7"
+  },
+  {
+   "message": "D2:7",
+   "fact": "7b1cccecd2984c7d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie hasn't painted in weeks and is now focusing on pottery as her main creative outlet, attending the studio three evenings a week.",
+   "fact_source": "D2:7"
+  },
+  {
+   "message": "D2:7",
+   "fact": "d9e20b2bb8f94ad1",
+   "label": "refinement",
+   "p": 0.78,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.78,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie enjoys painting as a fun way to express her feelings and get creative, finding it a great way to relax after a long day.",
+   "fact_source": "D1:16"
+  },
+  {
+   "message": "D2:8",
+   "fact": "143ec5e207854209",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:9",
+   "fact": "624b8e5cfdbe4a04",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed admiration for Caroline's plans to adopt children in need, stating that her future family will be lucky to have her.",
+   "fact_source": "D2:9"
+  },
+  {
+   "message": "D2:10",
+   "fact": "53b37d5c448241fa",
+   "event": "insert",
+   "after": 0.87,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:10",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.87,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.8700000000000001,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:10",
+   "fact": "8fefcfe20fbe4ca0",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:10",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.93,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.93,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:11",
+   "fact": "1ef60da8f4584297",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed enthusiasm about an adoption agency Caroline is considering and asked what influenced her choice.",
+   "fact_source": "D2:11"
+  },
+  {
+   "message": "D2:11",
+   "fact": "8fefcfe20fbe4ca0",
+   "label": "refinement",
+   "p": 0.56,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.56,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:11",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.61,
+   "before": 0.93,
+   "event": "applied",
+   "after": 0.9540867810292635,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:12",
+   "fact": "c79d896885924df6",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline chose the adoption agency she is considering because they help LGBTQ+ individuals with adoption, and their inclusivity and support resonated with her.",
+   "fact_source": "D2:12"
+  },
+  {
+   "message": "D2:12",
+   "fact": "1ef60da8f4584297",
+   "label": "refinement",
+   "p": 0.86,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.86,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed enthusiasm about an adoption agency Caroline is considering and asked what influenced her choice.",
+   "fact_source": "D2:11"
+  },
+  {
+   "message": "D2:12",
+   "fact": "8fefcfe20fbe4ca0",
+   "label": "refinement",
+   "p": 0.98,
+   "before": 0.56,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:12",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.89,
+   "before": 0.9540867810292635,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:13",
+   "fact": "c4fcf467676f41d4",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed appreciation for the inclusivity and support of the adoption agency Caroline is considering and asked if there is anything Caroline is excited about in the adoption process.",
+   "fact_source": "D2:13"
+  },
+  {
+   "message": "D2:13",
+   "fact": "1ef60da8f4584297",
+   "label": "refinement",
+   "p": 0.39,
+   "before": 0.86,
+   "event": "applied",
+   "after": 0.7970532319391634,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed enthusiasm about an adoption agency Caroline is considering and asked what influenced her choice.",
+   "fact_source": "D2:11"
+  },
+  {
+   "message": "D2:14",
+   "fact": "3fb222dba38248d1",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline is thrilled about the prospect of creating a family for children in need and acknowledges that being a single parent will be challenging, but she is ready to take on the challenge.",
+   "fact_source": "D2:14"
+  },
+  {
+   "message": "D2:14",
+   "fact": "53b37d5c448241fa",
+   "label": "refinement",
+   "p": 0.76,
+   "before": 0.87,
+   "event": "applied",
+   "after": 0.9549393414211438,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:14",
+   "fact": "624b8e5cfdbe4a04",
+   "label": "refinement",
+   "p": 0.59,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.59,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed admiration for Caroline's plans to adopt children in need, stating that her future family will be lucky to have her.",
+   "fact_source": "D2:9"
+  },
+  {
+   "message": "D2:14",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.82,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:14",
+   "fact": "8fefcfe20fbe4ca0",
+   "label": "refinement",
+   "p": 0.79,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:14",
+   "fact": "c4fcf467676f41d4",
+   "label": "refinement",
+   "p": 0.54,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.54,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed appreciation for the inclusivity and support of the adoption agency Caroline is considering and asked if there is anything Caroline is excited about in the adoption process.",
+   "fact_source": "D2:13"
+  },
+  {
+   "message": "D2:15",
+   "fact": "5f894e0e28654c54",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie praised Caroline for her plans to create a family for children in need, expressing that Caroline will be an awesome mom and wishing her good luck.",
+   "fact_source": "D2:15"
+  },
+  {
+   "message": "D2:15",
+   "fact": "624b8e5cfdbe4a04",
+   "label": "duplicate",
+   "p": 0.54,
+   "before": 0.59,
+   "event": "applied",
+   "after": 0.6281545741324921,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed admiration for Caroline's plans to adopt children in need, stating that her future family will be lucky to have her.",
+   "fact_source": "D2:9"
+  },
+  {
+   "message": "D2:15",
+   "fact": "1ef60da8f4584297",
+   "label": "refinement",
+   "p": 0.5,
+   "before": 0.7970532319391634,
+   "event": "applied",
+   "after": 0.7970532319391634,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed enthusiasm about an adoption agency Caroline is considering and asked what influenced her choice.",
+   "fact_source": "D2:11"
+  },
+  {
+   "message": "D2:15",
+   "fact": "53b37d5c448241fa",
+   "label": "refinement",
+   "p": 0.67,
+   "before": 0.9549393414211438,
+   "event": "applied",
+   "after": 0.9772865651886167,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:15",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.58,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:16",
+   "fact": "be1e92e184604831",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed gratitude for Melanie's kind words, stating they mean a lot to her as she strives to ensure the kids she plans to adopt have a safe and loving home.",
+   "fact_source": "D2:16"
+  },
+  {
+   "message": "D2:16",
+   "fact": "5f894e0e28654c54",
+   "label": "refinement",
+   "p": 0.5,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.5,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie praised Caroline for her plans to create a family for children in need, expressing that Caroline will be an awesome mom and wishing her good luck.",
+   "fact_source": "D2:15"
+  },
+  {
+   "message": "D2:16",
+   "fact": "53b37d5c448241fa",
+   "label": "refinement",
+   "p": 0.88,
+   "before": 0.9772865651886167,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:16",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.63,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:17",
+   "fact": "a479e575df894fce",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie believes Caroline has a caring heart and expresses confidence that the children she plans to adopt will receive all the love and stability they need, showing excitement for this new chapter in Caroline's life.",
+   "fact_source": "D2:17"
+  },
+  {
+   "message": "D2:17",
+   "fact": "624b8e5cfdbe4a04",
+   "label": "refinement",
+   "p": 0.6900000000000001,
+   "before": 0.6281545741324921,
+   "event": "applied",
+   "after": 0.7899173553719008,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed admiration for Caroline's plans to adopt children in need, stating that her future family will be lucky to have her.",
+   "fact_source": "D2:9"
+  },
+  {
+   "message": "D2:17",
+   "fact": "5f894e0e28654c54",
+   "label": "refinement",
+   "p": 0.72,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.72,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie praised Caroline for her plans to create a family for children in need, expressing that Caroline will be an awesome mom and wishing her good luck.",
+   "fact_source": "D2:15"
+  },
+  {
+   "message": "D2:17",
+   "fact": "53b37d5c448241fa",
+   "label": "refinement",
+   "p": 0.5,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:17",
+   "fact": "1ef60da8f4584297",
+   "label": "refinement",
+   "p": 0.72,
+   "before": 0.7970532319391634,
+   "event": "applied",
+   "after": 0.909902034664657,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed enthusiasm about an adoption agency Caroline is considering and asked what influenced her choice.",
+   "fact_source": "D2:11"
+  },
+  {
+   "message": "D2:17",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.51,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D3:1",
+   "fact": "751c22e9a7f74056",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline participated in a school event around June 2-3, 2023, where she talked about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since starting her transition three years ago.",
+   "fact_source": "D3:1"
+  },
+  {
+   "message": "D3:2",
+   "fact": "2efa379224f04651",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed pride in Caroline for spreading awareness about her transgender journey at a school event around June 2-3, 2023, and encouraged her to continue inspiring others with her strength and courage.",
+   "fact_source": "D3:2"
+  },
+  {
+   "message": "D3:3",
+   "fact": "1e5379372da241d6",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline felt powerful giving her talk at the school event around June 2-3, 2023, where she shared her transgender journey, struggles, and personal growth since coming out. She was grateful to see how the audience related to her message and felt inspired to be better allies.",
+   "fact_source": "D3:3"
+  },
+  {
+   "message": "D3:3",
+   "fact": "751c22e9a7f74056",
+   "label": "refinement",
+   "p": 0.75,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.75,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline participated in a school event around June 2-3, 2023, where she talked about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since starting her transition three years ago.",
+   "fact_source": "D3:1"
+  },
+  {
+   "message": "D3:3",
+   "fact": "9dcf53ab0fcb494f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline believes conversations about gender identity and inclusion are necessary and is thankful for the opportunity to give a voice to the trans community.",
+   "fact_source": "D3:3"
+  },
+  {
+   "message": "D3:3",
+   "fact": "751c22e9a7f74056",
+   "label": "refinement",
+   "p": 0.72,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.72,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline participated in a school event around June 2-3, 2023, where she talked about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since starting her transition three years ago.",
+   "fact_source": "D3:1"
+  },
+  {
+   "message": "D3:5",
+   "fact": "5632265936624f1c",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D3:5",
+   "fact": "9dcf53ab0fcb494f",
+   "label": "refinement",
+   "p": 0.51,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.51,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes conversations about gender identity and inclusion are necessary and is thankful for the opportunity to give a voice to the trans community.",
+   "fact_source": "D3:3"
+  },
+  {
+   "message": "D3:6",
+   "fact": "733ac17c61a74a5e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed that it takes courage to talk about personal stories and emphasized the importance of vulnerability in creating bonds and understanding among people. She believes sharing stories can inspire and encourage others facing similar challenges.",
+   "fact_source": "D3:6"
+  },
+  {
+   "message": "D3:6",
+   "fact": "21d461cfff064a8d",
+   "label": "refinement",
+   "p": 0.5,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.5,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be.",
+   "fact_source": "D1:8"
+  },
+  {
+   "message": "D3:7",
+   "fact": "c33a506fbed947d6",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed gratitude for the opportunity to share her story and give others hope, emphasizing the importance of unique paths and collaboration in building a more inclusive and understanding world.",
+   "fact_source": "D3:7"
+  },
+  {
+   "message": "D3:7",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.75,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.75,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D3:7",
+   "fact": "9dcf53ab0fcb494f",
+   "label": "refinement",
+   "p": 0.6799999999999999,
+   "before": 0.51,
+   "event": "applied",
+   "after": 0.6886417791898332,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes conversations about gender identity and inclusion are necessary and is thankful for the opportunity to give a voice to the trans community.",
+   "fact_source": "D3:3"
+  },
+  {
+   "message": "D3:7",
+   "fact": "1e5379372da241d6",
+   "label": "refinement",
+   "p": 0.55,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.55,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline felt powerful giving her talk at the school event around June 2-3, 2023, where she shared her transgender journey, struggles, and personal growth since coming out. She was grateful to see how the audience related to her message and felt inspired to be better allies.",
+   "fact_source": "D3:3"
+  },
+  {
+   "message": "D3:7",
+   "fact": "b29dcc2c12a342c8",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline plans to continue using her voice to make a change and lift others up, acknowledging Melanie's role in this journey.",
+   "fact_source": "D3:7"
+  },
+  {
+   "message": "D3:7",
+   "fact": "be1e92e184604831",
+   "label": "refinement",
+   "p": 0.51,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.51,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline expressed gratitude for Melanie's kind words, stating they mean a lot to her as she strives to ensure the kids she plans to adopt have a safe and loving home.",
+   "fact_source": "D2:16"
+  },
+  {
+   "message": "D3:7",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.87,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.8700000000000001,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D3:8",
+   "fact": "d7dc1ac4daf4409b",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed gratitude to Caroline for allowing her to be part of her journey and pride in the difference Caroline is making. She emphasized the importance of motivating and helping each other as they navigate through life together.",
+   "fact_source": "D3:8"
+  },
+  {
+   "message": "D3:8",
+   "fact": "2efa379224f04651",
+   "label": "refinement",
+   "p": 0.4,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.4,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed pride in Caroline for spreading awareness about her transgender journey at a school event around June 2-3, 2023, and encouraged her to continue inspiring others with her strength and courage.",
+   "fact_source": "D3:2"
+  },
+  {
+   "message": "D3:9",
+   "fact": "89987678afa84a9a",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed a desire to spread love and understanding, thanking Melanie for her support and encouragement, and emphasized their ability to tackle life's challenges together.",
+   "fact_source": "D3:9"
+  },
+  {
+   "message": "D3:9",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.8,
+   "before": 0.8700000000000001,
+   "event": "applied",
+   "after": 0.96398891966759,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D3:9",
+   "fact": "b29dcc2c12a342c8",
+   "label": "refinement",
+   "p": 0.73,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.7299999999999999,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline plans to continue using her voice to make a change and lift others up, acknowledging Melanie's role in this journey.",
+   "fact_source": "D3:7"
+  },
+  {
+   "message": "D3:10",
+   "fact": "4e4f9ab9e16d4d06",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie feels motivated by her family, who provide her with love and support, and she aspires to be courageous for them.",
+   "fact_source": "D3:10"
+  },
+  {
+   "message": "D3:10",
+   "fact": "4e97b2a9a7be428e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed admiration for Caroline's courage and finds it inspiring.",
+   "fact_source": "D3:10"
+  },
+  {
+   "message": "D3:10",
+   "fact": "21d461cfff064a8d",
+   "label": "refinement",
+   "p": 0.47000000000000003,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.47000000000000003,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be.",
+   "fact_source": "D1:8"
+  },
+  {
+   "message": "D3:10",
+   "fact": "2efa379224f04651",
+   "label": "duplicate",
+   "p": 0.41,
+   "before": 0.4,
+   "event": "applied",
+   "after": 0.3166023166023166,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed pride in Caroline for spreading awareness about her transgender journey at a school event around June 2-3, 2023, and encouraged her to continue inspiring others with her strength and courage.",
+   "fact_source": "D3:2"
+  },
+  {
+   "message": "D3:11",
+   "fact": "41dbd21fb261468f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline shared a picture from a meetup with her friends and family last week.",
+   "fact_source": "D3:11"
+  },
+  {
+   "message": "D3:11",
+   "fact": "f6c5e8681e0e4b7a",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's friends, family, and mentors are her sources of motivation and strength, helping her to push on in her journey.",
+   "fact_source": "D3:11"
+  },
+  {
+   "message": "D3:11",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.75,
+   "before": 0.96398891966759,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D3:11",
+   "fact": "53b37d5c448241fa",
+   "label": "refinement",
+   "p": 0.54,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D3:11",
+   "fact": "89987678afa84a9a",
+   "label": "refinement",
+   "p": 0.52,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.52,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline expressed a desire to spread love and understanding, thanking Melanie for her support and encouragement, and emphasized their ability to tackle life's challenges together.",
+   "fact_source": "D3:9"
+  },
+  {
+   "message": "D3:12",
+   "fact": "b25a926da7e14263",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie admired a photo shared by Caroline and inquired about the duration of her strong support system.",
+   "fact_source": "D3:12"
+  },
+  {
+   "message": "D3:13",
+   "fact": "66d0c9a4b34c446e",
+   "event": "insert",
+   "after": 0.95,
+   "fact_text": "Caroline has known her friends for 4 years since moving from her home country, and their love and support have been crucial, especially after a tough breakup.",
+   "fact_source": "D3:13"
+  },
+  {
+   "message": "D3:13",
+   "fact": "f6c5e8681e0e4b7a",
+   "label": "refinement",
+   "p": 0.95,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.9499999999999998,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's friends, family, and mentors are her sources of motivation and strength, helping her to push on in her journey.",
+   "fact_source": "D3:11"
+  },
+  {
+   "message": "D3:13",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.93,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D3:13",
+   "fact": "b25a926da7e14263",
+   "label": "refinement",
+   "p": 0.63,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.6299999999999999,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie admired a photo shared by Caroline and inquired about the duration of her strong support system.",
+   "fact_source": "D3:12"
+  },
+  {
+   "message": "D3:13",
+   "fact": "53b37d5c448241fa",
+   "label": "refinement",
+   "p": 0.81,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D3:13",
+   "fact": "ba573f537b60416e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline feels lucky to have a strong support system that has been there for her through everything, and she expresses gratitude for their help.",
+   "fact_source": "D3:13"
+  },
+  {
+   "message": "D3:13",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.79,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D3:13",
+   "fact": "f6c5e8681e0e4b7a",
+   "label": "refinement",
+   "p": 0.88,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.8800000000000001,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's friends, family, and mentors are her sources of motivation and strength, helping her to push on in her journey.",
+   "fact_source": "D3:11"
+  },
+  {
+   "message": "D3:13",
+   "fact": "89987678afa84a9a",
+   "label": "refinement",
+   "p": 0.49,
+   "before": 0.52,
+   "event": "applied",
+   "after": 0.5100080064051241,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline expressed a desire to spread love and understanding, thanking Melanie for her support and encouragement, and emphasized their ability to tackle life's challenges together.",
+   "fact_source": "D3:9"
+  },
+  {
+   "message": "D3:13",
+   "fact": "53b37d5c448241fa",
+   "label": "refinement",
+   "p": 0.62,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D3:14",
+   "fact": "ad29292b8f4a4af4",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie feels lucky to have her husband and kids, who keep her motivated.",
+   "fact_source": "D3:14"
+  },
+  {
+   "message": "D3:14",
+   "fact": "4e4f9ab9e16d4d06",
+   "label": "refinement",
+   "p": 0.66,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.66,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie feels motivated by her family, who provide her with love and support, and she aspires to be courageous for them.",
+   "fact_source": "D3:10"
+  },
+  {
+   "message": "D3:15",
+   "fact": "2c430240a7914525",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline admired a family picture shared by Melanie and asked how long she has been married.",
+   "fact_source": "D3:15"
+  },
+  {
+   "message": "D3:16",
+   "fact": "4fdb4dc18b334dbe",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie has been married for 5 years as of June 9, 2023, and reflected on how time flies since she wore her wedding dress.",
+   "fact_source": "D3:16"
+  },
+  {
+   "message": "D3:16",
+   "fact": "2c430240a7914525",
+   "label": "refinement",
+   "p": 0.74,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.74,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline admired a family picture shared by Melanie and asked how long she has been married.",
+   "fact_source": "D3:15"
+  },
+  {
+   "message": "D3:17",
+   "fact": "aa3e96d8d0e9492e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline congratulated Melanie on her wedding, complimenting how great they looked on their wedding day and wishing her many happy years together.",
+   "fact_source": "D3:17"
+  },
+  {
+   "message": "D3:18",
+   "fact": "6eeb93f40b9b4fef",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed appreciation for Caroline's kind words and is looking forward to more happy years, emphasizing that her family and moments make it all worth it.",
+   "fact_source": "D3:18"
+  },
+  {
+   "message": "D3:18",
+   "fact": "aa3e96d8d0e9492e",
+   "label": "refinement",
+   "p": 0.53,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.53,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline congratulated Melanie on her wedding, complimenting how great they looked on their wedding day and wishing her many happy years together.",
+   "fact_source": "D3:17"
+  },
+  {
+   "message": "D3:20",
+   "fact": "0a092a84d1da4a1a",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie had a fun family gathering where they played games, ate good food, and spent quality time together, emphasizing that family moments make life awesome.",
+   "fact_source": "D3:20"
+  },
+  {
+   "message": "D3:20",
+   "fact": "6eeb93f40b9b4fef",
+   "label": "refinement",
+   "p": 0.57,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.57,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed appreciation for Caroline's kind words and is looking forward to more happy years, emphasizing that her family and moments make it all worth it.",
+   "fact_source": "D3:18"
+  },
+  {
+   "message": "D3:22",
+   "fact": "50564eeefad54d7c",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie cherishes time spent with her family, stating that it is when she truly feels alive and happy.",
+   "fact_source": "D3:22"
+  },
+  {
+   "message": "D3:22",
+   "fact": "0a092a84d1da4a1a",
+   "label": "refinement",
+   "p": 0.57,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.57,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie had a fun family gathering where they played games, ate good food, and spent quality time together, emphasizing that family moments make life awesome.",
+   "fact_source": "D3:20"
+  },
+  {
+   "message": "D3:22",
+   "fact": "6eeb93f40b9b4fef",
+   "label": "refinement",
+   "p": 0.74,
+   "before": 0.57,
+   "event": "applied",
+   "after": 0.7904797601199399,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed appreciation for Caroline's kind words and is looking forward to more happy years, emphasizing that her family and moments make it all worth it.",
+   "fact_source": "D3:18"
+  },
+  {
+   "message": "D3:22",
+   "fact": "ad29292b8f4a4af4",
+   "label": "refinement",
+   "p": 0.6,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.6,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie feels lucky to have her husband and kids, who keep her motivated.",
+   "fact_source": "D3:14"
+  },
+  {
+   "message": "D3:23",
+   "fact": "6644b97a6a884891",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed that spending time with loved ones brings her immense happiness and makes her feel thankful, emphasizing that family is everything.",
+   "fact_source": "D3:23"
+  },
+  {
+   "message": "D4:2",
+   "fact": "4150b75ed6ca46fd",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning.",
+   "fact_source": "D4:2"
+  },
+  {
+   "message": "D4:3",
+   "fact": "ffa45d669bb2469e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline lost her grandma's necklace at the beach on July 8, 2023, and despite searching for hours, it could not be found.",
+   "fact_source": "D4:3"
+  },
+  {
+   "message": "D4:3",
+   "fact": "4150b75ed6ca46fd",
+   "label": "refinement",
+   "p": 0.61,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.61,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning.",
+   "fact_source": "D4:2"
+  },
+  {
+   "message": "D4:3",
+   "fact": "f6c5e8681e0e4b7a",
+   "label": "refinement",
+   "p": 0.7,
+   "before": 0.8800000000000001,
+   "event": "applied",
+   "after": 0.9447852760736196,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's friends, family, and mentors are her sources of motivation and strength, helping her to push on in her journey.",
+   "fact_source": "D3:11"
+  },
+  {
+   "message": "D4:3",
+   "fact": "ba573f537b60416e",
+   "label": "refinement",
+   "p": 0.7,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.7,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline feels lucky to have a strong support system that has been there for her through everything, and she expresses gratitude for their help.",
+   "fact_source": "D3:13"
+  },
+  {
+   "message": "D4:4",
+   "fact": "35dc8bbdd6664e90",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie complimented Caroline on her necklace, expressing that it's gorgeous and reflecting on the significance of treasured items.",
+   "fact_source": "D4:4"
+  },
+  {
+   "message": "D4:4",
+   "fact": "4150b75ed6ca46fd",
+   "label": "refinement",
+   "p": 0.81,
+   "before": 0.61,
+   "event": "applied",
+   "after": 0.8695881731784584,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning.",
+   "fact_source": "D4:2"
+  },
+  {
+   "message": "D4:4",
+   "fact": "19603ff89a514614",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie asked Caroline if she has any other treasured objects similar to the necklace.",
+   "fact_source": "D4:4"
+  },
+  {
+   "message": "D4:4",
+   "fact": "4150b75ed6ca46fd",
+   "label": "refinement",
+   "p": 0.54,
+   "before": 0.61,
+   "event": "applied",
+   "after": 0.6474056603773585,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning.",
+   "fact_source": "D4:2"
+  },
+  {
+   "message": "D4:5",
+   "fact": "1e34eee8b5554cb9",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline has a hand-painted bowl that holds sentimental value, made by a friend for her 18th birthday ten years ago. The bowl's pattern and colors remind her of art and self-expression.",
+   "fact_source": "D4:5"
+  },
+  {
+   "message": "D4:6",
+   "fact": "9d81775168e54fa8",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie took her family camping in the mountains around June 20-26, 2023, and described it as a really nice time together.",
+   "fact_source": "D4:6"
+  },
+  {
+   "message": "D4:6",
+   "fact": "109dc39e252946aa",
+   "label": "refinement",
+   "p": 0.55,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.55,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie's kids are excited about summer break, and they are considering going camping in June 2023.",
+   "fact_source": "D2:7"
+  },
+  {
+   "message": "D4:6",
+   "fact": "0a092a84d1da4a1a",
+   "label": "refinement",
+   "p": 0.68,
+   "before": 0.57,
+   "event": "applied",
+   "after": 0.738004569687738,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie had a fun family gathering where they played games, ate good food, and spent quality time together, emphasizing that family moments make life awesome.",
+   "fact_source": "D3:20"
+  },
+  {
+   "message": "D4:6",
+   "fact": "50564eeefad54d7c",
+   "label": "refinement",
+   "p": 0.68,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.68,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie cherishes time spent with her family, stating that it is when she truly feels alive and happy.",
+   "fact_source": "D3:22"
+  },
+  {
+   "message": "D4:6",
+   "fact": "6eeb93f40b9b4fef",
+   "label": "refinement",
+   "p": 0.64,
+   "before": 0.7904797601199399,
+   "event": "applied",
+   "after": 0.8702514506769826,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed appreciation for Caroline's kind words and is looking forward to more happy years, emphasizing that her family and moments make it all worth it.",
+   "fact_source": "D3:18"
+  },
+  {
+   "message": "D4:7",
+   "fact": "64bb3073914f4b09",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed interest in Melanie's recent family camping trip, asking how it was and if there was anything fun about it.",
+   "fact_source": "D4:7"
+  },
+  {
+   "message": "D4:8",
+   "fact": "ce8ce5add424495b",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie had an awesome family camping trip around June 20-26, 2023, where they explored nature, roasted marshmallows around the campfire, and went on a hike with the two younger kids, who love nature. She described the view from the top as amazing and emphasized the special moments shared together as a family.",
+   "fact_source": "D4:8"
+  },
+  {
+   "message": "D4:8",
+   "fact": "9d81775168e54fa8",
+   "label": "refinement",
+   "p": 0.98,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie took her family camping in the mountains around June 20-26, 2023, and described it as a really nice time together.",
+   "fact_source": "D4:6"
+  },
+  {
+   "message": "D4:8",
+   "fact": "0a092a84d1da4a1a",
+   "label": "refinement",
+   "p": 0.52,
+   "before": 0.738004569687738,
+   "event": "applied",
+   "after": 0.7531838565022422,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie had a fun family gathering where they played games, ate good food, and spent quality time together, emphasizing that family moments make life awesome.",
+   "fact_source": "D3:20"
+  },
+  {
+   "message": "D4:8",
+   "fact": "64bb3073914f4b09",
+   "label": "refinement",
+   "p": 0.55,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.55,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline expressed interest in Melanie's recent family camping trip, asking how it was and if there was anything fun about it.",
+   "fact_source": "D4:7"
+  },
+  {
+   "message": "D4:8",
+   "fact": "50564eeefad54d7c",
+   "label": "refinement",
+   "p": 0.79,
+   "before": 0.68,
+   "event": "applied",
+   "after": 0.8888153540701522,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie cherishes time spent with her family, stating that it is when she truly feels alive and happy.",
+   "fact_source": "D3:22"
+  },
+  {
+   "message": "D4:10",
+   "fact": "4d5d6778647748ca",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie values family time and considers it important in her life.",
+   "fact_source": "D4:10"
+  },
+  {
+   "message": "D4:10",
+   "fact": "50564eeefad54d7c",
+   "label": "duplicate",
+   "p": 0.83,
+   "before": 0.8888153540701522,
+   "event": "applied",
+   "after": 0.9750185873605947,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie cherishes time spent with her family, stating that it is when she truly feels alive and happy.",
+   "fact_source": "D3:22"
+  },
+  {
+   "message": "D4:10",
+   "fact": "0a092a84d1da4a1a",
+   "label": "refinement",
+   "p": 0.41000000000000003,
+   "before": 0.7531838565022422,
+   "event": "applied",
+   "after": 0.6795490698381247,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie had a fun family gathering where they played games, ate good food, and spent quality time together, emphasizing that family moments make life awesome.",
+   "fact_source": "D3:20"
+  },
+  {
+   "message": "D4:10",
+   "fact": "6eeb93f40b9b4fef",
+   "label": "duplicate",
+   "p": 0.5,
+   "before": 0.8702514506769826,
+   "event": "applied",
+   "after": 0.8702514506769826,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed appreciation for Caroline's kind words and is looking forward to more happy years, emphasizing that her family and moments make it all worth it.",
+   "fact_source": "D3:18"
+  },
+  {
+   "message": "D4:10",
+   "fact": "ad29292b8f4a4af4",
+   "label": "refinement",
+   "p": 0.58,
+   "before": 0.6,
+   "event": "applied",
+   "after": 0.6744186046511628,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie feels lucky to have her husband and kids, who keep her motivated.",
+   "fact_source": "D3:14"
+  },
+  {
+   "message": "D4:11",
+   "fact": "724a7ba8a314468e",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "fact_source": "D4:11"
+  },
+  {
+   "message": "D4:11",
+   "fact": "a5ad19f1a6104db5",
+   "label": "duplicate",
+   "p": 0.98,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D4:11",
+   "fact": "390cf5aa306e4f09",
+   "label": "refinement",
+   "p": 0.99,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline plans to continue her education and explore career options, which she finds exciting.",
+   "fact_source": "D1:9"
+  },
+  {
+   "message": "D4:11",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.65,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D4:11",
+   "fact": "adab777e3ad147ef",
+   "label": "refinement",
+   "p": 0.8,
+   "before": 0.7299999999999999,
+   "event": "applied",
+   "after": 0.9153605015673981,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie asked Caroline about the types of jobs she is considering and if any particular options stand out to her.",
+   "fact_source": "D1:10"
+  },
+  {
+   "message": "D4:12",
+   "fact": "6a9031253993444b",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie asked Caroline about the specific types of counseling and mental health services she wants to pursue.",
+   "fact_source": "D4:12"
+  },
+  {
+   "message": "D4:12",
+   "fact": "21d461cfff064a8d",
+   "label": "refinement",
+   "p": 0.81,
+   "before": 0.47000000000000003,
+   "event": "applied",
+   "after": 0.7908184461985874,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be.",
+   "fact_source": "D1:8"
+  },
+  {
+   "message": "D4:13",
+   "fact": "578d49c45d264573",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline is considering a career in counseling, specifically working with transgender individuals to help them accept themselves and support their mental health.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "D4:13",
+   "fact": "a5ad19f1a6104db5",
+   "label": "refinement",
+   "p": 1.0,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D4:13",
+   "fact": "724a7ba8a314468e",
+   "label": "refinement",
+   "p": 1.0,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "fact_source": "D4:11"
+  },
+  {
+   "message": "D4:13",
+   "fact": "6a9031253993444b",
+   "label": "refinement",
+   "p": 0.64,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.64,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie asked Caroline about the specific types of counseling and mental health services she wants to pursue.",
+   "fact_source": "D4:12"
+  },
+  {
+   "message": "D4:13",
+   "fact": "42af1105c4494144",
+   "label": "refinement",
+   "p": 0.83,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.83,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes Caroline would be a great counselor, highlighting her empathy and understanding as valuable traits for helping others.",
+   "fact_source": "D1:12"
+  },
+  {
+   "message": "D4:13",
+   "fact": "9dcf53ab0fcb494f",
+   "label": "refinement",
+   "p": 0.56,
+   "before": 0.6886417791898332,
+   "event": "applied",
+   "after": 0.737872340425532,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes conversations about gender identity and inclusion are necessary and is thankful for the opportunity to give a voice to the trans community.",
+   "fact_source": "D3:3"
+  },
+  {
+   "message": "D4:13",
+   "fact": "352a5557701e44da",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline attended an LGBTQ+ counseling workshop on June 23, 2023, where she learned about different therapeutic methods and how to best work with transgender individuals.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "D4:13",
+   "fact": "a5ad19f1a6104db5",
+   "label": "refinement",
+   "p": 0.92,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D4:13",
+   "fact": "724a7ba8a314468e",
+   "label": "refinement",
+   "p": 0.92,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "fact_source": "D4:11"
+  },
+  {
+   "message": "D4:13",
+   "fact": "17e382fb02054346",
+   "label": "refinement",
+   "p": 0.86,
+   "before": 0.8800000000000001,
+   "event": "applied",
+   "after": 0.9782833505687695,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie complimented Caroline on a painting and expressed appreciation for the helpful LGBTQ support group Caroline attended, asking how it has impacted her.",
+   "fact_source": "D1:6"
+  },
+  {
+   "message": "D4:13",
+   "fact": "0d5d8c3f5c034f99",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline was inspired by the passion of the professionals at the LGBTQ+ counseling workshop for creating a safe space for transgender individuals.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "D4:13",
+   "fact": "501be8757ea84012",
+   "label": "refinement",
+   "p": 0.68,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "fact_source": "D1:3"
+  },
+  {
+   "message": "D4:13",
+   "fact": "9dcf53ab0fcb494f",
+   "label": "refinement",
+   "p": 0.65,
+   "before": 0.6886417791898332,
+   "event": "applied",
+   "after": 0.8042097752408134,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes conversations about gender identity and inclusion are necessary and is thankful for the opportunity to give a voice to the trans community.",
+   "fact_source": "D3:3"
+  },
+  {
+   "message": "D4:13",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.53,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D4:13",
+   "fact": "17e382fb02054346",
+   "label": "refinement",
+   "p": 0.6900000000000001,
+   "before": 0.8800000000000001,
+   "event": "applied",
+   "after": 0.942271880819367,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie complimented Caroline on a painting and expressed appreciation for the helpful LGBTQ support group Caroline attended, asking how it has impacted her.",
+   "fact_source": "D1:6"
+  },
+  {
+   "message": "D4:13",
+   "fact": "a5ad19f1a6104db5",
+   "label": "refinement",
+   "p": 0.97,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D4:13",
+   "fact": "724a7ba8a314468e",
+   "label": "refinement",
+   "p": 0.93,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "fact_source": "D4:11"
+  },
+  {
+   "message": "D4:14",
+   "fact": "4abb92c8e0634157",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie finds Caroline's dedication to helping others through counseling impressive and inspiring, and she inquired about what motivated Caroline to pursue this career path.",
+   "fact_source": "D4:14"
+  },
+  {
+   "message": "D4:14",
+   "fact": "42af1105c4494144",
+   "label": "refinement",
+   "p": 0.7,
+   "before": 0.83,
+   "event": "applied",
+   "after": 0.9193037974683543,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes Caroline would be a great counselor, highlighting her empathy and understanding as valuable traits for helping others.",
+   "fact_source": "D1:12"
+  },
+  {
+   "message": "D4:14",
+   "fact": "4e97b2a9a7be428e",
+   "label": "refinement",
+   "p": 0.76,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.7599999999999999,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed admiration for Caroline's courage and finds it inspiring.",
+   "fact_source": "D3:10"
+  },
+  {
+   "message": "D4:15",
+   "fact": "512e278e176a4363",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline is looking into a career in counseling and mental health, motivated by her own journey and the support she received, which made a significant difference in her life.",
+   "fact_source": "D4:15"
+  },
+  {
+   "message": "D4:15",
+   "fact": "724a7ba8a314468e",
+   "label": "refinement",
+   "p": 0.52,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "fact_source": "D4:11"
+  },
+  {
+   "message": "D4:15",
+   "fact": "a5ad19f1a6104db5",
+   "label": "refinement",
+   "p": 0.89,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D4:15",
+   "fact": "578d49c45d264573",
+   "label": "refinement",
+   "p": 0.78,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.78,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is considering a career in counseling, specifically working with transgender individuals to help them accept themselves and support their mental health.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "D4:15",
+   "fact": "4abb92c8e0634157",
+   "label": "refinement",
+   "p": 0.58,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.58,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie finds Caroline's dedication to helping others through counseling impressive and inspiring, and she inquired about what motivated Caroline to pursue this career path.",
+   "fact_source": "D4:14"
+  },
+  {
+   "message": "D4:15",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.7,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D4:15",
+   "fact": "390cf5aa306e4f09",
+   "label": "refinement",
+   "p": 0.99,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline plans to continue her education and explore career options, which she finds exciting.",
+   "fact_source": "D1:9"
+  },
+  {
+   "message": "D4:15",
+   "fact": "89987678afa84a9a",
+   "label": "refinement",
+   "p": 0.59,
+   "before": 0.5100080064051241,
+   "event": "applied",
+   "after": 0.5996489828480255,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline expressed a desire to spread love and understanding, thanking Melanie for her support and encouragement, and emphasized their ability to tackle life's challenges together.",
+   "fact_source": "D3:9"
+  },
+  {
+   "message": "D4:15",
+   "fact": "c97c02dfc7474409",
+   "event": "insert",
+   "after": 0.89,
+   "fact_text": "Caroline is passionate about creating a safe and inviting space for people to grow, inspired by how counseling and support groups improved her life.",
+   "fact_source": "D4:15"
+  },
+  {
+   "message": "D4:15",
+   "fact": "5632265936624f1c",
+   "label": "refinement",
+   "p": 0.83,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D4:15",
+   "fact": "a5ad19f1a6104db5",
+   "label": "refinement",
+   "p": 0.89,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D4:15",
+   "fact": "724a7ba8a314468e",
+   "label": "refinement",
+   "p": 0.87,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "fact_source": "D4:11"
+  },
+  {
+   "message": "D4:15",
+   "fact": "578d49c45d264573",
+   "label": "refinement",
+   "p": 0.67,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.67,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is considering a career in counseling, specifically working with transgender individuals to help them accept themselves and support their mental health.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "D4:15",
+   "fact": "42af1105c4494144",
+   "label": "refinement",
+   "p": 0.53,
+   "before": 0.9193037974683543,
+   "event": "applied",
+   "after": 0.9277794516420608,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes Caroline would be a great counselor, highlighting her empathy and understanding as valuable traits for helping others.",
+   "fact_source": "D1:12"
+  },
+  {
+   "message": "D4:15",
+   "fact": "89987678afa84a9a",
+   "label": "refinement",
+   "p": 0.74,
+   "before": 0.5100080064051241,
+   "event": "applied",
+   "after": 0.7476288659793814,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline expressed a desire to spread love and understanding, thanking Melanie for her support and encouragement, and emphasized their ability to tackle life's challenges together.",
+   "fact_source": "D3:9"
+  },
+  {
+   "message": "D4:16",
+   "fact": "6fd6051dfc3e4df6",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie praised Caroline for her passion and hard work in helping others, acknowledging the significant impact she is making through her experiences.",
+   "fact_source": "D4:16"
+  },
+  {
+   "message": "D4:16",
+   "fact": "d7dc1ac4daf4409b",
+   "label": "refinement",
+   "p": 0.73,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.7299999999999999,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed gratitude to Caroline for allowing her to be part of her journey and pride in the difference Caroline is making. She emphasized the importance of motivating and helping each other as they navigate through life together.",
+   "fact_source": "D3:8"
+  },
+  {
+   "message": "D4:16",
+   "fact": "4abb92c8e0634157",
+   "label": "refinement",
+   "p": 0.62,
+   "before": 0.58,
+   "event": "applied",
+   "after": 0.6926040061633282,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie finds Caroline's dedication to helping others through counseling impressive and inspiring, and she inquired about what motivated Caroline to pursue this career path.",
+   "fact_source": "D4:14"
+  },
+  {
+   "message": "D4:16",
+   "fact": "42af1105c4494144",
+   "label": "refinement",
+   "p": 0.5,
+   "before": 0.9277794516420608,
+   "event": "applied",
+   "after": 0.9277794516420608,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes Caroline would be a great counselor, highlighting her empathy and understanding as valuable traits for helping others.",
+   "fact_source": "D1:12"
+  },
+  {
+   "message": "D4:16",
+   "fact": "2efa379224f04651",
+   "label": "refinement",
+   "p": 0.37,
+   "before": 0.3166023166023166,
+   "event": "applied",
+   "after": 0.21388790976383504,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Melanie expressed pride in Caroline for spreading awareness about her transgender journey at a school event around June 2-3, 2023, and encouraged her to continue inspiring others with her strength and courage.",
+   "fact_source": "D3:2"
+  },
+  {
+   "message": "D4:18",
+   "fact": "586e55fa7d6f4b49",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie congratulated Caroline on pursuing her passion for counseling and mental health, expressing admiration for her dedication to helping others.",
+   "fact_source": "D4:18"
+  },
+  {
+   "message": "D4:18",
+   "fact": "4abb92c8e0634157",
+   "label": "refinement",
+   "p": 0.66,
+   "before": 0.6926040061633282,
+   "event": "applied",
+   "after": 0.813909465020576,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie finds Caroline's dedication to helping others through counseling impressive and inspiring, and she inquired about what motivated Caroline to pursue this career path.",
+   "fact_source": "D4:14"
+  },
+  {
+   "message": "D4:18",
+   "fact": "6fd6051dfc3e4df6",
+   "label": "refinement",
+   "p": 0.77,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.77,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie praised Caroline for her passion and hard work in helping others, acknowledging the significant impact she is making through her experiences.",
+   "fact_source": "D4:16"
+  },
+  {
+   "message": "D4:18",
+   "fact": "d7dc1ac4daf4409b",
+   "label": "refinement",
+   "p": 0.59,
+   "before": 0.7299999999999999,
+   "event": "applied",
+   "after": 0.7955301071296637,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed gratitude to Caroline for allowing her to be part of her journey and pride in the difference Caroline is making. She emphasized the importance of motivating and helping each other as they navigate through life together.",
+   "fact_source": "D3:8"
+  },
+  {
+   "message": "D4:18",
+   "fact": "42af1105c4494144",
+   "label": "refinement",
+   "p": 0.76,
+   "before": 0.9277794516420608,
+   "event": "applied",
+   "after": 0.9760079673166525,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes Caroline would be a great counselor, highlighting her empathy and understanding as valuable traits for helping others.",
+   "fact_source": "D1:12"
+  },
+  {
+   "message": "D4:18",
+   "fact": "4e97b2a9a7be428e",
+   "label": "refinement",
+   "p": 0.89,
+   "before": 0.7599999999999999,
+   "event": "applied",
+   "after": 0.962435970404098,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie expressed admiration for Caroline's courage and finds it inspiring.",
+   "fact_source": "D3:10"
+  },
+  {
+   "message": "U:E03",
+   "fact": "f4da1a765a2a46d1",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie quit her job on June 30, 2023, to be home with her kids full-time.",
+   "fact_source": "U:E03"
+  },
+  {
+   "message": "U:E05",
+   "fact": "10b069d116fc4cdf",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's hand-painted bowl from her 18th birthday, which held sentimental value, fell off the shelf and shattered around July 11, 2023. She kept a shard but the bowl is now gone.",
+   "fact_source": "U:E05"
+  },
+  {
+   "message": "U:E05",
+   "fact": "1e34eee8b5554cb9",
+   "label": "negates",
+   "p": 0.83,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.027171017581246664,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Caroline has a hand-painted bowl that holds sentimental value, made by a friend for her 18th birthday ten years ago. The bowl's pattern and colors remind her of art and self-expression.",
+   "fact_source": "D4:5"
+  },
+  {
+   "message": "U:E06",
+   "fact": "c6aa37710a304943",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline no longer attends the LGBTQ support group as it disbanded after the organizer moved away.",
+   "fact_source": "U:E06"
+  },
+  {
+   "message": "U:E06",
+   "fact": "501be8757ea84012",
+   "label": "update",
+   "p": 0.46,
+   "before": 0.98,
+   "event": "blocked_structure",
+   "fact_text": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "fact_source": "D1:3"
+  },
+  {
+   "message": "U:E06",
+   "fact": "e5ffef4a88204961",
+   "label": "update",
+   "p": 0.44,
+   "before": 0.46,
+   "event": "blocked_structure",
+   "fact_text": "Caroline found the transgender stories shared at the LGBTQ support group she attended on May 7, 2023, to be very inspiring and felt happy and thankful for all the support.",
+   "fact_source": "D1:5"
+  },
+  {
+   "message": "U:E06",
+   "fact": "17e382fb02054346",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.942271880819367,
+   "event": "blocked_structure",
+   "fact_text": "Melanie complimented Caroline on a painting and expressed appreciation for the helpful LGBTQ support group Caroline attended, asking how it has impacted her.",
+   "fact_source": "D1:6"
+  },
+  {
+   "message": "U:E07",
+   "fact": "c58a64effb5b49bc",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's local pool closed permanently around July 15, 2023, so she and her kids no longer swim there and have switched to biking together instead.",
+   "fact_source": "U:E07"
+  },
+  {
+   "message": "U:E07",
+   "fact": "b5aeeb13c6354cf1",
+   "label": "negates",
+   "p": 0.66,
+   "before": 0.7748294162244124,
+   "event": "unconfirmed",
+   "fact_text": "Melanie believes that taking care of oneself is vital and plans to go swimming with the kids after their conversation on May 8, 2023.",
+   "fact_source": "D1:18"
+  },
+  {
+   "message": "U:E08",
+   "fact": "aa50a1e1bcca4677",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's two younger kids have moved on from their interest in nature and are now completely obsessed with dinosaurs.",
+   "fact_source": "U:E08"
+  },
+  {
+   "message": "U:E08",
+   "fact": "ce8ce5add424495b",
+   "label": "update",
+   "p": 0.87,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie had an awesome family camping trip around June 20-26, 2023, where they explored nature, roasted marshmallows around the campfire, and went on a hike with the two younger kids, who love nature. She described the view from the top as amazing and emphasized the special moments shared together as a family.",
+   "fact_source": "D4:8"
+  },
+  {
+   "message": "U:E09",
+   "fact": "c6e8eb9390f24a15",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie sold her violin in June 2023 and is now learning guitar, finding it more fun to play with her kids.",
+   "fact_source": "U:E09"
+  },
+  {
+   "message": "U:E09",
+   "fact": "f01487d63a264975",
+   "label": "update",
+   "p": 0.61,
+   "before": 0.93,
+   "event": "unconfirmed",
+   "fact_text": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family.",
+   "fact_source": "D2:5"
+  },
+  {
+   "message": "U:E09",
+   "fact": "4d5d6778647748ca",
+   "label": "refinement",
+   "p": 0.68,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.68,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie values family time and considers it important in her life.",
+   "fact_source": "D4:10"
+  },
+  {
+   "message": "U:E10",
+   "fact": "480c821f80ce4abd",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie has been experiencing knee issues, so she stopped running completely and now swims laps at the gym instead.",
+   "fact_source": "U:E10"
+  },
+  {
+   "message": "U:E10",
+   "fact": "c58a64effb5b49bc",
+   "label": "contradiction",
+   "p": 0.54,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie's local pool closed permanently around July 15, 2023, so she and her kids no longer swim there and have switched to biking together instead.",
+   "fact_source": "U:E07"
+  },
+  {
+   "message": "U:E10",
+   "fact": "f01487d63a264975",
+   "label": "update",
+   "p": 0.45,
+   "before": 0.93,
+   "event": "unconfirmed",
+   "fact_text": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family.",
+   "fact_source": "D2:5"
+  },
+  {
+   "message": "U:E10",
+   "fact": "b5aeeb13c6354cf1",
+   "label": "refinement",
+   "p": 0.55,
+   "before": 0.7748294162244124,
+   "event": "applied",
+   "after": 0.8079051383399208,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes that taking care of oneself is vital and plans to go swimming with the kids after their conversation on May 8, 2023.",
+   "fact_source": "D1:18"
+  },
+  {
+   "message": "U:E11",
+   "fact": "99ad6268414243fb",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie has swapped reading for meditation in her me-time, dedicating twenty minutes every morning to the practice.",
+   "fact_source": "U:E11"
+  },
+  {
+   "message": "U:E11",
+   "fact": "f01487d63a264975",
+   "label": "update",
+   "p": 0.8,
+   "before": 0.93,
+   "event": "blocked_structure",
+   "fact_text": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family.",
+   "fact_source": "D2:5"
+  },
+  {
+   "message": "U:E11",
+   "fact": "fafc1e652019470c",
+   "label": "refinement",
+   "p": 0.63,
+   "before": 0.93,
+   "event": "applied",
+   "after": 0.9576659038901602,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie found the charity race for mental health on May 20, 2023, to be thought-provoking and is starting to realize the importance of self-care. She acknowledges that taking care of herself enables her to better care for her family.",
+   "fact_source": "D2:3"
+  },
+  {
+   "message": "U:E12",
+   "fact": "2a50e81e0fca467c",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline switched her adoption agency to Rainbow Families around July 25, 2023, because they are closer to home and move faster.",
+   "fact_source": "U:E12"
+  },
+  {
+   "message": "U:E12",
+   "fact": "c79d896885924df6",
+   "label": "update",
+   "p": 0.35,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Caroline chose the adoption agency she is considering because they help LGBTQ+ individuals with adoption, and their inclusivity and support resonated with her.",
+   "fact_source": "D2:12"
+  },
+  {
+   "message": "U:E12",
+   "fact": "8fefcfe20fbe4ca0",
+   "label": "update",
+   "p": 0.77,
+   "before": 0.98,
+   "event": "unconfirmed",
+   "fact_text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "U:E12",
+   "fact": "143ec5e207854209",
+   "label": "update",
+   "p": 0.53,
+   "before": 0.98,
+   "event": "blocked_structure",
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "U:E12",
+   "fact": "1ef60da8f4584297",
+   "label": "update",
+   "p": 0.53,
+   "before": 0.909902034664657,
+   "event": "blocked_structure",
+   "fact_text": "Melanie expressed enthusiasm about an adoption agency Caroline is considering and asked what influenced her choice.",
+   "fact_source": "D2:11"
+  },
+  {
+   "message": "U:E12",
+   "fact": "c4fcf467676f41d4",
+   "label": "update",
+   "p": 0.63,
+   "before": 0.54,
+   "event": "blocked_structure",
+   "fact_text": "Melanie expressed appreciation for the inclusivity and support of the adoption agency Caroline is considering and asked if there is anything Caroline is excited about in the adoption process.",
+   "fact_source": "D2:13"
+  },
+  {
+   "message": "U:E13",
+   "fact": "dfa3ea004aa449e3",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline has changed her adoption plan as of July 27, 2023, deciding to foster first instead of adopting right away to learn the ropes.",
+   "fact_source": "U:E13"
+  },
+  {
+   "message": "U:E13",
+   "fact": "53b37d5c448241fa",
+   "label": "refinement",
+   "p": 0.63,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "U:E13",
+   "fact": "8fefcfe20fbe4ca0",
+   "label": "update",
+   "p": 0.55,
+   "before": 0.98,
+   "event": "blocked_structure",
+   "fact_text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "U:E13",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.47,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.9775042444821732,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "U:E13",
+   "fact": "3fb222dba38248d1",
+   "label": "refinement",
+   "p": 0.53,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.53,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is thrilled about the prospect of creating a family for children in need and acknowledges that being a single parent will be challenging, but she is ready to take on the challenge.",
+   "fact_source": "D2:14"
+  },
+  {
+   "message": "U:E13",
+   "fact": "a479e575df894fce",
+   "label": "update",
+   "p": 0.59,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie believes Caroline has a caring heart and expresses confidence that the children she plans to adopt will receive all the love and stability they need, showing excitement for this new chapter in Caroline's life.",
+   "fact_source": "D2:17"
+  },
+  {
+   "message": "U:E13",
+   "fact": "624b8e5cfdbe4a04",
+   "label": "update",
+   "p": 0.53,
+   "before": 0.7899173553719008,
+   "event": "blocked_structure",
+   "fact_text": "Melanie expressed admiration for Caroline's plans to adopt children in need, stating that her future family will be lucky to have her.",
+   "fact_source": "D2:9"
+  },
+  {
+   "message": "U:E14",
+   "fact": "1e4c7521e53d4921",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie has established a consistent self-care routine that she feels is now effective, marking a significant improvement from her previous struggles with self-care.",
+   "fact_source": "U:E14"
+  },
+  {
+   "message": "U:E14",
+   "fact": "f01487d63a264975",
+   "label": "refinement",
+   "p": 0.69,
+   "before": 0.93,
+   "event": "applied",
+   "after": 0.9672897196261683,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family.",
+   "fact_source": "D2:5"
+  },
+  {
+   "message": "U:E14",
+   "fact": "fafc1e652019470c",
+   "label": "update",
+   "p": 0.66,
+   "before": 0.9576659038901602,
+   "event": "blocked_structure",
+   "fact_text": "Melanie found the charity race for mental health on May 20, 2023, to be thought-provoking and is starting to realize the importance of self-care. She acknowledges that taking care of herself enables her to better care for her family.",
+   "fact_source": "D2:3"
+  },
+  {
+   "message": "U:E14",
+   "fact": "b5aeeb13c6354cf1",
+   "label": "refinement",
+   "p": 0.54,
+   "before": 0.8079051383399208,
+   "event": "applied",
+   "after": 0.8315703824247356,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes that taking care of oneself is vital and plans to go swimming with the kids after their conversation on May 8, 2023.",
+   "fact_source": "D1:18"
+  },
+  {
+   "message": "U:E14",
+   "fact": "99ad6268414243fb",
+   "label": "refinement",
+   "p": 0.66,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.66,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie has swapped reading for meditation in her me-time, dedicating twenty minutes every morning to the practice.",
+   "fact_source": "U:E11"
+  },
+  {
+   "message": "U:E15",
+   "fact": "b40c28fe028b4e95",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's grandma moved from Sweden and now lives in Norway with her aunt as of July 31, 2023.",
+   "fact_source": "U:E15"
+  },
+  {
+   "message": "U:S01",
+   "fact": "8028f55306af4c8c",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie and her spouse's first apartment after their wedding was very small, and they still laugh about it.",
+   "fact_source": "U:S01"
+  },
+  {
+   "message": "U:S02",
+   "fact": "89fdeb0d7d064117",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline wanted to be a nurse back in high school, reflecting on how her career aspirations have changed over time.",
+   "fact_source": "U:S02"
+  },
+  {
+   "message": "U:S03",
+   "fact": "95c90d831f8d43a5",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline felt lonely during her first year after moving, before she met her friends.",
+   "fact_source": "U:S03"
+  },
+  {
+   "message": "U:S03",
+   "fact": "66d0c9a4b34c446e",
+   "label": "refinement",
+   "p": 0.68,
+   "before": 0.95,
+   "event": "applied",
+   "after": 0.9758308157099698,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline has known her friends for 4 years since moving from her home country, and their love and support have been crucial, especially after a tough breakup.",
+   "fact_source": "D3:13"
+  },
+  {
+   "message": "U:S04",
+   "fact": "9e15ca782a3f43cb",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline mentioned that she might move back to Sweden someday, but not in the near future.",
+   "fact_source": "U:S04"
+  },
+  {
+   "message": "U:S05",
+   "fact": "99a2c772987e4d5a",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie wants to run another charity race in the fall of 2023, considering participating in a half marathon this time.",
+   "fact_source": "U:S05"
+  },
+  {
+   "message": "U:S06",
+   "fact": "fb1b410e2dac4bcb",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie hopes to camp at the Grand Canyon next summer, contingent on saving up.",
+   "fact_source": "U:S06"
+  },
+  {
+   "message": "U:S07",
+   "fact": "0a5fa9e794a549bd",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline attended her first counseling workshop on June 23, 2023.",
+   "fact_source": "U:S07"
+  },
+  {
+   "message": "U:S07",
+   "fact": "352a5557701e44da",
+   "label": "refinement",
+   "p": 0.56,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.56,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline attended an LGBTQ+ counseling workshop on June 23, 2023, where she learned about different therapeutic methods and how to best work with transgender individuals.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "U:S07",
+   "fact": "c97c02dfc7474409",
+   "label": "refinement",
+   "p": 0.65,
+   "before": 0.89,
+   "event": "applied",
+   "after": 0.9376012965964343,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is passionate about creating a safe and inviting space for people to grow, inspired by how counseling and support groups improved her life.",
+   "fact_source": "D4:15"
+  },
+  {
+   "message": "U:S07",
+   "fact": "0d5d8c3f5c034f99",
+   "label": "refinement",
+   "p": 0.75,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.75,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline was inspired by the passion of the professionals at the LGBTQ+ counseling workshop for creating a safe space for transgender individuals.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "U:S07",
+   "fact": "512e278e176a4363",
+   "label": "refinement",
+   "p": 0.7,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is looking into a career in counseling and mental health, motivated by her own journey and the support she received, which made a significant difference in her life.",
+   "fact_source": "D4:15"
+  },
+  {
+   "message": "U:S08",
+   "fact": "397e3f1e54cf4ac8",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Before coming out, Caroline was too scared to tell anyone about herself.",
+   "fact_source": "U:S08"
+  },
+  {
+   "message": "U:S09",
+   "fact": "77b9ba036c5f438d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline used to believe she would only adopt with a partner someday, but her perspective has changed.",
+   "fact_source": "U:S09"
+  },
+  {
+   "message": "U:S09",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.47,
+   "before": 0.9775042444821732,
+   "event": "applied",
+   "after": 0.9747050877982891,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "U:S09",
+   "fact": "3fb222dba38248d1",
+   "label": "refinement",
+   "p": 0.61,
+   "before": 0.53,
+   "event": "applied",
+   "after": 0.6381760757994474,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is thrilled about the prospect of creating a family for children in need and acknowledges that being a single parent will be challenging, but she is ready to take on the challenge.",
+   "fact_source": "D2:14"
+  },
+  {
+   "message": "U:S09",
+   "fact": "a479e575df894fce",
+   "label": "refinement",
+   "p": 0.54,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.54,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Melanie believes Caroline has a caring heart and expresses confidence that the children she plans to adopt will receive all the love and stability they need, showing excitement for this new chapter in Caroline's life.",
+   "fact_source": "D2:17"
+  },
+  {
+   "message": "U:S10",
+   "fact": "9a792331486844b5",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie used to be really shy, even as a teenager.",
+   "fact_source": "U:S10"
+  },
+  {
+   "message": "U:F01",
+   "fact": "f37b7a9212e74127",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline enrolled in a psychology certificate program at the community college around August 23, 2023, with classes starting the following week.",
+   "fact_source": "U:F01"
+  },
+  {
+   "message": "U:F01",
+   "fact": "a5ad19f1a6104db5",
+   "label": "refinement",
+   "p": 0.66,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "U:F01",
+   "fact": "512e278e176a4363",
+   "label": "refinement",
+   "p": 0.71,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is looking into a career in counseling and mental health, motivated by her own journey and the support she received, which made a significant difference in her life.",
+   "fact_source": "D4:15"
+  },
+  {
+   "message": "U:F01",
+   "fact": "390cf5aa306e4f09",
+   "label": "refinement",
+   "p": 0.94,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline plans to continue her education and explore career options, which she finds exciting.",
+   "fact_source": "D1:9"
+  },
+  {
+   "message": "U:F01",
+   "fact": "724a7ba8a314468e",
+   "label": "refinement",
+   "p": 0.77,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "fact_source": "D4:11"
+  },
+  {
+   "message": "U:F02",
+   "fact": "d93e11f838f8445e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's kids' summer break started around August 24, 2023, and they are enjoying every minute of it.",
+   "fact_source": "U:F02"
+  },
+  {
+   "message": "U:F03",
+   "fact": "457a211f0dd34f40",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline started volunteering as a peer counselor for trans youth at the community center around August 25, 2023.",
+   "fact_source": "U:F03"
+  },
+  {
+   "message": "U:F03",
+   "fact": "578d49c45d264573",
+   "label": "refinement",
+   "p": 0.73,
+   "before": 0.67,
+   "event": "applied",
+   "after": 0.8459010722933241,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is considering a career in counseling, specifically working with transgender individuals to help them accept themselves and support their mental health.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "U:F04",
+   "fact": "6ff2b46899634a72",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline finished her research and submitted her application to Rainbow Families on August 21, 2023.",
+   "fact_source": "U:F04"
+  },
+  {
+   "message": "U:F04",
+   "fact": "2a50e81e0fca467c",
+   "label": "refinement",
+   "p": 0.51,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.51,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline switched her adoption agency to Rainbow Families around July 25, 2023, because they are closer to home and move faster.",
+   "fact_source": "U:E12"
+  },
+  {
+   "message": "U:F04",
+   "fact": "143ec5e207854209",
+   "label": "refinement",
+   "p": 0.86,
+   "before": 0.9747050877982891,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "U:F04",
+   "fact": "8fefcfe20fbe4ca0",
+   "label": "refinement",
+   "p": 0.81,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "U:F05",
+   "fact": "306056b737bf4b31",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline gave another talk about her journey at a high school in the next town around August 28, 2023.",
+   "fact_source": "U:F05"
+  }
+ ],
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {
+  "embeddings": 0.0014900943396226418,
+  "escalations": 0.0,
+  "extraction": 1.3138542452830189,
+  "jev": 0.31566173171977396,
+  "llm_decisions": 0.011085849056603772
+ }
+}

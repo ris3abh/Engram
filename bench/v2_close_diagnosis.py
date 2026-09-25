@@ -1,7 +1,7 @@
 """Why engram leaves update-set close items stale (V2 Stage 2, OpenAI stack, dated extraction). No API calls.
 
 For every set-1 close item (easy closes and fulfilled plans) and every set-2 close pair left stale, from the Stage 2
-stores and logs (bench/.cache/arms/openai/e4_belief_v2/dev_updates{,2}/ and their result files):
+stores and logs (bench/.cache/arms/openai/<arm>/dev_updates{,2}/ and their result files):
 
 - the stale old fact(s): facts from the original message still active (set 1: matched to the item's fact as the
   update report matches them; set 2: every fact from the earlier message);
@@ -14,7 +14,7 @@ stores and logs (bench/.cache/arms/openai/e4_belief_v2/dev_updates{,2}/ and thei
 Each stale item gets one cause, the first that applies along the write path. Output:
 bench/results/v2/close_diagnosis.json.
 
-    uv run --extra bench python -m bench.v2_close_diagnosis
+    uv run --extra bench python -m bench.v2_close_diagnosis [arm]     # default e4_belief_v2 (the frozen arm)
 """
 
 import json
@@ -26,20 +26,20 @@ from .run import SET2_CLOSE_PAIRS, UPDATES
 from .stale import MATCH_THRESHOLD
 
 ROOT = Path(__file__).parents[1]
-ARMS = ROOT / "bench" / ".cache" / "arms" / "openai" / "e4_belief_v2"
+ARMS = ROOT / "bench" / ".cache" / "arms" / "openai"
 V2 = ROOT / "bench" / "results" / "v2"
 AGAINST = {"update", "contradiction", "negates"}
 CLOSE_BELOW = 0.25
 
 
-def load_store(slice_name: str) -> tuple[dict, dict, dict]:
-    db = sqlite3.connect(ARMS / slice_name / "engram.db")
+def load_store(arm: str, slice_name: str) -> tuple[dict, dict, dict]:
+    db = sqlite3.connect(ARMS / arm / slice_name / "engram.db")
     db.row_factory = sqlite3.Row
     facts = {r["id"]: dict(r) for r in db.execute("SELECT * FROM facts")}
     decisions: dict[str, list[dict]] = {}
     for r in db.execute("SELECT * FROM decisions"):
         decisions.setdefault(r["fact_id"], []).append({**dict(r), "probs": json.loads(r["probs"])})
-    result = json.loads((V2 / f"e4_belief_v2__{slice_name}.json").read_text())
+    result = json.loads((V2 / f"{arm}__{slice_name}.json").read_text())
     trace: dict[tuple, list[dict]] = {}
     for e in result.get("belief_trace", []):
         trace.setdefault((e["message"], e["fact"]), []).append(e)
@@ -107,10 +107,10 @@ def diagnose_pair(old: dict, update_id: str, facts: dict, decisions: dict, trace
     }
 
 
-def set1() -> list[dict]:
+def set1(arm: str) -> list[dict]:
     from engram.embed import SentenceEmbedder
 
-    facts, decisions, trace = load_store("dev_updates")
+    facts, decisions, trace = load_store(arm, "dev_updates")
     embedder = SentenceEmbedder()
     out = []
     for item in json.loads(UPDATES.read_text())["items"]:
@@ -129,8 +129,8 @@ def set1() -> list[dict]:
     return out
 
 
-def set2() -> list[dict]:
-    facts, decisions, trace = load_store("dev_updates2")
+def set2(arm: str) -> list[dict]:
+    facts, decisions, trace = load_store(arm, "dev_updates2")
     out = []
     for earlier, later in sorted(SET2_CLOSE_PAIRS):
         for old in [f for f in facts.values() if f["source_message_id"] == earlier and f["valid_until"] is None]:
@@ -140,8 +140,8 @@ def set2() -> list[dict]:
     return out
 
 
-def main() -> None:
-    rows = set1() + set2()
+def main(arm: str = "e4_belief_v2") -> None:
+    rows = set1(arm) + set2(arm)
     causes = Counter(r["cause"] for r in rows)
     labels = Counter(
         s["label"] for r in rows for s in r["candidate_decisions"] if s["question"] == "relation_to_candidate"
@@ -153,9 +153,12 @@ def main() -> None:
         "rows": rows,
     }
     V2.mkdir(parents=True, exist_ok=True)
-    (V2 / "close_diagnosis.json").write_text(json.dumps(out, indent=1, default=str) + "\n")
+    name = "close_diagnosis.json" if arm == "e4_belief_v2" else f"close_diagnosis__{arm}.json"
+    (V2 / name).write_text(json.dumps(out, indent=1, default=str) + "\n")
     print(json.dumps({k: out[k] for k in ("stale_old_facts", "causes", "labels_given")}, indent=1))
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    main(*sys.argv[1:])
