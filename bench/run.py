@@ -351,6 +351,10 @@ def load_slice(name: str) -> dict:
         return load_heldout(name.split(":", 1)[1])
     if name == "conv26":  # the whole tuning conversation (v2 Stage 2), loaded like a held-out one
         return load_heldout("conv-26")
+    if name.startswith("lme:"):  # one LongMemEval question and its haystack (V2_PLAN section 10)
+        from .longmemeval import load_question
+
+        return load_question(name.split(":", 1)[1])
     path, checkpoints = SLICES[name]
     s = json.loads(path.read_text())
     if name in ("dev_updates", "dev_updates2"):
@@ -830,7 +834,7 @@ class GraphitiArm:
     NEO4J_AUTH = ("neo4j", os.environ.get("NEO4J_PASSWORD", "engram-local-bench"))  # a local, throwaway container
     TIMEOUT_S = 600  # per episode write or search
 
-    def __init__(self, arm_dir: Path, cache: CallCache, group_id: str, models: str = "shared"):
+    def __init__(self, arm_dir: Path, cache: CallCache, group_id: str, models: str = "shared", keep: bool = False):
         import openai
         from graphiti_core import Graphiti
         from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
@@ -853,6 +857,7 @@ class GraphitiArm:
             cross_encoder=OpenAIRerankerClient(config=llm_config, client=client),  # built, not called by RRF search
         )
         self.group_id = re.sub(r"[^A-Za-z0-9_-]", "_", group_id)
+        self.keep = keep  # reuse the graph an earlier pass built under this group id
         self._ready = False
         self._records: list[dict] = []
 
@@ -937,7 +942,8 @@ class GraphitiArm:
             from graphiti_core.utils.maintenance.graph_data_operations import clear_data
 
             await self.graphiti.build_indices_and_constraints()
-            await clear_data(self.graphiti.driver, group_ids=[self.group_id])
+            if not self.keep:
+                await clear_data(self.graphiti.driver, group_ids=[self.group_id])
             self._ready = True
 
     async def write(self, m: dict) -> dict:
@@ -1103,14 +1109,23 @@ async def run_arm(
     extra_top_ks: list[int] | None = None,
     no_answer: bool = False,
     stack: str = "anthropic",
+    sweep: list[int] | None = None,
+    reuse_from: str | None = None,
 ) -> dict:
+    """`sweep`: after the final answers, retrieval-only token counts per question at each k (LongMemEval token
+    matching, V2_PLAN section 10). `reuse_from`: read the store another pass of this arm built on this slice (its
+    suffix, e.g. "__k20") and write nothing, so a second k answers on the same ingestion."""
     spec = ARMS[name]
     sl = load_slice(slice_name)
     suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "") + ("__noanswer" if no_answer else "")
     arms_dir, results = (ARMS_DIR / "openai", RESULTS_V2) if stack == "openai" else (ARMS_DIR, RESULTS)
-    arm_dir = arms_dir / name / (slice_name.replace(":", "_") + suffix)  # each option set gets its own store
-    shutil.rmtree(arm_dir, ignore_errors=True)
-    arm_dir.mkdir(parents=True)
+    arm_dir = arms_dir / name / (slice_name.replace(":", "_") + (reuse_from or suffix))  # a store per option set
+    if reuse_from:
+        if not arm_dir.exists():
+            raise FileNotFoundError(f"--reuse-from: no store at {arm_dir}")
+    else:
+        shutil.rmtree(arm_dir, ignore_errors=True)
+        arm_dir.mkdir(parents=True)
     cache = CallCache(CACHE, budget=budget)
     frozen_store = spec.get("store_from")  # Stage 4 reranker arms: read a copy of another arm's store, write nothing
     if frozen_store:
@@ -1124,7 +1139,11 @@ async def run_arm(
         if stack != "openai":
             raise ValueError("Graphiti runs on the OpenAI stack only (V2_PLAN section 4)")
         system = GraphitiArm(
-            arm_dir, cache, group_id=f"{name}__{slice_name}{suffix}", models=spec.get("models", "shared")
+            arm_dir,
+            cache,
+            group_id=f"{name}__{slice_name}{reuse_from or suffix}",
+            models=spec.get("models", "shared"),
+            keep=bool(reuse_from),
         )
     else:
         system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False), stack=stack)
@@ -1213,7 +1232,9 @@ async def run_arm(
                 "retrieved_tokens": retrieved_tokens,
                 **read,
             }
-        prompt = ANSWER_PROMPT.format(speakers=speakers, memories=block, question=q["question"])
+        # LongMemEval (V2_PLAN section 10): the question slot carries the question's date; retrieval and judge do not
+        slot = f"(Current date: {q['question_date']}) {q['question']}" if q.get("question_date") else q["question"]
+        prompt = ANSWER_PROMPT.format(speakers=speakers, memories=block, question=slot)
         ans, grade = await answer_and_judge(prompt, q["question"], q["gold"])
         return {
             **q,
@@ -1231,8 +1252,9 @@ async def run_arm(
 
     last_of_session = {m["session"]: m["id"] for m in sl["messages"]}
     outcome_log: list[tuple[str, list[dict]]] = []
+    read_only = bool(frozen_store or reuse_from)
     for n, m in enumerate(sl["messages"], 1):
-        if not frozen_store:
+        if not read_only:
             writes.append(await system.write(m))
             if "outcomes" in writes[-1]:
                 outcome_log.append((m["id"], writes[-1]["outcomes"]))
@@ -1243,7 +1265,7 @@ async def run_arm(
             )
         if m["session"] in sl["checkpoints"] and m["id"] == last_of_session[m["session"]]:
             cp = m["session"]
-            if cp == max(sl["checkpoints"]) and spec.get("hygiene") and not frozen_store:
+            if cp == max(sl["checkpoints"]) and spec.get("hygiene") and not read_only:
                 from engram.pipeline.hygiene import hygiene_pass
 
                 before_hygiene = update_report(sl, [], system, SentenceEmbedder()) if sl.get("update_items") else None
@@ -1292,7 +1314,7 @@ async def run_arm(
         for cp in sl["checkpoints"]
     ]
     actions = Counter(a for w in writes for a in w["actions"])
-    n_msgs = len(sl["messages"]) if frozen_store else len(writes)
+    n_msgs = len(sl["messages"]) if read_only else len(writes)
     # Only messages that produced facts have a decision layer to time; the rest decide nothing in ~0 ms.
     decision_ms = [w["decision_ms"] for w in writes if w["decision_ms"] is not None and w["extracted"]]
     decision_cost = [w["decision_cost"] for w in writes if w["decision_cost"] is not None]
@@ -1335,6 +1357,18 @@ async def run_arm(
     result["options"] = {"top_k": top_k, "no_dates": no_dates, "no_answer": no_answer}
     if frozen_store:
         result["store_from"] = frozen_store
+    if reuse_from:
+        result["reused_store"] = reuse_from
+    if sweep:  # retrieval only, no answers: o200k tokens of the memory block at each k, per final question
+
+        async def swept(q: dict) -> dict:
+            out = {}
+            for k in sweep:
+                lines, _ = await system.memories(q["question"], top_k=k, no_dates=no_dates)
+                out[k] = await tokens(json.dumps(lines, indent=4)) - empty_block
+            return out
+
+        result["sweep_tokens"] = {a["idx"]: await swept(a) for a in answers}
     if spec["system"] == "engram" and stack != "anthropic":
         result["write_outcomes"] = [{"message": m_id, **o} for m_id, w in outcome_log for o in w]
         system.save_trace()
@@ -1754,6 +1788,8 @@ async def run_v2(args, extra: list[int]) -> dict:
             extra_top_ks=extra,
             no_answer=args.no_answer,
             stack="openai",
+            sweep=args.sweep,
+            reuse_from=args.reuse_from,
         )
     print(table([result]))
     totals = ledger_totals()
@@ -1778,6 +1814,14 @@ async def main() -> None:
     parser.add_argument("--top-k", type=int, default=None, help="answer from only the top k memories")
     parser.add_argument("--no-dates", action="store_true", help="answer from memory text only")
     parser.add_argument("--no-answer", action="store_true", help="retrieval only: record memories, skip answer/judge")
+    parser.add_argument(
+        "--sweep",
+        type=lambda v: list(range(int(v.split("-")[0]), int(v.split("-")[1]) + 1)),
+        help="with --stack openai: retrieval-only token counts per question at each k in this range, e.g. 3-10",
+    )
+    parser.add_argument(
+        "--reuse-from", help="with --stack openai: answer from the store this arm's run with that suffix built (__k20)"
+    )
     parser.add_argument("--suffix", default="", help="with --report: result-file suffix, e.g. __k3 or __nodates")
     parser.add_argument("--stack", choices=list(STACKS), default="anthropic", help="model stack (default: v1's)")
     parser.add_argument("--stage", help="with --stack openai: the V2_PLAN stage this run belongs to, for the ledger")

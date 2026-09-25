@@ -44,6 +44,68 @@ def select(questions: list[dict]) -> dict[str, list[str]]:
     }
 
 
+def parse_date(s: str):
+    """LongMemEval's '2023/05/20 (Sat) 02:21' -> a UTC datetime."""
+    from datetime import UTC, datetime
+
+    day, clock = s.split(" (")[0], s.split(") ")[1]
+    return datetime.strptime(f"{day} {clock}", "%Y/%m/%d %H:%M").replace(tzinfo=UTC)
+
+
+_QUESTIONS: dict[str, dict] | None = None
+
+
+def load_question(question_id: str) -> dict:
+    """One selected question as a bench/run.py slice (V2_PLAN section 10): its haystack's user turns only, one
+    message each, sessions sorted by date (the file does not store them in date order; ties keep file order), each
+    turn at its session date plus its index in seconds; one question, asked after ingestion, with its question_date."""
+    global _QUESTIONS
+    if _QUESTIONS is None:
+        selected = {i for ids in json.loads(IDS.read_text())["ids"].values() for i in ids}
+        raw = json.loads((DATA_DIR / FILENAME).read_text())
+        _QUESTIONS = {q["question_id"]: q for q in raw if q["question_id"] in selected}
+    from datetime import timedelta
+
+    q = _QUESTIONS[question_id]
+    order = sorted(range(len(q["haystack_sessions"])), key=lambda i: parse_date(q["haystack_dates"][i]))
+    messages = []
+    for n, i in enumerate(order, start=1):
+        date = q["haystack_dates"][i]
+        turns = [m for m in q["haystack_sessions"][i] if m["role"] == "user"]
+        for k, m in enumerate(turns):
+            messages.append(
+                {
+                    "id": f"{q['haystack_session_ids'][i]}:{k}",
+                    "session": n,
+                    "index": k,
+                    "speaker": "User",
+                    "text": m["content"],
+                    "session_date": date,
+                    "at": parse_date(date) + timedelta(seconds=k),
+                }
+            )
+    last = max(m["session"] for m in messages)
+    return {
+        "conversation": question_id,
+        "speakers": ["User"],
+        "sessions": [1, last],
+        "checkpoints": [last],
+        "messages": messages,
+        "questions": [
+            {
+                "idx": question_id,
+                "question": q["question"],
+                "question_date": q["question_date"],
+                "gold": q["answer"],
+                "category": q["question_type"],
+                "abstention": question_id.endswith("_abs"),
+                "evidence": q.get("answer_session_ids", []),
+                "last_evidence_session": last,
+            }
+        ],
+    }
+
+
 def main() -> None:
     path = download()
     raw = path.read_bytes()
