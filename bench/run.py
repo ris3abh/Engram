@@ -18,6 +18,15 @@ Each run rebuilds the arm's store from scratch in bench/.cache/arms/<arm>/, so r
 
 Spend guard: a run stops at $3 of real (uncached) spend, and phase 2 stops at $12 cumulative. Every run is
 appended to bench/results/phase2_spend.jsonl. Results go to bench/results/<arm>.json.
+
+Stacks (--stack, default anthropic): `anthropic` is v1's stack (claude-haiku-4-5 extraction, claude-sonnet-4-6
+answers, judge and LLM decisions, local MiniLM embeddings) and is unchanged, so v1 reproduces. `openai` is v2's primary
+stack (docs/V2_PLAN.md, section 3): gpt-4o-mini for extraction, answers, judge and LLM decisions (temperature 0 for
+answers and judge), text-embedding-3-small for every system, retrieved tokens counted with tiktoken o200k_base.
+OpenAI-stack runs keep their own stores (bench/.cache/arms/openai/), write results to bench/results/v2/ (never over a
+v1 file), and charge bench/v2_spend.py (ledger bench/results/v2/spend.jsonl, per-run and phase caps); --stage names
+the plan stage for the ledger. Analysis-side matching of stored facts to labels (stale rate, update report) uses
+MiniLM on both stacks.
 """
 
 import argparse
@@ -67,6 +76,7 @@ SLICES = {
 ARMS_DIR = ROOT / "bench" / ".cache" / "arms"
 CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
+RESULTS_V2 = RESULTS / "v2"  # OpenAI-stack results (phase 3); v1 files are never overwritten
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
 # per-run stop $20; phase cap $12 -> $20 -> $30 -> $45 -> $90 -> $95 -> $105 (user; the last raise, 2026-09-24, for
@@ -74,6 +84,17 @@ ANSWER_MODEL = "claude-sonnet-4-6"
 RUN_LIMIT, PHASE_LIMIT = 20.0, 105.0
 FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy from step 8, for the E0 check
 PINNED_DATE = "2026-09-23"  # mem0's and engram's "Current Date", pinned so cached runs are reproducible
+STACKS = {
+    "anthropic": {"extract": EXTRACT_MODEL, "answer": ANSWER_MODEL, "judge": JUDGE_MODEL},
+    "openai": {
+        "extract": "gpt-4o-mini",
+        "answer": "gpt-4o-mini",
+        "judge": "gpt-4o-mini",
+        "decide": "gpt-4o-mini",  # escalations and the LLM decider arms
+        "embed": "text-embedding-3-small",
+        "tokenizer": "o200k_base",
+    },
+}
 
 E1_FLAGS = dict(
     extract_prompt="v2",
@@ -366,12 +387,21 @@ def make_backend(name: str, log, cache: CallCache):
 
 
 class EngramArm:
-    def __init__(self, arm_dir: Path, flags: Flags, cache: CallCache, backend: str = "jev", shadow: str | None = None):
+    def __init__(
+        self,
+        arm_dir: Path,
+        flags: Flags,
+        cache: CallCache,
+        backend: str = "jev",
+        shadow: str | None = None,
+        stack: str = "anthropic",
+    ):
         from engram.decide.log import DecisionLog
-        from engram.embed import SentenceEmbedder
+        from engram.embed import OpenAIEmbedder, SentenceEmbedder
         from engram.engine import Engram
         from engram.llm.anthropic import AnthropicLLM
         from engram.llm.base import UsageLog
+        from engram.llm.openai import OpenAILLM
         from engram.store import Store
 
         log = DecisionLog(arm_dir / "decisions.jsonl")
@@ -381,17 +411,22 @@ class EngramArm:
             from engram.decide.shadow import ShadowBackend
 
             decider = ShadowBackend(decider, make_backend(shadow, None, cache), arm_dir / "shadow.jsonl")
-        self.engine = Engram(
-            Store(arm_dir / "engram.db"),
-            decider,
-            AnthropicLLM(
+        if stack == "openai":
+            s = STACKS["openai"]
+            llm = OpenAILLM(
+                model=s["decide"],
+                extract_model=s["extract"],
+                usage_log=usage,
+                cache=cache,
+                extract_prompt=flags.extract_prompt,
+            )
+            embedder = OpenAIEmbedder(s["embed"], cache=cache)
+        else:
+            llm = AnthropicLLM(
                 extract_model=EXTRACT_MODEL, usage_log=usage, cache=cache, extract_prompt=flags.extract_prompt
-            ),
-            SentenceEmbedder(),
-            log,
-            usage,
-            flags,
-        )
+            )
+            embedder = SentenceEmbedder()
+        self.engine = Engram(Store(arm_dir / "engram.db"), decider, llm, embedder, log, usage, flags)
 
     async def write(self, m: dict) -> dict:
         r = await self.engine.ingest(m["text"], speaker=m["speaker"], created_at=m["at"], message_id=m["id"])
@@ -473,24 +508,32 @@ class EngramArm:
 class Mem0Arm:
     """mem0 default Memory (ADD-only), Haiku 4.5, local MiniLM on CPU, telemetry off. LLM calls go through the cache."""
 
-    def __init__(self, arm_dir: Path, cache: CallCache, dated: bool = False):
+    def __init__(self, arm_dir: Path, cache: CallCache, dated: bool = False, stack: str = "anthropic"):
         from mem0 import Memory
 
         self.user_id = "conv-26"
+        if stack == "openai":  # mem0's default provider: its OpenAI LLM and embedder, on the shared models
+            s = STACKS["openai"]
+            llm = {"provider": "openai", "config": {"model": s["extract"]}}
+            embedder, dims = {"provider": "openai", "config": {"model": s["embed"]}}, 1536
+        else:
+            llm = {"provider": "anthropic", "config": {"model": EXTRACT_MODEL}}
+            embedder = {
+                "provider": "huggingface",
+                "config": {
+                    "model": "sentence-transformers/all-MiniLM-L6-v2",
+                    "embedding_dims": 384,
+                    "model_kwargs": {"device": "cpu"},
+                },
+            }
+            dims = 384
         self.memory = Memory.from_config(
             {
-                "llm": {"provider": "anthropic", "config": {"model": EXTRACT_MODEL}},
-                "embedder": {
-                    "provider": "huggingface",
-                    "config": {
-                        "model": "sentence-transformers/all-MiniLM-L6-v2",
-                        "embedding_dims": 384,
-                        "model_kwargs": {"device": "cpu"},
-                    },
-                },
+                "llm": llm,
+                "embedder": embedder,
                 "vector_store": {
                     "provider": "qdrant",
-                    "config": {"path": str(arm_dir / "qdrant"), "on_disk": True, "embedding_model_dims": 384},
+                    "config": {"path": str(arm_dir / "qdrant"), "on_disk": True, "embedding_model_dims": dims},
                 },
                 "history_db_path": str(arm_dir / "history.db"),
             }
@@ -505,6 +548,9 @@ class Mem0Arm:
         mem0_prompts._resolve_dates = lambda current_date=None, observation_date=None: resolve(
             current_date or PINNED_DATE, observation_date or (self.observation if dated else None)
         )
+        if stack == "openai":
+            self._cache_openai(cache)
+            return
         client = self.memory.llm.client
         original = client.messages.create
 
@@ -531,6 +577,60 @@ class Mem0Arm:
             return response
 
         client.messages.create = create
+
+    def _cache_openai(self, cache: CallCache) -> None:
+        """Route mem0's OpenAI chat and embedding calls through the call cache, charging misses as openai spend."""
+        import openai.types
+        import openai.types.chat
+
+        from engram.embed import OpenAIEmbedder
+        from engram.llm.openai import cost
+
+        chat = self.memory.llm.client.chat.completions
+        original_chat = chat.create
+
+        def create(*args, **kwargs):
+            key = call_key("mem0-openai", kwargs)
+            if hit := cache.get(key):
+                cache.replay_sync(hit["latency_ms"])
+                self.calls.append({**hit, "cached": True})
+                return openai.types.chat.ChatCompletion.model_validate(hit["response"])
+            started = time.perf_counter()
+            response = original_chat(*args, **kwargs)
+            u = response.usage
+            record = {
+                "response": response.model_dump(),
+                "latency_ms": (time.perf_counter() - started) * 1000,
+                "cost": cost(kwargs["model"], u.prompt_tokens, u.completion_tokens),
+            }
+            cache.put(key, record)
+            cache.spend("openai", record["cost"])
+            self.calls.append(record)
+            return response
+
+        chat.create = create
+        emb = self.memory.embedding_model.client.embeddings
+        original_emb = emb.create
+
+        def embed(*args, **kwargs):
+            key = call_key("mem0-openai-embed", kwargs)
+            if hit := cache.get(key):
+                cache.replay_sync(hit["latency_ms"])
+                self.calls.append({**hit, "cached": True})
+                return openai.types.CreateEmbeddingResponse.model_validate(hit["response"])
+            started = time.perf_counter()
+            response = original_emb(*args, **kwargs)
+            record = {
+                "response": response.model_dump(),
+                "latency_ms": (time.perf_counter() - started) * 1000,
+                "cost": response.usage.prompt_tokens * OpenAIEmbedder.PRICE_PER_TOKEN[kwargs["model"]],
+            }
+            cache.put(key, record)
+            cache.spend("openai", record["cost"])
+            self.calls.append(record)
+            return response
+
+        emb.create = embed
 
     async def write(self, m: dict) -> dict:
         self.calls.clear()
@@ -605,6 +705,34 @@ async def claude(client, cache: CallCache, purpose: str, sem: asyncio.Semaphore,
     return out, out["cost"]
 
 
+async def gpt(client, cache: CallCache, purpose: str, sem: asyncio.Semaphore, **request) -> tuple[dict, float]:
+    """The OpenAI-stack answer and judge calls, cached like claude(); temperature 0 is part of the request."""
+    from engram.llm.openai import cost
+
+    key = call_key("bench-openai", purpose, request)
+    if hit := cache.get(key):
+        return hit, 0.0
+    async with sem:
+        if purpose == "judge":
+            r = await client.chat.completions.parse(**request, response_format=Judgement)
+            parsed = r.choices[0].message.parsed
+            out = {"label": parsed.label if parsed else "WRONG"}
+        else:
+            r = await client.chat.completions.create(**request)
+            out = {"text": (r.choices[0].message.content or "").strip()}
+    out["cost"] = cost(request["model"], r.usage.prompt_tokens, r.usage.completion_tokens)
+    cache.put(key, out)
+    cache.spend("openai", out["cost"])
+    return out, out["cost"]
+
+
+def count_tokens_tiktoken(text: str, encoding: str = STACKS["openai"]["tokenizer"]) -> int:
+    """Tokens the OpenAI-stack answer model reads for a memory block (local tokenizer, no API call)."""
+    import tiktoken
+
+    return len(tiktoken.get_encoding(encoding).encode(text))
+
+
 async def count_tokens(client, cache: CallCache, text: str) -> int:
     """Tokens the answer model reads for a memory block (Anthropic's free count endpoint, cached)."""
     key = call_key("bench", "count_tokens", ANSWER_MODEL, text)
@@ -626,28 +754,88 @@ async def run_arm(
     no_dates: bool = False,
     extra_top_ks: list[int] | None = None,
     no_answer: bool = False,
+    stack: str = "anthropic",
 ) -> dict:
     spec = ARMS[name]
     sl = load_slice(slice_name)
     suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "") + ("__noanswer" if no_answer else "")
-    arm_dir = ARMS_DIR / name / (slice_name.replace(":", "_") + suffix)  # each option set gets its own store
+    arms_dir, results = (ARMS_DIR / "openai", RESULTS_V2) if stack == "openai" else (ARMS_DIR, RESULTS)
+    arm_dir = arms_dir / name / (slice_name.replace(":", "_") + suffix)  # each option set gets its own store
     shutil.rmtree(arm_dir, ignore_errors=True)
     arm_dir.mkdir(parents=True)
     cache = CallCache(CACHE, budget=budget)
     if spec["system"] == "engram":
-        system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"))
+        system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"), stack)
     else:
-        system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False))
+        system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False), stack=stack)
 
-    client = anthropic.AsyncAnthropic(max_retries=5, timeout=120)
+    if stack == "openai":
+        import openai
+
+        client = openai.AsyncOpenAI(max_retries=5, timeout=120)
+    else:
+        client = anthropic.AsyncAnthropic(max_retries=5, timeout=120)
     sem = asyncio.Semaphore(6)
     speakers = " and ".join(sl["speakers"])
-    empty_block = await count_tokens(client, cache, json.dumps([], indent=4))
+
+    async def tokens(text: str) -> int:
+        return count_tokens_tiktoken(text) if stack == "openai" else await count_tokens(client, cache, text)
+
+    async def answer_and_judge(prompt: str, question: str, gold: str) -> tuple[dict, dict]:
+        if stack == "openai":
+            s = STACKS["openai"]
+            ans, _ = await gpt(
+                client,
+                cache,
+                "answer",
+                sem,
+                model=s["answer"],
+                max_tokens=1024,
+                temperature=0.0,
+                messages=[{"role": "system", "content": prompt}, {"role": "user", "content": question}],
+            )
+            judge_prompt = ACCURACY_PROMPT.format(question=question, gold_answer=gold, generated_answer=ans["text"])
+            grade, _ = await gpt(
+                client,
+                cache,
+                "judge",
+                sem,
+                model=s["judge"],
+                max_tokens=1024,
+                temperature=0.0,
+                messages=[{"role": "user", "content": judge_prompt}],
+            )
+            return ans, grade
+        ans, _ = await claude(
+            client,
+            cache,
+            "answer",
+            sem,
+            model=ANSWER_MODEL,
+            max_tokens=1024,
+            extra_body={"temperature": 0.0},
+            system=prompt,
+            messages=[{"role": "user", "content": question}],
+        )
+        judge_prompt = ACCURACY_PROMPT.format(question=question, gold_answer=gold, generated_answer=ans["text"])
+        grade, _ = await claude(
+            client,
+            cache,
+            "judge",
+            sem,
+            model=JUDGE_MODEL,
+            max_tokens=1024,
+            extra_body={"temperature": 0.0},
+            messages=[{"role": "user", "content": judge_prompt}],
+        )
+        return ans, grade
+
+    empty_block = await tokens(json.dumps([], indent=4))
 
     async def one(q: dict, k: int | None = top_k) -> dict:
         lines, retrieve_cost = await system.memories(q["question"], top_k=k, no_dates=no_dates)
         block = json.dumps(lines, indent=4)
-        retrieved_tokens = await count_tokens(client, cache, block) - empty_block
+        retrieved_tokens = await tokens(block) - empty_block
         if no_answer:  # retrieval only: no answer or judge calls; accuracy fields are meaningless
             return {
                 **q,
@@ -659,34 +847,7 @@ async def run_arm(
                 "retrieved_tokens": retrieved_tokens,
             }
         prompt = ANSWER_PROMPT.format(speakers=speakers, memories=block, question=q["question"])
-        ans, _ = await claude(
-            client,
-            cache,
-            "answer",
-            sem,
-            model=ANSWER_MODEL,
-            max_tokens=1024,
-            extra_body={"temperature": 0.0},
-            system=prompt,
-            messages=[{"role": "user", "content": q["question"]}],
-        )
-        grade, _ = await claude(
-            client,
-            cache,
-            "judge",
-            sem,
-            model=JUDGE_MODEL,
-            max_tokens=1024,
-            extra_body={"temperature": 0.0},
-            messages=[
-                {
-                    "role": "user",
-                    "content": ACCURACY_PROMPT.format(
-                        question=q["question"], gold_answer=q["gold"], generated_answer=ans["text"]
-                    ),
-                }
-            ],
-        )
+        ans, grade = await answer_and_judge(prompt, q["question"], q["gold"])
         return {
             **q,
             "answer": ans["text"],
@@ -821,9 +982,11 @@ async def run_arm(
             }
             for e in system.engine.writer.belief_trace
         ]
-    RESULTS.mkdir(parents=True, exist_ok=True)
+    if stack != "anthropic":  # v1 result files keep their exact v1 shape
+        result["stack"] = {"name": stack, **STACKS[stack]}
+    results.mkdir(parents=True, exist_ok=True)
     out_name = slice_name.replace(":", "_")
-    (RESULTS / f"{name}__{out_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))
+    (results / f"{name}__{out_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))
     # Extra k values reuse this run's ingestion: answer the final questions again with a different cap.
     for k in extra_top_ks or []:
         final_qs = [q for q in sl["questions"] if q["last_evidence_session"] <= final]
@@ -844,7 +1007,7 @@ async def run_arm(
             "store_size_buckets": [],
         }
         ksuffix = f"__k{k}" + ("__nodates" if no_dates else "") + ("__noanswer" if no_answer else "")
-        (RESULTS / f"{name}__{out_name}{ksuffix}.json").write_text(json.dumps(rk, indent=1, default=str))
+        (results / f"{name}__{out_name}{ksuffix}.json").write_text(json.dumps(rk, indent=1, default=str))
         print(f"[{name}/{slice_name}] k={k}: accuracy {rk['accuracy']:.1%} (Q={len(ans_k)})", flush=True)
     if spec["system"] == "engram" and hasattr(system.engine.backend, "drain"):
         await system.engine.backend.drain()
@@ -1135,6 +1298,50 @@ def table(results: list[dict]) -> str:
     return "\n".join(lines)
 
 
+class V2Budget(Budget):
+    """A Budget whose every charge also goes to a bench.v2_spend.RunBudget (OpenAI stack): its per-run caps, the
+    phase-wide non-OpenAI cap, and the ledger bench/results/v2/spend.jsonl. The Budget itself sets no limits."""
+
+    PROVIDER = {"claude": "anthropic", "jev": "jev", "openai": "openai"}
+
+    def __init__(self, run_budget):
+        super().__init__()
+        self.spent["openai"] = 0.0
+        self.run_budget = run_budget
+
+    def add(self, kind: str, usd: float) -> None:
+        super().add(kind, usd)
+        self.run_budget.charge(self.PROVIDER[kind], usd)
+
+
+async def run_v2(args, extra: list[int]) -> dict:
+    """An OpenAI-stack run under bench/v2_spend.py's guard; the ledger row is written even if the run stops."""
+    from .v2_spend import RunBudget, ledger_totals
+
+    with RunBudget(stage=args.stage, system=args.arm, run_id=f"{args.arm}:{args.slice}") as run_budget:
+        budget = V2Budget(run_budget)
+        result = await run_arm(
+            args.arm,
+            args.slice,
+            budget,
+            top_k=args.top_k,
+            no_dates=args.no_dates,
+            extra_top_ks=extra,
+            no_answer=args.no_answer,
+            stack="openai",
+        )
+    print(table([result]))
+    totals = ledger_totals()
+    print(
+        "real spend this run: "
+        + ", ".join(f"{p} ${v:.4f}" for p, v in run_budget.spent.items())
+        + "; phase 3 so far: "
+        + ", ".join(f"{p} ${v:.4f}" for p, v in totals.items())
+        + f"; cache hits {result['cache']['hits']}, misses {result['cache']['misses']}"
+    )
+    return result
+
+
 async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--arm", choices=list(ARMS))
@@ -1147,10 +1354,18 @@ async def main() -> None:
     parser.add_argument("--no-dates", action="store_true", help="answer from memory text only")
     parser.add_argument("--no-answer", action="store_true", help="retrieval only: record memories, skip answer/judge")
     parser.add_argument("--suffix", default="", help="with --report: result-file suffix, e.g. __k3 or __nodates")
+    parser.add_argument("--stack", choices=list(STACKS), default="anthropic", help="model stack (default: v1's)")
+    parser.add_argument("--stage", help="with --stack openai: the V2_PLAN stage this run belongs to, for the ledger")
     args = parser.parse_args()
     if args.report is not None:
         sl = args.slice.replace(":", "_")
-        print(table([json.loads((RESULTS / f"{a}__{sl}{args.suffix}.json").read_text()) for a in args.report]))
+        base = RESULTS_V2 if args.stack == "openai" else RESULTS
+        print(table([json.loads((base / f"{a}__{sl}{args.suffix}.json").read_text()) for a in args.report]))
+        return
+    if args.stack == "openai":
+        if not args.stage:
+            parser.error("--stack openai needs --stage (the V2_PLAN stage, recorded in the spend ledger)")
+        await run_v2(args, [int(k) for k in args.also_top_k.split(",") if k])
         return
     budget = Budget(run_limit=RUN_LIMIT, total_limit=PHASE_LIMIT, prior_total=prior_spend())
     started = time.time()
