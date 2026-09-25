@@ -351,6 +351,17 @@ one.
   $0.10); then, if approved, update sets 1 and 2 and the whole of conv-26. Kept only if correct closes increase, 0 of
   10 traps close, closes matching no labelled pair do not increase, and conv-26 accuracy at k=3 and k=20 drops by no
   more than one question each. The outcome is recorded here.
+- 2026-09-25, Stage 2 close attempt, second round (section 5.1): outcome, kept. The targeted replay (Jev $0.014 of a
+  $0.10 cap) and the full runs agree: correct closes on update sets 1 and 2 rise from 8 to 10 (the therapist,
+  same_attribute 0.96, and a guitar teacher, 0.93, now pass the gate, clear the second phrasing and close); closes
+  matching no labelled pair stay at 1 (the same close in both runs); 0 of 10 no-close traps close (none reaches the
+  gate; the highest trap same_attribute is 0.38); all 8 baseline correct closes are kept; set-2 stale values fall from
+  10 of 16 to 8 of 16; set-1 and set-2 answers are unchanged (29/30, 19/20). conv-26 accuracy is 129/152 against 130
+  at k=3 and 129/152 against 129 at k=20, within one question. On conv-26 the gate closes nothing, but it lets
+  update evidence lower the belief of 24 multi-valued facts, which reorders one k=3 retrieval (question 145 turns
+  wrong). All four keep criteria hold, so the v2 system is the frozen arm with the gate on (arm e4_frozen_sameattr:
+  E4_FROZEN plus same_attribute_gate, threshold 0.85, edge_type v1). E4_FROZEN itself is unchanged, so v1 reproduces.
+  This was the last change before v2-frozen.
 
 ### Where this plan differs from the phase-3 brief
 

@@ -124,6 +124,7 @@ E4_V2 = dict(
 
 E4_FROZEN = {**E4_V2, "temporal_gate": "not_planned_mass", "temporal_version": 2, "render": "compact"}
 
+V2_SYSTEM = "e4_frozen_sameattr"  # the engram arm every v2 held-out and LongMemEval run uses (tag v2-frozen)
 ARMS: dict[str, dict] = {
     "e0_baseline": {"system": "engram", "flags": Flags()},
     "e1_recall": {"system": "engram", "flags": Flags(**E1_FLAGS)},
@@ -233,7 +234,8 @@ ARMS: dict[str, dict] = {
         "hygiene": True,
         "flags": Flags(**{**E4_FROZEN, "edge_type_version": 2}),
     },
-    # v2 Stage 2 close attempt, second round (V2_PLAN Deviations 2026-09-25): the frozen arm with same_attribute_gate.
+    # THE V2 SYSTEM (V2_PLAN Deviations 2026-09-25, second close round, kept): the frozen arm with same_attribute_gate.
+    # E4_FROZEN itself stays v1's frozen configuration, so v1's runs reproduce.
     "e4_frozen_sameattr": {
         "system": "engram",
         "hygiene": True,
