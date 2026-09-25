@@ -10,12 +10,14 @@ question, n questions). Projection for the nine held-out conversations: writes f
 the fewest requests a query can make (routing plus one stopping check over 40 evidence nodes) and Jev-Mem's cap
 (16 requests, 80 candidate expansions).
 
-    uv run --extra bench python -m bench.jevmem_probe_report <payload.jsonl>
+    uv run --extra bench python -m bench.jevmem_probe_report <payload.jsonl>            # probe 1
+    uv run --extra bench python -m bench.jevmem_probe_report --probe2 <payload.jsonl>   # probe 2
 """
 
 import json
 import statistics
 import sys
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -145,5 +147,98 @@ def main(payload_path: str) -> None:
     )
 
 
+SCOPES = {  # messages and questions (all five categories), from bench/data/locomo10.json
+    "nine held-out (conv-30, 41, 42, 43, 44, 47, 48, 49, 50)": (5463, 1787),
+    "five fresh (conv-44, 47, 48, 49, 50)": (3122, 987),
+}
+SWEEP = range(3, 11)  # V2_PLAN section 5.3: retrieval at every k from 3 to 10 on every question
+ADOPTED_NON_OPENAI, CAP = 37.58, 40.0  # V2_PLAN section 13
+
+
+def probe2(payload_path: str) -> None:
+    """Probe 2 (120 turns, 20 questions, k 40 and 3-10), reconstructed from the payload log.
+
+    Each read is grouped by (question, k). A request Jev-Mem answered from its in-process cache (the routing request
+    repeats across k for one question) is priced at what the identical request was billed, so a per-query cost stands
+    alone. Projection: writes per message times messages, and per scope the reads at k 40 plus the section 5.3
+    sweep (k 3-10 on every question; the answers at the matched k reuse the sweep's retrievals).
+    """
+    rows = [json.loads(line) for line in Path(payload_path).read_text().splitlines()]
+    billed_of: dict[str, int] = {}
+    for r in rows:
+        if r["billed_input_tokens"]:
+            billed_of[json.dumps([r["operation"], r["state"], r["questions"]], sort_keys=True)] = r[
+                "billed_input_tokens"
+            ]
+
+    def billed(r: dict) -> int:
+        return r["billed_input_tokens"] or billed_of.get(
+            json.dumps([r["operation"], r["state"], r["questions"]], sort_keys=True), 0
+        )
+
+    writes = [r for r in rows if r["name"] == "write"]
+    turns = sum(r["operation"] == "memory_type" for r in writes)
+    reads: dict[tuple, list[dict]] = {}
+    for r in rows:
+        if r["name"] == "read":
+            reads.setdefault((r["question"], r["k"]), []).append(r)
+    per_k = {}
+    for k in sorted({k for _, k in reads}):
+        qs = [rs for (q, kk), rs in reads.items() if kk == k]
+        per_k[k] = {
+            "queries": len(qs),
+            "jev_calls_mean": statistics.fmean(len(rs) for rs in qs),
+            "jev_calls_max": max(len(rs) for rs in qs),
+            "traversal_rounds_mean": statistics.fmean(sum(r["operation"] == "traversal" for r in rs) for rs in qs),
+            "traversal_rounds_max": max(sum(r["operation"] == "traversal" for r in rs) for rs in qs),
+            "usd_per_query_mean": statistics.fmean(sum(billed(r) for r in rs) for rs in qs) * JEV_PRICE,
+            "usd_per_query_max": max(sum(billed(r) for r in rs) for rs in qs) * JEV_PRICE,
+            "fallbacks": sum(r["source"] == "fallback" for rs in qs for r in rs),
+        }
+    write_usd = sum(billed(r) for r in writes) * JEV_PRICE / turns
+    spent = sum(
+        json.loads(line)["spend"]["jev"] + json.loads(line)["spend"]["anthropic"]
+        for line in (ROOT / "bench" / "results" / "v2" / "spend.jsonl").read_text().splitlines()
+        if line and json.loads(line)["stage"].startswith("jevmem")
+    )
+    headroom = CAP - ADOPTED_NON_OPENAI - spent
+    sweep = sum(per_k[k]["usd_per_query_mean"] for k in SWEEP if k in per_k)
+    projection = {}
+    for scope, (messages, questions) in SCOPES.items():
+        w, r40, rs = write_usd * messages, per_k[40]["usd_per_query_mean"] * questions, sweep * questions
+        projection[scope] = {
+            "writes": w,
+            "reads_k40": r40,
+            "reads_sweep_k3_10": rs,
+            "total_k40_only": w + r40,
+            "total_k40_and_token_matched": w + r40 + rs,
+            "fits_headroom": w + r40 + rs <= headroom,
+        }
+    out = {
+        "turns": turns,
+        "questions_completed": len({q for q, _ in reads}),
+        "write_usd_per_message": write_usd,
+        "write_requests": dict(sorted(Counter(r["operation"] for r in writes).items())),
+        "reads_per_k": per_k,
+        "headroom": {
+            "cap": CAP,
+            "adopted_estimate": ADOPTED_NON_OPENAI,
+            "jevmem_probes_spent": spent,
+            "remaining_for_jevmem": headroom,
+        },
+        "projection": projection,
+        "note": (
+            "The run stopped after 13 of 20 questions had been read at every k (a 14th at k 40 and 3): an OpenAI "
+            "embedding timeout inside Jev-Mem's query path raised uncaught. Rendered lines were not saved, so T(k) "
+            "and the token-matched k are not measured; the sweep's cost does not depend on which k is matched."
+        ),
+    }
+    (ROOT / "bench" / "results" / "v2" / "jevmem_probe2.json").write_text(json.dumps(out, indent=1) + "\n")
+    print(json.dumps(out, indent=1))
+
+
 if __name__ == "__main__":
-    main(sys.argv[1])
+    if sys.argv[1] == "--probe2":
+        probe2(sys.argv[2])
+    else:
+        main(sys.argv[1])
