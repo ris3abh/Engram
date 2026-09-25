@@ -17,3 +17,11 @@ Wording agreed with the author during phase 3, to carry into the v2 paper. Each 
   its memory-mapped weights; the retriever copies the weights after loading, and the model then reproduces its model
   card's example (8.607141 and -4.320079 against 8.607138 and -4.320078). Mention it where the reranker arms are
   described, so the setup can be reproduced.
+- **Main retrieval-side finding (Stage 4, conv-26; 2026-09-25).** At k=3 on the frozen conv-26 store, Jev's listwise
+  rerank and gpt-4o-mini's listwise rerank are level on accuracy (129 and 131 of 152), and Jev is about 5x faster at
+  the median and about 12x faster at p90 (334 against 1,632 ms, 452 against 5,454 ms, one query at a time), at a
+  slightly lower cost per query ($0.00018 against $0.00021). Both beat no rerank (113) and a cross-encoder (98).
+- **Caveat on Jev's close advantage over the LLM deciders (Stage 4; 2026-09-25).** Jev's better close record in the
+  frozen-extraction ablation (fewer closes matching no labelled pair, more correct closes on set 2) was measured on
+  update sets 1 and 2, the data engram's thresholds and the same-attribute gate were tuned on; the LLM deciders were
+  not tuned there. State this caveat next to the ablation's store results.
