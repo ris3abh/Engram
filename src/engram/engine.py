@@ -35,6 +35,8 @@ class Engram:
             cosine_floor=self.flags.retrieval_floor,
             history=self.flags.retrieval_history,
             rerank=self.flags.retrieval_rerank,
+            reranker=self.flags.retrieval_reranker,
+            llm=self.llm,
         )
 
     async def ingest(self, text: str, **kw) -> IngestResult:

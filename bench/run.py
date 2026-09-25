@@ -234,6 +234,21 @@ ARMS: dict[str, dict] = {
         "hygiene": True,
         "flags": Flags(**{**E4_FROZEN, "edge_type_version": 2}),
     },
+    # V2 Stage 4 reranker arms (V2_PLAN section 4): the v2 system's frozen store (copied, nothing written), only the
+    # shortlist's scorer differs. Run on the slice and k the source store was built with (conv26, --top-k 3).
+    **{
+        f"rr_{name}": {
+            "system": "engram",
+            "store_from": "e4_frozen_sameattr",
+            "flags": Flags(**{**E4_FROZEN, "same_attribute_gate": True, **extra}),
+        }
+        for name, extra in (
+            ("jev", {}),
+            ("none", {"retrieval_rerank": False}),
+            ("cross", {"retrieval_reranker": "cross_encoder"}),
+            ("llm", {"retrieval_reranker": "llm"}),
+        )
+    },
     # THE V2 SYSTEM (V2_PLAN Deviations 2026-09-25, second close round, kept): the frozen arm with same_attribute_gate.
     # E4_FROZEN itself stays v1's frozen configuration, so v1's runs reproduce.
     "e4_frozen_sameattr": {
@@ -1032,6 +1047,9 @@ async def run_arm(
     shutil.rmtree(arm_dir, ignore_errors=True)
     arm_dir.mkdir(parents=True)
     cache = CallCache(CACHE, budget=budget)
+    frozen_store = spec.get("store_from")  # Stage 4 reranker arms: read a copy of another arm's store, write nothing
+    if frozen_store:
+        shutil.copy(arms_dir / frozen_store / (slice_name.replace(":", "_") + suffix) / "engram.db", arm_dir)
     if spec["system"] == "engram":
         system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"), stack)
     elif spec["system"] == "graphiti":
@@ -1107,7 +1125,13 @@ async def run_arm(
     empty_block = await tokens(json.dumps([], indent=4))
 
     async def one(q: dict, k: int | None = top_k) -> dict:
+        read_started = time.perf_counter()
         lines, retrieve_cost = await system.memories(q["question"], top_k=k, no_dates=no_dates)
+        read = (
+            {"retrieve_ms": (time.perf_counter() - read_started) * 1000, "retrieve_cost": retrieve_cost}
+            if stack != "anthropic"
+            else {}
+        )
         block = json.dumps(lines, indent=4)
         retrieved_tokens = await tokens(block) - empty_block
         if no_answer:  # retrieval only: no answer or judge calls; accuracy fields are meaningless
@@ -1119,6 +1143,7 @@ async def run_arm(
                 "label": None,
                 "query_cost": retrieve_cost,
                 "retrieved_tokens": retrieved_tokens,
+                **read,
             }
         prompt = ANSWER_PROMPT.format(speakers=speakers, memories=block, question=q["question"])
         ans, grade = await answer_and_judge(prompt, q["question"], q["gold"])
@@ -1129,6 +1154,7 @@ async def run_arm(
             "label": grade["label"],
             "query_cost": retrieve_cost + ans["cost"],
             "retrieved_tokens": retrieved_tokens,
+            **read,
         }
 
     writes, asked = [], []
@@ -1137,7 +1163,8 @@ async def run_arm(
 
     last_of_session = {m["session"]: m["id"] for m in sl["messages"]}
     for n, m in enumerate(sl["messages"], 1):
-        writes.append(await system.write(m))
+        if not frozen_store:
+            writes.append(await system.write(m))
         if n % 20 == 0:
             print(
                 f"[{name}/{slice_name}] {n}/{len(sl['messages'])} messages, real spend ${budget.run_total:.3f}",
@@ -1145,7 +1172,7 @@ async def run_arm(
             )
         if m["session"] in sl["checkpoints"] and m["id"] == last_of_session[m["session"]]:
             cp = m["session"]
-            if cp == max(sl["checkpoints"]) and spec.get("hygiene"):
+            if cp == max(sl["checkpoints"]) and spec.get("hygiene") and not frozen_store:
                 from engram.pipeline.hygiene import hygiene_pass
 
                 before_hygiene = update_report(sl, [], system, SentenceEmbedder()) if sl.get("update_items") else None
@@ -1194,7 +1221,7 @@ async def run_arm(
         for cp in sl["checkpoints"]
     ]
     actions = Counter(a for w in writes for a in w["actions"])
-    n_msgs = len(writes)
+    n_msgs = len(sl["messages"]) if frozen_store else len(writes)
     # Only messages that produced facts have a decision layer to time; the rest decide nothing in ~0 ms.
     decision_ms = [w["decision_ms"] for w in writes if w["decision_ms"] is not None and w["extracted"]]
     decision_cost = [w["decision_cost"] for w in writes if w["decision_cost"] is not None]
@@ -1220,8 +1247,8 @@ async def run_arm(
         "llm_decisions": sum(w.get("llm_decisions", 0) for w in writes),
         "actions": dict(actions),
         "decision_cost_per_1k": 1000 * statistics.fmean(decision_cost) if decision_cost else None,
-        "cost_per_1k": 1000 * statistics.fmean(w["cost"] for w in writes),
-        "write_latency_p50_ms": statistics.median(w["latency_ms"] for w in writes),
+        "cost_per_1k": 1000 * statistics.fmean(w["cost"] for w in writes) if writes else None,
+        "write_latency_p50_ms": statistics.median(w["latency_ms"] for w in writes) if writes else None,
         "decision_latency_p50_ms": statistics.median(decision_ms) if decision_ms else None,
         "no_memory_questions": sum(a["memories"] == 0 for a in answers),
         "retrieved_tokens_mean": statistics.fmean(a["retrieved_tokens"] for a in answers) if answers else None,
@@ -1235,6 +1262,11 @@ async def run_arm(
         "asked": asked,
     }
     result["options"] = {"top_k": top_k, "no_dates": no_dates, "no_answer": no_answer}
+    if frozen_store:
+        result["store_from"] = frozen_store
+    if stack != "anthropic" and answers:
+        result["retrieve_ms_p50"] = statistics.median(a["retrieve_ms"] for a in answers)
+        result["retrieve_cost_per_query"] = statistics.fmean(a["retrieve_cost"] for a in answers)
     if spec["system"] == "engram":
         result["backend"] = decider_report(system.engine.backend)
         if system.engine.flags.same_attribute_gate:

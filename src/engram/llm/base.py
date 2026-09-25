@@ -69,6 +69,10 @@ class LLMBackend(ABC):
         """mem0's ADDITIVE_EXTRACTION_PROMPT on the extraction model; returns memory texts (E2)."""
         raise NotImplementedError
 
+    async def rerank(self, query: str, memories: list[str]) -> tuple[list[int], LLMUsage]:
+        """Listwise rerank (V2 Stage 4): indices of the memories relevant to `query`, most relevant first."""
+        raise NotImplementedError
+
     async def update_decision(self, old_memory: list[dict], new_facts: list[str]) -> tuple[list[dict], LLMUsage]:
         """mem0's DEFAULT_UPDATE_MEMORY_PROMPT: returns the memory list with ADD/UPDATE/DELETE/NONE events."""
         raise NotImplementedError

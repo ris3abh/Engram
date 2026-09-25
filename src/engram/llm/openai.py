@@ -30,6 +30,12 @@ CACHED_INPUT = {"gpt-5.5": 0.50, "gpt-4.1-nano": 0.025}  # USD per million cache
 LONG_CONTEXT = {"gpt-5.5": (272_000, 2.0, 1.5)}  # prompts over the limit bill input x2 and output x1.5
 
 
+RERANK_SYSTEM = (
+    "You rank memories for answering a question. Given the question and a numbered list of memories, return the "
+    "numbers of the memories that help answer it, most relevant first. Leave out memories that do not help."
+)
+
+
 def cost(model: str, tokens_in: int, tokens_out: int, cached_in: int = 0) -> float:
     """List-price cost of one call. `tokens_in` includes any cached input tokens (`cached_in`)."""
     price_in, price_out = PRICES.get(model, (0.0, 0.0))
@@ -184,6 +190,24 @@ class OpenAILLM(LLMBackend):
         user = prompts_mem0.get_update_memory_messages(old_memory, new_facts)
         text, usage = await self._plain("decide", self.model, None, user, {"prompt": "mem0_update"})
         return parse_memory_json(text), usage
+
+    async def rerank(self, query: str, memories: list[str]) -> tuple[list[int], LLMUsage]:
+        """gpt-4o-mini listwise rerank of a shortlist, one call: the relevant memories' numbers, most relevant first."""
+        from pydantic import BaseModel
+
+        class Ranking(BaseModel):
+            relevant: list[int]
+
+        numbered = "\n".join(f"[{i}] {m}" for i, m in enumerate(memories))
+        user = f"Question: {query}\n\nMemories:\n{numbered}"
+        return await self._cached(
+            "rerank",
+            self.model,
+            {"system": RERANK_SYSTEM, "user": user},
+            lambda: self._parse("rerank", self.model, RERANK_SYSTEM, user, Ranking, temperature=0.0),
+            encode=lambda r: r.choices[0].message.parsed.relevant,
+            decode=lambda out: [i for i in dict.fromkeys(out) if 0 <= i < len(memories)],
+        )
 
     async def answer(self, question: str, memories: str) -> tuple[str, LLMUsage]:
         content = f"Memories:\n{memories}\n\nQuestion: {question}"

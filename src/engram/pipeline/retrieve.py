@@ -8,6 +8,7 @@ works without Jev comparing dates. The answer step sees each fact's validity win
 """
 
 import asyncio
+import threading
 import time
 from dataclasses import dataclass, field, replace
 from datetime import datetime
@@ -19,6 +20,7 @@ from ..embed import Embedder, top_k
 from ..models import Decision, Fact
 from ..store import Store
 
+CROSS_ENCODER = "cross-encoder/ms-marco-MiniLM-L-6-v2"  # Stage 4 reranker arm (V2_PLAN section 4)
 MAX_EXPANDED = 15
 MAX_RELATION_PULL = 10
 HUB_DEGREE = 25  # do not expand through nodes this connected (usually the user node)
@@ -42,9 +44,12 @@ class Retrieval:
     degraded: str | None = None  # set when Jev failed and cosine order was used instead
     query_relation: str | None = None  # the relation pulled on, if query_relation cleared the threshold
 
+    rerank_cost: float = 0.0  # a non-Jev reranker's own cost (llm); Jev's is in decisions
+    rerank_ms: float = 0.0  # time spent scoring the shortlist
+
     @property
     def cost_usd(self) -> float:
-        return sum(d.cost_usd for d in self.decisions)
+        return sum(d.cost_usd for d in self.decisions) + self.rerank_cost
 
 
 class Retriever:
@@ -56,6 +61,8 @@ class Retriever:
         cosine_floor: int = 0,
         history: bool = True,
         rerank: bool = True,
+        reranker: str = "jev",
+        llm=None,
     ):
         self.store = store
         self.backend = backend
@@ -63,6 +70,10 @@ class Retriever:
         self.cosine_floor = cosine_floor  # always keep this many top-cosine facts, even if Jev scores them low
         self.history = history  # add the chain of facts each kept fact superseded
         self.rerank = rerank  # False: no Jev on the read path at all; cosine order, no query_relation pull
+        self.reranker = reranker  # jev | cross_encoder | llm: what scores the shortlist (Jev still pulls by relation)
+        self.llm = llm
+        self._cross_encoder = None
+        self._cross_encoder_lock = threading.Lock()  # torch is not re-entrant; questions are answered concurrently
 
     async def retrieve(self, query: str, k: int = config.RETRIEVE_K) -> Retrieval:
         started = time.perf_counter()
@@ -84,8 +95,12 @@ class Retriever:
             if self.history:
                 results += self._history([r.fact for r in results])
             return self._finish(query, results, [], started, len(shortlist), None, None)
+        if self.reranker != "jev":
+            return await self._other_reranker(query, shortlist, rank, started)
         try:
+            scored_at = time.perf_counter()
             d = await self.backend.ask({"query": query}, asks)
+            rerank_ms = (time.perf_counter() - scored_at) * 1000
             decisions = list(d.values())
             kept = sorted(
                 (
@@ -100,7 +115,7 @@ class Retriever:
                 relation = qr.chosen
         except DecisionError as e:
             # Never fail a read: fall back to the top 10 by cosine, unscored.
-            degraded, decisions = str(e), []
+            degraded, decisions, rerank_ms = str(e), [], 0.0
             kept = [(f, None) for f in shortlist[:10]]
 
         results = [RetrievedFact(f, p, "rerank") for f, p in kept]
@@ -117,7 +132,64 @@ class Retriever:
         if self.history:
             results += self._history([r.fact for r in results])
         results += self._expand([f for f, _ in kept], {r.fact.id for r in results})
-        return self._finish(query, results, decisions, started, len(shortlist), degraded, relation)
+        out = self._finish(query, results, decisions, started, len(shortlist), degraded, relation)
+        out.rerank_ms = rerank_ms
+        return out
+
+    async def _other_reranker(self, query: str, shortlist: list[Fact], rank: dict[str, int], started: float):
+        """Stage 4 reranker arms: the same shortlist scored by a cross-encoder or gpt-4o-mini instead of Jev.
+        Everything else is the system's: the kept order, the cosine floor, Jev's query_relation pull, history and
+        one-hop expansion. Cross-encoder: sigmoid of its logit as P(relevant), kept above the relevance threshold
+        and ordered by P x belief as Jev's are. LLM: its listed memories in its order."""
+        scored_at = time.perf_counter()
+        rerank_cost = 0.0
+        if self.reranker == "cross_encoder":
+            import math
+
+            logits = await asyncio.to_thread(self._cross_encode, [(query, f.text) for f in shortlist])
+            scored = [(f, 1 / (1 + math.exp(-float(x)))) for f, x in zip(shortlist, logits, strict=True)]
+            kept = sorted(
+                ((f, p) for f, p in scored if p > config.RELEVANCE_THRESHOLD),
+                key=lambda x: (-x[1] * (x[0].belief if x[0].belief is not None else 1.0), x[0].text),
+            )
+        elif self.reranker == "llm":
+            order, usage = await self.llm.rerank(query, [_memory_line(f) for f in shortlist])
+            rerank_cost = usage.cost_usd
+            kept = [(shortlist[i], None) for i in order]
+        else:
+            raise ValueError(f"unknown reranker {self.reranker!r}")
+        rerank_ms = (time.perf_counter() - scored_at) * 1000
+        degraded, relation, decisions = None, None, []
+        try:
+            d = await self.backend.ask({"query": query}, [Ask("query_relation", QUERY_RELATION)])
+            decisions = list(d.values())
+            qr = d["query_relation"]
+            if qr.backend != "fallback" and qr.chosen != "none" and qr.p >= config.ACT_THRESHOLD:
+                relation = qr.chosen
+        except DecisionError as e:
+            degraded = str(e)
+        results = [RetrievedFact(f, p, "rerank") for f, p in kept]
+        if self.cosine_floor:
+            kept_ids = {f.id for f, _ in kept}
+            results += [
+                RetrievedFact(f, None, "cosine") for f in shortlist[: self.cosine_floor] if f.id not in kept_ids
+            ]
+        if relation:
+            results += self._pull(relation, {r.fact.id for r in results}, rank)
+        if self.history:
+            results += self._history([r.fact for r in results])
+        results += self._expand([f for f, _ in kept], {r.fact.id for r in results})
+        out = self._finish(query, results, decisions, started, len(shortlist), degraded, relation)
+        out.rerank_cost, out.rerank_ms = rerank_cost, rerank_ms
+        return out
+
+    def _cross_encode(self, pairs: list[tuple[str, str]]):
+        with self._cross_encoder_lock:
+            if self._cross_encoder is None:
+                from sentence_transformers import CrossEncoder
+
+                self._cross_encoder = CrossEncoder(CROSS_ENCODER, device=config.EMBED_DEVICE)
+            return self._cross_encoder.predict(pairs, show_progress_bar=False)
 
     def _finish(self, query, results, decisions, started, shortlist, degraded, relation) -> Retrieval:
         results = self._collapse_same_as(results)
@@ -193,6 +265,11 @@ class Retriever:
                 if len(out) >= MAX_EXPANDED:
                     return out
         return out
+
+
+def _memory_line(fact: Fact) -> str:
+    until = f" until {fact.valid_until:%Y-%m-%d}" if fact.valid_until else ""
+    return f"{fact.text} (from {fact.valid_from:%Y-%m-%d}{until})"
 
 
 def _memory(fact: Fact) -> dict[str, str | None]:

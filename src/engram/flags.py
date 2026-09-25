@@ -47,6 +47,9 @@ class Flags:
     # Read-path switches for attribution (E4 k=3 ablations): history expansion and Jev reranking/query_relation.
     retrieval_history: bool = True
     retrieval_rerank: bool = True
+    # V2 Stage 4 reranker arms (V2_PLAN section 4): what scores the 30-fact shortlist when retrieval_rerank is on.
+    # jev (the system) | cross_encoder (cross-encoder/ms-marco-MiniLM-L-6-v2) | llm (gpt-4o-mini listwise).
+    retrieval_reranker: str = "jev"
     # Answer-model rendering (phase 2 step 2): full = belief/confidence, validity, relevance, source quote;
     # compact = "[said date] text - source quote", validity only for closed facts, no belief or scores.
     render: str = "full"
