@@ -246,6 +246,12 @@ re-registered in `tests/test_v3_plan.py`.
        If OpenAI would pass $32, these are dropped in order until it fits: full context on the expansion
        (descriptive); then mem0 on LongMemEval together with S5 (§11's existing rule).
   5. **Keys branch:** on hold, not run.
+- 2026-09-26, docs/V3_OUTCOMES.md revised before upload, before any H1-relevant result was seen (no H1, S3 or S4
+  computed, no Batch B accuracy seen; Batch B still running). (1) The three H1 paragraphs are replaced by the author's
+  wording (Pass, Inconclusive, Inferior), kept verbatim with capital-letter placeholders; the fourth sentence (whole CI
+  above 0: descriptive, not tested superiority) is kept. (2) "LongMemEval holds" now means that S7 significantly
+  favours T0R after Holm correction and S5 does not significantly favour mem0 after Holm correction. If S7 is not
+  significant, the paper states that the selection effect was not shown on long histories.
 
 ## AI assistance
 

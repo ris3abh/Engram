@@ -13,26 +13,24 @@ Definitions used below:
 
 ## H1
 
-Exactly one of the first three paragraphs applies. The fourth sentence is added to the Pass paragraph when its
-condition holds.
+Exactly one of the three paragraphs applies, chosen by its condition. The text is fixed; placeholders in capitals
+(N, X, Y, R, G, a, b) and the bracketed alternatives are filled in from the results. The fourth sentence is added when
+its condition holds.
 
-**Pass (LB > -5 points).** T0R, which stores raw turns and uses one Jev rerank over a 30-turn cosine shortlist, was
-non-inferior to engram v2, which extracts facts with an LLM, at the 5-point margin: {acc_t0r}% against {acc_engram}%,
-d̄ = {d_bar} points, one-sided 95% lower bound {lb} points (two-sided 95% CI [{ci_lo}, {ci_hi}]). The conversation
-bootstrap gives a 5th percentile of {boot_5} points. With the second answer model (Llama 3.3 70B Instruct) the lower
-bound is {lb_llama} points, so the result {is / is not} model-robust.
+*Condition: one-sided 95% lower bound above -5 points.*
 
-**Inconclusive (LB ≤ -5 points and the two-sided CI includes 0).** Non-inferiority at the 5-point margin was not
-shown: {acc_t0r}% against {acc_engram}%, d̄ = {d_bar} points, one-sided lower bound {lb} points. The two-sided 95% CI
-[{ci_lo}, {ci_hi}] includes 0, so the data show no difference in either direction. They can neither establish that T0R
-matches engram v2 nor that it falls short.
+Pass. At matched context (N tokens), raw turns with a single rerank call were non-inferior to LLM-extraction memory: difference X points, one-sided 95% lower bound Y, above the registered -5 margin. Whatever accuracy extraction adds at this budget is under |Y| points, at R× the write cost. The rerank closes G% of the gap between similarity search and extraction. By category, T0R [trailed / did not trail] on multi-hop and open-domain (X vs Y), [as / contrary to what] we registered.
 
-**Inferior (the whole two-sided CI is below 0).** T0R was less accurate than engram v2: {acc_t0r}% against
-{acc_engram}%, d̄ = {d_bar} points, two-sided 95% CI [{ci_lo}, {ci_hi}], entirely below 0. Non-inferiority at the
-5-point margin was not shown (one-sided lower bound {lb} points).
+*Condition: one-sided lower bound at or below -5 points, and the two-sided 95% CI includes 0.*
 
-**Fourth sentence (the whole two-sided CI is above 0).** T0R's accuracy was also higher than engram v2's (two-sided
-95% CI [{ci_lo}, {ci_hi}], entirely above 0). This is reported as a descriptive result, not as tested superiority,
+Inconclusive. At matched context, the difference was X points, but the one-sided lower bound (Y) fell below the registered -5 margin, so non-inferiority was not established. The two-sided interval [a, b] is also consistent with no difference, so these data cannot say whether extraction adds accuracy. The rerank closes G% of the gap between similarity search and extraction at R× lower write cost.
+
+*Condition: one-sided lower bound at or below -5 points, and the whole two-sided 95% CI below 0.*
+
+Inferior. At matched context, T0R was X points less accurate than LLM-extraction memory (95% CI [a, b]). The rerank closes G% of the gap between similarity search and extraction; extraction adds the remaining X points, at R× the write cost, [concentrated / not concentrated] in multi-hop and open-domain questions, [as / contrary to what] we registered.
+
+*Fourth sentence, added when the whole two-sided 95% CI lies above 0:* T0R's accuracy was also higher than engram
+v2's (two-sided 95% CI [a, b], entirely above 0). This is reported as a descriptive result, not as tested superiority,
 because the registered test is non-inferiority.
 
 ## G: how much of the gap selection closes
@@ -70,9 +68,10 @@ registered prediction (T0R below engram v2 on multi-hop and open-domain) fits th
 The LongMemEval tests compare T0R with mem0 (S5) and with L0 (S6, S7), not with engram v2. They therefore cannot
 support "matches LLM-extracted memory" on long histories.
 
-LongMemEval "holds" if none of S5, S6 and S7 significantly favours the comparator after Holm (T0R is at least as
-accurate as mem0 and L0). If LongMemEval does not hold, the paper's claims are
-narrowed to conversations of LoCoMo scale, and it states that long histories are where selection alone breaks down.
+LongMemEval "holds" if S7 significantly favours T0R after Holm correction and S5 does not significantly favour mem0
+after Holm correction. If S7 is not significant, the paper states that the selection effect was not shown on long
+histories. If LongMemEval does not hold, the paper's claims are narrowed to conversations of LoCoMo scale, and it states
+that long histories are where selection alone breaks down.
 
 ## Candidate titles
 
