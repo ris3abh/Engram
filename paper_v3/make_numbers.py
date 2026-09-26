@@ -53,6 +53,8 @@ def show(v, fmt: str) -> str:
         return s.replace("-", MINUS)
     if fmt == "int":
         return f"{round(v):,}"
+    if fmt == "f2":  # a probability, two decimals
+        return f"{v:.2f}"
     if fmt == "tok":
         return f"{round(v):,}"
     if fmt == "ms":
@@ -294,6 +296,8 @@ def main() -> None:
         f"{rel(C)}#expansion (T0R k=20 - L0 k=20)",
         "pts",
     )
+    for key in ("rerank.locomo.k3", "rerank.locomo.k20", "rerank.lme.k3", "rerank.lme.k20"):  # unsigned, for prose
+        N(f"{key}.u", NUM[key]["value"], NUM[key]["source"], "p1")
     N(
         "fc.vs.t0r.k3",
         fresh["full context all turns"]["accuracy"] - fresh["T0R k3"]["accuracy"],
@@ -424,6 +428,12 @@ def main() -> None:
         jm["write_cost_per_1k"]["embeddings"],
         f"{rel(A)}#write/Jev-Mem/write_cost_per_1k/embeddings",
         "usd4",
+    )
+    N(
+        "write.jevmem.total",
+        jm["write_cost_per_1k"]["jev"] + jm["write_cost_per_1k"]["embeddings"],
+        f"{rel(A)}#write/Jev-Mem/write_cost_per_1k (jev + embeddings)",
+        "usd3",
     )
     N(
         "write.jevmem.lat",
@@ -764,7 +774,12 @@ def main() -> None:
         "src/engram/config.py#JEV_PRICE_PER_INPUT_TOKEN (per million)",
         "usd3",
     )
-    N("fig.tight_tokens", 300, "figure setting: the tight-budget region shaded in the accuracy-context figure (paper_v3/figures.py)", "int")
+    N(
+        "fig.tight_tokens",
+        300,
+        "figure setting: the tight-budget region shaded in the accuracy-context figure (paper_v3/figures.py)",
+        "int",
+    )
     N("wide.shortlist", 150, "bench/run.py#ARMS/lean_t0r_wide/flags/retrieval_shortlist", "raw")
     N("plan.latency_sample", 40, "docs/V3_PLAN.md §7 (fixed sample of 40 questions); bench/v3_latency.py", "raw")
     J("expl.k", A, ("token_match", "L0 (exploratory)", "t0r_k"), "raw")
@@ -803,6 +818,18 @@ def main() -> None:
         ("ext.fidelity.anchor_4o_q", 1540, "int", "an2026fidelity"),
     ):
         N(key, v, f"cite:{cite} (checked against the paper's text; paper_v3/bib_verification.md)", fmt)
+
+    # --- the worked example (Figure 2): one H1 question replayed offline from the frozen stores and the call cache
+    WE = V3 / "worked_example.json"
+    w = load(WE)
+    N("ex.candidates", w["candidates_meeting_rule"], f"{rel(WE)}#candidates_meeting_rule", "int")
+    N("ex.t0r.k", w["t0r"]["k"], f"{rel(WE)}#t0r/k", "int")
+    N("ex.t0r.tokens", w["t0r"]["recorded_tokens"], f"{rel(WE)}#t0r/recorded_tokens", "int")
+    N("ex.engram.tokens", w["engram_v2"]["recorded_tokens"], f"{rel(WE)}#engram_v2/recorded_tokens", "int")
+    N("ex.shortlist", len(w["t0r"]["shortlist"]), f"{rel(WE)}#t0r/shortlist (length)", "int")
+    for side, key in (("t0r", "t0r"), ("engram", "engram_v2")):
+        for i, row in enumerate(w[key]["shortlist"]):
+            N(f"ex.{side}.p{row['rank']}", row["p_relevant"], f"{rel(WE)}#{key}/shortlist/{i}/p_relevant", "f2")
 
     out = Path(__file__).parent / "numbers.json"
     out.write_text(json.dumps(NUM, indent=1, ensure_ascii=False) + "\n")

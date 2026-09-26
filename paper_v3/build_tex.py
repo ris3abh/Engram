@@ -25,7 +25,7 @@ import build  # noqa: E402
 
 OUT = ROOT / "paper_v3"
 OPEN, SEP, CLOSE = "\x00", "\x01", "\x02"  # sourced-number markers inside the intermediate Markdown
-WIDE_FIGS = {"arch", "context"}  # figure*: the architecture diagram and the two-panel accuracy-context figure
+WIDE_FIGS = {"arch", "example", "context"}  # figure*: the two diagrams and the two-panel accuracy-context figure
 COLUMN_PT = 219.0  # one column in acl.sty: A4, 2.5 cm margins, 0.6 cm column sep
 CHAR_PT = 4.2  # average character width at \footnotesize (9 pt Times in acl.sty)
 TT_PT = 4.75  # typewriter (inconsolata) at \footnotesize
@@ -312,6 +312,8 @@ def table_tex(
 ) -> str:
     header, body = rows[0], rows[2:]
     ncol = len(header)
+    groups = {n for n, r in enumerate(body) if len(r) == 1}  # "| *label* |": a budget group starts here
+    rows_all, body = body, [r for r in body if len(r) > 1]
     cap = (rf"\caption{{{inline(caption)}}}" + (rf"\label{{{label}}}" if label else "")) if caption else ""
     longest = max(len(plain(c)) for r in rows for c in r)
     if onecolumn and (longest > 40 or len(body) > 15):  # long appendix data: a longtable that breaks across pages
@@ -340,9 +342,14 @@ def table_tex(
         rf">{{\{'raggedleft' if j and numeric_col(body, j) else 'raggedright'}\arraybackslash}}p{{{w:.1f}pt}}"
         for j, w in enumerate(widths)
     )
-    body_tex = [
-        " & ".join(inline(c.replace(", ", ",\x06") if c.startswith("[") else c) for c in r) + r" \\" for r in body
-    ]
+    body_tex = []
+    for n, r in enumerate(rows_all):
+        if n in groups:
+            body_tex += ([r"\midrule"] if n else []) + [rf"\multicolumn{{{ncol}}}{{@{{}}l}}{{{inline(r[0])}}} \\"]
+        else:
+            body_tex.append(
+                " & ".join(inline(c.replace(", ", ",\x06") if c.startswith("[") else c) for c in r) + r" \\"
+            )
     env = "table*" if wide else "table"
     return "\n".join(
         [
@@ -610,7 +617,7 @@ AUTHOR = r"""\author{Rishabh Sharma\thanks{Preprint. Pre-registered plan:
 
 def main() -> None:
     build.cite = marker_cite
-    md = build.render((OUT / "main.src.md").read_text())
+    md = build.render(build.bold_tables((OUT / "main.src.md").read_text()))
     title, abstract, body, appendix = convert(md)
     tex = "\n".join(
         [

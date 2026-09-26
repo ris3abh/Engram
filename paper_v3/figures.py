@@ -1,9 +1,10 @@
 """Figures for the v3 paper, drawn only from paper_v3/numbers.json (every plotted or printed value is a sourced number).
 
-Figure 1 (architecture) is a hand-built SVG in the v1 pipeline figure's design (paper_v3/diagram.py). Figures 2-7 are
-matplotlib: the Okabe-Ito colour-blind-safe palette with one fixed colour per system, Helvetica Neue as in Figure 1,
-text at 8 pt at printed size (single-column figures 3.3 in wide, full-width ones 6.8 in), direct labels instead of
-legends. Each figure is written as PDF (LaTeX), SVG (Markdown) and PNG (review) in paper_v3/figures/.
+Figures 1 (architecture) and 2 (worked example) are hand-built SVGs in the v1 pipeline figure's design
+(paper_v3/diagram.py). Figures 3-8 are matplotlib in the same design system: its palette with one fixed colour per
+system, a light panel background and Helvetica Neue, text at 8 pt at printed size (single-column figures 3.3 in
+wide, full-width ones 6.8 in), direct labels instead of legends. Each figure is written as PDF (LaTeX), SVG
+(Markdown) and PNG (review) in paper_v3/figures/.
 
     uv run --with matplotlib --with pillow python paper_v3/figures.py
 """
@@ -15,24 +16,24 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-
 import diagram  # noqa: E402
+import matplotlib.pyplot as plt  # noqa: E402
 
 HERE = Path(__file__).parent
 OUT = HERE / "figures"
 NUM = json.loads((HERE / "numbers.json").read_text())
 
-COL = {  # Okabe-Ito, one fixed colour per system
-    "T0R": "#0072B2",
-    "engram v2": "#E69F00",
-    "mem0": "#009E73",
-    "Jev-Mem": "#CC79A7",
-    "T0R-LLM": "#56B4E9",
-    "L0": "#7F7F7F",
-    "full context": "#000000",
+COL = {  # the design system of Figure 1 (paper_v3/diagram.py): one fixed colour per system
+    "T0R": "#4453C4",  # Jev blue
+    "engram v2": "#E8762C",  # LLM orange
+    "mem0": "#2E9E6B",  # green
+    "Jev-Mem": "#8E5BB5",  # purple
+    "T0R-LLM": "#8FA3E8",  # light blue: T0R's store with an LLM reranker
+    "L0": "#8A94A6",  # code-only grey
+    "full context": "#1F2430",  # near-black
 }
-VERMILLION, LIGHT, GREY = "#D55E00", "#DDDDDD", "#555555"
+VERMILLION, LIGHT, GREY = "#C8402F", "#D5DAE3", "#5B6577"  # margins and rerank drops; missed; secondary ink
+PANEL = "#F5F7FA"  # light panel background
 SINGLE, FULL = 3.3, 6.8
 plt.rcParams.update(
     {
@@ -48,6 +49,12 @@ plt.rcParams.update(
         "axes.linewidth": 0.6,
         "xtick.major.width": 0.6,
         "ytick.major.width": 0.6,
+        "axes.facecolor": PANEL,
+        "axes.edgecolor": "#8A94A6",
+        "xtick.color": "#4B5566",
+        "ytick.color": "#4B5566",
+        "axes.labelcolor": "#1F2430",
+        "text.color": "#1F2430",
         "pdf.fonttype": 42,
         "svg.fonttype": "none",
     }
@@ -76,7 +83,7 @@ def wilson(p: float, n: int) -> tuple[float, float]:
 
 def save(fig, name: str) -> None:
     OUT.mkdir(exist_ok=True)
-    for ext, kw in (("pdf", {}), ("svg", {}), ("png", {"dpi": 250})):
+    for ext, kw in (("pdf", {}), ("svg", {}), ("png", {"dpi": 250})):  # noqa: B007
         fig.savefig(OUT / f"{name}.{ext}", bbox_inches="tight", pad_inches=0.02, **kw)
     plt.close(fig)
 
@@ -118,15 +125,22 @@ def h1_forest() -> None:
     forest(ax, rows)
     margin = -v("plan.margin")
     ax.axvline(margin, color=VERMILLION, lw=0.9, ls="--")
-    ax.text(margin + 0.12, 3.75, f"non-inferiority margin ({d('h1.lb')[0]}{d('plan.margin')})", color=VERMILLION,
-            va="bottom", ha="left")
+    ax.text(
+        margin + 0.12,
+        3.75,
+        f"non-inferiority margin ({d('h1.lb')[0]}{d('plan.margin')})",
+        color=VERMILLION,
+        va="bottom",
+        ha="left",
+    )
     ax.set_xlim(margin - 1.3, 4.0)
     ax.set_ylim(-0.6, 4.3)
     ax.set_xlabel("T0R minus engram v2 (points)")
     ax.plot([], [], color=GREY, lw=1.6, label="two-sided 95% CI")
     ax.plot([], [], marker="|", color=VERMILLION, ms=8, mew=1.6, ls="", label="one-sided 95% bound")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.45, -0.3), ncol=2, frameon=False, handlelength=1.4,
-              columnspacing=1.2)
+    ax.legend(
+        loc="upper center", bbox_to_anchor=(0.45, -0.3), ncol=2, frameon=False, handlelength=1.4, columnspacing=1.2
+    )
     save(fig, "h1")
 
 
@@ -142,7 +156,7 @@ def secondary_forest() -> None:
     }
     rows, holm = [], []
     for t, label in labels.items():
-        colour = COL["T0R"] if v(f"{t}.holm") < 0.05 else "#999999"
+        colour = COL["T0R"] if v(f"{t}.holm") < 0.05 else COL["L0"]
         rows.append((label, pts(f"{t}.dbar"), pts(f"{t}.ci_lo"), pts(f"{t}.ci_hi"), None, colour, False))
         holm.append(d(f"{t}.holm"))
     fig, ax = plt.subplots(figsize=(SINGLE, 2.3))
@@ -150,8 +164,7 @@ def secondary_forest() -> None:
     y4 = len(rows) - 1 - 3
     margin = -v("plan.margin")
     ax.plot([margin, margin], [y4 - 0.4, y4 + 0.4], color=VERMILLION, lw=1.0, ls="--")
-    ax.text(margin - 0.8, y4, f"margin {d('h1.lb')[0]}{d('plan.margin')}", color=VERMILLION, ha="right",
-            va="center")
+    ax.text(margin - 0.8, y4, f"margin {d('h1.lb')[0]}{d('plan.margin')}", color=VERMILLION, ha="right", va="center")
     ax.text(1.02, len(rows) - 0.3, "Holm p", transform=ax.get_yaxis_transform(), va="center", style="italic")
     ax.set_xlim(-21, 23)
     ax.set_ylim(-0.6, len(rows) - 0.1)
@@ -165,8 +178,7 @@ def secondary_forest() -> None:
 def budget_gain() -> None:
     fig, ax = plt.subplots(figsize=(SINGLE, 2.1))
     series = [
-        ("LoCoMo", "#000000", [3, 6, 20], ["rer.locomo.k3", "rer.locomo.k6", "rer.locomo.k20"], 0.93, (6.6, 12.5),
-         -1),
+        ("LoCoMo", "#1F2430", [3, 6, 20], ["rer.locomo.k3", "rer.locomo.k6", "rer.locomo.k20"], 0.93, (6.6, 12.5), -1),
         ("LongMemEval", VERMILLION, [3, 20], ["rer.lme.k3", "rer.lme.k20"], 1.07, (3.7, 2.6), 1),
     ]
     for name, colour, ks, keys, dodge, (lx, ly), side in series:
@@ -176,8 +188,15 @@ def budget_gain() -> None:
         hi = [pts(f"{k}.ci_hi") - pts(f"{k}.dbar") for k in keys]
         ax.errorbar(xs, ys, yerr=[lo, hi], color=colour, marker="o", ms=4, lw=1.2, elinewidth=0.8, capsize=2)
         for x, y, k in ((xs[0], ys[0], keys[0]), (xs[-1], ys[-1], keys[-1])):  # LoCoMo left, LongMemEval right
-            ax.annotate(d(f"{k}.dbar"), (x, y), xytext=(7 * side, 0), textcoords="offset points",
-                        ha="left" if side > 0 else "right", va="center", color=colour)
+            ax.annotate(
+                d(f"{k}.dbar"),
+                (x, y),
+                xytext=(7 * side, 0),
+                textcoords="offset points",
+                ha="left" if side > 0 else "right",
+                va="center",
+                color=colour,
+            )
         ax.text(lx, ly, name, color=colour)
     ax.axhline(0, color="black", lw=0.6)
     ax.set_xscale("log")
@@ -197,18 +216,34 @@ def context() -> None:
     n_loc, n_lme = int(v("data.fresh.questions")), int(v("data.lme.scored"))
     tight = v("fig.tight_tokens")
     for ax in (a1, a2):
-        ax.axvspan(80, tight, color="#EFEFEF", zorder=0, lw=0)
-        ax.text(88, 0.985, f"tight budget\n(≤ {d('fig.tight_tokens')} tokens)", transform=ax.get_xaxis_transform(),
-                va="top", color=GREY)
+        ax.axvspan(80, tight, color="#E3E7F0", zorder=0, lw=0)
+        ax.text(
+            88,
+            0.985,
+            f"tight budget\n(≤ {d('fig.tight_tokens')} tokens)",
+            transform=ax.get_xaxis_transform(),
+            va="top",
+            color=GREY,
+        )
 
     def line(ax, s, xs, accs, n):
         err = list(zip(*(wilson(a, n) for a in accs), strict=True))
-        ax.errorbar(xs, [100 * a for a in accs], yerr=err, color=COL[s], marker="o", ms=3.5, lw=1.1, elinewidth=0.7,
-                    capsize=1.5)
+        ax.errorbar(
+            xs, [100 * a for a in accs], yerr=err, color=COL[s], marker="o", ms=3.5, lw=1.1, elinewidth=0.7, capsize=1.5
+        )
 
     def point(ax, x, acc, n, colour, hollow=False, marker="s"):
-        ax.errorbar([x], [100 * acc], yerr=[[e] for e in wilson(acc, n)], color=colour, marker=marker, ms=4.5,
-                    capsize=1.5, elinewidth=0.7, mfc="white" if hollow else colour)
+        ax.errorbar(
+            [x],
+            [100 * acc],
+            yerr=[[e] for e in wilson(acc, n)],
+            color=colour,
+            marker=marker,
+            ms=4.5,
+            capsize=1.5,
+            elinewidth=0.7,
+            mfc="white" if hollow else colour,
+        )
 
     loc = {
         "L0": ["l0.k3", "l0.k6", "l0.k20"],
@@ -226,8 +261,14 @@ def context() -> None:
         line(a1, s, xs, accs, n_loc)
         ends.append((100 * accs[-1], xs[-1], s, COL[s]))
     point(a1, v("sys.fc.tok"), v("sys.fc.acc"), n_loc, COL["full context"])
-    a1.annotate("full context", (v("sys.fc.tok"), pts("sys.fc.acc")), xytext=(0, -24), textcoords="offset points",
-                ha="center", va="center")
+    a1.annotate(
+        "full context",
+        (v("sys.fc.tok"), pts("sys.fc.acc")),
+        xytext=(0, -24),
+        textcoords="offset points",
+        ha="center",
+        va="center",
+    )
     point(a1, v("wide.tok"), v("wide.acc"), n_loc, COL["T0R"], hollow=True, marker="o")
     ends.append((pts("wide.acc"), v("wide.tok"), "T0R-wide (post-hoc)", COL["T0R"]))
     # direct labels in a column right of the lines, in the order of the line ends, with thin leaders
@@ -242,11 +283,18 @@ def context() -> None:
         xs = [v(f"lme.{k}.tok") for k in ks]
         accs = [v(f"lme.{k}.acc") for k in ks]
         line(a2, s, xs, accs, n_lme)
-        a2.annotate(s, (xs[0], 100 * accs[0]), xytext=off, textcoords="offset points", color=COL[s], va="center",
-                    ha="right")
+        a2.annotate(
+            s, (xs[0], 100 * accs[0]), xytext=off, textcoords="offset points", color=COL[s], va="center", ha="right"
+        )
     point(a2, v("lme.fc.tok"), v("lme.fc.acc"), n_lme, COL["full context"])
-    a2.annotate("full context", (v("lme.fc.tok"), pts("lme.fc.acc")), xytext=(-8, 0), textcoords="offset points",
-                ha="right", va="center")
+    a2.annotate(
+        "full context",
+        (v("lme.fc.tok"), pts("lme.fc.acc")),
+        xytext=(-8, 0),
+        textcoords="offset points",
+        ha="right",
+        va="center",
+    )
     a2.set_title(f"LongMemEval ({d('data.lme.scored')} questions)")
     for ax in (a1, a2):
         ax.set_xscale("log")
@@ -290,9 +338,11 @@ def cost() -> None:
 
 def recall() -> None:
     cats = ["multi-hop", "temporal", "open-domain", "single-hop", "all"]
-    parts = (("kept", COL["T0R"], "white", "kept by rerank"),
-             ("dropped", VERMILLION, "white", "dropped by rerank"),
-             ("missed", LIGHT, "black", "not shortlisted"))
+    parts = (
+        ("kept", COL["T0R"], "white", "kept by rerank"),
+        ("dropped", VERMILLION, "white", "dropped by rerank"),
+        ("missed", LIGHT, "black", "not shortlisted"),
+    )
     fig, ax = plt.subplots(figsize=(SINGLE, 3.3))
     ticks, labels, y = [], [], 0.0
     for c in cats:
@@ -301,15 +351,24 @@ def recall() -> None:
             for part, colour, tc, _ in parts:
                 key = f"fig7.{which}.{c}.{part}"
                 w = pts(key)
-                ax.barh(y, w, left=left, color=colour, height=0.8, edgecolor="white", lw=0.4,
-                        alpha=1.0 if which == "reg" else 0.72)
+                ax.barh(
+                    y,
+                    w,
+                    left=left,
+                    color=colour,
+                    height=0.8,
+                    edgecolor="white",
+                    lw=0.4,
+                    alpha=1.0 if which == "reg" else 0.72,
+                )
                 if w >= 10:
                     ax.text(left + w / 2, y, d(key), ha="center", va="center", color=tc)
                 left += w
             ticks.append(y)
             name = f"{c} (n={d(f'fig7.reg.{c}.n')})" if c != "all" else f"all (n={d('fig7.reg.all.n')})"
-            labels.append(f"{name}\n{d('plan.shortlist')} turns" if which == "reg" else
-                          f"{d('wide.shortlist')} turns, post-hoc")
+            labels.append(
+                f"{name}\n{d('plan.shortlist')} turns" if which == "reg" else f"{d('wide.shortlist')} turns, post-hoc"
+            )
             y += 0.95
         y += 0.5
     ax.set_yticks(ticks, labels)
@@ -322,13 +381,24 @@ def recall() -> None:
     ax.spines["left"].set_visible(False)
     ax.tick_params(axis="y", length=0)
     handles = [plt.Rectangle((0, 0), 1, 1, color=colour) for _, colour, _, _ in parts]
-    ax.legend(handles, [name for *_, name in parts], loc="lower center", bbox_to_anchor=(0.4, 1.0), ncol=3,
-              frameon=False, handlelength=0.9, handletextpad=0.4, columnspacing=0.8, borderaxespad=0.2)
+    ax.legend(
+        handles,
+        [name for *_, name in parts],
+        loc="lower center",
+        bbox_to_anchor=(0.4, 1.0),
+        ncol=3,
+        frameon=False,
+        handlelength=0.9,
+        handletextpad=0.4,
+        columnspacing=0.8,
+        borderaxespad=0.2,
+    )
     save(fig, "recall")
 
 
 def main() -> None:
     diagram.arch()
+    diagram.example()
     h1_forest()
     secondary_forest()
     budget_gain()

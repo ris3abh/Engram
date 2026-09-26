@@ -27,6 +27,71 @@ def render(src: str) -> str:
     return re.sub(r"\{\{([^{}]+)\}\}", lambda m: cite(m.group(1).strip()), src)
 
 
+BOLD_RULE = re.compile(r"^<!-- bold: ([\w,]+) -->$")
+ONE_ID = re.compile(r"^\{\{([^{}]+)\}\}(?:–\{\{[^{}]+\}\})?$")  # one number, or a range compared by its first end
+
+
+def cells(line: str) -> list[str]:
+    return [c.strip() for c in line.strip().strip("|").split(" | ")]
+
+
+def bold_tables(src: str) -> str:
+    """Apply each `<!-- bold: rule,rule,... -->` line to the next table, then drop the line.
+
+    One rule per column: max (bold the highest), min (the lowest), p05 (every value below 0.05), none. A row with one
+    cell ("| *label* |") starts a budget group; max and min pick the best within each group. Only cells that are a
+    single number id (or a range of two, compared by its first end) take part; ties at the displayed precision are all
+    bolded. The rule decides, never the system: which cells are bold follows from the numbers alone.
+    """
+    lines, out, i = src.split("\n"), [], 0
+    while i < len(lines):
+        m = BOLD_RULE.match(lines[i].strip())
+        if not m:
+            out.append(lines[i])
+            i += 1
+            continue
+        rules = m.group(1).split(",")
+        i += 1
+        while not lines[i].startswith("|"):  # the caption between the rule and the table
+            out.append(lines[i])
+            i += 1
+        start = i
+        while i < len(lines) and lines[i].startswith("|"):
+            i += 1
+        table = lines[start:i]
+        rows = [cells(line) for line in table]
+        assert all(len(r) == len(rules) for r in rows[:1]), f"bold rule has {len(rules)} columns: {table[0]}"
+        groups, cur = [], []
+        for n in range(2, len(rows)):
+            if len(rows[n]) == 1:
+                if cur:
+                    groups.append(cur)
+                cur = []
+            else:
+                cur.append(n)
+        groups.append(cur)
+        for col, rule in enumerate(rules):
+            if rule == "none":
+                continue
+            for group in groups:
+                found = []
+                for n in group:
+                    hit = ONE_ID.match(rows[n][col])
+                    if hit:
+                        found.append((n, NUM[hit.group(1)]["value"], NUM[hit.group(1)]["display"]))
+                if rule == "p05":
+                    chosen = [n for n, v, _ in found if v < 0.05]
+                elif found:
+                    best = (max if rule == "max" else min)(found, key=lambda x: x[1])
+                    chosen = [n for n, _, disp in found if disp == best[2]]
+                else:
+                    chosen = []
+                for n in chosen:
+                    rows[n][col] = f"**{rows[n][col]}**"
+        out += [table[n] if len(r) == 1 or n == 1 else "| " + " | ".join(r) + " |" for n, r in enumerate(rows)]
+    return "\n".join(out)
+
+
 CITE = re.compile(r"\[(@[\w-]+(?:;\s*@[\w-]+)*)\]")
 
 
@@ -37,7 +102,7 @@ def md_cites(text: str) -> str:
 
 
 def main() -> None:
-    out = md_cites(render((HERE / "main.src.md").read_text()))
+    out = md_cites(render(bold_tables((HERE / "main.src.md").read_text())))
     (HERE / "main.md").write_text(
         "<!-- GENERATED from paper_v3/main.src.md by paper_v3/build.py; numbers are sourced in numbers.json. -->\n\n"
         + out

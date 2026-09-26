@@ -4,50 +4,63 @@
 
 ## Abstract
 
-Recent work argues that conversational memory does not need LLM extraction when raw history is ranked well
-(SmartSearch; Fidelity Before Structure). We test that claim confirmatorily with Jev, TypeSafe's typed decision
-model, as the ranker: raw conversation turns reranked by one Jev call (T0R), against an LLM-extraction memory at
-matched context. Under a pre-registered plan, on five LoCoMo conversations never used for development, T0R was
-non-inferior within a {{plan.margin}}-point margin at a tight budget of about {{h1.tok_t0r}} tokens per question:
-{{h1.d}} points by the registered judge (one-sided 95% bound {{h1.lb}}) and {{h1.strict.d}} to {{h1.lenient.d}} by
-blind human grading (bounds {{h1.strict.lb}} to {{h1.lenient.lb}}), at {{cost.write.ratio}}× lower write cost, and
-robust to a second answer model. Reranking's value depends on how hard the budget cuts the candidate set: over
-similarity search it adds {{rerank.locomo.k3}} points at k=3 and {{rerank.locomo.k20}} at k=20 on LoCoMo, and
-{{rerank.lme.k3}} and {{rerank.lme.k20}} on {{data.lme.scored}} LongMemEval questions. Jev selected as accurately as
-a gpt-4o-mini reranker (non-inferior, bound {{s4.lb}}) at about a third of the latency. At generous budgets,
-extraction systems were more accurate, and reranking lowered correct abstention. Plans, code, per-question results
-and audit grades are released.
+Does conversational memory need LLM-extracted facts, or is it enough to select the right raw turns? Published
+results disagree: extraction-based systems report gains from distilled facts, while recent studies find raw history
+with good ranking does as well, and disagree about whether ranking matters. We show the disagreement is largely about
+the context budget. In a pre-registered study on held-out LoCoMo conversations and LongMemEval, raw turns selected by
+a single call to Jev, a typed decision model, are non-inferior on LoCoMo to an LLM-extraction memory at a tight budget
+({{h1.d}} points, one-sided 95% bound {{h1.lb}}; {{h1.strict.d}} to {{h1.lenient.d}} under blind human grading) at
+{{cost.write.ratio}}× lower write cost, and the result holds under a second answer model. Selection's value depends on
+how hard the budget cuts the candidates: reranking adds {{rerank.locomo.k3.u}} points on LoCoMo and
+{{rerank.lme.k3.u}} on LongMemEval when three of {{plan.shortlist}} are kept, and {{rerank.locomo.k20.u}} and
+{{rerank.lme.k20.u}} at generous budgets, where extraction systems are more accurate. Jev selects as accurately as an
+LLM reranker (non-inferior, bound {{s4.lb}}) at a third of the latency, and more accurately than a multi-call graph
+traversal. Reranking lowers correct abstention. Plans, code and all graded answers are released.
 
 ## 1. Introduction
 
-Recent work questions whether conversational memory needs LLM structuring at all. SmartSearch [@derehag2026smartsearch]
-retrieves from raw history with a deterministic pipeline and a learned ranking stage, and identifies ranking, not
-retrieval, as the bottleneck. Fidelity Before Structure [@an2026fidelity] shows in a controlled comparison that
-verbatim chunks beat LLM-extracted artifacts, and that reranking adds little. Both papers state the thesis this
-study tests; neither tests it confirmatorily, and they disagree about how much ranking matters.
+Does conversational memory need LLM-extracted facts? The literature is split. Extraction-based systems report gains
+from distilling conversations before retrieval: mem0 [@chhikara2025mem0] extracts facts from each message, the
+LongMemEval design study [@wu2025longmemeval] finds that expanding index keys with extracted facts helps retrieval, and
+SeCom [@pan2025secom] segments sessions and compresses the segments before retrieval. Recent studies find that raw
+history, ranked well, does as well or better: SmartSearch [@derehag2026smartsearch] retrieves from raw history with a
+deterministic pipeline and a learned ranking stage, and Fidelity Before Structure [@an2026fidelity] finds verbatim
+chunks ahead of LLM-extracted artifacts in a controlled comparison. These two also disagree with each other:
+SmartSearch identifies ranking as the bottleneck, while Fidelity finds that reranking adds little.
 
-We test the shared claim under a pre-registered plan, on conversations never used for development: are raw turns
-with a single reranking call non-inferior to a strong extraction-based memory at matched context, and how does the
-answer depend on the context budget? The ranker is Jev, TypeSafe's typed decision model [@typesafe2026jev], which
-answers a fixed-option question with a probability in one short request. The extraction system is engram v2, which
-extracts facts with gpt-4o-mini and types, relates and updates them with Jev; it was the most accurate system on our
-development conversation and was chosen as the comparator because the test could fail against it.
+This paper explains the disagreement by the context budget, the number of retrieved items the answer model reads.
+When the budget keeps a few of many candidates, which items are kept decides the answer: selection matters, and a
+good selector over raw turns can stand in for extraction. When the budget is generous, similarity order already
+includes most of the evidence, ranking adds little, and extracted facts, which are more compact, are more accurate.
+We test this under a pre-registered plan, on conversations never used for development: are raw turns with a single
+reranking call non-inferior to a strong extraction-based memory at a tight, matched budget, and how does the
+rerank's value change as the budget grows?
 
-This is a confirmatory study of an existing idea, not a new architecture. Its contributions:
+The selector is Jev, TypeSafe's typed decision model [@typesafe2026jev], which answers a fixed-option question with
+a probability in one short request. The extraction system is engram v2, which extracts facts with gpt-4o-mini and
+types, relates and updates them with Jev; it was the most accurate system on our development conversation and was
+chosen as the comparator because the test could fail against it.
 
-1. **A pre-registered non-inferiority test** of raw turns plus one Jev rerank (T0R) against LLM-extraction memory,
-   on held-out conversations, confirmed on a second answer model and by blind human grading (§5.1, §5.4). At a tight
-   budget, T0R is non-inferior within a {{plan.margin}}-point margin; under the worst grading we applied, extraction
-   adds at most {{h1.lenient.worst}} points at this budget, at {{cost.write.ratio}}× the write cost.
-2. **The budget dependence of reranking**, on LoCoMo and LongMemEval: its gain over similarity search is large when
-   the budget keeps three of {{plan.shortlist}} candidates and small at twenty (§5.3). We offer this, labelled as an
-   interpretation across different pipelines, as a reconciliation of SmartSearch's and Fidelity's findings (§6).
-3. **A typed decision model as the selector.** Jev selected as accurately as a gpt-4o-mini listwise reranker
-   (registered test S4: non-inferior, lower bound {{s4.lb}}) at about a third of the latency, and better than a
-   multi-call Jev graph walk at matched context (S2) (§5.2, §5.7).
-4. **An account of where the result stops**: at generous budgets extraction systems are more accurate; T0R is capped
-   by its shortlist, which a recall analysis decomposes by category; and reranking lowers correct abstention
-   (§5.6, §5.8, Limitations).
+Our contributions:
+
+1. **The context budget explains the published disagreement.** Over similarity search, reranking raw turns adds
+   {{rerank.locomo.k3.u}} points on LoCoMo and {{rerank.lme.k3.u}} on LongMemEval when three of {{plan.shortlist}}
+   candidates are kept, and {{rerank.locomo.k20.u}} and {{rerank.lme.k20.u}} at k=20, where extraction systems are
+   more accurate (§5.3, §6).
+2. **To our knowledge, the first pre-registered non-inferiority test in conversational-memory evaluation**, on
+   held-out conversations, with a second answer model and blind human grading. It bounds what extraction adds at a
+   tight budget: at most {{h1.lenient.worst}} points under the worst grading we applied, with point estimates of
+   {{h1.strict.d}} to {{h1.lenient.d}} points by human grading (§5.1, §5.4).
+3. **To our knowledge, the first answer-level, matched-context evaluation of a typed decision model as the
+   selector.** Jev is non-inferior to a gpt-4o-mini listwise reranker (S4, lower bound {{s4.lb}}) at about a third of
+   the latency, and more accurate than Jev-Mem's multi-call Jev graph traversal (S2) (§5.2, §5.7).
+4. **Diagnostics.** The selection ceiling decomposes into shortlist misses ({{rec.all_nine.miss}} of questions) and
+   rerank drops ({{rec.all_nine.lost}}), with temporal evidence dropped most at the rerank; and the LLM judge's
+   leniency interacts with answer length, so judge–human agreement differs by system (§5.4, §5.6, §6).
+
+What is not new: raw turns plus a reranker is a known pattern [@derehag2026smartsearch; @nanomemory2026], and engram
+v2 is the system of our earlier preprint [@sharma2026typed]; the contribution is the test, the budget explanation and
+the typed selector, not a new architecture.
 
 ## 2. Related Work
 
@@ -119,6 +132,14 @@ observation date; reads are vector search.
 its own API. Each turn is a node; each write makes two Jev requests (memory type, relations), and each read routes,
 traverses and stops with between two and sixteen Jev requests. Its returned turns are rendered as "[date] speaker:
 text" and answered with our prompt; its own prompts, best-of-three selection and judge are not used.
+
+**A worked example.** Figure 2 traces one held-out question through T0R and engram v2 at the H1 budgets. It was
+chosen by a fixed rule, not for effect: among the {{ex.candidates}} temporal H1 questions that the judge and the human
+grader both scored correct for T0R and wrong for engram v2, the one with the shortest T0R context among those whose
+evidence turn Jev kept and whose replayed contexts match the recorded ones. engram v2 extracted the evidence turn, but under the wrong speaker, and three
+other facts outranked it at k=3; T0R kept the verbatim turn with its date.
+
+![Figure 2: One held-out question traced through both read paths, replayed offline from the frozen stores and the call cache (no API call; both contexts match the recorded token counts: T0R {{ex.t0r.tokens}}, engram v2 {{ex.engram.tokens}}). Left: T0R's {{ex.shortlist}}-turn cosine shortlist, ranks shown in cosine order, with Jev's P(relevant) (tick at the threshold); blue rows were kept by Jev, grey rows by the cosine floor, and the answer model reads the first k={{ex.t0r.k}}. Right: engram v2's fact shortlist; Jev kept four facts, and the evidence fact (dashed) was cut at k=3. An illustration chosen by the rule in §3, not evidence.](figures/example.svg)
 
 ## 4. Study Design
 
@@ -196,12 +217,12 @@ The one-sided p-value is {{h1.p}}, and the conversation bootstrap puts the fifth
 {{h1.boot}} points. {{h1.only_t0r}} questions were answered correctly only by T0R and {{h1.only_engram}} only by
 engram v2. Human grading moves the difference to between {{h1.strict.d}} and {{h1.lenient.d}} points and the bound to
 between {{h1.strict.lb}} and {{h1.lenient.lb}}; under lenient grading the two-sided interval lies just below zero, so
-by that grading engram v2 is more accurate, still inside the margin (Figure 2). We therefore state the result as: non-inferior
+by that grading engram v2 is more accurate, still inside the margin (Figure 3). We therefore state the result as: non-inferior
 within a {{plan.margin}}-point margin under every grading we applied, with extraction adding at most
 {{h1.lenient.worst}} points at this budget. The category comparisons are descriptive; the categories are small and
 the differences are not tested.
 
-![Figure 2: H1 (registered) as a forest plot: T0R at k={{h1.k}} minus engram v2 at k=3, in points, on the {{data.fresh.questions}} questions of the five held-out conversations. Bars are two-sided 95% intervals; the vermillion tick is the one-sided 95% lower bound, tested against the −{{plan.margin}}-point margin (dashed). The judge row is the registered test; the human rows replace the judge's labels on the {{audit.graded}} graded discordant questions (§5.4); the Llama 3.3 70B row re-answers from the same contexts (the answer-model check of §4).](figures/h1.svg)
+![Figure 3: H1 (registered) as a forest plot: T0R at k={{h1.k}} minus engram v2 at k=3, in points, on the {{data.fresh.questions}} questions of the five held-out conversations. Bars are two-sided 95% intervals; the red tick is the one-sided 95% lower bound, tested against the −{{plan.margin}}-point margin (dashed). The judge row is the registered test; the human rows replace the judge's labels on the {{audit.graded}} graded discordant questions (§5.4); the Llama 3.3 70B row re-answers from the same contexts (the answer-model check of §4).](figures/h1.svg)
 
 G, the share of the gap between similarity search and extraction that the rerank closes, uses L0 at its own matched
 k ({{g.l0_k}}, {{g.l0}} accuracy): at the same token budget, one rerank call closes G = {{g.value}} of the accuracy gap
@@ -211,10 +232,12 @@ write-cost ratio uses held-out measurements: engram v2 costs {{cost.write.engram
 
 ### 5.2 Secondary tests (S1–S7, registered)
 
+<!-- bold: none,none,none,none,none,none,none,p05 -->
 *Table 2. Secondary tests. In each, the comparator runs at k=3 and T0R at its matched k. "Only T0R" and "only other"
 count questions answered correctly by one system. S4 is a non-inferiority test (one-sided p); the rest are exact
 two-sided McNemar tests. Holm adjustment over S1–S7. LoCoMo tests use {{data.fresh.questions}} questions;
-LongMemEval ingestion: user turns for S5–S6, user and assistant turns for S7.*
+LongMemEval ingestion: user turns for S5–S6, user and assistant turns for S7. Bold: rejected after Holm adjustment
+(family-wise 0.05).*
 
 | Test | Comparison | T0R k | T0R | Other | Only T0R / only other | p | Holm p |
 |---|---|---|---|---|---|---|---|
@@ -233,47 +256,54 @@ OpenRouter, about half of it by Azure (Appendix G). On the LongMemEval sample, S
 and mem0 on {{s5.n}} knowledge-update questions, which is too few to establish equivalence, and S6 detected none
 between T0R and L0 on {{s6.n}} questions. On the full set, S7 found T0R more accurate than L0 by {{s7.diff}} points.
 By the registered rule, LongMemEval holds: S7 favours T0R after Holm correction and S5 does not favour mem0.
-Figure 3 shows the paired differences with their intervals.
+Figure 4 shows the paired differences with their intervals.
 
-![Figure 3: Secondary tests S1–S7 (registered): T0R minus the comparator, in points, with paired 95% intervals; the Holm-adjusted p is printed at the right, and blue rows are rejected after Holm correction. S4 is a non-inferiority test against the −{{plan.margin}}-point margin (dashed). LoCoMo tests use {{data.fresh.questions}} questions; S5 and S6 use the LongMemEval sample ({{s5.n}} and {{s6.n}} questions), S7 the full set ({{s7.n}}).](figures/secondary.svg)
+![Figure 4: Secondary tests S1–S7 (registered): T0R minus the comparator, in points, with paired 95% intervals; the Holm-adjusted p is printed at the right, and blue rows are rejected after Holm correction. S4 is a non-inferiority test against the −{{plan.margin}}-point margin (dashed). LoCoMo tests use {{data.fresh.questions}} questions; S5 and S6 use the LongMemEval sample ({{s5.n}} and {{s6.n}} questions), S7 the full set ({{s7.n}}).](figures/secondary.svg)
 
 ### 5.3 The budget dependence of reranking
 
-The rerank's value depends on how many candidates the budget keeps (Figure 4). On LoCoMo its gain over
+The rerank's value depends on how many candidates the budget keeps (Figure 5). On LoCoMo its gain over
 similarity search is {{rerank.locomo.k3}} points at k=3 and {{rerank.locomo.k20}} at k=20. On the full LongMemEval
 set it is {{rerank.lme.k3}} points at k=3 (S7) and {{rerank.lme.k20}} at k=20. With three of {{plan.shortlist}}
 candidates kept, ordering decides which evidence reaches the answer model; with twenty kept, cosine order already
 includes most of it. The k=3 gains are registered tests (S1, S7); the k=20 differences are descriptive.
 
-![Figure 4: The rerank's gain over similarity search (T0R minus L0, paired, in points, with 95% intervals) against k. LoCoMo: {{data.fresh.questions}} questions of the five held-out conversations at k=3, k=6 and k=20; LongMemEval: {{data.lme.scored}} non-abstention questions, user and assistant turns, at k=3 and k=20. The k=3 points are registered tests (S1, S7); the others are descriptive.](figures/gain.svg)
+![Figure 5: The rerank's gain over similarity search (T0R minus L0, paired, in points, with 95% intervals) against k. LoCoMo: {{data.fresh.questions}} questions of the five held-out conversations at k=3, k=6 and k=20; LongMemEval: {{data.lme.scored}} non-abstention questions, user and assistant turns, at k=3 and k=20. The k=3 points are registered tests (S1, S7); the others are descriptive.](figures/gain.svg)
 
 T0R at k=3 is within {{fc.vs.t0r.k3}} points of full context on LoCoMo while reading {{sys.t0r.k3.tok}} tokens per
-question instead of {{sys.fc.tok}}. At generous budgets the ordering reverses (Table 3, Figure 5): engram v2 at k=20 reaches
-{{sys.engram.k20.acc}}, Jev-Mem at k=40 {{sys.jevmem.k40.acc}}, mem0 at k=20 {{sys.mem0.k20.acc}} and full context
-{{sys.fc.acc}}, while T0R stays near {{sys.t0r.k20.acc}} at any k (§5.6).
+question instead of {{sys.fc.tok}}. At generous budgets the ordering reverses (Table 3, Figure 6): engram v2 at k=20 was the most accurate system
+we measured ({{sys.engram.k20.acc}} with {{sys.engram.k20.tok}} tokens), above Jev-Mem at k=40 ({{sys.jevmem.k40.acc}},
+{{sys.jevmem.k40.tok}} tokens) and mem0 at k=20 ({{sys.mem0.k20.acc}}, {{sys.mem0.k20.tok}} tokens); full context
+scored {{sys.fc.acc}}, and T0R stays near {{sys.t0r.k20.acc}} at any k (§5.6). This comparison is descriptive, not a
+registered test, and the systems are not token-matched.
 
+<!-- bold: none,max,none,min,min,max,max,max,max -->
 *Table 3. LoCoMo, five held-out conversations, {{data.fresh.questions}} scored questions: accuracy (%), tokens per
-question and accuracy by category.*
+question, write cost per 1,000 turns and read cost per query at list prices (as in Table 5; the read cost excludes
+the answer call; "–": none), and accuracy by category. Rows are grouped by budget. Bold: best in column within the
+budget group (highest accuracy, lowest cost).*
 
-| System, setting | Accuracy | Tokens | Multi-hop | Temporal | Open-domain | Single-hop |
-|---|---|---|---|---|---|---|
-| L0, k=3 | {{sys.l0.k3.acc}} | {{sys.l0.k3.tok}} | {{sys.l0.k3.multi-hop}} | {{sys.l0.k3.temporal}} | {{sys.l0.k3.open-domain}} | {{sys.l0.k3.single-hop}} |
-| L0, k=6 | {{sys.l0.k6.acc}} | {{sys.l0.k6.tok}} | {{sys.l0.k6.multi-hop}} | {{sys.l0.k6.temporal}} | {{sys.l0.k6.open-domain}} | {{sys.l0.k6.single-hop}} |
-| L0, k=20 | {{sys.l0.k20.acc}} | {{sys.l0.k20.tok}} | {{sys.l0.k20.multi-hop}} | {{sys.l0.k20.temporal}} | {{sys.l0.k20.open-domain}} | {{sys.l0.k20.single-hop}} |
-| T0R, k=3 | {{sys.t0r.k3.acc}} | {{sys.t0r.k3.tok}} | {{sys.t0r.k3.multi-hop}} | {{sys.t0r.k3.temporal}} | {{sys.t0r.k3.open-domain}} | {{sys.t0r.k3.single-hop}} |
-| T0R, k=6 | {{sys.t0r.k6.acc}} | {{sys.t0r.k6.tok}} | {{sys.t0r.k6.multi-hop}} | {{sys.t0r.k6.temporal}} | {{sys.t0r.k6.open-domain}} | {{sys.t0r.k6.single-hop}} |
-| T0R, k=20 | {{sys.t0r.k20.acc}} | {{sys.t0r.k20.tok}} | {{sys.t0r.k20.multi-hop}} | {{sys.t0r.k20.temporal}} | {{sys.t0r.k20.open-domain}} | {{sys.t0r.k20.single-hop}} |
-| T0R-LLM, k=3 | {{sys.t0rllm.k3.acc}} | {{sys.t0rllm.k3.tok}} | {{sys.t0rllm.k3.multi-hop}} | {{sys.t0rllm.k3.temporal}} | {{sys.t0rllm.k3.open-domain}} | {{sys.t0rllm.k3.single-hop}} |
-| T0R-LLM, k=20 | {{sys.t0rllm.k20.acc}} | {{sys.t0rllm.k20.tok}} | {{sys.t0rllm.k20.multi-hop}} | {{sys.t0rllm.k20.temporal}} | {{sys.t0rllm.k20.open-domain}} | {{sys.t0rllm.k20.single-hop}} |
-| engram v2, k=3 | {{sys.engram.k3.acc}} | {{sys.engram.k3.tok}} | {{sys.engram.k3.multi-hop}} | {{sys.engram.k3.temporal}} | {{sys.engram.k3.open-domain}} | {{sys.engram.k3.single-hop}} |
-| engram v2, k=20 | {{sys.engram.k20.acc}} | {{sys.engram.k20.tok}} | {{sys.engram.k20.multi-hop}} | {{sys.engram.k20.temporal}} | {{sys.engram.k20.open-domain}} | {{sys.engram.k20.single-hop}} |
-| mem0, k=3 | {{sys.mem0.k3.acc}} | {{sys.mem0.k3.tok}} | {{sys.mem0.k3.multi-hop}} | {{sys.mem0.k3.temporal}} | {{sys.mem0.k3.open-domain}} | {{sys.mem0.k3.single-hop}} |
-| mem0, k=20 | {{sys.mem0.k20.acc}} | {{sys.mem0.k20.tok}} | {{sys.mem0.k20.multi-hop}} | {{sys.mem0.k20.temporal}} | {{sys.mem0.k20.open-domain}} | {{sys.mem0.k20.single-hop}} |
-| Jev-Mem, k=3 | {{sys.jevmem.k3.acc}} | {{sys.jevmem.k3.tok}} | {{sys.jevmem.k3.multi-hop}} | {{sys.jevmem.k3.temporal}} | {{sys.jevmem.k3.open-domain}} | {{sys.jevmem.k3.single-hop}} |
-| Jev-Mem, k=40 | {{sys.jevmem.k40.acc}} | {{sys.jevmem.k40.tok}} | {{sys.jevmem.k40.multi-hop}} | {{sys.jevmem.k40.temporal}} | {{sys.jevmem.k40.open-domain}} | {{sys.jevmem.k40.single-hop}} |
-| Full context | {{sys.fc.acc}} | {{sys.fc.tok}} | {{sys.fc.multi-hop}} | {{sys.fc.temporal}} | {{sys.fc.open-domain}} | {{sys.fc.single-hop}} |
+| System, setting | Accuracy | Tokens | Write $/1k turns | Read $/query | Multi-hop | Temporal | Open-domain | Single-hop |
+|---|---|---|---|---|---|---|---|---|
+| *Tight budget (k=3 or k=6)* |
+| L0, k=3 | {{sys.l0.k3.acc}} | {{sys.l0.k3.tok}} | {{write.t0r.emb}} | {{sys.l0.k3.read}} | {{sys.l0.k3.multi-hop}} | {{sys.l0.k3.temporal}} | {{sys.l0.k3.open-domain}} | {{sys.l0.k3.single-hop}} |
+| L0, k=6 | {{sys.l0.k6.acc}} | {{sys.l0.k6.tok}} | {{write.t0r.emb}} | {{sys.l0.k6.read}} | {{sys.l0.k6.multi-hop}} | {{sys.l0.k6.temporal}} | {{sys.l0.k6.open-domain}} | {{sys.l0.k6.single-hop}} |
+| T0R, k=3 | {{sys.t0r.k3.acc}} | {{sys.t0r.k3.tok}} | {{write.t0r.emb}} | {{sys.t0r.k3.read}} | {{sys.t0r.k3.multi-hop}} | {{sys.t0r.k3.temporal}} | {{sys.t0r.k3.open-domain}} | {{sys.t0r.k3.single-hop}} |
+| T0R, k=6 | {{sys.t0r.k6.acc}} | {{sys.t0r.k6.tok}} | {{write.t0r.emb}} | {{sys.t0r.k6.read}} | {{sys.t0r.k6.multi-hop}} | {{sys.t0r.k6.temporal}} | {{sys.t0r.k6.open-domain}} | {{sys.t0r.k6.single-hop}} |
+| T0R-LLM, k=3 | {{sys.t0rllm.k3.acc}} | {{sys.t0rllm.k3.tok}} | {{write.t0r.emb}} | {{sys.t0rllm.k3.read}} | {{sys.t0rllm.k3.multi-hop}} | {{sys.t0rllm.k3.temporal}} | {{sys.t0rllm.k3.open-domain}} | {{sys.t0rllm.k3.single-hop}} |
+| engram v2, k=3 | {{sys.engram.k3.acc}} | {{sys.engram.k3.tok}} | {{write.engram.total}} | {{sys.engram.k3.read}} | {{sys.engram.k3.multi-hop}} | {{sys.engram.k3.temporal}} | {{sys.engram.k3.open-domain}} | {{sys.engram.k3.single-hop}} |
+| mem0, k=3 | {{sys.mem0.k3.acc}} | {{sys.mem0.k3.tok}} | {{write.mem0.total}} | {{sys.mem0.k3.read}} | {{sys.mem0.k3.multi-hop}} | {{sys.mem0.k3.temporal}} | {{sys.mem0.k3.open-domain}} | {{sys.mem0.k3.single-hop}} |
+| Jev-Mem, k=3 | {{sys.jevmem.k3.acc}} | {{sys.jevmem.k3.tok}} | {{write.jevmem.total}} | {{sys.jevmem.k3.read}} | {{sys.jevmem.k3.multi-hop}} | {{sys.jevmem.k3.temporal}} | {{sys.jevmem.k3.open-domain}} | {{sys.jevmem.k3.single-hop}} |
+| *Generous budget (k=20 or k=40, and full context)* |
+| L0, k=20 | {{sys.l0.k20.acc}} | {{sys.l0.k20.tok}} | {{write.t0r.emb}} | {{sys.l0.k20.read}} | {{sys.l0.k20.multi-hop}} | {{sys.l0.k20.temporal}} | {{sys.l0.k20.open-domain}} | {{sys.l0.k20.single-hop}} |
+| T0R, k=20 | {{sys.t0r.k20.acc}} | {{sys.t0r.k20.tok}} | {{write.t0r.emb}} | {{sys.t0r.k20.read}} | {{sys.t0r.k20.multi-hop}} | {{sys.t0r.k20.temporal}} | {{sys.t0r.k20.open-domain}} | {{sys.t0r.k20.single-hop}} |
+| T0R-LLM, k=20 | {{sys.t0rllm.k20.acc}} | {{sys.t0rllm.k20.tok}} | {{write.t0r.emb}} | {{sys.t0rllm.k20.read}} | {{sys.t0rllm.k20.multi-hop}} | {{sys.t0rllm.k20.temporal}} | {{sys.t0rllm.k20.open-domain}} | {{sys.t0rllm.k20.single-hop}} |
+| engram v2, k=20 | {{sys.engram.k20.acc}} | {{sys.engram.k20.tok}} | {{write.engram.total}} | {{sys.engram.k20.read}} | {{sys.engram.k20.multi-hop}} | {{sys.engram.k20.temporal}} | {{sys.engram.k20.open-domain}} | {{sys.engram.k20.single-hop}} |
+| mem0, k=20 | {{sys.mem0.k20.acc}} | {{sys.mem0.k20.tok}} | {{write.mem0.total}} | {{sys.mem0.k20.read}} | {{sys.mem0.k20.multi-hop}} | {{sys.mem0.k20.temporal}} | {{sys.mem0.k20.open-domain}} | {{sys.mem0.k20.single-hop}} |
+| Jev-Mem, k=40 | {{sys.jevmem.k40.acc}} | {{sys.jevmem.k40.tok}} | {{write.jevmem.total}} | {{sys.jevmem.k40.read}} | {{sys.jevmem.k40.multi-hop}} | {{sys.jevmem.k40.temporal}} | {{sys.jevmem.k40.open-domain}} | {{sys.jevmem.k40.single-hop}} |
+| Full context | {{sys.fc.acc}} | {{sys.fc.tok}} | – | – | {{sys.fc.multi-hop}} | {{sys.fc.temporal}} | {{sys.fc.open-domain}} | {{sys.fc.single-hop}} |
 
-![Figure 5: Accuracy against retrieved tokens per question (log scale), with Wilson 95% intervals. Left: LoCoMo, {{data.fresh.questions}} questions of the five held-out conversations, each system at each k it was run. Right: LongMemEval, {{data.lme.scored}} non-abstention questions, user and assistant turns. Shaded: the tight budget (at most {{fig.tight_tokens}} tokens). T0R-wide (hollow) is post-hoc; the other points are registered runs, compared descriptively except in the tests of §5.1–§5.3.](figures/context.svg)
+![Figure 6: Accuracy against retrieved tokens per question (log scale), with Wilson 95% intervals. Left: LoCoMo, {{data.fresh.questions}} questions of the five held-out conversations, each system at each k it was run. Right: LongMemEval, {{data.lme.scored}} non-abstention questions, user and assistant turns. Shaded: the tight budget (at most {{fig.tight_tokens}} tokens). T0R-wide (hollow) is post-hoc; the other points are registered runs, compared descriptively except in the tests of §5.1–§5.3.](figures/context.svg)
 
 ### 5.4 Robustness: a second answer model and blind human grading
 
@@ -300,15 +330,20 @@ claim that T0R matches LLM-extracted memory on long histories. What they support
 {{data.lme.fc_tokens}} rendered tokens, the rerank still beats similarity search (S7), and no difference from mem0
 was detected on knowledge-update questions (S5).
 
+<!-- bold: none,max,none,max,max,max,max,max,max,max -->
 *Table 4. LongMemEval, all {{data.lme.all}} questions, user and assistant turns ingested: accuracy (%) on the
-{{data.lme.scored}} non-abstention questions, by question type (n), and the share of the {{data.lme.abstention}}
-abstention questions answered by abstaining.*
+{{data.lme.scored}} non-abstention questions and by question type (n in parentheses), and the share of the
+{{data.lme.abstention}} abstention questions answered by abstaining. KU: knowledge update; MS: multi-session; SS-A,
+SS-P, SS-U: single-session assistant, preference and user; TR: temporal reasoning; Abs: abstention. Bold: best in
+column within the budget group.*
 
-| System | Accuracy | Tokens | Knowledge update ({{lme.n.knowledge-update}}) | Multi-session ({{lme.n.multi-session}}) | Single-session assistant ({{lme.n.single-session-assistant}}) | Single-session preference ({{lme.n.single-session-preference}}) | Single-session user ({{lme.n.single-session-user}}) | Temporal ({{lme.n.temporal-reasoning}}) | Abstention |
+| System | Accuracy | Tokens | KU ({{lme.n.knowledge-update}}) | MS ({{lme.n.multi-session}}) | SS-A ({{lme.n.single-session-assistant}}) | SS-P ({{lme.n.single-session-preference}}) | SS-U ({{lme.n.single-session-user}}) | TR ({{lme.n.temporal-reasoning}}) | Abs |
 |---|---|---|---|---|---|---|---|---|---|
+| *Tight budget (k=3)* |
 | L0, k=3 | {{lme.l0.k3.acc}} | {{lme.l0.k3.tok}} | {{lme.l0.k3.knowledge-update}} | {{lme.l0.k3.multi-session}} | {{lme.l0.k3.single-session-assistant}} | {{lme.l0.k3.single-session-preference}} | {{lme.l0.k3.single-session-user}} | {{lme.l0.k3.temporal-reasoning}} | {{lme.abs.l0.k3}} |
-| L0, k=20 | {{lme.l0.k20.acc}} | {{lme.l0.k20.tok}} | {{lme.l0.k20.knowledge-update}} | {{lme.l0.k20.multi-session}} | {{lme.l0.k20.single-session-assistant}} | {{lme.l0.k20.single-session-preference}} | {{lme.l0.k20.single-session-user}} | {{lme.l0.k20.temporal-reasoning}} | {{lme.abs.l0.k20}} |
 | T0R, k=3 | {{lme.t0r.k3.acc}} | {{lme.t0r.k3.tok}} | {{lme.t0r.k3.knowledge-update}} | {{lme.t0r.k3.multi-session}} | {{lme.t0r.k3.single-session-assistant}} | {{lme.t0r.k3.single-session-preference}} | {{lme.t0r.k3.single-session-user}} | {{lme.t0r.k3.temporal-reasoning}} | {{lme.abs.t0r.k3}} |
+| *Generous budget (k=20, and full context)* |
+| L0, k=20 | {{lme.l0.k20.acc}} | {{lme.l0.k20.tok}} | {{lme.l0.k20.knowledge-update}} | {{lme.l0.k20.multi-session}} | {{lme.l0.k20.single-session-assistant}} | {{lme.l0.k20.single-session-preference}} | {{lme.l0.k20.single-session-user}} | {{lme.l0.k20.temporal-reasoning}} | {{lme.abs.l0.k20}} |
 | T0R, k=20 | {{lme.t0r.k20.acc}} | {{lme.t0r.k20.tok}} | {{lme.t0r.k20.knowledge-update}} | {{lme.t0r.k20.multi-session}} | {{lme.t0r.k20.single-session-assistant}} | {{lme.t0r.k20.single-session-preference}} | {{lme.t0r.k20.single-session-user}} | {{lme.t0r.k20.temporal-reasoning}} | {{lme.abs.t0r.k20}} |
 | Full context | {{lme.fc.acc}} | {{lme.fc.tok}} | {{lme.fc.knowledge-update}} | {{lme.fc.multi-session}} | {{lme.fc.single-session-assistant}} | {{lme.fc.single-session-preference}} | {{lme.fc.single-session-user}} | {{lme.fc.temporal-reasoning}} | {{lme.abs.fc}} |
 
@@ -328,9 +363,9 @@ loss on all nine held-out conversations ({{rec.all_nine.n}} questions). All evid
 among questions with evidence in the shortlist, the rerank kept none of it for {{rec.all_nine.drop}}. About
 {{rec.all_nine.miss}} of questions are lost to the shortlist and another {{rec.all_nine.lost}} to the rerank.
 
-Figure 6 shows the same decomposition by category on the five held-out conversations.
+Figure 7 shows the same decomposition by category on the five held-out conversations.
 
-![Figure 6: Where T0R's accuracy stops, by category, on the {{fig7.reg.all.n}} questions of the five held-out conversations: the rerank kept at least one evidence turn (blue), evidence was in the shortlist but the rerank kept none of it (vermillion), or no evidence turn was in the shortlist (grey). Upper bar of each pair: T0R's {{plan.shortlist}}-turn shortlist (shortlist recall, exploratory as registered). Lower, lighter bar: T0R-wide's {{wide.shortlist}}-turn shortlist (post-hoc). Percentages are printed where the segment is wide enough.](figures/recall.svg)
+![Figure 7: Where T0R's accuracy stops, by category, on the {{fig7.reg.all.n}} questions of the five held-out conversations: the rerank kept at least one evidence turn (blue), evidence was in the shortlist but the rerank kept none of it (red), or no evidence turn was in the shortlist (grey). Upper bar of each pair: T0R's {{plan.shortlist}}-turn shortlist (shortlist recall, exploratory as registered). Lower, lighter bar: T0R-wide's {{wide.shortlist}}-turn shortlist (post-hoc). Percentages are printed where the segment is wide enough.](figures/recall.svg)
 
 The categories differ. Open-domain evidence reaches the shortlist least often ({{rec.open-domain.any}}) and is
 dropped most often ({{rec.open-domain.drop}}), consistent with T0R trailing engram v2 on open-domain questions.
@@ -344,24 +379,27 @@ outside the Holm family and in its own ledger: T0R-wide takes a {{wide.shortlist
 shortlisted turn, and keeps the top k by Jev's score with no cut-off, with k={{wide.k}} matched to Jev-Mem at k=40
 ({{wide.tok}} tokens against {{wide.target}}). It scored {{wide.acc}}, against {{sys.jevmem.k40.acc}} for Jev-Mem at
 k=40 and {{sys.engram.k20.acc}} for engram v2 at k=20 ({{sys.engram.k20.tok}} tokens); all-evidence recall rose to
-{{wide.rec.all}} and the rerank's losses fell to {{wide.rec.drop}} (Figure 6, lower bars). This suggests the ceiling comes from T0R's read
+{{wide.rec.all}} and the rerank's losses fell to {{wide.rec.drop}} (Figure 7, lower bars). This suggests the ceiling comes from T0R's read
 path rather than from storing raw turns, a hypothesis for new data, not a finding of this study.
 
 ### 5.7 Cost and latency
 
-*Table 5. Cost and latency (exploratory as registered). Write cost per 1,000 turns at list prices, split by LLM, Jev
+<!-- bold: none,min,min,min,min,min,min,none,min,min -->
+*Table 5. Cost and latency (exploratory as registered), all at k=3 (the tight budget). Write cost per 1,000 turns at list prices, split by LLM, Jev
 and embeddings; read cost per query; read latency measured live on a fixed sample of {{plan.latency_sample}} questions at k=3, one query at
 a time, including the query-embedding call. Jev-Mem's latency comes from its reads of the same questions, measured
-live when they ran ({{lat.jevmem.queries}} reads: two question texts repeat).*
+live when they ran ({{lat.jevmem.queries}} reads: two question texts repeat). A write-latency range spans the
+conversations and is compared by its lower end. Bold: best in column within the budget group (lowest cost and
+latency).*
 
 | System | Write $/1k turns | LLM | Jev | Embeddings | Write p50 (s) | Read $/query | Jev calls/query | Read p50 (ms) | Read p90 (ms) |
 |---|---|---|---|---|---|---|---|---|---|
 | T0R | {{write.t0r.emb}} | – | – | {{write.t0r.emb}} | {{write.t0r.lat}} | {{sys.t0r.k3.read}} | one | {{lat.t0r.p50}} | {{lat.t0r.p90}} |
-| L0 | {{write.t0r.emb}} | – | – | {{write.t0r.emb}} | {{write.t0r.lat}} | – | none | {{lat.l0.p50}} | {{lat.l0.p90}} |
+| L0 | {{write.t0r.emb}} | – | – | {{write.t0r.emb}} | {{write.t0r.lat}} | {{sys.l0.k3.read}} | none | {{lat.l0.p50}} | {{lat.l0.p90}} |
 | T0R-LLM | {{write.t0r.emb}} | – | – | {{write.t0r.emb}} | {{write.t0r.lat}} | {{sys.t0rllm.k3.read}} | one (no-op) | {{lat.t0rllm.p50}} | {{lat.t0rllm.p90}} |
 | engram v2 | {{write.engram.total}} | {{write.engram.llm}} | {{write.engram.jev}} | {{write.engram.emb}} | {{write.engram.lat_lo}}–{{write.engram.lat_hi}} | {{sys.engram.k3.read}} | one | {{lat.engram.p50}} | {{lat.engram.p90}} |
-| mem0 | {{write.mem0.total}} | {{write.mem0.llm}} | – | {{write.mem0.emb}} | {{write.mem0.lat_lo}}–{{write.mem0.lat_hi}} | – | none | {{lat.mem0.p50}} | {{lat.mem0.p90}} |
-| Jev-Mem | {{write.jevmem.jev}} | – | {{write.jevmem.jev}} | {{write.jevmem.emb}} | {{write.jevmem.lat}} | {{sys.jevmem.k3.read}} | {{jevmem.k3.calls}} | {{lat.jevmem.p50}} | {{lat.jevmem.p90}} |
+| mem0 | {{write.mem0.total}} | {{write.mem0.llm}} | – | {{write.mem0.emb}} | {{write.mem0.lat_lo}}–{{write.mem0.lat_hi}} | {{sys.mem0.k3.read}} | none | {{lat.mem0.p50}} | {{lat.mem0.p90}} |
+| Jev-Mem | {{write.jevmem.total}} | – | {{write.jevmem.jev}} | {{write.jevmem.emb}} | {{write.jevmem.lat}} | {{sys.jevmem.k3.read}} | {{jevmem.k3.calls}} | {{lat.jevmem.p50}} | {{lat.jevmem.p90}} |
 
 Jev reads about {{lat.ratio.llm}}× faster than the LLM reranker and {{lat.ratio.jevmem}}× faster than Jev-Mem at
 k=3; engram v2 reads as fast as T0R because its read path is the same one request. The write cost is where the
@@ -370,17 +408,19 @@ two Jev requests per turn cost {{write.jevmem.jev}} per 1,000 turns. Jev-Mem at 
 Jev calls per query (up to {{jevmem.k40.calls_max}}) and {{sys.jevmem.k40.read}} per query. Mem0's read cost is a query
 embedding only.
 
-![Figure 7: Accuracy against total cost per question (log scale) at k=3, on the {{data.fresh.questions}} questions of the five held-out conversations (exploratory as registered): write cost amortised at the benchmark's {{fig5.turns_per_question}} turns written per question, plus read cost and answer cost (judge excluded), at list prices; full context has no write or read cost. In a read-heavy use with one turn written per question, engram v2's total falls to {{fig5.engram.k3.read_heavy}}, mem0's to {{fig5.mem0.k3.read_heavy}} and Jev-Mem's to {{fig5.jevmem.k3.read_heavy}}; the other systems' totals do not change at this precision.](figures/cost.svg)
+![Figure 8: Accuracy against total cost per question (log scale) at k=3, on the {{data.fresh.questions}} questions of the five held-out conversations (exploratory as registered): write cost amortised at the benchmark's {{fig5.turns_per_question}} turns written per question, plus read cost and answer cost (judge excluded), at list prices; full context has no write or read cost. In a read-heavy use with one turn written per question, engram v2's total falls to {{fig5.engram.k3.read_heavy}}, mem0's to {{fig5.mem0.k3.read_heavy}} and Jev-Mem's to {{fig5.jevmem.k3.read_heavy}}; the other systems' totals do not change at this precision.](figures/cost.svg)
 
-Figure 7 amortises write cost at the benchmark's own ratio ({{fig5.turns_per_question}} turns written per scored
+Figure 8 amortises write cost at the benchmark's own ratio ({{fig5.turns_per_question}} turns written per scored
 question). At that ratio T0R's total cost per question is {{fig5.t0r.k3.bench}} and engram v2's
 {{fig5.engram.k3.bench}}; full context costs {{fig5.fc.bench}}. In a read-heavy use with one turn written per
 question, the write cost weighs less: engram v2's total falls to {{fig5.engram.k3.read_heavy}}.
 
 ### 5.8 Abstention
 
+<!-- bold: none,max,max -->
 *Table 6. Share of LoCoMo adversarial questions ({{data.fresh.adversarial}}, five held-out conversations) answered by
-abstaining (exploratory as registered).*
+abstaining (exploratory as registered). Each column is a budget group. Bold: best in column within the budget group
+(highest share).*
 
 | System | k=3 | k=20 |
 |---|---|---|
@@ -453,12 +493,17 @@ conversations and are not comparable to it. Our best result, the post-hoc T0R-wi
 
 ## 7. Conclusion
 
-At tight context budgets, raw conversation turns reranked by one call to a typed decision model were non-inferior
-within a {{plan.margin}}-point margin to LLM-extracted memory, at thousands of times lower write cost, on held-out
-conversations, two answer models and blind human grading. The value of that rerank depends on the budget: large when
-three of {{plan.shortlist}} candidates are kept, small when twenty are. Jev selected as accurately as an LLM
-reranker at about a third of the latency. At generous budgets extraction systems were more accurate, so the result
-is a statement about tight budgets.
+The context budget explains much of the published disagreement about conversational memory. Selecting raw turns
+matters when the budget keeps a few of many candidates: reranking added {{rerank.locomo.k3.u}} points on LoCoMo and
+{{rerank.lme.k3.u}} on LongMemEval when three of {{plan.shortlist}} were kept, and {{rerank.locomo.k20.u}} and
+{{rerank.lme.k20.u}} at k=20, where extraction systems were more accurate. A pre-registered non-inferiority test on
+held-out conversations, with a second answer model and blind human grading, bounds what extraction adds at a tight
+budget to at most {{h1.lenient.worst}} points, at {{cost.write.ratio}}× the write cost. A typed decision model is an
+effective selector: Jev was non-inferior to an LLM reranker (bound {{s4.lb}}) at about a third of the latency and more
+accurate than a multi-call Jev graph traversal at matched context. The diagnostics locate where selection stops,
+in shortlist misses ({{rec.all_nine.miss}}) and rerank drops ({{rec.all_nine.lost}}), most for temporal evidence,
+and show that an LLM judge's leniency interacts with answer length, so memory benchmarks that compare systems with
+different answer styles should report judge–human agreement by system.
 
 ## AI Assistance
 
@@ -523,10 +568,12 @@ is a dated entry in its Deviations section:
 - **2026-09-27, paper title** (presentation change): the title the outcome rule selected, "Selection, Not Extraction:
   One Rerank Call Matches LLM-Extracted Memory at a Fraction of the Write Cost", was replaced because it presents a
   published idea as new and its "matches" overstates a non-inferiority result.
+- **2026-09-26, token counting** (record only): one LongMemEval haystack contains the literal text `<|endoftext|>`,
+  which the token counter refused; counting now treats it as ordinary text, the affected question was re-run, and every
+  other count is unchanged.
 
-Implementation notes not in the Deviations section: one LongMemEval haystack contains the literal text `<|endoftext|>`, which the token
-counter refused; counting now treats it as ordinary text, and the affected question was re-run. Two retrieval-only
-sweeps were stopped by mistake and re-run from the cache.
+An implementation note not in the Deviations section: two retrieval-only sweeps were stopped by mistake and re-run from
+the cache.
 
 ## Appendix C. Human audit
 
@@ -606,14 +653,17 @@ others did not get. Billed amounts are reported separately: the registered ledge
 {{spend.jev}} of Jev and {{spend.openrouter}} of OpenRouter for the second answer model (at {{plan.llama.in}} and
 {{plan.llama.out}} per million input and output tokens), plus mem0's {{spend.mem0.billed}} through OpenRouter.
 Write-cost ratios use the held-out measurements; read costs are per query; totals per question state their
-reads-per-write assumption (Figure 7).
+reads-per-write assumption (Figure 8).
 
 ## Appendix I. Reproduction
 
 Each table and figure is rebuilt from the committed result files, with no API calls:
 
 - numbers: `uv run --extra bench python paper_v3/make_numbers.py`
-- figures: `uv run --with matplotlib python paper_v3/figures.py`
+- figures: `uv run --with matplotlib --with pillow python paper_v3/figures.py` (Figures 1 and 2 are SVGs from
+  `paper_v3/diagram.py`, printed to PDF with headless Chrome)
+- the worked example of Figure 2: `bench/v3_worked_example.py`, which replays both read paths from the frozen stores
+  through the call cache opened read-only (a cache miss stops it, so it cannot call an API)
 - paper: `make -C paper_v3 paper` (renders `main.md` and `main.tex`, builds the PDF, runs `paper_v3/check.py`)
 - reports behind the tables: `bench/v3_report.py` (Batches A–C), `bench/v3_human_audit.py`,
   `bench/v3_shortlist_recall.py`, `bench/v3_latency.py`, `bench/v3_second_model.py`, `bench/v3_posthoc.py`
