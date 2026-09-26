@@ -348,5 +348,118 @@ def batch_b() -> None:
     print(json.dumps(rep, indent=1))
 
 
+def lme(arm: str, prefix: str, ids: list[str], suffix: str) -> list[dict]:
+    rows = []
+    for q in ids:
+        r = load(arm, f"{prefix}:{q}", suffix)
+        rows += [{**r["answers"][0], "conv": prefix}]
+    return rows
+
+
+def lme_summary(rows: list[dict]) -> dict:
+    return {
+        "questions": len(rows),
+        "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in rows),
+        "by_type": {
+            t: {
+                "n": sum(a["category"] == t for a in rows),
+                "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in rows if a["category"] == t),
+            }
+            for t in sorted({a["category"] for a in rows})
+        },
+        "tokens_mean": statistics.fmean(a["retrieved_tokens"] for a in rows),
+    }
+
+
+def batch_c() -> None:
+    from .v2_spend import LEDGER_CAPS, V3_LEDGER, ledger_totals
+    from .v3_batch_c import KU, SAMPLE, all_ids
+
+    tm = json.loads((RESULTS_V3 / "token_match_C.json").read_text())
+    tm_full = json.loads((RESULTS_V3 / "token_match_C_full.json").read_text())
+    k_mem0, k_l0, k_full = tm["mem0"]["t0r_k"], tm["L0"]["t0r_k"], tm_full["L0"]["t0r_k"]
+    full_ids = all_ids()
+    scored = [q for q in full_ids if not q.endswith("_abs")]
+    abstain = [q for q in full_ids if q.endswith("_abs")]
+    rep: dict = {
+        "ingestion": {
+            "sample (registered)": "user turns only, 70 questions",
+            "expansion": "user and assistant turns, 500 questions",
+        },
+        "token_match": {
+            "sample: T0R vs mem0 k=3": {"comparator_k3": tm["mem0"]["comparator_k3_mean_tokens"], "t0r_k": k_mem0},
+            "sample: T0R vs L0 k=3": {"comparator_k3": tm["L0"]["comparator_k3_mean_tokens"], "t0r_k": k_l0},
+            "expansion: T0R vs L0 k=3": {"comparator_k3": tm_full["L0"]["comparator_k3_mean_tokens"], "t0r_k": k_full},
+        },
+        "sample": {},
+        "expansion": {},
+    }
+    for name, arm, ids, ks in (
+        ("L0", "lean_l0", SAMPLE, (3, 20)),
+        ("T0R", "lean_t0r", SAMPLE, sorted({3, 20, k_l0})),
+        ("mem0 (knowledge-update 30)", "mem0", KU, (3, 20)),
+        ("T0R on the knowledge-update 30", "lean_t0r", KU, sorted({3, k_mem0})),
+    ):
+        for k in ks:
+            rep["sample"][f"{name} k={k}"] = lme_summary(lme(arm, "lme", ids, f"__k{k}"))
+    rep["sample"]["full context"] = lme_summary(lme("full_context", "lme", SAMPLE, ""))
+    for name, arm, ks in (("L0", "lean_l0", (3, 20)), ("T0R", "lean_t0r", sorted({3, 20, k_full}))):
+        for k in ks:
+            rep["expansion"][f"{name} k={k} (non-abstention)"] = lme_summary(lme(arm, "lmefull", scored, f"__k{k}"))
+            ab = lme(arm, "lmefull", abstain, f"__k{k}")
+            rep["expansion"][f"{name} k={k} (abstention, correct = abstained)"] = {
+                "questions": len(ab),
+                "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in ab),
+            }
+    rep["expansion"]["full context (non-abstention)"] = lme_summary(lme("full_context", "lmefull", scored, ""))
+    ab = lme("full_context", "lmefull", abstain, "")
+    rep["expansion"]["full context (abstention)"] = {
+        "questions": len(ab),
+        "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in ab),
+    }
+    rows = [json.loads(x) for x in (RESULTS_V3 / "spend.jsonl").read_text().splitlines()]
+    fc_full = sum(r["spend"]["openai"] for r in rows if r["system"] == "full_context" and r["stage"] == "C-full")
+    rep["expansion"]["full context cost per question (answer and judge)"] = fc_full / len(full_ids)
+    rep["expansion"]["T0R vs full context (descriptive)"] = mcnemar(
+        lme("lean_t0r", "lmefull", scored, "__k3"), lme("full_context", "lmefull", scored, "")
+    )
+    rep["S5"] = {
+        "comparison": f"T0R k={k_mem0} vs mem0 k=3, 30 knowledge-update questions, user turns",
+        **mcnemar(lme("lean_t0r", "lme", KU, f"__k{k_mem0}"), lme("mem0", "lme", KU, "__k3")),
+    }
+    rep["S6"] = {
+        "comparison": f"T0R k={k_l0} vs L0 k=3, 70 questions, user turns",
+        **mcnemar(lme("lean_t0r", "lme", SAMPLE, f"__k{k_l0}"), lme("lean_l0", "lme", SAMPLE, "__k3")),
+    }
+    rep["S7"] = {
+        "comparison": f"T0R k={k_full} vs L0 k=3, 470 non-abstention questions, user and assistant turns",
+        **mcnemar(lme("lean_t0r", "lmefull", scored, f"__k{k_full}"), lme("lean_l0", "lmefull", scored, "__k3")),
+    }
+    a_rep = json.loads((RESULTS_V3 / "batch_a_report.json").read_text())
+    b_rep = json.loads((RESULTS_V3 / "batch_b_report.json").read_text())
+    ps = {
+        "S1": a_rep["S1"]["p_two_sided"],
+        "S2": a_rep["S2"]["p_two_sided"],
+        "S3": b_rep["S3"]["p_two_sided"],
+        "S4": b_rep["S4"]["p_one_sided"],
+        "S5": rep["S5"]["p_two_sided"],
+        "S6": rep["S6"]["p_two_sided"],
+        "S7": rep["S7"]["p_two_sided"],
+    }
+    rep["holm_S1_S7"] = holm(ps)
+    h = rep["holm_S1_S7"]
+    s7_for_t0r = h["S7"]["rejected"] and rep["S7"]["only_a"] > rep["S7"]["only_b"]
+    s5_for_mem0 = h["S5"]["rejected"] and rep["S5"]["only_b"] > rep["S5"]["only_a"]
+    rep["longmemeval_holds"] = {
+        "rule": "S7 significantly favours T0R after Holm, and S5 does not significantly favour mem0 after Holm",
+        "S7_favours_T0R": s7_for_t0r,
+        "S5_favours_mem0": s5_for_mem0,
+        "holds": s7_for_t0r and not s5_for_mem0,
+    }
+    rep["ledger"] = {"totals": ledger_totals(V3_LEDGER), "caps": LEDGER_CAPS[V3_LEDGER]}
+    (RESULTS_V3 / "batch_c_report.json").write_text(json.dumps(rep, indent=1) + "\n")
+    print(json.dumps(rep, indent=1))
+
+
 if __name__ == "__main__":
-    {"match": lambda: match(sys.argv[2]), "batch_a": batch_a, "batch_b": batch_b}[sys.argv[1]]()
+    {"match": lambda: match(sys.argv[2]), "batch_a": batch_a, "batch_b": batch_b, "batch_c": batch_c}[sys.argv[1]]()

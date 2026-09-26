@@ -1,0 +1,177 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "lmefull:gpt4_45189cb4",
+  "sessions": [
+   1,
+   45
+  ],
+  "messages": 501,
+  "questions": 1
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 45,
+   "store_size": 501,
+   "questions": 1,
+   "accuracy": 1.0,
+   "no_memory": 0,
+   "early_questions": 1,
+   "early_accuracy": 1.0
+  }
+ ],
+ "accuracy": 1.0,
+ "accuracy_by_category": {
+  "temporal-reasoning": 1.0
+ },
+ "stored": 501,
+ "active": 501,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 273.0,
+ "retrieved_tokens_median": 273,
+ "memories_mean": 3.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 0,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.00042205800000000006,
+  "claude": 0.0,
+  "openai": 0.00012405
+ },
+ "cache": {
+  "hits": 15,
+  "misses": 19
+ },
+ "answers": [
+  {
+   "idx": "gpt4_45189cb4",
+   "question": "What is the order of the sports events I watched in January?",
+   "question_date": "2023/01/30 (Mon) 01:53",
+   "gold": "First, I attended a NBA game at the Staples Center, then I watched the College Football National Championship game, and finally, I watched the NFL playoffs.",
+   "category": "temporal-reasoning",
+   "abstention": false,
+   "evidence": [
+    "answer_e6c20e52_3",
+    "answer_e6c20e52_2",
+    "answer_e6c20e52_1"
+   ],
+   "last_evidence_session": 45,
+   "answer": "NBA game, College Football Championship, NFL playoffs.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0006425034193548388,
+   "retrieved_tokens": 273,
+   "retrieve_ms": 331.549916008953,
+   "retrieve_cost": 0.0005184534193548388,
+   "checkpoint": 45,
+   "store_size": 501
+  }
+ ],
+ "asked": [
+  {
+   "idx": "gpt4_45189cb4",
+   "question": "What is the order of the sports events I watched in January?",
+   "question_date": "2023/01/30 (Mon) 01:53",
+   "gold": "First, I attended a NBA game at the Staples Center, then I watched the College Football National Championship game, and finally, I watched the NFL playoffs.",
+   "category": "temporal-reasoning",
+   "abstention": false,
+   "evidence": [
+    "answer_e6c20e52_3",
+    "answer_e6c20e52_2",
+    "answer_e6c20e52_1"
+   ],
+   "last_evidence_session": 45,
+   "answer": "NBA game, College Football Championship, NFL playoffs.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0006425034193548388,
+   "retrieved_tokens": 273,
+   "retrieve_ms": 331.549916008953,
+   "retrieve_cost": 0.0005184534193548388,
+   "checkpoint": 45,
+   "store_size": 501
+  }
+ ],
+ "options": {
+  "top_k": 3,
+  "no_dates": false,
+  "no_answer": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 331.549916008953,
+ "retrieve_cost_per_query": 0.0005184534193548388,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {}
+}

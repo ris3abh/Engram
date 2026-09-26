@@ -1,0 +1,138 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "lmefull:370a8ff4",
+  "sessions": [
+   1,
+   46
+  ],
+  "messages": 498,
+  "questions": 1
+ },
+ "accuracy": 0.0,
+ "accuracy_by_category": {
+  "temporal-reasoning": 0.0
+ },
+ "stored": 498,
+ "active": 498,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 1861.0,
+ "retrieved_tokens_median": 1861,
+ "memories_mean": 10.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 0,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.00040341000000000004,
+  "claude": 0.0,
+  "openai": 0.0
+ },
+ "cache": {
+  "hits": 3,
+  "misses": 31
+ },
+ "answers": [
+  {
+   "idx": "370a8ff4",
+   "question": "How many weeks had passed since I recovered from the flu when I went on my 10th jog outdoors?",
+   "question_date": "2023/10/15 (Sun) 17:53",
+   "gold": 15,
+   "category": "temporal-reasoning",
+   "abstention": false,
+   "evidence": [
+    "answer_61d1be50_1",
+    "answer_61d1be50_2"
+   ],
+   "last_evidence_session": 46,
+   "answer": "Approximately 11 weeks.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0007653600000000001,
+   "retrieved_tokens": 1861,
+   "retrieve_ms": 317.22750002518296,
+   "retrieve_cost": 0.00040341000000000004
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 335.4692080174573,
+ "retrieve_cost_per_query": 0.00040341000000000004,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

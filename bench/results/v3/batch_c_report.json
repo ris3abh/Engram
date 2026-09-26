@@ -1,0 +1,430 @@
+{
+ "ingestion": {
+  "sample (registered)": "user turns only, 70 questions",
+  "expansion": "user and assistant turns, 500 questions"
+ },
+ "token_match": {
+  "sample: T0R vs mem0 k=3": {
+   "comparator_k3": 134.1,
+   "t0r_k": 2
+  },
+  "sample: T0R vs L0 k=3": {
+   "comparator_k3": 213.88571428571427,
+   "t0r_k": 3
+  },
+  "expansion: T0R vs L0 k=3": {
+   "comparator_k3": 521.8234042553191,
+   "t0r_k": 3
+  }
+ },
+ "sample": {
+  "L0 k=3": {
+   "questions": 70,
+   "accuracy": 0.6571428571428571,
+   "by_type": {
+    "knowledge-update": {
+     "n": 30,
+     "accuracy": 0.7666666666666667
+    },
+    "multi-session": {
+     "n": 20,
+     "accuracy": 0.5
+    },
+    "temporal-reasoning": {
+     "n": 20,
+     "accuracy": 0.65
+    }
+   },
+   "tokens_mean": 213.88571428571427
+  },
+  "L0 k=20": {
+   "questions": 70,
+   "accuracy": 0.7142857142857143,
+   "by_type": {
+    "knowledge-update": {
+     "n": 30,
+     "accuracy": 0.9
+    },
+    "multi-session": {
+     "n": 20,
+     "accuracy": 0.5
+    },
+    "temporal-reasoning": {
+     "n": 20,
+     "accuracy": 0.65
+    }
+   },
+   "tokens_mean": 1314.142857142857
+  },
+  "T0R k=3": {
+   "questions": 70,
+   "accuracy": 0.6857142857142857,
+   "by_type": {
+    "knowledge-update": {
+     "n": 30,
+     "accuracy": 0.7666666666666667
+    },
+    "multi-session": {
+     "n": 20,
+     "accuracy": 0.5
+    },
+    "temporal-reasoning": {
+     "n": 20,
+     "accuracy": 0.75
+    }
+   },
+   "tokens_mean": 215.85714285714286
+  },
+  "T0R k=20": {
+   "questions": 70,
+   "accuracy": 0.7714285714285715,
+   "by_type": {
+    "knowledge-update": {
+     "n": 30,
+     "accuracy": 0.8333333333333334
+    },
+    "multi-session": {
+     "n": 20,
+     "accuracy": 0.6
+    },
+    "temporal-reasoning": {
+     "n": 20,
+     "accuracy": 0.85
+    }
+   },
+   "tokens_mean": 687.3571428571429
+  },
+  "mem0 (knowledge-update 30) k=3": {
+   "questions": 30,
+   "accuracy": 0.7,
+   "by_type": {
+    "knowledge-update": {
+     "n": 30,
+     "accuracy": 0.7
+    }
+   },
+   "tokens_mean": 134.1
+  },
+  "mem0 (knowledge-update 30) k=20": {
+   "questions": 30,
+   "accuracy": 0.8,
+   "by_type": {
+    "knowledge-update": {
+     "n": 30,
+     "accuracy": 0.8
+    }
+   },
+   "tokens_mean": 907.1
+  },
+  "T0R on the knowledge-update 30 k=2": {
+   "questions": 30,
+   "accuracy": 0.7,
+   "by_type": {
+    "knowledge-update": {
+     "n": 30,
+     "accuracy": 0.7
+    }
+   },
+   "tokens_mean": 141.66666666666666
+  },
+  "T0R on the knowledge-update 30 k=3": {
+   "questions": 30,
+   "accuracy": 0.7666666666666667,
+   "by_type": {
+    "knowledge-update": {
+     "n": 30,
+     "accuracy": 0.7666666666666667
+    }
+   },
+   "tokens_mean": 205.03333333333333
+  },
+  "full context": {
+   "questions": 70,
+   "accuracy": 0.6285714285714286,
+   "by_type": {
+    "knowledge-update": {
+     "n": 30,
+     "accuracy": 0.8666666666666667
+    },
+    "multi-session": {
+     "n": 20,
+     "accuracy": 0.45
+    },
+    "temporal-reasoning": {
+     "n": 20,
+     "accuracy": 0.45
+    }
+   },
+   "tokens_mean": 16364.171428571428
+  }
+ },
+ "expansion": {
+  "L0 k=3 (non-abstention)": {
+   "questions": 470,
+   "accuracy": 0.5765957446808511,
+   "by_type": {
+    "knowledge-update": {
+     "n": 72,
+     "accuracy": 0.5833333333333334
+    },
+    "multi-session": {
+     "n": 121,
+     "accuracy": 0.3140495867768595
+    },
+    "single-session-assistant": {
+     "n": 56,
+     "accuracy": 0.8571428571428571
+    },
+    "single-session-preference": {
+     "n": 30,
+     "accuracy": 0.5333333333333333
+    },
+    "single-session-user": {
+     "n": 64,
+     "accuracy": 0.953125
+    },
+    "temporal-reasoning": {
+     "n": 127,
+     "accuracy": 0.5196850393700787
+    }
+   },
+   "tokens_mean": 521.8234042553191
+  },
+  "L0 k=3 (abstention, correct = abstained)": {
+   "questions": 30,
+   "accuracy": 0.43333333333333335
+  },
+  "L0 k=20 (non-abstention)": {
+   "questions": 470,
+   "accuracy": 0.7276595744680852,
+   "by_type": {
+    "knowledge-update": {
+     "n": 72,
+     "accuracy": 0.8472222222222222
+    },
+    "multi-session": {
+     "n": 121,
+     "accuracy": 0.5867768595041323
+    },
+    "single-session-assistant": {
+     "n": 56,
+     "accuracy": 0.9821428571428571
+    },
+    "single-session-preference": {
+     "n": 30,
+     "accuracy": 0.4
+    },
+    "single-session-user": {
+     "n": 64,
+     "accuracy": 0.96875
+    },
+    "temporal-reasoning": {
+     "n": 127,
+     "accuracy": 0.6377952755905512
+    }
+   },
+   "tokens_mean": 4351.548936170213
+  },
+  "L0 k=20 (abstention, correct = abstained)": {
+   "questions": 30,
+   "accuracy": 0.7
+  },
+  "T0R k=3 (non-abstention)": {
+   "questions": 470,
+   "accuracy": 0.6680851063829787,
+   "by_type": {
+    "knowledge-update": {
+     "n": 72,
+     "accuracy": 0.7777777777777778
+    },
+    "multi-session": {
+     "n": 121,
+     "accuracy": 0.4793388429752066
+    },
+    "single-session-assistant": {
+     "n": 56,
+     "accuracy": 0.9821428571428571
+    },
+    "single-session-preference": {
+     "n": 30,
+     "accuracy": 0.4666666666666667
+    },
+    "single-session-user": {
+     "n": 64,
+     "accuracy": 0.984375
+    },
+    "temporal-reasoning": {
+     "n": 127,
+     "accuracy": 0.5354330708661418
+    }
+   },
+   "tokens_mean": 534.2617021276595
+  },
+  "T0R k=3 (abstention, correct = abstained)": {
+   "questions": 30,
+   "accuracy": 0.43333333333333335
+  },
+  "T0R k=20 (non-abstention)": {
+   "questions": 470,
+   "accuracy": 0.7382978723404255,
+   "by_type": {
+    "knowledge-update": {
+     "n": 72,
+     "accuracy": 0.8472222222222222
+    },
+    "multi-session": {
+     "n": 121,
+     "accuracy": 0.6776859504132231
+    },
+    "single-session-assistant": {
+     "n": 56,
+     "accuracy": 0.9642857142857143
+    },
+    "single-session-preference": {
+     "n": 30,
+     "accuracy": 0.4666666666666667
+    },
+    "single-session-user": {
+     "n": 64,
+     "accuracy": 0.96875
+    },
+    "temporal-reasoning": {
+     "n": 127,
+     "accuracy": 0.5826771653543307
+    }
+   },
+   "tokens_mean": 2277.8531914893615
+  },
+  "T0R k=20 (abstention, correct = abstained)": {
+   "questions": 30,
+   "accuracy": 0.6333333333333333
+  },
+  "full context (non-abstention)": {
+   "questions": 470,
+   "accuracy": 0.6297872340425532,
+   "by_type": {
+    "knowledge-update": {
+     "n": 72,
+     "accuracy": 0.8194444444444444
+    },
+    "multi-session": {
+     "n": 121,
+     "accuracy": 0.45454545454545453
+    },
+    "single-session-assistant": {
+     "n": 56,
+     "accuracy": 0.9107142857142857
+    },
+    "single-session-preference": {
+     "n": 30,
+     "accuracy": 0.5666666666666667
+    },
+    "single-session-user": {
+     "n": 64,
+     "accuracy": 0.921875
+    },
+    "temporal-reasoning": {
+     "n": 127,
+     "accuracy": 0.4330708661417323
+    }
+   },
+   "tokens_mean": 111770.42765957447
+  },
+  "full context (abstention)": {
+   "questions": 30,
+   "accuracy": 0.7
+  },
+  "full context cost per question (answer and judge)": 0.016940120399999998,
+  "T0R vs full context (descriptive)": {
+   "questions": 470,
+   "acc_a": 0.6680851063829787,
+   "acc_b": 0.6297872340425532,
+   "only_a": 72,
+   "only_b": 54,
+   "p_two_sided": 0.12957613928638628
+  }
+ },
+ "S5": {
+  "comparison": "T0R k=2 vs mem0 k=3, 30 knowledge-update questions, user turns",
+  "questions": 30,
+  "acc_a": 0.7,
+  "acc_b": 0.7,
+  "only_a": 4,
+  "only_b": 4,
+  "p_two_sided": 1.0
+ },
+ "S6": {
+  "comparison": "T0R k=3 vs L0 k=3, 70 questions, user turns",
+  "questions": 70,
+  "acc_a": 0.6857142857142857,
+  "acc_b": 0.6571428571428571,
+  "only_a": 7,
+  "only_b": 5,
+  "p_two_sided": 0.7744140625
+ },
+ "S7": {
+  "comparison": "T0R k=3 vs L0 k=3, 470 non-abstention questions, user and assistant turns",
+  "questions": 470,
+  "acc_a": 0.6680851063829787,
+  "acc_b": 0.5765957446808511,
+  "only_a": 61,
+  "only_b": 18,
+  "p_two_sided": 1.2696974368404285e-06
+ },
+ "holm_S1_S7": {
+  "S1": {
+   "p": 2.7493616558929532e-28,
+   "holm_adjusted_p": 1.9245531591250673e-27,
+   "rejected": true
+  },
+  "S7": {
+   "p": 1.2696974368404285e-06,
+   "holm_adjusted_p": 7.618184621042571e-06,
+   "rejected": true
+  },
+  "S4": {
+   "p": 1.496969482928101e-06,
+   "holm_adjusted_p": 7.618184621042571e-06,
+   "rejected": true
+  },
+  "S3": {
+   "p": 1.737586927936309e-06,
+   "holm_adjusted_p": 7.618184621042571e-06,
+   "rejected": true
+  },
+  "S2": {
+   "p": 4.26634580070168e-05,
+   "holm_adjusted_p": 0.0001279903740210504,
+   "rejected": true
+  },
+  "S6": {
+   "p": 0.7744140625,
+   "holm_adjusted_p": 1.0,
+   "rejected": false
+  },
+  "S5": {
+   "p": 1.0,
+   "holm_adjusted_p": 1.0,
+   "rejected": false
+  }
+ },
+ "longmemeval_holds": {
+  "rule": "S7 significantly favours T0R after Holm, and S5 does not significantly favour mem0 after Holm",
+  "S7_favours_T0R": true,
+  "S5_favours_mem0": false,
+  "holds": true
+ },
+ "ledger": {
+  "totals": {
+   "openai": 23.164537769999974,
+   "jev": 5.553077628000007,
+   "anthropic": 0.0,
+   "openrouter": 0.3146460720000003
+  },
+  "caps": {
+   "openai": 32.0,
+   "jev": 6.5,
+   "openrouter": 2.0
+  }
+ }
+}

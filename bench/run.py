@@ -1263,7 +1263,9 @@ def count_tokens_tiktoken(text: str, encoding: str = STACKS["openai"]["tokenizer
     """Tokens the OpenAI-stack answer model reads for a memory block (local tokenizer, no API call)."""
     import tiktoken
 
-    return len(tiktoken.get_encoding(encoding).encode(text))
+    # disallowed_special=(): text that spells a special token ("<|endoftext|>" occurs in one LongMemEval haystack) is
+    # counted as ordinary text; every other count is unchanged
+    return len(tiktoken.get_encoding(encoding).encode(text, disallowed_special=()))
 
 
 async def count_tokens(client, cache: CallCache, text: str) -> int:

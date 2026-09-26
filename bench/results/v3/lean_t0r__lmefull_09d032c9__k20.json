@@ -1,0 +1,137 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "lmefull:09d032c9",
+  "sessions": [
+   1,
+   43
+  ],
+  "messages": 481,
+  "questions": 1
+ },
+ "accuracy": 1.0,
+ "accuracy_by_category": {
+  "single-session-preference": 1.0
+ },
+ "stored": 481,
+ "active": 481,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 1741.0,
+ "retrieved_tokens_median": 1741,
+ "memories_mean": 10.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 0,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.0004533900000000001,
+  "claude": 0.0,
+  "openai": 0.00028335
+ },
+ "cache": {
+  "hits": 1,
+  "misses": 33
+ },
+ "answers": [
+  {
+   "idx": "09d032c9",
+   "question": "I've been having trouble with the battery life on my phone lately. Any tips?",
+   "question_date": "2023/05/30 (Tue) 16:42",
+   "gold": "The user would prefer responses that build upon their previous mention of purchasing a portable power bank, such as suggestions on how to optimize its use, like ensuring it's fully charged before use. They might also appreciate tips on utilizing battery-saving features on their phone. The user may not prefer responses that suggest alternative solutions or unrelated advice.",
+   "category": "single-session-preference",
+   "abstention": false,
+   "evidence": [
+    "answer_b10dce5e"
+   ],
+   "last_evidence_session": 43,
+   "answer": "Consider a portable power bank.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0007961400000000001,
+   "retrieved_tokens": 1741,
+   "retrieve_ms": 304.2627079994418,
+   "retrieve_cost": 0.0004533900000000001
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 319.86633298220113,
+ "retrieve_cost_per_query": 0.0004533900000000001,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}
