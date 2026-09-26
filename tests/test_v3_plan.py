@@ -15,10 +15,10 @@ PLAN = Path(__file__).parents[1] / "docs" / "V3_PLAN.md"
 REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviations entries naming it)
     "1": ("1. Primary hypothesis", "7e4bda8aa487886dedff5c9a0af8e5c7464b237b39b06093f005c105e8dc0d2b", 0),
     "2": ("2. Power", "dd141ec497e32d00f812137c92e7c503f90d256df45d5be766f5759db4ca46f4", 0),
-    "3": ("3. Stack", "61d9d2b8c1e6992098f525780d8dd6219a23d25ff847ff2fbf54eeb399e2c1d5", 0),
+    "3": ("3. Stack", "61d9d2b8c1e6992098f525780d8dd6219a23d25ff847ff2fbf54eeb399e2c1d5", 1),
     "4": ("4. Systems", "7559a97bd50e6223c7d5960c3d96327dee977a702f9db37e408e601acb9373ba", 0),
-    "5": ("5. Data and k", "b774a97be47b755f69a9381668c7f1cdb0a3c9e3cabdf0b623e145d6118339c9", 0),
-    "6": ("6. Hypothesis family", "acce7ea2064588d90ea4f16da7c81ada590f41b792358e62b9430e066a375595", 0),
+    "5": ("5. Data and k", "b774a97be47b755f69a9381668c7f1cdb0a3c9e3cabdf0b623e145d6118339c9", 1),
+    "6": ("6. Hypothesis family", "acce7ea2064588d90ea4f16da7c81ada590f41b792358e62b9430e066a375595", 1),
     "7": (
         "7. Predictions and descriptive results",
         "05a123c10a108d7b8b98ef782a75e7d1ab9c7b9177f06eb7a6182acd5c318f29",
@@ -26,11 +26,11 @@ REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviatio
     ),
     "8": ("8. Human check", "28c31a476ca42338bf22e25a099a24be24d55f7f484e6668804391587f3395d3", 0),
     "9": ("9. Run order", "9457eda20c760009ca37a364e9bb5ce6ce96ab2bc449101e81432203236a198e", 0),
-    "10": ("10. Estimated cost", "37c3acdbdab19318744a347a13d0f6e9451f446ead59cb13c08333b23bc177e1", 0),
+    "10": ("10. Estimated cost", "37c3acdbdab19318744a347a13d0f6e9451f446ead59cb13c08333b23bc177e1", 1),
     "11": (
         "11. Budget, spend and stopping rules",
         "08c61e0b93555164f1be3b52a300751c0971f53f786e5a2e992cd3bbabe33f8e",
-        0,
+        1,
     ),
 }
 
