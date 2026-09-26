@@ -311,9 +311,9 @@ re-registered in `tests/test_v3_plan.py`.
   hedged-correct grades also count). H1 remains decided by the judge.
 - 2026-09-27, paper title (presentation change, no analysis change): the title selected by the registered outcome rule
   in docs/V3_OUTCOMES.md ("Selection, Not Extraction: One Rerank Call Matches LLM-Extracted Memory at a Fraction of
-  the Write Cost") is replaced by "When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory Under
-  Context Budgets". The replaced title presents a published idea (SmartSearch; Fidelity Before Structure) as new, and
-  its "matches" overstates a non-inferiority result, most of all after the human audit.
+  the Write Cost") is replaced by "When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a
+  Typed Decision Model". The replaced title presents a published idea (SmartSearch; Fidelity Before Structure) as new,
+  and its "matches" overstates a non-inferiority result, most of all after the human audit.
 
 ## AI assistance
 
