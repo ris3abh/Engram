@@ -737,6 +737,7 @@ def main() -> None:
         ("arch.t0r.llm", "0", "bench/run.py LEAN arms: the write path embeds only (src/engram/pipeline/lean.py)"),
         ("arch.t0r.jev_write", "0", "src/engram/pipeline/lean.py (no worth gate in T0R)"),
         ("arch.t0r.jev_read", "1", "src/engram/pipeline/retrieve.py (one request over the shortlist)"),
+        ("arch.l0.jev_read", "0", "bench/run.py LEAN arms: L0 reads in cosine order (retriever rerank=False)"),
         ("arch.engram.llm", "1", "src/engram/pipeline/write.py (one extraction call per message)"),
         ("arch.engram.jev_write", "about 1", "src/engram/pipeline/write.py (one request per extracted fact)"),
         ("arch.engram.jev_read", "1", "src/engram/pipeline/retrieve.py"),

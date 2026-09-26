@@ -108,7 +108,7 @@ agreement depended on the system's answer style (§5.4, §6).
 All systems use gpt-4o-mini to answer, text-embedding-3-small to embed and jev-1.13.0 for every Jev decision.
 Figure 1 contrasts the write and read paths of T0R, engram v2 and Jev-Mem.
 
-![Figure 1: Write path (per turn, top) and read path (per question, bottom) of T0R, L0, engram v2 and Jev-Mem. Border colour says what does the work: code (blue), an LLM call (amber), a Jev typed decision (purple), a store (green), the answer model (red) and the judge (teal). The grid gives LLM calls and Jev requests per turn and Jev requests per question, from each system's code (Jev-Mem: its default profile). A design diagram; no measured data.](figures/arch.svg)
+![Figure 1: Write path (per turn, top) and read path (per question, bottom) of T0R, L0, engram v2 and Jev-Mem. Border colour says what does the work: code (blue), an LLM call (amber), a Jev typed decision (purple), a store (green), the answer model (red) and the judge (teal). The grid gives LLM calls and Jev requests per turn and Jev requests per question, from each system's code (Jev-Mem: its default profile); T0R and L0 share a write path and differ only per question, where T0R makes one Jev request and L0 none. A design diagram; no measured data.](figures/arch.svg)
 
 **T0R.** The write path embeds each turn and stores it as "[date] speaker: text", with no extraction and no LLM
 call. The read path takes a {{plan.shortlist}}-turn cosine shortlist and asks Jev, in one request, whether each turn
@@ -261,7 +261,7 @@ between T0R and L0 on {{s6.n}} questions. On the full set, S7 found T0R more acc
 By the registered rule, LongMemEval holds: S7 favours T0R after Holm correction and S5 does not favour mem0.
 Figure 4 shows the paired differences with their intervals.
 
-![Figure 4: Secondary tests S1–S7 (registered): T0R minus the comparator, in points, with paired 95% intervals; the Holm-adjusted p is printed at the right, and blue rows are rejected after Holm correction. S4 is a non-inferiority test against the −{{plan.margin}}-point margin (dashed). LoCoMo tests use {{data.fresh.questions}} questions; S5 and S6 use the LongMemEval sample ({{s5.n}} and {{s6.n}} questions), S7 the full set ({{s7.n}}).](figures/secondary.svg)
+![Figure 4: Secondary tests S1–S7 (registered): T0R minus the comparator, in points, with paired 95% intervals; the Holm-adjusted p is printed at the right, and purple rows are rejected after Holm correction (grey rows are not). S4 is a non-inferiority test against the −{{plan.margin}}-point margin (dashed). LoCoMo tests use {{data.fresh.questions}} questions; S5 and S6 use the LongMemEval sample ({{s5.n}} and {{s6.n}} questions), S7 the full set ({{s7.n}}).](figures/secondary.svg)
 
 ### 5.3 The budget dependence of reranking
 
@@ -368,7 +368,9 @@ loss on all nine held-out conversations ({{rec.all_nine.n}} questions). All evid
 among questions with evidence in the shortlist, the rerank kept none of it for {{rec.all_nine.drop}}. About
 {{rec.all_nine.miss}} of questions are lost to the shortlist and another {{rec.all_nine.lost}} to the rerank.
 
-Figure 7 shows the same decomposition by category on the five held-out conversations.
+Figure 7 shows the same decomposition by category on the five held-out conversations. Figure 9 (Appendix J) is an example of a shortlist miss:
+the evidence turn lies outside T0R's {{plan.shortlist}}-turn shortlist, while engram v2's fact extracted from it
+reaches the answer model.
 
 ![Figure 7: Where T0R's accuracy stops, by category, on the {{fig7.reg.all.n}} questions of the five held-out conversations: the rerank kept at least one evidence turn (purple), evidence was in the shortlist but the rerank kept none of it (amber), or no evidence turn was in the shortlist (grey). Upper bar of each pair: T0R's {{plan.shortlist}}-turn shortlist (shortlist recall, exploratory as registered). Lower, lighter bar: T0R-wide's {{wide.shortlist}}-turn shortlist (post-hoc). Percentages are printed where the segment is wide enough.](figures/recall.svg)
 

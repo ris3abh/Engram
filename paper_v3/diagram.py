@@ -115,14 +115,25 @@ def compile_tikz(name: str, body: str) -> None:
 def arch() -> None:
     sl, th, fl = d("plan.shortlist"), d("plan.threshold"), d("plan.floor")
     grid = []
+    xs = (14.05, 14.72, 15.52)  # column centres; the per-question column is wider (T0R and L0 differ there)
     for s, y in (("t0r", 1.5), ("engram", 0.0), ("jevmem", -1.5)):
         for j, (col, kind) in enumerate((("llm", "llm"), ("jev_write", "jev"), ("jev_read", "jev"))):
+            if s == "t0r" and col == "jev_read":  # T0R makes one Jev request per question; L0 makes none
+                grid.append(
+                    rf"\node[box, draw={kind}B, fill={kind}F, minimum width=0.9cm, minimum height=0.29cm, inner sep=0.5pt,"
+                    rf" font=\sffamily\scriptsize] at ({xs[j]},{y + 0.16}) {{{d('arch.t0r.jev_read')} T0R}};"
+                )
+                grid.append(
+                    r"\node[box, draw=slate!40, fill=white, text=slate, minimum width=0.9cm, minimum height=0.29cm,"
+                    rf" inner sep=0.5pt, font=\sffamily\scriptsize] at ({xs[j]},{y - 0.16}) {{{d('arch.l0.jev_read')} L0}};"
+                )
+                continue
             v = NUM[f"arch.{s}.{col}"]["display"]
             text = tex(v).replace("about ", r"$\sim$").replace("-", "--")
             style = r"draw=slate!40, fill=white, text=slate" if v == "0" else f"draw={kind}B, fill={kind}F"
             grid.append(
-                rf"\node[box, {style}, minimum width=0.66cm, minimum height=0.6cm, inner sep=1pt,"
-                rf" font=\sffamily\footnotesize] at ({14.2 + 0.75 * j:.2f},{y}) {{{text}}};"
+                rf"\node[box, {style}, minimum width={0.9 if j == 2 else 0.6}cm, minimum height=0.6cm, inner sep=1pt,"
+                rf" font=\sffamily\footnotesize] at ({xs[j]},{y}) {{{text}}};"
             )
     jw, jr = d("arch.jevmem.jev_write"), d("arch.jevmem.jev_read").replace("-", "--")
     body = rf"""
@@ -149,16 +160,16 @@ def arch() -> None:
 \node[draw=annot, dashed, rounded corners=4pt, line width=0.9pt, inner sep=0.15cm, fit=(e)(x)(dc)(p)(j)] (grp) {{}};
 \node[font=\sffamily\small\bfseries, text=annot, above=1pt] at (grp.north) {{What each system writes, per turn}};
 % calls per system
-\node[font=\sffamily\small\bfseries] at (14.95,3.0) {{Model calls}};
-\node[font=\sffamily\scriptsize] at (14.575,2.5) {{per turn}};
+\node[font=\sffamily\small\bfseries] at (14.85,3.0) {{Model calls}};
+\node[font=\sffamily\scriptsize] at (14.385,2.5) {{per turn}};
 \node[font=\sffamily\scriptsize, align=right, anchor=east, inner sep=0] at (16.05,2.5) {{per\\question}};
-\foreach \x/\t in {{14.2/LLM, 14.95/Jev, 15.7/Jev}} {{ \node[font=\sffamily\scriptsize\bfseries] at (\x,2.05) {{\t}}; }}
+\foreach \x/\t in {{14.05/LLM, 14.72/Jev, 15.52/Jev}} {{ \node[font=\sffamily\scriptsize\bfseries] at (\x,2.05) {{\t}}; }}
 {chr(10).join(grid)}
 % stored items go to the read path
-\foreach \s in {{s1,s2,s3}} {{ \draw[line, draw=storeB] (\s.east) -- (\s.east -| 13.72,0); }}
-\draw[line, draw=storeB] (13.72,1.5) -- (13.72,-1.5);
-\draw[arr, draw=storeB] (13.72,-1.5) -- (13.72,-2.72);
-\node[font=\sffamily\scriptsize, text=storeB, anchor=east] at (13.66,-2.5) {{stored items}};
+\foreach \s in {{s1,s2,s3}} {{ \draw[line, draw=storeB] (\s.east) -- (\s.east -| 13.6,0); }}
+\draw[line, draw=storeB] (13.6,1.5) -- (13.6,-1.5);
+\draw[arr, draw=storeB] (13.6,-1.5) -- (13.6,-2.72);
+\node[font=\sffamily\scriptsize, text=storeB, anchor=east] at (13.54,-2.5) {{stored items}};
 % ---------------- read time
 \node[draw=slate, rounded corners=6pt, line width=0.9pt, minimum width=16.0cm, minimum height=3.6cm,
   anchor=north west] (rc) at (0.0,-2.75) {{}};
@@ -173,7 +184,7 @@ def arch() -> None:
 \node[code, text width=2.5cm, minimum height=0.95cm, right=0.35cm of rb] (kb) {{Top $k$ nodes\\[-1pt]{{\footnotesize by walk score}}}};
 \draw[arr] (2.1,-3.85) -- (sa); \draw[arr] (2.1,-5.45) -- (sb);
 \draw[arr] (sa) -- (ra); \draw[arr] (ra) -- (ka); \draw[arr] (sb) -- (rb); \draw[arr] (rb) -- (kb);
-\node[lab, anchor=south west, inner sep=1.5pt] at (sa.north west) {{T0R, L0 (no Jev call), engram v2 (+ superseded facts)}};
+\node[lab, anchor=south west, inner sep=1.5pt] at (sa.north west) {{T0R: one Jev request; L0: cosine order only (no Jev call); engram v2: as T0R, over facts, + superseded facts}};
 \node[lab, anchor=south west, inner sep=1.5pt] at (sb.north west) {{Jev-Mem ({jr} Jev requests)}};
 \node[answer, text width=1.75cm] (an) at (12.4,-4.65) {{Answerer\\[-1pt]{{\footnotesize gpt-4o-mini}}}};
 \node[judge, text width=1.75cm] (ju) at (14.85,-4.65) {{LLM judge\\[-1pt]{{\footnotesize gpt-4o-mini}}}};

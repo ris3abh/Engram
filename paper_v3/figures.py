@@ -28,7 +28,7 @@ COL = {  # one fixed colour per system, from the diagram roles
     "T0R": P["jev"][0],  # purple: selection by one Jev request
     "engram v2": "#D4921C",  # amber (the LLM role, a shade darker for lines)
     "mem0": P["store"][0],  # green
-    "Jev-Mem": P["code"][0],  # blue
+    "Jev-Mem": "#8B5A2B",  # brown: a colour no diagram role uses
     "T0R-LLM": P["judge"][0],  # teal: T0R's store with an LLM reranker
     "L0": "#8A9BA5",  # slate grey: similarity search, no model call
     "full context": "#263238",  # near-black
@@ -214,6 +214,33 @@ def budget_gain() -> None:
 # ---------------------------------------------------------------- Figure 5: accuracy against context
 
 
+def leader_order(ends, lab_x, slots):
+    """The assignment of labels to slots with the fewest leader-line crossings (ties: least total vertical travel).
+    Leaders run from (1.08 x, y) to (0.93 lab_x, slot) on a log x axis."""
+    from itertools import combinations, permutations
+    from math import log10
+
+    def seg(e, ly):
+        return (log10(e[1] * 1.08), e[0]), (log10(lab_x * 0.93), ly)
+
+    def cross(a, b):
+        (p1, p2), (p3, p4) = a, b
+
+        def orient(p, q, r):
+            return (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])
+
+        return orient(p1, p2, p3) * orient(p1, p2, p4) < 0 and orient(p3, p4, p1) * orient(p3, p4, p2) < 0
+
+    best = None
+    for order in permutations(ends):
+        segs = [seg(e, ly) for e, ly in zip(order, slots, strict=True)]
+        n = sum(cross(a, b) for a, b in combinations(segs, 2))
+        travel = sum(abs(e[0] - ly) for e, ly in zip(order, slots, strict=True))
+        if best is None or (n, travel) < best[0]:
+            best = ((n, travel), order)
+    return best[1]
+
+
 def context() -> None:
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(FULL, 2.7), gridspec_kw={"width_ratios": [1.35, 1]})
     n_loc, n_lme = int(v("data.fresh.questions")), int(v("data.lme.scored"))
@@ -276,8 +303,8 @@ def context() -> None:
     ends.append((pts("wide.acc"), v("wide.tok"), "T0R-wide (post-hoc)", COL["T0R"]))
     # direct labels in a column right of the lines, in the order of the line ends, with thin leaders
     lab_x, top, step = 3300, 85.2, 1.9
-    for i, (y, x, name, colour) in enumerate(sorted(ends, reverse=True)):
-        ly = top - i * step
+    slots = [top - i * step for i in range(len(ends))]
+    for (y, x, name, colour), ly in zip(leader_order(ends, lab_x, slots), slots, strict=True):
         a1.plot([x * 1.08, lab_x * 0.93], [y, ly], color=colour, lw=0.5, alpha=0.7)
         a1.text(lab_x, ly, name, color=colour, va="center")
     a1.set_title(f"LoCoMo ({d('data.fresh.questions')} questions)")
