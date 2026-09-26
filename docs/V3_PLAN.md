@@ -191,6 +191,61 @@ re-registered in `tests/test_v3_plan.py`.
 - 2026-09-26, external timestamp: this plan as of commit b3c5dc5 is deposited on Zenodo as 10.5281/zenodo.22970745.
   Tag `v3-frozen` marks the code that runs it: the frozen systems, and T0R-LLM and full context as specified (arms
   `lean_t0r_llm` and `full_context`, offline tests in `tests/test_v3_arms.py`), before any v3 run.
+- 2026-09-26, amendment (§3, §5, §6, §10, §11), registered before H1, S3 or S4 is computed or any Batch B accuracy is
+  seen; Batch B's runs continue while it is written. The amendment is timestamped together with docs/V3_OUTCOMES.md
+  (how each H1 outcome will be reported). Sections 1 to 11 keep their text; this entry amends them.
+  1. **Shortlist recall (exploratory, no API spend).** For L0 and T0R on all nine held-out conversations, per
+     category:
+     - the share of questions whose LoCoMo evidence turns appear in the 30-turn cosine shortlist, all of them and at
+       least one;
+     - among questions with an evidence turn in the shortlist, the share where no such turn is among those the Jev
+       rerank keeps.
+     L0 and T0R share the shortlist. The shortlists and the rerank's kept turns are rebuilt from the frozen stores
+     through the call cache.
+  2. **LongMemEval expansion (§5, §6).** T0R, L0 and full context run on all 500 LongMemEval_S questions (same file
+     and revision as §5).
+     - **Ingestion:** both user and assistant turns, so single-session-assistant questions are answerable. Speakers
+       are "User" and "Assistant", sessions in date order, and the question date is in the question slot as in v2.
+     - **Size:** 494 turns and about 107,500 tokens per haystack. Every haystack fits gpt-4o-mini's 128k window, so
+       full context sees the whole haystack.
+     - **Settings:** k=3 and k=20, and T0R at its k matched to L0 at k=3 (§5's rule, pooled over the 470
+       non-abstention questions, from T0R's retrieval-only sweep saved before answering).
+     - **Reporting:** the 30 abstention questions are reported separately. Results are also given by question type.
+       Full context is reported descriptively against T0R, with its cost per question.
+     - **Registered sample unchanged:** mem0 and engram v2 stay on the 70-question sample, and S5 and S6 stay as
+       registered on it, user turns only.
+     - **New test S7**, in the Holm family: T0R (matched) against L0 at k=3 on the 470 non-abstention questions,
+       exact McNemar.
+     - **Captions:** every caption states which turns each system ingested.
+  3. **Second answer model (robustness, §3, §6).** H1's two arms (T0R at its matched k, engram v2 at k=3) and S1's two
+     arms (T0R at its matched k, L0 at k=3) are answered again by Llama 3.3 70B Instruct.
+     - **Model:** `meta-llama/llama-3.3-70b-instruct` via OpenRouter, $0.10 per million input tokens and $0.32 per
+       million output tokens on 2026-09-26, temperature 0, the same answer prompt, OpenRouter's default provider
+       routing, with the serving provider recorded per call.
+     - **Contexts:** the memory blocks are those the gpt-4o-mini answers saw, rebuilt from the frozen stores through
+       the call cache and checked against each question's recorded retrieved-token count.
+     - **Judge:** the same gpt-4o-mini judge.
+     - **Reporting:** H1 and S1 are reported under both answer models. A result is called model-robust only if it
+       holds under both. The gpt-4o-mini results remain the registered tests.
+  4. **Budget (§10, §11).** The OpenAI cap rises from $23 to $32; Jev stays at $6.50; OpenRouter is capped at $2. All
+     three are in the v3 ledger.
+     - **Updated projection:** spent so far $3.74 OpenAI and $3.31 Jev, not counting engram v2's and mem0's running
+       Batch B jobs, which ledger their spend when they finish.
+
+       | item | OpenAI | Jev | OpenRouter |
+       |---|---|---|---|
+       | spent (ledgered) | 3.74 | 3.31 | 0 |
+       | rest of Batch B as estimated (engram v2 4.50, mem0 4.49, full context 2.80, T0R answers 0.35, live latency 0.02) | 12.16 | 2.19 | 0 |
+       | Batch C as registered | 3.22 | 0.01 | 0 |
+       | LongMemEval expansion (embeddings of 38.7M unique tokens 0.77; full context, 500 × about 107,500 tokens, 8.20; L0 and T0R answers 1.05) | 10.02 | 0.25 | 0 |
+       | second answer model (about 3,100 answers; judge on OpenAI) | 0.19 | 0 | 0.25 |
+       | **total** | **29.33** | **5.76** | **0.25** |
+
+     - **Headroom:** 8% on OpenAI.
+     - **Re-projection:** before Batch C and again before the expansion, spend is re-projected from measured v3 rates.
+       If OpenAI would pass $32, these are dropped in order until it fits: full context on the expansion
+       (descriptive); then mem0 on LongMemEval together with S5 (§11's existing rule).
+  5. **Keys branch:** on hold, not run.
 
 ## AI assistance
 
