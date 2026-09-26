@@ -318,6 +318,17 @@ ARMS: dict[str, dict] = {
             lean_worth_gate=True,
         ),
     },
+    # T0R: raw turns (L0's store, no dates, no worth gate) with T3's read path.
+    "lean_t0r": {
+        "system": "engram",
+        "store_from": "lean_l0",
+        "flags": Flags(
+            **{**LEAN_BASE, "retrieval_rerank": True, "retrieval_history": True},
+            retrieval_floor=config.RETRIEVAL_FLOOR,
+        ),
+    },
+    # Jev-Mem on conv-26 (lean comparison): its retrieved lines, answered and judged with the shared prompt and judge.
+    "jevmem_conv26": {"system": "jevmem_lines", "run_dir": "bench/.cache/jevmem_conv26"},
     "mem0": {"system": "mem0"},
     # v2 baseline (V2_PLAN section 4): Graphiti on the OpenAI stack's shared models; see GraphitiArm.
     "graphiti": {"system": "graphiti"},
@@ -666,6 +677,30 @@ class EngramArm:
             "same_as_edges": self.engine.store.same_as_count(),
             "pipeline_stats": dict(self.engine.writer.stats),
         }
+
+
+class JevMemLines:
+    """Jev-Mem's retrieved lines for each (question, k), read by bench/jevmem_run.py in Jev-Mem's own environment, so
+    the shared answer prompt and judge are applied here exactly as for every other system. Writes nothing."""
+
+    def __init__(self, run_dir: Path):
+        self.run = json.loads((run_dir / "run.json").read_text())
+        self.reads = {}
+        for line in (run_dir / "reads.jsonl").read_text().splitlines():
+            row = json.loads(line)
+            self.reads[(row["question"], row["k"])] = row
+
+    async def memories(
+        self, question: str, top_k: int | None = None, no_dates: bool = False
+    ) -> tuple[list[str], float]:
+        row = self.reads[(question, top_k)]
+        return row["lines"], row["jev_usd"]
+
+    def fact_records(self) -> list[tuple[str, str | None, bool]]:
+        return []
+
+    def stored(self) -> dict:
+        return {"stored": self.run["turns"], "active": self.run["turns"], "tentative": 0}
 
 
 class Mem0Arm:
@@ -1218,6 +1253,8 @@ async def run_arm(
             models=spec.get("models", "shared"),
             keep=bool(reuse_from),
         )
+    elif spec["system"] == "jevmem_lines":
+        system = JevMemLines(ROOT / spec["run_dir"])
     else:
         system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False), stack=stack)
 
@@ -1325,7 +1362,7 @@ async def run_arm(
 
     last_of_session = {m["session"]: m["id"] for m in sl["messages"]}
     outcome_log: list[tuple[str, list[dict]]] = []
-    read_only = bool(frozen_store or reuse_from)
+    read_only = bool(frozen_store or reuse_from) or spec["system"] == "jevmem_lines"
     for n, m in enumerate(sl["messages"], 1):
         if not read_only:
             writes.append(await system.write(m))

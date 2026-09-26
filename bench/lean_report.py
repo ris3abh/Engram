@@ -17,7 +17,7 @@ import sys
 from .run import RESULTS_V2
 
 TARGET_ARM = "e4_frozen_sameattr"
-ARMS = ["lean_l0", "lean_l1", "lean_l2", "lean_t1", "lean_t2", "lean_t3"]
+ARMS = ["lean_l0", "lean_l1", "lean_l2", "lean_t1", "lean_t2", "lean_t3", "lean_t0r"]
 REFERENCE = [TARGET_ARM, "mem0"]
 MATCH = RESULTS_V2 / "lean_token_match.json"
 
