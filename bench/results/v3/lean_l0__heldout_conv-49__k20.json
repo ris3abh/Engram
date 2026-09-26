@@ -1,0 +1,6011 @@
+{
+ "arm": "lean_l0",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 0,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": false,
+  "retrieval_rerank": false,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "heldout:conv-49",
+  "sessions": [
+   1,
+   25
+  ],
+  "messages": 509,
+  "questions": 156
+ },
+ "accuracy": 0.7435897435897436,
+ "accuracy_by_category": {
+  "1": 0.7297297297297297,
+  "2": 0.696969696969697,
+  "3": 0.6923076923076923,
+  "4": 0.7808219178082192
+ },
+ "stored": 509,
+ "active": 509,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {
+  "dates_resolved": 0,
+  "dates_idiom_skipped": 0,
+  "units_indexed": 509
+ },
+ "facts_extracted": 509,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {
+  "unit": 509
+ },
+ "decision_cost_per_1k": 0.0,
+ "cost_per_1k": 0.0006227504911591348,
+ "write_latency_p50_ms": 194.66120802098885,
+ "decision_latency_p50_ms": 194.44041699171066,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 858.9487179487179,
+ "retrieved_tokens_median": 852.5,
+ "memories_mean": 20.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.0,
+  "claude": 0.0,
+  "openai": 0.0299051
+ },
+ "cache": {
+  "hits": 0,
+  "misses": 977
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "What kind of car does Evan drive?",
+   "gold": "Prius",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D1:4",
+    "D18:1",
+    "D18:3",
+    "D22:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan drives a Prius.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019365,
+   "retrieved_tokens": 782,
+   "retrieve_ms": 1136.0301669919863,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 1,
+   "question": "What kinds of things did Evan have broken?",
+   "gold": "His old Prius and his new Prius.",
+   "category": 1,
+   "evidence": [
+    "D18:1",
+    "D18:2",
+    "D18:3",
+    "D1:2",
+    "D1:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His ankle and new Prius.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0001947,
+   "retrieved_tokens": 787,
+   "retrieve_ms": 1132.7670410391875,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 2,
+   "question": "Where has Evan been on roadtrips with his family?",
+   "gold": "Rockies, Jasper",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D1:4",
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Jasper and Banff.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020475,
+   "retrieved_tokens": 848,
+   "retrieve_ms": 1127.1747919963673,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 3,
+   "question": "How many Prius has Evan owned?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D1:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Two Prius.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001767,
+   "retrieved_tokens": 683,
+   "retrieve_ms": 1122.1875000046566,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 4,
+   "question": "Which hobby did Sam take up in May 2023?",
+   "gold": "painting",
+   "category": 2,
+   "evidence": [
+    "D1:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019529999999999998,
+   "retrieved_tokens": 805,
+   "retrieve_ms": 1117.0170410186984,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 5,
+   "question": "Which country was Evan visiting in May 2023?",
+   "gold": "Canada",
+   "category": 3,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Canada",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019605,
+   "retrieved_tokens": 812,
+   "retrieve_ms": 1112.2972919838503,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 6,
+   "question": "How many roadtrips did Evan take in May 2023?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D1:4",
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Two road trips.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001998,
+   "retrieved_tokens": 819,
+   "retrieve_ms": 1108.1225829548202,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 7,
+   "question": "What new hobbies did Sam consider trying?",
+   "gold": "Painting, kayaking, hiking, cooking, running",
+   "category": 1,
+   "evidence": [
+    "D1:11",
+    "D2:10",
+    "D10:8",
+    "D13:6",
+    "D13:8",
+    "D20:6",
+    "D7:2",
+    "D7:4",
+    "D7:6",
+    "D21:19"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting and kayaking.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020415,
+   "retrieved_tokens": 860,
+   "retrieve_ms": 1105.368249991443,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 8,
+   "question": "What hobby did Evan start practicing a few years ago that he enjoys?",
+   "gold": "Watercolor painting",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D1:16",
+    "D8:13",
+    "D8:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019289999999999997,
+   "retrieved_tokens": 785,
+   "retrieve_ms": 1100.5715409992263,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 9,
+   "question": "When did Evan go to Jasper with his family?",
+   "gold": "weekend before May 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Last weekend, May 20-21, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020070000000000003,
+   "retrieved_tokens": 797,
+   "retrieve_ms": 1095.4369170358405,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 10,
+   "question": "Which type of vacation would Evan prefer with his family, walking tours in metropolitan cities or camping trip in the outdoors?",
+   "gold": "camping trip in the outdoors",
+   "category": 3,
+   "evidence": [
+    "D2:1",
+    "D2:3",
+    "D19:1",
+    "D19:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Camping trip in the outdoors.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002091,
+   "retrieved_tokens": 855,
+   "retrieve_ms": 1091.992458968889,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 11,
+   "question": "What health issue did Sam face that motivated him to change his lifestyle?",
+   "gold": "Weight problem",
+   "category": 1,
+   "evidence": [
+    "D2:6",
+    "D3:4",
+    "D24:12",
+    "D24:14",
+    "D5:5",
+    "D6:2",
+    "D7:2",
+    "D7:12",
+    "D8:1",
+    "D10:6",
+    "D12:1",
+    "D13:2",
+    "D14:1",
+    "D15:1",
+    "D16:3",
+    "D17:3",
+    "D24:20",
+    "D25:1",
+    "D25:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Severe stomachache (gastritis).",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00022815000000000002,
+   "retrieved_tokens": 988,
+   "retrieve_ms": 1087.2656250139698,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 12,
+   "question": "When did Sam first go to the doctor and find out he had a weight problem?",
+   "gold": "A few days before May 24, 2023.",
+   "category": 2,
+   "evidence": [
+    "D2:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "May 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00024,
+   "retrieved_tokens": 1081,
+   "retrieve_ms": 1083.424374985043,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 13,
+   "question": "When did Evan have his sudden heart palpitation incident that really shocked him up?",
+   "gold": "first week of June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Last week from June 6, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00023339999999999998,
+   "retrieved_tokens": 1011,
+   "retrieve_ms": 1079.5822910149582,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 14,
+   "question": "What is Evan's favorite food?",
+   "gold": "Ginger snaps",
+   "category": 1,
+   "evidence": [
+    "D3:3",
+    "D5:5",
+    "D23:15",
+    "D22:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Ginger snaps.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019275,
+   "retrieved_tokens": 786,
+   "retrieve_ms": 1075.65108302515,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 15,
+   "question": "What kind of unhealthy snacks does Sam enjoy eating?",
+   "gold": "soda, candy",
+   "category": 1,
+   "evidence": [
+    "D3:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Soda and candy.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020219999999999998,
+   "retrieved_tokens": 839,
+   "retrieve_ms": 1070.70191699313,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 16,
+   "question": "What recurring issue frustrates Sam at the grocery store?",
+   "gold": "Malfunctioning self-checkout machines.",
+   "category": 1,
+   "evidence": [
+    "D3:16",
+    "D22:19"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Self-checkout machines breaking down.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022094999999999998,
+   "retrieved_tokens": 954,
+   "retrieve_ms": 1070.2108329860494,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 17,
+   "question": "When did Sam's friends mock him for being overweight?",
+   "gold": "Friday before 27 July 2023",
+   "category": 2,
+   "evidence": [
+    "D4:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "July 21, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022559999999999998,
+   "retrieved_tokens": 981,
+   "retrieve_ms": 1066.005665983539,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 18,
+   "question": "What kind of healthy food suggestions has Evan given to Sam?",
+   "gold": "flavored seltzer water, dark chocolate with high cocoa content, air-popped popcorn and fruit, veggies, healthy sandwich snacks, energy balls, grilled chicken salad with avocado",
+   "category": 1,
+   "evidence": [
+    "D3:5",
+    "D4:10",
+    "D22:10",
+    "D22:14",
+    "D24:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Vegetable recipes and low-calorie snacks.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00022035,
+   "retrieved_tokens": 940,
+   "retrieve_ms": 1059.7901659784839,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 19,
+   "question": "Considering their conversations and personal growth, what advice might Evan and Sam give to someone facing a major life transition or challenge?",
+   "gold": "Evan and Sam would likely advise embracing small, consistent changes\u200b\u200b, finding stress-relieving activities like hiking\u200b\u200b, painting, and road trips\u200b\u200b, and the importance of friendship and support in navigating challenges\u200b\u200b.",
+   "category": 3,
+   "evidence": [
+    "D3:10",
+    "D3:15",
+    "D22:1",
+    "D8:17",
+    "D8:22",
+    "D9:8",
+    "D9:11",
+    "D14:7",
+    "D14:12",
+    "D12:7",
+    "D12:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Stay positive and seek support.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020954999999999997,
+   "retrieved_tokens": 856,
+   "retrieve_ms": 1055.7231670245528,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 20,
+   "question": "In light of the health and dietary changes discussed, what would be an appropriate gift for both Evan and Sam to encourage their healthy lifestyles?",
+   "gold": "a cookbook with healthy recipes or a subscription to a healthy meal delivery service.",
+   "category": 3,
+   "evidence": [
+    "D2:9",
+    "D3:1",
+    "D3:3",
+    "D3:5",
+    "D4:10",
+    "D14:12",
+    "D5:9",
+    "D7:3",
+    "D7:2",
+    "D7:5",
+    "D7:12",
+    "D8:1",
+    "D8:5",
+    "D8:7",
+    "D8:8",
+    "D8:12",
+    "D9:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Healthy recipe book.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002172,
+   "retrieved_tokens": 909,
+   "retrieve_ms": 1051.0801670025103,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 21,
+   "question": "How does Evan describe the woman and his feelings for her that he met in Canada?",
+   "gold": "He says she's cool, incredible, like something out of a movie, and that he feels alive around her. Every moment with her is fun and energetic, also Evan feels really lucky to have someone who gets him.",
+   "category": 1,
+   "evidence": [
+    "D5:1",
+    "D5:3",
+    "D23:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Incredible and love at first sight.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021870000000000003,
+   "retrieved_tokens": 923,
+   "retrieve_ms": 1042.2284999513067,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 22,
+   "question": "When Evan did meet his future wife?",
+   "gold": "week before August 7, 2023.",
+   "category": 2,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Last week of July 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019845000000000003,
+   "retrieved_tokens": 806,
+   "retrieve_ms": 1037.348458019551,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 23,
+   "question": "When did Sam start working out at the gym?",
+   "gold": "July 28, 2023",
+   "category": 2,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam started working out on July 27, 2023.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00021915000000000001,
+   "retrieved_tokens": 920,
+   "retrieve_ms": 1033.3222910412587,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 24,
+   "question": "What significant event happened in Sam's life towards the end of summer 2023?",
+   "gold": "He fell in love with a Canadian woman",
+   "category": 2,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam had health issues.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020654999999999998,
+   "retrieved_tokens": 854,
+   "retrieve_ms": 1028.229708026629,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 25,
+   "question": "Which year did Evan start taking care of his health seriously?",
+   "gold": "2021",
+   "category": 2,
+   "evidence": [
+    "D5:6",
+    "D5:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "2021",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021344999999999998,
+   "retrieved_tokens": 922,
+   "retrieve_ms": 1022.7395830443129,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 26,
+   "question": "What motivates Evan to take care of his health?",
+   "gold": "family, fitness tracker, thirst for adventure on interesting hikes",
+   "category": 1,
+   "evidence": [
+    "D5:9",
+    "D5:11",
+    "D5:13"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His family motivates him.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021375,
+   "retrieved_tokens": 916,
+   "retrieve_ms": 1019.846957991831,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 27,
+   "question": "What electronic device could Evan gift Sam to help him keep up with his fitness goals?",
+   "gold": "fitness tracker",
+   "category": 3,
+   "evidence": [
+    "D5:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A GPS sensor for keys.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00022425,
+   "retrieved_tokens": 968,
+   "retrieve_ms": 1015.184624993708,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 28,
+   "question": "What kind of writing does Sam do to relax and cope with his health issues?",
+   "gold": "journalling, creative writing",
+   "category": 1,
+   "evidence": [
+    "D6:4",
+    "D11:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Creative writing and journaling.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002538,
+   "retrieved_tokens": 1167,
+   "retrieve_ms": 1010.69299998926,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 29,
+   "question": "Who did Evan meet on his trip to Canada, and who did he come back from Canada with?",
+   "gold": "Evan met the woman he fell in love with and returned with her.",
+   "category": 1,
+   "evidence": [
+    "D5:1",
+    "D6:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A Canadian woman; his new SO.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019784999999999998,
+   "retrieved_tokens": 778,
+   "retrieve_ms": 1001.5712919994257,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 30,
+   "question": "When Evan get back from a vacation with his SO?",
+   "gold": "August 13, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "August 13, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018315,
+   "retrieved_tokens": 698,
+   "retrieve_ms": 996.3836249662563,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 31,
+   "question": "How might Evan and Sam's experiences with health and lifestyle changes influence their approach to stress and challenges?",
+   "gold": "Their experiences likely lead them to view challenges as opportunities for growth and change. They both have embraced healthier lifestyles, indicating a proactive approach to managing stress and challenges.",
+   "category": 3,
+   "evidence": [
+    "D9:1 D4:4 D4:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "They prioritize healthier choices and support.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00024299999999999997,
+   "retrieved_tokens": 1083,
+   "retrieve_ms": 991.6457500075921,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 32,
+   "question": "What recurring frustration does Evan experience?",
+   "gold": "Evan consistently misplaces his keys every week.",
+   "category": 1,
+   "evidence": [
+    "D6:13",
+    "D21:20"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Car breakdowns and reliability issues.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020099999999999998,
+   "retrieved_tokens": 829,
+   "retrieve_ms": 987.0336670428514,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 33,
+   "question": "What is the recurring dream that Sam keeps having?",
+   "gold": "he's flying over a cityscape.",
+   "category": 1,
+   "evidence": [
+    "D6:14",
+    "D24:22"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Flying over skyscrapers.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002124,
+   "retrieved_tokens": 907,
+   "retrieve_ms": 979.9820839543827,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 34,
+   "question": "What accidents has Evan's son faced lately?",
+   "gold": "injured at a soccer game, fell off his bike",
+   "category": 1,
+   "evidence": [
+    "D7:1",
+    "D20:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Bike accident and soccer accident.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020954999999999997,
+   "retrieved_tokens": 886,
+   "retrieve_ms": 976.3108339975588,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 35,
+   "question": "When was Evan's son injured at soccer?",
+   "gold": "Saturday before August 15, 2023.",
+   "category": 2,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "August 12, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019935,
+   "retrieved_tokens": 810,
+   "retrieve_ms": 972.155791008845,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 36,
+   "question": "What kind of foods or recipes has Sam recommended to Evan?",
+   "gold": "grilled vegetables, grilled chicken and veggie stir-fry, poutine",
+   "category": 1,
+   "evidence": [
+    "D7:8",
+    "D8:7",
+    "D23:26"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Healthy meals and roasted vegetables.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00022244999999999999,
+   "retrieved_tokens": 966,
+   "retrieve_ms": 967.7392080193385,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 37,
+   "question": "What kind of healthy meals did Sam start eating after getting a health scare?",
+   "gold": "salad, grilled salmon and vegetables, grilled chicken and veggie stir-fry, Beef Merlot, fruit bowl, smoothie bowl",
+   "category": 1,
+   "evidence": [
+    "D3:2",
+    "D8:1",
+    "D7:4",
+    "D8:7",
+    "D10:2",
+    "D11:1",
+    "D18:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Nutritious meals from cooking class.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00023145000000000002,
+   "retrieved_tokens": 1012,
+   "retrieve_ms": 957.7107079676352,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 38,
+   "question": "What role does nature and the outdoors play in Evan and Sam's mental well-being?",
+   "gold": "Nature and outdoor activities seem to be significant stress relievers and sources of joy for both Evan and Sam. These activities likely contribute positively to their mental well-being.",
+   "category": 3,
+   "evidence": [
+    "D22:1 D22:2 D9:10 D9:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Nature brings peace and rejuvenation.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020699999999999996,
+   "retrieved_tokens": 849,
+   "retrieve_ms": 953.2456249580719,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 39,
+   "question": "How many months lapsed between Sam's first and second doctor's appointment?",
+   "gold": "three months",
+   "category": 2,
+   "evidence": [
+    "D2:6",
+    "D7:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Five months.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00021255000000000002,
+   "retrieved_tokens": 908,
+   "retrieve_ms": 950.1662089605816,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 40,
+   "question": "When did Evan start taking painting classes?",
+   "gold": "Few days before 19 August, 2023.",
+   "category": 2,
+   "evidence": [
+    "D8:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A few days before August 19, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020745,
+   "retrieved_tokens": 850,
+   "retrieve_ms": 946.2661250145175,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 41,
+   "question": "Which classes did Evan join in mid-August 2023?",
+   "gold": "painting classes",
+   "category": 2,
+   "evidence": [
+    "D8:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan joined painting classes.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00017414999999999998,
+   "retrieved_tokens": 642,
+   "retrieve_ms": 939.316832984332,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 42,
+   "question": "How did Evan get into painting?",
+   "gold": "His friend got him into it by gifting him a painting and giving him some advice. The painting inspired Evan.",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D1:15",
+    "D1:16",
+    "D8:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A friend inspired him with a painting.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002184,
+   "retrieved_tokens": 941,
+   "retrieve_ms": 934.9397080368362,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 43,
+   "question": "How often does Sam get health checkups?",
+   "gold": "every three months",
+   "category": 3,
+   "evidence": [
+    "D2:6",
+    "D7:2",
+    "D12:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam hasn't seen a doctor in a while.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00022965,
+   "retrieved_tokens": 1008,
+   "retrieve_ms": 927.2324579651468,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 44,
+   "question": "What kind of subjects does Evan enjoy painting?",
+   "gold": "nature landscapes, portraits, abstract minimalism",
+   "category": 1,
+   "evidence": [
+    "D8:20",
+    "D20:13",
+    "D20:15",
+    "D21:10",
+    "D21:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan enjoys painting landscapes.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021119999999999998,
+   "retrieved_tokens": 897,
+   "retrieve_ms": 924.5633340324275,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 45,
+   "question": "Which places in Canada was Evan visiting in July 2023?",
+   "gold": "Banff, Rocky Mountains",
+   "category": 2,
+   "evidence": [
+    "D8:27",
+    "D9:8",
+    "D9:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan visited Canada in July 2023.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020565,
+   "retrieved_tokens": 836,
+   "retrieve_ms": 921.4907920104451,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 46,
+   "question": "How do Evan and Sam use creative outlets to cope with life's challenges?",
+   "gold": "Evan and Sam use creative activities, like painting and writing, as therapeutic tools to express themselves and cope with stress.",
+   "category": 3,
+   "evidence": [
+    "D21:18 D21:22 D11:15 D11:19"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan paints; Sam writes creatively.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002109,
+   "retrieved_tokens": 877,
+   "retrieve_ms": 917.1779170283116,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 47,
+   "question": "When did Evan go skiing in Banff?",
+   "gold": "July 2023",
+   "category": 2,
+   "evidence": [
+    "D8:26",
+    "D8:27",
+    "D8:28"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Next year (2024).",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020295,
+   "retrieved_tokens": 842,
+   "retrieve_ms": 908.1967910169624,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 48,
+   "question": "What new diet and lifestyle change did Sam adopt over time?",
+   "gold": "Healthy eating, exercise routine, running, hiking",
+   "category": 1,
+   "evidence": [
+    "D8:1",
+    "D9:1",
+    "D21:9",
+    "D22:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Started a new diet and exercise routine.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020070000000000003,
+   "retrieved_tokens": 813,
+   "retrieve_ms": 898.8933750079013,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 49,
+   "question": "Who was injured in Evan's family?",
+   "gold": "Evan's son and Evan himself",
+   "category": 1,
+   "evidence": [
+    "D7:1",
+    "D7:9",
+    "D7:10",
+    "D9:2",
+    "D11:2",
+    "D11:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan's son was injured.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020024999999999996,
+   "retrieved_tokens": 822,
+   "retrieve_ms": 893.9192080288194,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 50,
+   "question": "What kind of hobbies does Evan pursue?",
+   "gold": "painting, hiking, reading books, biking, skiing, snowboarding, ice skating, swimming, camping, kayaking",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D1:6",
+    "D4:8",
+    "D6:1",
+    "D8:30",
+    "D9:6",
+    "D25:8",
+    "D25:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting, hiking, skiing, snowboarding.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019845,
+   "retrieved_tokens": 802,
+   "retrieve_ms": 890.9805840230547,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 51,
+   "question": "What challenges does Sam face in his quest for a healthier lifestyle, and how does he address them?",
+   "gold": "Sam faces challenges like maintaining motivation and making dietary changes. He addresses them by enrolling in cooking classes and seeking support from friends like Evan.",
+   "category": 3,
+   "evidence": [
+    "D4:2",
+    "D4:6",
+    "D14:1",
+    "D14:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Struggling with weight and cravings.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020264999999999997,
+   "retrieved_tokens": 814,
+   "retrieve_ms": 886.2810409627855,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 52,
+   "question": "Which activity do Evan and Sam plan on doing together during September 2023?",
+   "gold": "painting",
+   "category": 2,
+   "evidence": [
+    "D10:12",
+    "D10:13",
+    "D10:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting session.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018930000000000002,
+   "retrieved_tokens": 749,
+   "retrieve_ms": 880.6379999732599,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 53,
+   "question": "When did Evan and Sam decide to paint together?",
+   "gold": "Saturday after 11 September, 2023.",
+   "category": 2,
+   "evidence": [
+    "D10:12",
+    "D10:13",
+    "D10:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "September 11, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020730000000000002,
+   "retrieved_tokens": 861,
+   "retrieve_ms": 874.2104590055533,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 54,
+   "question": "What personal health incidents does Evan face in 2023?",
+   "gold": "heart palpitations, twisted ankle, twisted ankle",
+   "category": 1,
+   "evidence": [
+    "D3:1",
+    "D9:2",
+    "D11:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Heart palpitation incident, hospital visit.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002454,
+   "retrieved_tokens": 1111,
+   "retrieve_ms": 869.7225830401294,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 55,
+   "question": "What recurring adventure does Evan have with strangers?",
+   "gold": "Helping lost tourists and experiencing unexpected adventures in the city.",
+   "category": 1,
+   "evidence": [
+    "D11:6",
+    "D14:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Helping lost tourists.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020219999999999998,
+   "retrieved_tokens": 845,
+   "retrieve_ms": 865.4105839668773,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 56,
+   "question": "What is Sam's persistent problem with his phone?",
+   "gold": "His new phone malfunctioning, particularly with the navigation app.",
+   "category": 1,
+   "evidence": [
+    "D11:15",
+    "D14:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Navigation app malfunctions.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021779999999999998,
+   "retrieved_tokens": 943,
+   "retrieve_ms": 860.255874984432,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 57,
+   "question": "Which US state was Sam travelling in during October 2023?",
+   "gold": "California",
+   "category": 3,
+   "evidence": [
+    "D13:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "California",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001917,
+   "retrieved_tokens": 779,
+   "retrieve_ms": 853.5028750193305,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 58,
+   "question": "When did Evan start lifting weights?",
+   "gold": "October 2022",
+   "category": 2,
+   "evidence": [
+    "D12:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "One year ago from October 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020115,
+   "retrieved_tokens": 822,
+   "retrieve_ms": 845.6240419764072,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 59,
+   "question": "When did Sam and his friend decide to try kayaking?",
+   "gold": "October 14, 2023",
+   "category": 2,
+   "evidence": [
+    "D13:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "October 14, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000189,
+   "retrieved_tokens": 737,
+   "retrieve_ms": 840.769708971493,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 60,
+   "question": "Which new activity does Sam take up in October 2023?",
+   "gold": "kayaking",
+   "category": 2,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Kayaking.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018855,
+   "retrieved_tokens": 750,
+   "retrieve_ms": 833.0756250070408,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 61,
+   "question": "What kind of stress was Sam dealing with in October 2023?",
+   "gold": "work-related stress",
+   "category": 2,
+   "evidence": [
+    "D13:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Work stress and health concerns.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00023804999999999999,
+   "retrieved_tokens": 1066,
+   "retrieve_ms": 826.0992920259014,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 62,
+   "question": "What health scares did Sam and Evan experience?",
+   "gold": "Sam faced a health scare with stomach pains that turned out to be gastritis, prompting him to rethink his health habits. Evan, on the other hand, experienced two separate incidents: a sudden heart palpitation incident and a different event involving a misunderstanding during a medical check-up. These experiences have significantly influenced their perspectives on health and well-being.",
+   "category": 1,
+   "evidence": [
+    "D3:1",
+    "D14:1",
+    "D14:2",
+    "D17:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan had heart palpitations; Sam had gastritis.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00025125,
+   "retrieved_tokens": 1136,
+   "retrieve_ms": 820.6613750080578,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 63,
+   "question": "When was Sam in the ER?",
+   "gold": "weekend before 17 October, 2023.",
+   "category": 2,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "October 14, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022365000000000002,
+   "retrieved_tokens": 976,
+   "retrieve_ms": 814.4993750029244,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 64,
+   "question": "Which ailment does Sam have to face due to his weight?",
+   "gold": "gastritis",
+   "category": 1,
+   "evidence": [
+    "D2:6",
+    "D7:2",
+    "D12:1",
+    "D14:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Serious health risk.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00024914999999999996,
+   "retrieved_tokens": 1146,
+   "retrieve_ms": 809.8956249887124,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 65,
+   "question": "Does Evan live close to a beach or mountains?",
+   "gold": "beach",
+   "category": 3,
+   "evidence": [
+    "D16:16",
+    "D16:18",
+    "D16:20"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan lives close to a beach.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019109999999999998,
+   "retrieved_tokens": 753,
+   "retrieve_ms": 806.6420000395738,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 66,
+   "question": "When did Evan lose his job?",
+   "gold": "end of October 2023",
+   "category": 2,
+   "evidence": [
+    "D16:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "November 9, 2023.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0001854,
+   "retrieved_tokens": 721,
+   "retrieve_ms": 800.0827079522423,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 67,
+   "question": "When did Evan and Sam planned a trip to the beach together?",
+   "gold": "December, 2023",
+   "category": 2,
+   "evidence": [
+    "D16:24"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No specific trip planned.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020385,
+   "retrieved_tokens": 844,
+   "retrieve_ms": 794.7023329907097,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 68,
+   "question": "What was Sam doing on December 4, 2023?",
+   "gold": "Attending a Weight Watchers meeting",
+   "category": 2,
+   "evidence": [
+    "D18:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No information available for that date.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00017744999999999998,
+   "retrieved_tokens": 660,
+   "retrieve_ms": 789.9797919671983,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 69,
+   "question": "Which two significant life events occur in Evan's life in December 2023 with his partner?",
+   "gold": "his partner gets pregnant and they get married",
+   "category": 1,
+   "evidence": [
+    "D19:1",
+    "D21:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Marriage and pregnancy announcement.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021705,
+   "retrieved_tokens": 920,
+   "retrieve_ms": 785.0329170469195,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 70,
+   "question": "How long did Evan and his partner date before getting married?",
+   "gold": "four months",
+   "category": 2,
+   "evidence": [
+    "D5:1",
+    "D21:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Approximately five months.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00019515,
+   "retrieved_tokens": 792,
+   "retrieve_ms": 780.5309590185061,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 71,
+   "question": "Which major holiday season conincides with Evan's wedding?",
+   "gold": "Christmas",
+   "category": 3,
+   "evidence": [
+    "D21:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Christmas season",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00017835,
+   "retrieved_tokens": 688,
+   "retrieve_ms": 773.1632919749245,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 72,
+   "question": "Which activity did Sam resume in December 2023 after a long time?",
+   "gold": "hiking",
+   "category": 1,
+   "evidence": [
+    "D20:6",
+    "D22:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Hiking",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022199999999999998,
+   "retrieved_tokens": 973,
+   "retrieve_ms": 768.099875014741,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 73,
+   "question": "When is Evan planning a big family reunion?",
+   "gold": "Summer 2024",
+   "category": 2,
+   "evidence": [
+    "D19:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Next summer.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018975,
+   "retrieved_tokens": 766,
+   "retrieve_ms": 762.9937080200762,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 74,
+   "question": "When did Evan's son fall off his bike?",
+   "gold": "Thursday before December 17, 2023.",
+   "category": 2,
+   "evidence": [
+    "D20:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "December 12, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019470000000000002,
+   "retrieved_tokens": 777,
+   "retrieve_ms": 758.1946249702014,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 75,
+   "question": "When did Evan announce his marriage to his extended family?",
+   "gold": "January 5, 2024",
+   "category": 2,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "January 5, 2024.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001977,
+   "retrieved_tokens": 795,
+   "retrieve_ms": 753.8649159832858,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 76,
+   "question": "When did Evan finish the painting that's hanging in the exhibit?",
+   "gold": "few days before 17 December, 2023.",
+   "category": 2,
+   "evidence": [
+    "D20:13",
+    "D20:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "December 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002079,
+   "retrieved_tokens": 877,
+   "retrieve_ms": 749.6852920157835,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 77,
+   "question": "How does Evan spend his time with his bride after the wedding?",
+   "gold": "family get-together, honeymoon in Canada to see snowy landscapes, ski, taste local cuisine and do some snowshoeing",
+   "category": 1,
+   "evidence": [
+    "D23:15",
+    "D23:23",
+    "D23:25",
+    "D24:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Planning honeymoon activities in Canada.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019784999999999998,
+   "retrieved_tokens": 800,
+   "retrieve_ms": 742.7048339741305,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 78,
+   "question": "Who did Evan tell about his marriage?",
+   "gold": "To Sam, to his friends from work, and to his and his wife's families.",
+   "category": 1,
+   "evidence": [
+    "D21:2",
+    "D22:4",
+    "D22:5",
+    "D23:1",
+    "D23:5"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Extended family.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00017805000000000002,
+   "retrieved_tokens": 690,
+   "retrieve_ms": 738.2362500065938,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 79,
+   "question": "When will Evan and his partner have their honeymoon in Canada?",
+   "gold": "February 2024",
+   "category": 2,
+   "evidence": [
+    "D23:23"
+   ],
+   "last_evidence_session": 25,
+   "answer": "February 2024",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020684999999999999,
+   "retrieved_tokens": 870,
+   "retrieve_ms": 735.1872909930535,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 80,
+   "question": "When did Evan have a drunken night with his friends?",
+   "gold": "January 9, 2023",
+   "category": 2,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "January 9, 2024.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00017985,
+   "retrieved_tokens": 676,
+   "retrieve_ms": 729.1831249604002,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 81,
+   "question": "What is a stress reliever for Evan?",
+   "gold": "Drawing, traveling, places with a beautiful view, yoga, sunsets or something comfortable for Evan",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D2:10",
+    "D2:11",
+    "D2:14",
+    "D8:18",
+    "D10:8",
+    "D11:8",
+    "D16:23",
+    "D18:7",
+    "D24:19",
+    "D24:21"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001947,
+   "retrieved_tokens": 807,
+   "retrieve_ms": 724.9611250008456,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 82,
+   "question": "What is a stress reliever for Sam?",
+   "gold": "Unhealthy snacks, sweets, yoga, places with beautiful views",
+   "category": 1,
+   "evidence": [
+    "D10:6",
+    "D13:2",
+    "D13:4",
+    "D16:17",
+    "D16:23",
+    "D18:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00019994999999999998,
+   "retrieved_tokens": 838,
+   "retrieve_ms": 720.4889580025338,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 83,
+   "question": "What type of car did Evan get after his old Prius broke down?",
+   "gold": "new Prius",
+   "category": 4,
+   "evidence": [
+    "D1:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A new Prius.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020715,
+   "retrieved_tokens": 868,
+   "retrieve_ms": 712.5979160191491,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 84,
+   "question": "How did Evan get into watercolor painting?",
+   "gold": "friend's advice",
+   "category": 4,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A friend inspired him with a painting.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021435,
+   "retrieved_tokens": 912,
+   "retrieve_ms": 711.2784159835428,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 85,
+   "question": "What did Evan start doing a few years back as a stress-buster?",
+   "gold": "watercolor painting",
+   "category": 4,
+   "evidence": [
+    "D1:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan started painting.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020894999999999998,
+   "retrieved_tokens": 874,
+   "retrieve_ms": 707.030457968358,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 86,
+   "question": "What advice did Evan give Sam about finding a passion?",
+   "gold": "keep trying new things until something sparks excitement",
+   "category": 4,
+   "evidence": [
+    "D1:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Keep trying new things.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001992,
+   "retrieved_tokens": 817,
+   "retrieve_ms": 701.0516250156797,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 87,
+   "question": "Where did Evan take his family for a road trip on 24 May, 2023?",
+   "gold": "Jasper",
+   "category": 4,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Jasper",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020729999999999997,
+   "retrieved_tokens": 867,
+   "retrieve_ms": 695.9767079679295,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 88,
+   "question": "What did Evan find relaxing about his road trip to Jasper?",
+   "gold": "fresh air, peacefulness, cozy cabin surrounded by mountains and forests",
+   "category": 4,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Fresh air and peacefulness.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021569999999999998,
+   "retrieved_tokens": 921,
+   "retrieve_ms": 691.6381659684703,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 89,
+   "question": "What habit is Sam trying to change in terms of diet?",
+   "gold": "consuming soda and candy",
+   "category": 4,
+   "evidence": [
+    "D3:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Reducing soda and candy intake.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020535,
+   "retrieved_tokens": 848,
+   "retrieve_ms": 684.5443330239505,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 90,
+   "question": "What new suggestion did Evan give to Sam regarding his soda and candy consumption?",
+   "gold": "try flavored seltzer water and dark chocolate with high cocoa content",
+   "category": 4,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Swap soda for flavored seltzer water.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020175,
+   "retrieved_tokens": 810,
+   "retrieve_ms": 679.7202919842675,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 91,
+   "question": "What did Sam agree to try instead of soda and candy?",
+   "gold": "flavored seltzer water and dark chocolate with high cocoa content",
+   "category": 4,
+   "evidence": [
+    "D3:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Flavored seltzer water.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001947,
+   "retrieved_tokens": 777,
+   "retrieve_ms": 674.5674170088023,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 92,
+   "question": "What frustrating issue did Sam face at the supermarket?",
+   "gold": "broken self-checkout machines",
+   "category": 4,
+   "evidence": [
+    "D3:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Self-checkout machines were broken.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021495,
+   "retrieved_tokens": 916,
+   "retrieve_ms": 667.8671250119805,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 93,
+   "question": "What novel is Evan reading that he finds gripping?",
+   "gold": "The Great Gatsby",
+   "category": 4,
+   "evidence": [
+    "D4:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The Great Gatsby",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018915000000000002,
+   "retrieved_tokens": 760,
+   "retrieve_ms": 660.7758339960128,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 94,
+   "question": "What kind of water does Evan suggest Sam try as an alternative to soda?",
+   "gold": "Flavored seltzer water",
+   "category": 4,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Flavored seltzer water.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020264999999999997,
+   "retrieved_tokens": 824,
+   "retrieve_ms": 656.0034159920178,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 95,
+   "question": "What does the smartwatch help Evan with?",
+   "gold": "tracks progress and serves as a constant reminder to keep going",
+   "category": 4,
+   "evidence": [
+    "D5:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Tracks progress and health goals.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021089999999999998,
+   "retrieved_tokens": 897,
+   "retrieve_ms": 652.0733750076033,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 96,
+   "question": "What does the bonsai tree symbolize for Evan?",
+   "gold": "strength and resilience",
+   "category": 4,
+   "evidence": [
+    "D5:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Strength and resilience.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018419999999999998,
+   "retrieved_tokens": 723,
+   "retrieve_ms": 645.3416249714792,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 97,
+   "question": "Why did Evan decide to get the bonsai tree?",
+   "gold": "motivates him to keep going through tough times",
+   "category": 4,
+   "evidence": [
+    "D5:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "It symbolizes strength and resilience.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019514999999999997,
+   "retrieved_tokens": 786,
+   "retrieve_ms": 641.2454579840414,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 98,
+   "question": "According to Sam, what is more important than perfection?",
+   "gold": "progress",
+   "category": 4,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Progress.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001758,
+   "retrieved_tokens": 673,
+   "retrieve_ms": 634.3269580393098,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 99,
+   "question": "What did Evan suggest Sam to check out for insights into his dream?",
+   "gold": "dream interpretation book",
+   "category": 4,
+   "evidence": [
+    "D6:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A dream interpretation book.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018884999999999998,
+   "retrieved_tokens": 742,
+   "retrieve_ms": 630.2707919967361,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 100,
+   "question": "What did Evan mention he had been searching for fruitlessly for half an hour?",
+   "gold": "his keys",
+   "category": 4,
+   "evidence": [
+    "D6:13"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His keys.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019635,
+   "retrieved_tokens": 796,
+   "retrieve_ms": 625.8455830393359,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 101,
+   "question": "What class is Sam taking to learn how to make healthier meals?",
+   "gold": "cooking class",
+   "category": 4,
+   "evidence": [
+    "D7:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Cooking class.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002088,
+   "retrieved_tokens": 885,
+   "retrieve_ms": 617.0595840085298,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 102,
+   "question": "What dish did Sam make on 18 August, 2023 that turned out flavorful?",
+   "gold": "grilled dish with salmon and vegetables",
+   "category": 4,
+   "evidence": [
+    "D7:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Grilled chicken and veggie stir-fry.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020415,
+   "retrieved_tokens": 820,
+   "retrieve_ms": 612.4592080013826,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 103,
+   "question": "What kind of recipe did Evan request from Sam on 19 August, 2023?",
+   "gold": "recipes with more vegetables",
+   "category": 4,
+   "evidence": [
+    "D7:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Healthy recipes.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020445,
+   "retrieved_tokens": 846,
+   "retrieve_ms": 607.9563749954104,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 104,
+   "question": "What food did Sam share a photo of on 19 August, 2023?",
+   "gold": "bowl of spinach, avocado, and strawberries",
+   "category": 4,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Homemade sauce.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.000198,
+   "retrieved_tokens": 797,
+   "retrieve_ms": 603.8131250534207,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 105,
+   "question": "What type of painting classes did Evan start taking in 2023?",
+   "gold": "watercolor painting classes",
+   "category": 4,
+   "evidence": [
+    "D8:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Watercolor painting classes.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021435,
+   "retrieved_tokens": 912,
+   "retrieve_ms": 600.7142080343328,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 106,
+   "question": "What did Evan start painting years ago due to being inspired by a friend's gift?",
+   "gold": "forest scene",
+   "category": 4,
+   "evidence": [
+    "D8:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Landscapes.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002166,
+   "retrieved_tokens": 927,
+   "retrieve_ms": 594.396999978926,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 107,
+   "question": "What nature concept do watercolor painting classes emphasize according to Evan?",
+   "gold": "observing nature and painting what is seen",
+   "category": 4,
+   "evidence": [
+    "D8:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Observing nature.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002091,
+   "retrieved_tokens": 885,
+   "retrieve_ms": 590.1977909961715,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 108,
+   "question": "What type of landscapes does Evan love painting the most?",
+   "gold": "sunsets over the ocean",
+   "category": 4,
+   "evidence": [
+    "D8:20"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Nature landscapes.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002154,
+   "retrieved_tokens": 933,
+   "retrieve_ms": 583.1288329791278,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 109,
+   "question": "What fun activity did Evan mention doing in July 2023?",
+   "gold": "skiing",
+   "category": 4,
+   "evidence": [
+    "D8:26"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan mentioned hiking.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0001935,
+   "retrieved_tokens": 775,
+   "retrieve_ms": 577.3588750162162,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 110,
+   "question": "What injury did Evan suffer from in August 2023?",
+   "gold": "Twisted knee",
+   "category": 4,
+   "evidence": [
+    "D9:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan hurt his ankle.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002349,
+   "retrieved_tokens": 1049,
+   "retrieve_ms": 573.3493749867193,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 111,
+   "question": "What sports activity has Evan been doing to stay active while dealing with the knee injury?",
+   "gold": "Swimming",
+   "category": 4,
+   "evidence": [
+    "D9:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Swimming.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021329999999999998,
+   "retrieved_tokens": 911,
+   "retrieve_ms": 568.0016250116751,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 112,
+   "question": "What suggestion did Sam give to Evan to help with his knee issue?",
+   "gold": "Consider low-impact exercises or physical therapy",
+   "category": 4,
+   "evidence": [
+    "D9:5"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Swimming is a good choice.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020985,
+   "retrieved_tokens": 878,
+   "retrieve_ms": 564.2574169905856,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 113,
+   "question": "What did Evan suggest Sam try as a calming hobby?",
+   "gold": "Painting",
+   "category": 4,
+   "evidence": [
+    "D10:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020625,
+   "retrieved_tokens": 880,
+   "retrieve_ms": 559.420500008855,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 114,
+   "question": "What did Evan recommend Sam acquire to get started with painting?",
+   "gold": "Acrylic paints, brushes, canvas/paper, palette",
+   "category": 4,
+   "evidence": [
+    "D10:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Acrylic paints, brushes, canvas/paper, palette.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021344999999999998,
+   "retrieved_tokens": 882,
+   "retrieve_ms": 553.2689579995349,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 115,
+   "question": "What activity does Evan do to keep himself busy while healing his knee?",
+   "gold": "Watercolor painting",
+   "category": 4,
+   "evidence": [
+    "D11:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Swimming.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020774999999999998,
+   "retrieved_tokens": 880,
+   "retrieve_ms": 549.9097499996424,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 116,
+   "question": "What painting did Evan share with Sam in October?",
+   "gold": "a cactus in the desert",
+   "category": 4,
+   "evidence": [
+    "D11:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sunset painting.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.000201,
+   "retrieved_tokens": 835,
+   "retrieve_ms": 543.8229999854229,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 117,
+   "question": "What kind of writing does Sam enjoy as a form of expression?",
+   "gold": "creative writing",
+   "category": 4,
+   "evidence": [
+    "D11:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Journal and creative writing.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019109999999999998,
+   "retrieved_tokens": 759,
+   "retrieve_ms": 539.1156249679625,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 118,
+   "question": "What electronics issue has been frustrating Sam lately?",
+   "gold": "malfunctioning navigation app on the new phone",
+   "category": 4,
+   "evidence": [
+    "D11:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Self-checkout machines malfunctioning.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002349,
+   "retrieved_tokens": 1051,
+   "retrieve_ms": 535.8689579879865,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 119,
+   "question": "What activity did Evan start one year ago?",
+   "gold": "lifting weights",
+   "category": 4,
+   "evidence": [
+    "D12:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Lifting weights.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00017805000000000002,
+   "retrieved_tokens": 684,
+   "retrieve_ms": 529.8693339573219,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 120,
+   "question": "What advice did Evan give to Sam to avoid injuries while starting weightlifting?",
+   "gold": "Find a trainer",
+   "category": 4,
+   "evidence": [
+    "D12:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Find a trainer for guidance.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000204,
+   "retrieved_tokens": 837,
+   "retrieve_ms": 526.638583978638,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 121,
+   "question": "Where did Sam and his mate plan to try kayaking?",
+   "gold": "Lake Tahoe",
+   "category": 4,
+   "evidence": [
+    "D13:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Lake Tahoe",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018644999999999998,
+   "retrieved_tokens": 744,
+   "retrieve_ms": 521.7235829913989,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 122,
+   "question": "What digestive issue did Sam experience lately?",
+   "gold": "Gastritis",
+   "category": 4,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Gastritis.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002556,
+   "retrieved_tokens": 1203,
+   "retrieve_ms": 517.2559579950757,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 123,
+   "question": "What adventurous theme is emerging in Evan's life as mentioned by Sam?",
+   "gold": "helping lost tourists",
+   "category": 4,
+   "evidence": [
+    "D14:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Hiking and outdoor activities.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002115,
+   "retrieved_tokens": 889,
+   "retrieve_ms": 512.3617080389522,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 124,
+   "question": "What does Evan mention about his progress at the gym to Sam?",
+   "gold": "gaining strength",
+   "category": 4,
+   "evidence": [
+    "D14:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan is seeing gains.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021285,
+   "retrieved_tokens": 900,
+   "retrieve_ms": 507.11920898174867,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 125,
+   "question": "How did Evan start his transformation journey two years ago?",
+   "gold": "Changed his diet and started walking regularly",
+   "category": 4,
+   "evidence": [
+    "D15:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Changed diet, started walking regularly.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020399999999999997,
+   "retrieved_tokens": 841,
+   "retrieve_ms": 502.50766600947827,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 126,
+   "question": "What gift did Evan receive from a close friend?",
+   "gold": "1968 Kustom K-200A vintage guitar",
+   "category": 4,
+   "evidence": [
+    "D16:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A vintage guitar.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001683,
+   "retrieved_tokens": 617,
+   "retrieve_ms": 495.36000000080094,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 127,
+   "question": "Why had Evan been going through a tough time lately?",
+   "gold": "Lost their job due to downsizing",
+   "category": 4,
+   "evidence": [
+    "D16:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "He was downsized from his job.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002508,
+   "retrieved_tokens": 1149,
+   "retrieve_ms": 490.3790000244044,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 128,
+   "question": "How does Evan describe the island he grew up on?",
+   "gold": "A happy place",
+   "category": 4,
+   "evidence": [
+    "D17:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His happy place, peaceful paradise.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018449999999999996,
+   "retrieved_tokens": 711,
+   "retrieve_ms": 485.8126660110429,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 129,
+   "question": "What was the main reason for Evan's frustration with his new Prius breaking down?",
+   "gold": "He relied on it for his active lifestyle and road trips",
+   "category": 4,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "He relies on it for road trips.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020895,
+   "retrieved_tokens": 860,
+   "retrieve_ms": 481.28845798783004,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 130,
+   "question": "How did Sam suggest Evan view the setback with his broken Prius?",
+   "gold": "As a chance to explore other ways of staying active and traveling",
+   "category": 4,
+   "evidence": [
+    "D18:5"
+   ],
+   "last_evidence_session": 25,
+   "answer": "As a hassle, but manageable.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020654999999999998,
+   "retrieved_tokens": 854,
+   "retrieve_ms": 475.6270839716308,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 131,
+   "question": "What did Sam suggest Evan try for stress relief and flexibility?",
+   "gold": "Yoga",
+   "category": 4,
+   "evidence": [
+    "D18:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Yoga.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020835,
+   "retrieved_tokens": 888,
+   "retrieve_ms": 468.94545800751075,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 132,
+   "question": "What did Sam offer Evan regarding yoga?",
+   "gold": "Support and tips",
+   "category": 4,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Yoga tips and support.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019229999999999999,
+   "retrieved_tokens": 777,
+   "retrieve_ms": 464.06295901397243,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 133,
+   "question": "What news did Evan share with Sam on 9th December 2023?",
+   "gold": "partner is pregnant",
+   "category": 4,
+   "evidence": [
+    "D19:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan's partner is pregnant.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019289999999999997,
+   "retrieved_tokens": 757,
+   "retrieve_ms": 459.82391701545566,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 134,
+   "question": "What family event is Evan planning for next summer?",
+   "gold": "big family reunion",
+   "category": 4,
+   "evidence": [
+    "D19:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A big family reunion.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019875,
+   "retrieved_tokens": 816,
+   "retrieve_ms": 454.61354102008045,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 135,
+   "question": "What is the motto of Evan's family?",
+   "gold": "'Bring it on Home'",
+   "category": 4,
+   "evidence": [
+    "D19:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "\"Bring it on Home\"",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000183,
+   "retrieved_tokens": 709,
+   "retrieve_ms": 450.467667018529,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 136,
+   "question": "According to Evan, what is important for Sam to believe in concerning his weight?",
+   "gold": "Your worth is not defined by your weight",
+   "category": 4,
+   "evidence": [
+    "D20:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His worth is not defined by weight.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020775,
+   "retrieved_tokens": 852,
+   "retrieve_ms": 447.1101670060307,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 137,
+   "question": "Who helped Evan get the painting published in the exhibition?",
+   "gold": "a close friend",
+   "category": 4,
+   "evidence": [
+    "D20:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A close friend of Evan.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020939999999999997,
+   "retrieved_tokens": 881,
+   "retrieve_ms": 441.5240839589387,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 138,
+   "question": "What did Sam recently start enjoying to clear his head?",
+   "gold": "running in the mornings",
+   "category": 4,
+   "evidence": [
+    "D21:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Running in the mornings.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020504999999999997,
+   "retrieved_tokens": 856,
+   "retrieve_ms": 436.7335829883814,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 139,
+   "question": "What did Sam suggest Evan should do with his keys?",
+   "gold": "put a GPS sensor on them",
+   "category": 4,
+   "evidence": [
+    "D21:21"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Put a GPS sensor on them.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00016799999999999996,
+   "retrieved_tokens": 601,
+   "retrieve_ms": 431.94916599895805,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 140,
+   "question": "How did Evan feel when he painted the piece with the bird flying over it?",
+   "gold": "a sense of joy and freedom",
+   "category": 4,
+   "evidence": [
+    "D21:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not mention a specific painting with a bird flying over it. Therefore, I cannot provide an answer regarding Evan's feelings about that particular piece.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00022035,
+   "retrieved_tokens": 844,
+   "retrieve_ms": 427.24662501132116,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 141,
+   "question": "What did Evan suggest Sam should keep doing to find his own version of love?",
+   "gold": "Keep trying new things",
+   "category": 4,
+   "evidence": [
+    "D21:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Keep trying new things.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018659999999999998,
+   "retrieved_tokens": 723,
+   "retrieve_ms": 424.42283302079886,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 142,
+   "question": "How did Evan describe the process of creating the painting with the bird flying over it?",
+   "gold": "embracing the creative process without restraint",
+   "category": 4,
+   "evidence": [
+    "D21:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No specific description found.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020745,
+   "retrieved_tokens": 860,
+   "retrieve_ms": 418.82658295799047,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 143,
+   "question": "What did Evan want to share with his work friends?",
+   "gold": "getting married",
+   "category": 4,
+   "evidence": [
+    "D22:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan wanted to share his watercolor painting.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00019215,
+   "retrieved_tokens": 754,
+   "retrieve_ms": 414.9430000106804,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 144,
+   "question": "What did Evan share with Sam after their hiking trip?",
+   "gold": "a photo of a man standing on a rock looking out over a valley",
+   "category": 4,
+   "evidence": [
+    "D22:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan shared a funny incident.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00019485,
+   "retrieved_tokens": 780,
+   "retrieve_ms": 408.78429100848734,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 145,
+   "question": "What did Evan offer to share with Sam after talking about healthy snacks?",
+   "gold": "the recipes for cookies",
+   "category": 4,
+   "evidence": [
+    "D22:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "New healthy snacks.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00021105,
+   "retrieved_tokens": 894,
+   "retrieve_ms": 405.04983300343156,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 146,
+   "question": "What did Evan and his partner share with their extended family on January 5, 2024?",
+   "gold": "their marriage",
+   "category": 4,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Their marriage news.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000213,
+   "retrieved_tokens": 895,
+   "retrieve_ms": 398.41045800130814,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 147,
+   "question": "What was Evan limiting himself to on his new diet?",
+   "gold": "just two ginger snaps a day",
+   "category": 4,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Two ginger snaps a day.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022079999999999997,
+   "retrieved_tokens": 957,
+   "retrieve_ms": 394.4110830198042,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 148,
+   "question": "What sports activity did Evan and his partner try in a recent weekend?",
+   "gold": "Snowshoeing",
+   "category": 4,
+   "evidence": [
+    "D24:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Snowshoeing",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002136,
+   "retrieved_tokens": 915,
+   "retrieve_ms": 389.1500409808941,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 149,
+   "question": "What advice did Evan suggest Sam seek from a doctor?",
+   "gold": "diet plan and low-impact exercises",
+   "category": 4,
+   "evidence": [
+    "D24:11",
+    "D24:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Diet and exercise tips.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002355,
+   "retrieved_tokens": 1059,
+   "retrieve_ms": 383.753375033848,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 150,
+   "question": "What suggestions did Evan give for low-impact exercises?",
+   "gold": "swimming, yoga, walking",
+   "category": 4,
+   "evidence": [
+    "D24:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Swimming, yoga, and walking.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021195,
+   "retrieved_tokens": 896,
+   "retrieve_ms": 378.97058395901695,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 151,
+   "question": "What movie did Sam watch that motivated him to keep up with his routine?",
+   "gold": "The Godfather",
+   "category": 4,
+   "evidence": [
+    "D24:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The Godfather",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021765,
+   "retrieved_tokens": 940,
+   "retrieve_ms": 370.9485419676639,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 152,
+   "question": "What activity helped Evan with stress and flexibility?",
+   "gold": "Yoga",
+   "category": 4,
+   "evidence": [
+    "D24:19"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Yoga",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002016,
+   "retrieved_tokens": 853,
+   "retrieve_ms": 367.4786250339821,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 153,
+   "question": "What did Evan share a photo of that was taken on a camping trip?",
+   "gold": "a kayak",
+   "category": 4,
+   "evidence": [
+    "D25:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "An amazing sunset.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00022994999999999998,
+   "retrieved_tokens": 1018,
+   "retrieve_ms": 362.755540991202,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 154,
+   "question": "Why did Evan apologize to his partner?",
+   "gold": "for a drunken night",
+   "category": 4,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "For a drunken night incident.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002103,
+   "retrieved_tokens": 893,
+   "retrieve_ms": 357.34854196198285,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 155,
+   "question": "How does Evan describe being out on the water while kayaking and watching the sunset?",
+   "gold": "peaceful",
+   "category": 4,
+   "evidence": [
+    "D25:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "So peaceful and unforgettable.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002103,
+   "retrieved_tokens": 881,
+   "retrieve_ms": 352.7772080269642,
+   "retrieve_cost": 0.0
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "write_outcomes": [
+  {
+   "message": "D1:1",
+   "text": "Sam: Hey Evan, good to see you! What's new since we last met? Anything cool happening?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:2",
+   "text": "Evan: Hey Sam! Good to see you! Yeah, I just got back from a trip with my family in my new Prius.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:3",
+   "text": "Sam: Wow, not bad, what happened to the old one? Where'd you go, by the way?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:4",
+   "text": "Evan: My old prius broke down, decided to get it repaired and sell it. Glad you asked, we went to Rockies, check it out.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:5",
+   "text": "Sam: Wow! Looks amazing. When did you get to go there?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:6",
+   "text": "Evan: We all hiked the trails last week - the views were amazing!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:7",
+   "text": "Sam: Wow, that's cool. I love hiking, but it's been ages since I've done it. I did this hike with my dad way back when I was ten. Going hiking together was great fun, and really special for us.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:8",
+   "text": "Evan: Aww, that's cute. How far did you two hike?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:9",
+   "text": "Sam: We hiked a good distance - quite a feat for me back then. It's definitely a great memory.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:10",
+   "text": "Evan: What other hobbies have you found for yourself?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:11",
+   "text": "Sam: Nothing so far, but I was thinking about trying painting. Do you have any hobbies you love?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:12",
+   "text": "Evan: Cool idea, Sam! I love it. Have you tried it before?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:13",
+   "text": "Sam: Not yet, but I'm keen to give it a go. It looks like a nice way to chill and get creative.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:14",
+   "text": "Evan: Yep, it's a great stress-buster. I started doing this a few years back.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:15",
+   "text": "Sam: Wow, that's impressive! How did you get into watercolor painting?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:16",
+   "text": "Evan: My friend got me into it and gave me some advice, and I was hooked right away!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:17",
+   "text": "Sam: Wow! I hope I can find something I'm as passionate about as you are with watercolor painting.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:18",
+   "text": "Evan: You'll find it, just keep trying new things until something sparks your excitement.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:19",
+   "text": "Sam: Thanks, Evan! I'm excited to try new things, should be fun!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:20",
+   "text": "Evan: No worries, Sam! Super pumped for you! Let's catch up soon and see how you're enjoying your new hobbies!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:21",
+   "text": "Sam: Yeah, I'll keep you posted. See you soon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:22",
+   "text": "Evan: Take it easy, Evan! Can't wait to see you. Have a good one!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:1",
+   "text": "Evan: Hey Sam, good to hear from you! Since we last talked, lots has been happening! Last weekend, I took my family on a road trip to Jasper. It was amazing! We drove through the Icefields Parkway and the glaciers and lakes were gorgeous. I got a shot of a glacier, check it out!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:2",
+   "text": "Sam: Hey Evan, looks amazing! I've never been to Jasper, but it looks breathtaking. Tell me more about your road trip. Was it relaxing?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:3",
+   "text": "Evan: Hey Sam, thanks for asking! It was great - fresh air, peacefulness and a cozy cabin surrounded by mountains and forests made it feel like a real retreat.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:4",
+   "text": "Sam: That sounds great, Evan! It's so important to take time for ourselves and find peace, especially after a hard week. Mine's been tough.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:5",
+   "text": "Evan: Sorry to hear that, Sam. Is there anything I can do to help?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:6",
+   "text": "Sam: Thanks, Evan. Appreciate the offer, but had a check-up with my doctor a few days ago and, yikes, the weight wasn't great. It was pretty eye-opening.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:7",
+   "text": "Evan: That must have been a challenging experience, Sam. It's tough when we have to confront our own health challenges. Remember, it's never too late to make positive changes for a healthier lifestyle. Is there anything I can do to support you in this journey?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:8",
+   "text": "Sam: Thanks, Evan. Breaking old habits isn't easy. Do you have any tips for starting the process?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:9",
+   "text": "Evan: Yeah, what worked for me was finding a fitness routine I really enjoy. It's my go-to, I love the feeling of being healthy and strong. Making it fun and finding little ways to make smarter choices in my diet really added up. Don't forget, you got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:10",
+   "text": "Sam: Thanks, Evan. Like you said, I've been looking for a hobby to stay motivated. I've been thinking about trying painting. Do you think it will help me de-stress?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:11",
+   "text": "Evan: Of course, Sam! Painting is a great way to relieve stress and be creative. It gives you the freedom to explore colors and textures and express feelings. I've been doing it for a few years now and it helps me find peace. But unfortunately it won't help you with your weight problem, besides painting I recommend exercising!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:12",
+   "text": "Sam: Thanks, Evan! Appreciate the encouragement. I'll give it a go and let you know how it turns out.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:13",
+   "text": "Evan: Awesome, Sam! Have fun with it and don't put too much pressure on yourself. Can't wait to hear how it's going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:14",
+   "text": "Sam: Cheers, Evan! I won't stress - just gonna enjoy it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:15",
+   "text": "Evan: Alright Sam, have fun with it! Keep me updated!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:16",
+   "text": "Sam: Thanks, Evan! Will do. Bye for now.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:17",
+   "text": "Evan: Take care, Sam! I'll catch up with you later.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:1",
+   "text": "Evan: Hey Sam! Long time no talk! How're you doing? Life's been quite the rollercoaster lately. I had a health scare last week \u2013 a sudden heart palpitation incident that really shook me up. It's been a serious wake-up call about my lifestyle.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:2",
+   "text": "Sam: Hey Evan, great hearing from you! Sorry about that, glad you're feeling better now. Trying to eat healthier these days.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:3",
+   "text": "Evan: That salad looks yummy! I'm being extra careful with my health lately. I'm trying to eat less processed food and sugary snacks, even though I love ginger snaps. Have you made any changes to your diet recently?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:4",
+   "text": "Sam: Nah, no changes for me. Still enjoying my soda and candy, although I know it's not the best habit to have.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:5",
+   "text": "Evan: Yeah, breaking habits can be tough. Making small changes can have a big impact later on. Have you considered swapping soda for flavored seltzer water? It's still bubbly and tasty, but without the sugar. And instead of candy, you could try dark chocolate with high cocoa content - it's a healthier option. What do you think?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:6",
+   "text": "Sam: Yeah, good idea! I'll give it a try.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:7",
+   "text": "Evan: Awesome, Sam! Let me know how it goes. Making small changes can really help you live a healthier life. Don't forget - every step matters!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:8",
+   "text": "Sam: Hey Evan, thanks! Appreciate it. I'll definitely keep you posted.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:9",
+   "text": "Evan: I'm here for you, Sam. Let's continue supporting each other on our health journeys. It's important to remember that progress takes time.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:10",
+   "text": "Sam: Yeah, you're right. It takes time, but I'm up for keep trying and making those tiny changes.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:11",
+   "text": "Evan: C'mon, keep it up! Every little bit counts, you'll get there!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:12",
+   "text": "Sam: Thanks, Evan! I appreciate your support, it means a lot to me to have you in my corner.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:13",
+   "text": "Evan: Yes, Sam! I'm here for you. Let's rock our workouts and reach our goals! Exercise clears the mind - it's amazing!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:14",
+   "text": "Sam: Wow, that's awesome! Could you give me a hand with getting started?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:15",
+   "text": "Evan: Sure Sam, I'd be glad to help. Let's get together and I'll show you some basic exercises. We'll reach our goals!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:16",
+   "text": "Sam: Cool, can't wait! Thank you. By the way, I'm coming from the shop and I had a frustrating issue at the supermarket. The self-checkout machines were all broken, my mood is terrible now!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:17",
+   "text": "Evan: Sorry you were in that situation, hopefully it won't happen again!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:18",
+   "text": "Sam: Yeah, I hope so, take care of yourself.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:1",
+   "text": "Sam: Hey Evan, I need to talk to you. My friends were mocking my weight last Friday and it hurt. That made me realize I need to make changes.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:2",
+   "text": "Evan: Hey Sam, sorry about that. Don't worry, progress takes time. Let's work on it together.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:3",
+   "text": "Sam: Thanks for the support, Evan. I'm working on my health and getting active!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:4",
+   "text": "Evan: That's great, Sam! I struggled with my health a few years ago, but stuck with it. Here's a reminder of my commitment - my gym membership card. It's not just about exercise, diet and lifestyle changes also play a big role.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:5",
+   "text": "Sam: That's awesome, Evan! What do you think made the biggest impact on your health journey?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:6",
+   "text": "Evan: I made some dietary changes, like cutting down on sugary snacks and eating more veggies and fruit, and it made a big impact on my health. Have you considered any changes?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:7",
+   "text": "Sam: Yep, I'm reducing my soda and candy intake. It's tough, but I'm determined to make a change.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:8",
+   "text": "Evan: Go for it, Sam! It's tough at first, but you got this. Try flavored seltzer water instead. It can be a great alternative to soda. Btw I can't stop thinking about that new mystery novel I started. It's so gripping!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:9",
+   "text": "Sam: Sounds good, Evan. I've tried it before and it was nice. Do you have any ideas for low-calorie snacks to pair with it? And what's the novel?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:10",
+   "text": "Evan: Definitely, how about some flavored seltzer with some air-popped popcorn or fruit? It's yum and healthy! The novel I'm reading is \"The Great Gatsby\".",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:11",
+   "text": "Sam: Yum, that sounds good! Thanks! And I'll definitely read that novel sometime.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:12",
+   "text": "Evan: No worries, Sam! Focus on healthy swaps and taking small steps. Stay upbeat!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:13",
+   "text": "Sam: That reminder is inspiring. Thanks for reminding me to focus on progress, not perfection.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:14",
+   "text": "Evan: By the way, have you thought about exercising? Trust me, it's just as important as eating right.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:15",
+   "text": "Sam: Starting tomorrow, I will go to the gym and exercise regularly. The sooner I start, the sooner I will see the rewards of this activity.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:16",
+   "text": "Evan: That's awesome, Sam! It's such a rewarding and tough activity - keep going and have fun!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:17",
+   "text": "Sam: Thanks, Evan! Your support means a lot. I really appreciate it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:18",
+   "text": "Evan: No worries, you've got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:19",
+   "text": "Sam: Thanks, Evan. I really appreciate it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:20",
+   "text": "Evan: No worries, Sam. I'm here if you need me. Keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:1",
+   "text": "Evan: Hey Sam, how's it going? Last week I went on a trip to Canada and something unreal happened - I met this awesome Canadian woman and it was like something out of a movie. She's incredible and being with her makes me feel alive.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:2",
+   "text": "Sam: Congrats Evan! She must be something special! Being with someone who makes you feel alive is amazing. I'm sorry to hear that you're dealing with health issues lately, it can be really tough. It's hard to fully enjoy things sometimes.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:3",
+   "text": "Evan: Woah. such a nice view! Thanks, Sam! She's definitely great. Every moment with her is really fun and energizing. It's a nice change, especially after dealing with health issues. But you never know what life's gonna throw at you. Btw look what life has thrown for me right now haha.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:4",
+   "text": "Sam: Looks good to eat! Dealing with health problems can be challenging and take away from enjoyable experiences.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:5",
+   "text": "Evan: Ginger snaps are my weakness for sure! Dealing with health issues has been tough, but it's made me appreciate the good moments more. These are the ones who bring lots of joy even through the hard times.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:6",
+   "text": "Sam: It looks like your kids are having a great time! And how long have you been prioritizing your health?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:7",
+   "text": "Evan: Yes, they bring me such joy. My healthy road has been a long one. I've been working on it for two years now, so there have been ups and downs, but I'm doing my best.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:8",
+   "text": "Sam: I wish your motivation never goes anywhere! I'm thinking of ordering myself some similar ones too, what do you think, are they worth it?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:9",
+   "text": "Evan: Thanks Sam! My family motivates me to stay healthy. Well, it helps a lot with my health goals. It tracks my progress really well and serves as a constant reminder to keep going.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:10",
+   "text": "Sam: Cool! It sounds like a really good tool to stay on track. How has it been working out for you?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:11",
+   "text": "Evan: It's been awesome, Sam! That visual reminder has been really motivating.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:12",
+   "text": "Sam: Thanks for the recommendation, what else motivates you?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:13",
+   "text": "Evan: I'm motivated by a thirst for adventure on interesting hikes, that's pretty cool!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:14",
+   "text": "Sam: What an amazing view! The key is to find something that keeps you motivated.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:15",
+   "text": "Evan: Yep, that's it. Find something that motivates you and makes you happy, whether it's large or tiny. It'll help us conquer the struggles we encounter.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:16",
+   "text": "Sam: Nice! What made you decide to get that?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:17",
+   "text": "Evan: I got this because it symbolizes strength and resilience. Taking care of it motivates me to keep going through tough times.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:18",
+   "text": "Sam: Wow, it's amazing! So powerful yet so simple.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:19",
+   "text": "Evan: Thanks, Sam. It's a reminder that even in little things, we can be tough.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:20",
+   "text": "Sam: Little stuff matters - it builds our resilience over time.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:21",
+   "text": "Evan: Yeah, every little thing we do for ourselves helps us in the long run.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:22",
+   "text": "Sam: Yep, small steps add up. Stay consistent and don't give up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:23",
+   "text": "Evan: Yep, Sam! Consistency and perseverance will get us far. Great chat!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:24",
+   "text": "Sam: Great chatting with you, Sam! Take care, talk soon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:25",
+   "text": "Evan: Catch ya later!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:1",
+   "text": "Evan: Hey Sam, long time no talk! Hope you're doing great. I just got back from a rad vacay with my new SO in Canada. Tried some awesome activities too - think hiking, biking... all that cool stuff. We loved exploring the outdoors together, it was so awesome!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:2",
+   "text": "Sam: Hey Evan! Good to hear from you. Wow, Canada sounds amazing! That photo looks stunning. Wish I could do something like that. Things have been a bit challenging for me lately; some stuff has been hard on my health.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:3",
+   "text": "Evan: Sorry to hear that things haven't been going well. Dealing with health issues can be tough. Is there anything I can do to help?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:4",
+   "text": "Sam: Thanks, Evan. Your support means a lot to me. It's tough staying positive, but knowing I have people like you in my corner makes it easier.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:5",
+   "text": "Evan: Glad to support you, Sam. Surrounding ourselves with people who care is key. What's on that note? A reminder or quote to stay motivated?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:6",
+   "text": "Sam: Yeah, it's actually a quote that's been helping me stay motivated. It reminds me that progress is more important than perfection. Taking small steps towards a healthier life is still progress.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:7",
+   "text": "Evan: Cool mindset, Sam! I totally agree, progress over perfection. Mind sharing the quote with me? I would love to get something out of it too.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:8",
+   "text": "Sam: \"Don't fear it, just take the first step. It's been helping me move forward to healthier habits!\"",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:9",
+   "text": "Evan: Love the quote, Sam. That mindset really helps me too. Thanks!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:10",
+   "text": "Sam: You're welcome! Glad it helps. These times can be challenging.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:11",
+   "text": "Evan: They can be tough, but remember to celebrate the small wins - every step forward counts!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:12",
+   "text": "Sam: You're absolutely right! Celebrating those small wins is crucial. It's easy to get caught up in the challenges and setbacks, but those little victories are what keep me motivated. Thanks for the reminder, it's much appreciated.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:13",
+   "text": "Evan: Absolutely, Sam. Remember, every small victory is a step forward, so keep up the good work! I'm cheering for you! And hey, I could use some cheering too - I've been searching for my keys for the last half hour with no luck! I'm losing it every week..",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:14",
+   "text": "Sam: Oh, I'll definitely be your cheerleader once I get some sleep, Evan! Funny you mention that, I had this amazing dream last night where I was soaring over skyscrapers. It felt incredible! Makes me wonder what it signifies...",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:15",
+   "text": "Evan: That does sound like an amazing dream! Maybe you should check out a dream interpretation book; it could offer some insights. Sweet dreams, Sam!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:16",
+   "text": "Sam: Thanks for the suggestion, Evan. I'll look into it. This journey feels endless at times, but I'm convinced it's going to be rewarding in the end. So good luck with your keys, Evan!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:17",
+   "text": "Evan: I'll just keep going, step by step, and I'll definitely find those keys!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:18",
+   "text": "Sam: That's for sure!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:19",
+   "text": "Evan: Go to bed already, bud! And take care!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:1",
+   "text": "Evan: Hey Sam, what's up? It's been a few days since we talked. How have you been? Life's been tough lately - my son had a soccer accident last Saturday and hurt his ankle, it was tough seeing him hurt! I just been looking after him and taking him to the doctor. As a dad, it's hard to watch your kid go through something like that.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:2",
+   "text": "Sam: Hey Evan, sorry to hear about what happened. I can imagine how hard it must have been for you. Things haven't been easy for me either. Had a tough week and a doc's appointment, so it was kinda like a wake-up call to take better care of myself. On a bright side, I'm taking a cooking class to learn how to make healthier meals.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:3",
+   "text": "Evan: Hey Sam, sorry to hear you had a rough week. At least it's forcing us both to take better care of ourselves, right? I hear the class you're taking is packed with healthy recipes. How's it been going? Have you picked up any yummy new meals?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:4",
+   "text": "Sam: The cooking class has been great, I've learned awesome recipes. Last night I made this yummy grilled dish, so good!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:5",
+   "text": "Evan: Mmm, it looks delicious! What did you put in it? I want to eat healthy, so what kind of recipes do you suggest?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:6",
+   "text": "Sam: Thanks, Evan! I marinated it with a few different ingredients and grilled it with some veggies. It turned out really flavorful! If you want, I can share more recipes from my cooking class. Just let me know what you're looking for!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:7",
+   "text": "Evan: That'd be great, Sam! I'm looking to add more vegetables to my meals. Do you have any recipes for that?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:8",
+   "text": "Sam: Yeah definitely, Evan. I have a tasty and easy roasted veg recipe that I can share with you. Oh, by the way, how have you been doing after the soccer incident? Must've been tough.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:9",
+   "text": "Evan: Thanks, Sam. His ankle is getting better, but still sore. It was rough at first, but thank goodness it was nothing serious.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:10",
+   "text": "Sam: Glad to hear his ankle is getting better. It's hard seeing someone we care about hurt. Look after yourself too, yeah? We gotta look after our health.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:11",
+   "text": "Evan: Yep, taking care of ourselves is a must. How have you been feeling lately?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:12",
+   "text": "Sam: I have been feeling a mix of emotions - somewhat concerned about my health but also motivated to make positive changes. Taking things one step at a time.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:13",
+   "text": "Evan: It's okay to feel overwhelmed, Sam. Just keep moving forward slowly and taking small steps. You're doing awesome.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:14",
+   "text": "Sam: Thanks, Evan, your encouragement means a lot to me. I'll keep going and take it one step at a time!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:15",
+   "text": "Evan: No worries, just keep going and taking it one step at a time! You'll get there.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:16",
+   "text": "Sam: Thanks, Evan. I really appreciate that. It means a lot.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:1",
+   "text": "Sam: Hey Evan, some big news: I'm on a diet and living healthier! Been tough, but I'm determined.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:2",
+   "text": "Evan: Wow, Sam, that's great news! Making changes to live healthier can be challenging, how has it been going?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:3",
+   "text": "Sam: It's tough, but I'm sticking with it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:4",
+   "text": "Evan: Nice work, Sam! Proud of you sticking to it. Have you noticed any positive changes?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:5",
+   "text": "Sam: Yes, there are many, such as more energy and less sluggishness after eating. This is really encouraging!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:6",
+   "text": "Evan: Wow, Sam, that's great to hear! Feeling more energized after meals is such a positive change. Keep up the good work! And speaking of healthy meals, do you have any favorite recipes you'd like to share?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:7",
+   "text": "Sam: Sure, I'm loving this recipe I found. It's a flavorful and healthy grilled chicken and veggie stir-fry. Wanna give it a go?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:8",
+   "text": "Evan: Mmm, looks yummy! Is the sauce a family secret? I'm always down to try new recipes!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:9",
+   "text": "Sam: Nah, it's just my homemade sauce. Want the recipe?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:10",
+   "text": "Evan: Yeah, I'd love to! Thanks for sharing the recipe.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:11",
+   "text": "Sam: Sure thing! Here's the recipe. Let me know how it went!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:12",
+   "text": "Evan: Thanks Sam! I'll give it a shot and let you know how it went. Trying out new recipes is a great way to stay busy and creative. By the way, I also started taking a painting classes few days ago and I'm really enjoying it. It's all about trying new things, right?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:13",
+   "text": "Sam: You're already good at drawing, why did you decide to join a class? And why did you start painting then years ago anyway?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:14",
+   "text": "Evan: Thanks, Sam! It all started when a friend of mine gave me this painting one day, it inspired me a lot and that's when I started painting. And I joined the classes to find like-minded people and show them what I can do, you can always improve your skills.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:15",
+   "text": "Sam: Wow, that's awesome! You're really talented. Did you take any other classes?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:16",
+   "text": "Evan: Thanks, Sam! Just been painting with these for now, but might look into other classes. It's awesome for finding my peace and expressing myself!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:17",
+   "text": "Sam: Cool, Evan! What have you been learning in those classes?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:18",
+   "text": "Evan: In painting classes, we've been learning about watercolors. The instructor stresses observing nature and painting what we see. It's a relaxing way to take a break from everyday stress.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:19",
+   "text": "Sam: Wow, Evan! What type of nature do you enjoy painting the most?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:20",
+   "text": "Evan: I love painting landscapes. Nature's beauty captivates me and brings me peace. Here's one of my recent works.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:21",
+   "text": "Sam: Wow, Evan! The colors are so bright. How do you capture the tranquil beauty of nature in your paintings?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:22",
+   "text": "Evan: Thanks Sam! I aim to capture the vibe of nature in my paintings, conveying the peacefulness of being outdoors.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:23",
+   "text": "Sam: Wow, that pic is great! Do you often spend time in places like this?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:24",
+   "text": "Evan: Thanks! I love being in places like this - it brings back memories of road tripping in my trusty car.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:25",
+   "text": "Sam: Wow, that's cool! Have you been to any fun places in that ride?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:26",
+   "text": "Evan: Yep, last month I drove somewhere fun. The views were amazing!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:27",
+   "text": "Sam: Did you take advantage of the skiing opportunities in Banff? Sounds like it would have been a lot of fun!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:28",
+   "text": "Evan: Yeah, it was great for skiing! The snow was amazing and I had a lot of fun. Can't wait to go back next year! Did you try any winter sports, Sam?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:29",
+   "text": "Sam: Ooh, skiing looks like a blast! I'd love to try it but I'm not sure my body can take it. What about you? What winter activities do you enjoy?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:30",
+   "text": "Evan: Skiing, snowboarding, and ice skating are all fun winter activities I enjoy.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:31",
+   "text": "Sam: Wish I could join in on the fun! It sounds awesome.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:32",
+   "text": "Evan: I'd like you to join me, too. Winter activities are a blast - hopefully someday you will!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:33",
+   "text": "Sam: Yeah, maybe. It's hard with that, you know. But who knows? Thanks for the understanding, Evan - it really means a lot.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:1",
+   "text": "Sam: Hey Evan! Exciting news: I started a new diet and exercise routine last Monday and it's made a huge difference. I feel great! What about you, what changes have you made recently?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:2",
+   "text": "Evan: Wow, Sam, great! Glad your new diet/exercise is going well. As for me, I've hit a sore spot lately. Twisted my knee last Friday and it's really painful, so it's been tough to stay consistent with my usual fitness routine. It's really frustrating because staying active is like, mega-important to me.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:3",
+   "text": "Sam: Oh no, sorry to hear about that, Evan. It's frustrating when our bodies don't cooperate, isn't it? Is there anything I can do to help?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:4",
+   "text": "Evan: Thanks, Sam. I appreciate the concern. Life throws us curveballs - that's life, right? By the way, remember that book I was talking about? It just gets better with every page, can't let it out of my hands!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:5",
+   "text": "Sam: Life sure can be unpredictable and tough. Being adaptable and finding other ways to stay active is key when you're facing an obstacle. Maybe look into low-impact exercises or physical therapy to help with that? And damn, you really got me interested in this book haha!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:6",
+   "text": "Evan: Yeah, PT for my knee is on the cards. Hopefully I'll get an appointment soon. Till then, just keeping it low-key and swimming to stay active.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:7",
+   "text": "Sam: Swimming is a good choice, Evan. It's low-impact and easy on the joints, plus it's refreshing. Keep up with the active lifestyle!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:8",
+   "text": "Evan: Yeah, thanks for the push, Sam. Oh, hey, I came across this pic when I was tidying up. I took a road trip last month - the scenery was stunning and nature really chilled me out.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:9",
+   "text": "Sam: Wow, looks great! Where did you go? Bet it was nice to get away.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:10",
+   "text": "Evan: Thanks! I went up to the Rocky Mountains, it was so refreshing! The views were stunning and I felt so relaxed. Do you enjoy road trips and exploring nature?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:11",
+   "text": "Sam: I haven't gone on a road trip in ages, but I love being surrounded by nature. It's so tranquil and refreshing. I'd love to go hiking more, but it can be a bit challenging sometimes. However, I am working on becoming healthier, so maybe a road trip and a hike will be possible soon.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:12",
+   "text": "Evan: That's cool, Sam. Nature can be really peaceful. I'd suggest going for more hikes, like I do. It's always been calming and fun. We should definitely do one together sometime.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:13",
+   "text": "Sam: Sounds like fun! Which lake do you recommend? I'd love to explore some of the local trails.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:14",
+   "text": "Evan: Check out this one! It's gorgeous and there are lots of trails nearby. You'll love it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:15",
+   "text": "Sam: Wow, it looks great! Is it nearby? What a view!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:16",
+   "text": "Evan: It's only a two-hour drive from here, but trust me, it's worth every minute for the incredible views and peaceful atmosphere.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:17",
+   "text": "Sam: Cool, a day trip's doable. Nature's calling me, so I'm gonna go check it out! Thanks!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:18",
+   "text": "Evan: No worries, enjoy your time in nature. Take care! Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:19",
+   "text": "Sam: Thanks Evan. Have a good one. See ya!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:1",
+   "text": "Evan: Hey Sam! Long time no talk! Hope all is good. What have I been doing these past few weeks?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:2",
+   "text": "Sam: Hey Evan! Nice to hear from you. Life has been an up and down ride. Have you seen the pic I posted of my before and after body as a result of the diet? Working to motivate others to make better choices.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:3",
+   "text": "Evan: Hey Sam! Loving it. Making healthier choices has definitely made a difference for me. It's amazing how small changes can have such a big impact. How about you? Is it making a difference for you too?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:4",
+   "text": "Sam: Hey Evan, thanks for the support! Handling all this has been kinda wild. I'm trying to make healthier choices, but there are still the occasional cravings for sugary drinks and snacks... it's a real struggle.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:5",
+   "text": "Evan: Yeah, breaking bad habits can be hard. Cravings can be tough too, but little victories count. What do you think sets off those cravings for you?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:6",
+   "text": "Sam: It's usually stress, boredom, or just wanting comfort. You know, those sugary treats are so tempting, right?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:7",
+   "text": "Evan: Yeah, I get it. When I'm stressed, I always turn to something comforting. But I've found that painting or going for a drive helps too!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:8",
+   "text": "Sam: Wow Evan, that's an awesome painting! Good on you for finding a way to de-stress. I could really use something like that - maybe I'll give painting a go or find another calming hobby.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:9",
+   "text": "Evan: Hey Sam, painting is super chill for calming down. Wanna give it a try? I can help you get started and recommend some supplies if you're interested. Let me know!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:10",
+   "text": "Sam: Sounds great, Evan! I want to give it a go and see if it relaxes me. Can you suggest some basic supplies for me to get started?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:11",
+   "text": "Evan: Yep, painting is awesome! Get some acrylic paints, brushes, a canvas/paper, and a palette to mix colors. I can give you some recommendations if you want. Just let me know when you're ready and we can plan a painting session!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:12",
+   "text": "Sam: Sounds great, Evan! Can you help me pick out the stuff? Let's plan a painting session soon. I'm really excited!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:13",
+   "text": "Evan: Yeah, Sam - let's do it! Let's get everything ready and paint next Saturday. Can't wait!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:14",
+   "text": "Sam: Sounds good, Evan! Can't wait to paint with you next Saturday. It'll be a fun and creative activity.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:1",
+   "text": "Sam: Hey Evan, long time no see! I've started eating healthier - what's new with you? Picked up any new hobbies?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:2",
+   "text": "Evan: Hey Sam! That's awesome about your healthier eating! For me, I had a setback last week - messed up my knee playing b-ball with the kids. It's been tough to stay active since. I really miss going on adventures like we did last year - good times with the family!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:3",
+   "text": "Sam: Hey Evan, sorry to hear about your knee. It must be tough. Are there any ways to stay active while you heal up?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:4",
+   "text": "Evan: Thanks, Sam. PT has helped some. I can't do intense workouts, but I'm doing easy exercises to keep it strong. Not as good as being active outdoors, but still something.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:5",
+   "text": "Sam: Glad PT is helping, Evan! Taking care of yourself is key \u2013 have you explored any fun indoor activities or hobbies?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:6",
+   "text": "Evan: I do my favorite watercolor painting to keep me busy. It's a chill way to relax and get into the colors. By the way, something happened two weeks ago! You're not gonna believe this, I had a bit of an adventure recently. Helped a lost tourist find their way, and we ended up taking an unexpected tour around the city. It was a blast!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:7",
+   "text": "Sam: Hey Evan, that sounds like a fun and unexpected event! It's always interesting how helping someone can turn into a little adventure of its own. And how's your watercolor painting going?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:8",
+   "text": "Evan: It's been great! I find painting to be a great stress reliever. Here's what I did last week.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:9",
+   "text": "Sam: Wow, those are awesome! So cool. Where did you get the inspiration for them?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:10",
+   "text": "Evan: Thanks, Sam! The sunset painting was inspired by a vacation a few years back. The colors were so stunning. The cactus painting came from a road trip last month. Such cool places!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:11",
+   "text": "Sam: Wow, Evan, your paintings are awesome! How do you decide what to paint?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:12",
+   "text": "Evan: Thanks, Sam! I usually paint what's on my mind or something I'm feeling. It can be good memories or places I wanna go to. It's more like expressing myself through art.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:13",
+   "text": "Sam: That's really amazing, Evan. Expressing yourself through art is such a powerful form of self-expression.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:14",
+   "text": "Evan: Thanks, Sam. Yeah, it's really a great way to express myself and my emotions. It's a cool way to communicate without using words. So, do you have any other ways in which you express yourself?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:15",
+   "text": "Sam: Drawing is cool. I'm still just learning how to draw, but I love expressing myself through writing. It's therapeutic and helps me sort out my feelings. Though, I've been a bit frustrated lately with my new phone. Its navigation app keeps malfunctioning, making getting around a bit of a challenge.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:16",
+   "text": "Evan: Cool, Sam! Writing is a great way to express yourself. What kind of writing do you enjoy? And about the phone, I recommend trying to update it, it usually works for me!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:17",
+   "text": "Sam: Thanks for the tip, Evan! Writing in my journal and doing creative writing is a good way for me to express my innermost thoughts and feelings.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:18",
+   "text": "Evan: It can be super therapeutic. It gives you a place to express yourself. Keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:19",
+   "text": "Sam: Thanks, Evan! It really helps me make sense of things and express my feelings. It's like having a conversation with myself.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:20",
+   "text": "Evan: Gotcha, it's like having a place to figure stuff out and make sense of it all. We all need an outlet to express our thoughts and feelings.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:1",
+   "text": "Sam: Hey Evan, hope you're doing okay. I wanted to chat about something that's been bothering me lately... I went for a check-up Monday and my doc said my weight's a serious health risk - if I don't make changes soon, it can get worse. I know I made jokes about it, but it's really hitting me. Been having a hard time.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:2",
+   "text": "Evan: Hey Sam, tough news. Yeah, our health can really put a damper on things. I started lifting weights one year ago and it's been a journey. It was a struggle at first, but I'm seeing some gains. You interested in trying it out?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:3",
+   "text": "Sam: Hey Evan, I'm interested in getting into it. Any advice on how to get started? Thanks!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:4",
+   "text": "Evan: Hey Sam, that's awesome! It's important to start out with good form and technique. Find a trainer who can help you avoid injuries while you build your strength. Start with something small, and as you get stronger, the intensity can increase. Stay consistent with your workout routine and let me know how it goes! Good luck!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:5",
+   "text": "Sam: Thanks, Evan. I'm going to find someone who can help me out. I'll keep you posted!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:6",
+   "text": "Evan: No problem, Sam. Can't wait to hear about your progress. Keep up the hard work!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:7",
+   "text": "Sam: Thanks, Evan. I appreciate your support. It really means a lot to me. I'll definitely keep you posted on my progress.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:8",
+   "text": "Evan: You're welcome, Sam! It takes time, so be patient with yourself. Your health matters, and I believe in you. Keep going and stay upbeat. You got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:9",
+   "text": "Sam: Thanks, Evan. I'll stay positive and keep going. Your support means a lot.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:10",
+   "text": "Evan: Hey Sam, glad I can be here for you! Progress is key, so keep pushing on and stay positive. You got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:11",
+   "text": "Sam: Wow, Evan, that's really inspiring. Gonna keep believing in it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:12",
+   "text": "Evan: Go get 'em! Believe in your abilities and you'll reach your goals. Stay motivated!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:13",
+   "text": "Sam: Thanks Evan! Your words gave me a boost. I'm staying motivated and believing in myself.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:14",
+   "text": "Evan: Awesome! Keep staying motivated and believing in yourself. You've got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:15",
+   "text": "Sam: Thanks, Evan! Your support means a lot to me.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:16",
+   "text": "Evan: No prob, Sam! I'm here for you. Just keep taking one step at a time, and you'll get there eventually!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:17",
+   "text": "Sam: Sure, Evan. I'll take it slow. See ya!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:1",
+   "text": "Evan: Hey Sam, how's it going? Been a while since we talked. Hope all is good.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:2",
+   "text": "Sam: Hey Evan! It's been a rough week - I gave in and bought some unhealthy snacks. I feel kinda guilty. How's it going for you? That painting is awesome! Did you paint it?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:3",
+   "text": "Evan: Hey Sam, sorry to hear about the rough week. Don't worry about the snacks. I'm doing okay, just finished this painting of a sunset. It really helps me relax. So, how's everything going with you? Anything new and exciting?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:4",
+   "text": "Sam: Thanks, Evan! Yeah, I just couldn't resist them. Gotta do better. As for me, just dealing with work stress and trying to stay motivated.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:5",
+   "text": "Evan: Hey Sam, work stress can really get to you. Have you tried anything new to de-stress? Maybe picking up a hobby or something could help.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:6",
+   "text": "Sam: Thinking about trying something different outdoors. Any suggestions?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:7",
+   "text": "Evan: Sounds good! Have you ever tried kayaking? It's a fun and active way to paddle on a river or lake. What are your thoughts on that?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:8",
+   "text": "Sam: Kayaking sounds awesome! Haven't tried it yet, but it looks like a fun way to get in some exercise and enjoy nature. I'm definitely considering giving it a try. Thanks!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:9",
+   "text": "Evan: No worries, Sam! It's a fun way to get in some exercise and enjoy nature. Let me know when you're ready to give it a try and I can hook you up with a good spot.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:10",
+   "text": "Sam: Thanks for the idea, my mate and I are just around the corner from kayaking on the lake, we're going to try that now!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:11",
+   "text": "Evan: Of course, let me know if you like it, we can plan a kayaking trip together, I'll pick a cool spot!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:12",
+   "text": "Sam: Yep, Evan! Can't wait. Thanks for the help!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:13",
+   "text": "Evan: Ready for an adventure? Where will you go?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:14",
+   "text": "Sam: We're traveling through Lake Tahoe! I heard it's great for kayaking.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:15",
+   "text": "Evan: Hey Sam, it's an awesome pick! You'll love it there - clear water and gorgeous views. Have a blast and take lots of pics!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:16",
+   "text": "Sam: Thanks, Evan! I'm looking forward to it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:1",
+   "text": "Sam: Hey Evan! I've been missing our chats. I had quite the health scare last weekend - ended up in the ER with a severe stomachache. Turns out, it was gastritis, which was pretty alarming. It was a wake-up call for me to start prioritizing my health, like adopting a more nutritious diet and getting regular exercise. On top of that, my phone's been giving me a hard time, adding to the stress.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:2",
+   "text": "Evan: Hey Sam, sorry to hear about that. Gastritis can be tough. Taking care of ourselves is important. BTW, I've been focusing on fitness and it's been really beneficial for my overall well-being. Funny thing, I had another encounter with a lost tourist recently. Seems like helping tourists is becoming a recurring theme in my life!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:3",
+   "text": "Sam: Thanks, Evan! Glad you've found that it's been good for you! I totally need to get into it too. Just getting started is hard - any tips for staying motivated? Also, you mentioned another lost tourist? Seems like you're becoming the go-to guy for tourists in need!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:4",
+   "text": "Evan: Yup, Sam! Set some goals, like a certain distance to run or number of push-ups to do. It'll give you something to strive for and stay motivated. Also, try to find an exercise that you enjoy and maybe even get a buddy for extra fun and accountability. Sound good?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:5",
+   "text": "Sam: Yeah, that sounds like a good idea. Having goals and someone to exercise with might help. I'll give it a try!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:6",
+   "text": "Evan: Awesome, Sam! Getting started will get easier with time. And don't forget it's about feeling good and reaching goals, too. Let's plan a hike soon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:7",
+   "text": "Sam: Sounds awesome, Evan! Can't wait to go on a hike with you. It's going to be a fun challenge and a great opportunity to appreciate the beauty of nature.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:8",
+   "text": "Evan: Definitely, Sam! Hiking is an awesome way to bond with nature and push ourselves. It's gonna be a cool memory for us both. It's great to see progress, was just at the gym yesterday. Gaining strength!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:9",
+   "text": "Sam: Super excited to get fit with ya. Let's hit the trails soon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:10",
+   "text": "Evan: Thanks, Sam! That's so nice of you. We'll definitely have a great time on our hike!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:11",
+   "text": "Sam: Totally! I'm so pumped for this hike. Connecting with nature is exactly what I need. Thanks so much for the support and always being there. Means a lot.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:12",
+   "text": "Evan: Sure thing! Our hike is going to be awesome, I can tell. I'm always here to support you.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:13",
+   "text": "Sam: Thanks, Evan. I appreciate your support.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:14",
+   "text": "Evan: No problem, Sam. Whenever you need support, I'm here for you. Stay safe!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:15",
+   "text": "Sam: Thanks, I'll get in touch if I need anything. Stay safe. Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:16",
+   "text": "Evan: Later! Stay safe and don't hesitate to holler if you need anything. Can't wait to hit the trail.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:1",
+   "text": "Sam: Morning, Evan. I've been trying to keep up with my new health routine, but it's tough. My family's really pushing for it, and I feel so pressured.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:2",
+   "text": "Evan: I hear you, Sam. It's important to have people who encourage you, but not stress you out. By the way, I just got back from my morning walk. It really helps to start the day actively.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:3",
+   "text": "Sam: Yeah, it's easier when you have a great support system. Thanks for being there for me.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:4",
+   "text": "Evan: No worries, Sam. I'll be there for you. Take it slow and treat yourself.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:5",
+   "text": "Sam: Thanks for the reminder to take it easy. I sometimes get impatient with myself when I want results fast, but I gotta be patient.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:6",
+   "text": "Evan: Yep, progress takes time. So just take it one step at a time.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:7",
+   "text": "Sam: Yes, you're right, Evan. Taking it slow is better than doing too much. I appreciate your support.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:8",
+   "text": "Evan: I get it, Sam. I went through a similar phase a twoyears ago. Changed my diet, started walking regularly, things like that.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:9",
+   "text": "Sam: Wow, Evan, you look great! How did you manage the change?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:10",
+   "text": "Evan: I started focusing more on my well-being rather than fixating on quick results. Letting go of that pressure made a huge difference.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:11",
+   "text": "Sam: That's impressive, Evan. It's inspiring to see how you transformed by changing your mindset.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:12",
+   "text": "Evan: Thanks, Sam. Letting go of unrealistic expectations was liberating, both physically and mentally.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:13",
+   "text": "Sam: You're really doing great, Evan! I want to feel that same sense of freedom.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:14",
+   "text": "Evan: Thanks, Sam. Just take it one day at a time. Celebrate small victories.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:15",
+   "text": "Sam: Thanks, Evan! Focusing on small wins sounds like a plan. I'll take it one day at a time.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:16",
+   "text": "Evan: Exactly! Congrats on every little victory. Keep it up, I'm here for you.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:17",
+   "text": "Sam: Your support means everything. Here's to moving forward!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:18",
+   "text": "Evan: Anytime, Sam! Let's keep pushing ahead. I'm here to help you. Take care!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:1",
+   "text": "Sam: Hey Evan! Hope you're doing good. Got some good news to share - I'm a Weight Watchers coach in my group now! It's a pretty big accomplishment for me, feel really proud.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:2",
+   "text": "Evan: Congrats Sam! That's awesome! I'm super proud of you. Becoming a Weight Watchers coach is a big deal. Keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:3",
+   "text": "Sam: Thanks, Evan! Appreciate your support. It's been a journey, and being chosen as a coach is a great step in my quest for better health.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:4",
+   "text": "Evan: Wow, Sam! You've come such a long way. It's exciting to see what comes next for you in your quest for better health.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:5",
+   "text": "Sam: Thanks, Evan! It feels great to see progress. Being a coach will hopefully keep me motivated and help others stay committed too. It's a big challenge, but I'm ready for it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:6",
+   "text": "Evan: That's awesome, Sam! Helping others stay committed and motivated is so rewarding. You really inspire us. Keep up the great work!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:7",
+   "text": "Sam: Thanks, Evan! Your kind words mean a lot. It's been a difficult road, but I'm determined to continue making a positive impact.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:8",
+   "text": "Evan: Sorry about missing any events, I've had some personal challenges since we last spoke. Still here for you though - do you need any support or want to share anything? Btw look what i got!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:9",
+   "text": "Sam: Hey, it looks so vintage and cool! What model is it? How've you been doing lately? I'm here if you wanna chat.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:10",
+   "text": "Evan: It's a 1968 Kustom K-200A vintage guitar and I got it as a gift from a close friend. It's been a tough time for me since we last caught up; I lost my job last month, which has been pretty rough. But I really appreciate your support through all this.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:11",
+   "text": "Sam: Sorry to hear about your job, Evan. What happened?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:12",
+   "text": "Evan: It's been a bit of a rough patch lately. The company downsized, and I was part of that. I'm currently on the hunt for a new job, which hasn't been easy, but I'm keeping my spirits up and staying hopeful.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:13",
+   "text": "Sam: Sorry about your job, Evan. It's tough when it comes out of nowhere, but I'm proud of how you're handling it. Let me know if you need someone to talk to or if I can do anything to help. You'll get through this.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:14",
+   "text": "Evan: Thanks, Sam. Your support means a lot. It's been quite a ride, but I really appreciate having someone like you to talk to. I'll definitely reach out if I need anything.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:15",
+   "text": "Sam: For sure, Evan! I'm here for ya. Life can be tough sometimes, but we got this. Stay positive and it'll all work out. Just know that I'm here if you need someone to talk to.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:16",
+   "text": "Evan: Thanks, Sam. Your kind words and support mean a lot. It's great to have you here. I'm gonna stay positive and keep going. Cheers!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:17",
+   "text": "Sam: Wow, that sunset is stunning! It's so soothing just to see it. Is that a special spot you go to watch sunsets?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:18",
+   "text": "Evan: Yeah, it's this peaceful place close to my home. I often go there to relax and unwind.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:19",
+   "text": "Sam: That sounds wonderful, Evan! I'd love to check it out with you sometime.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:20",
+   "text": "Evan: Oh, I wish I could bring you along. That picture was actually taken last Friday at my favorite spot by the beach. Watching the waves and the sunset colors really helps me find peace, especially during tough times. It's a beautiful reminder of nature's resilience. We should definitely plan to go together someday.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:21",
+   "text": "Sam: No worries, Evan. And yes, we should make a plan to go. That photo is just mesmerizing!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:22",
+   "text": "Evan: I'm glad you like it! It's a really calming place. Let's make a point to visit it together soon.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:23",
+   "text": "Sam: Absolutely, Evan! A trip there sounds like the perfect way to de-stress.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:24",
+   "text": "Evan: Awesome, let's do it! Let's plan it for next month, I'm already excited about exploring it together!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:1",
+   "text": "Sam: Hey Ev! Long time no chat. How's it going? Hope all is well.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:2",
+   "text": "Evan: Hey Sam, good to hear from you! Life's been a wild ride lately. Last week, I had a health scare and had to go to the hospital. They found something suspicious during a check-up, which freaked me out. Thankfully, it was all a misunderstanding, but it made me realize how important it is to keep an eye on my health. How've you been?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:3",
+   "text": "Sam: Woah, Evan, that must've been scary! Phew, it was just a misunderstanding. A health scare can really make you re-evaluate what's important. As for me, I've been dealing with some discomfort and it's been limiting my movement. I've been trying to make changes diet-wise, but it can be hard.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:4",
+   "text": "Evan: That sucks, Sam. It's tough when our health holds us back. I believe in you \u2013 just taking small steps can help. Have you tried any new hobbies recently to take your mind off it?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:5",
+   "text": "Sam: Thanks, Evan. I haven't tried much new lately, but I did get this yesterday. It's been my go-to 'feel good' flick. So, you said you had a health scare - how're you now?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:6",
+   "text": "Evan: That movie sounds interesting! I'm doing well now. Doctors said everything is fine, but it taught me the value of life. Just trying to enjoy the moment.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:7",
+   "text": "Sam: That's awesome, Evan! Let's make it a habit to appreciate something each day. It really helps us enjoy life more. What do you think?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:8",
+   "text": "Evan: Sounds good, Sam! Let's take the time to appreciate the little things in life.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:9",
+   "text": "Sam: Thanks for always being there, Evan. It means a lot.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:10",
+   "text": "Evan: Sure, Sam. I'm here for you. We gotta stick together, especially now.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:11",
+   "text": "Sam: Yeah, Evan. Life can be tough sometimes, but having supportive people like you makes it way easier.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:12",
+   "text": "Evan: Yeah, Sam. Tough times are way easier with friends we can rely on. We've got each other!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:13",
+   "text": "Sam: Looks like you're having a blast! I was wondering, what do you do to stay fit and healthy?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:14",
+   "text": "Evan: That was wild! I stay in shape by hitting the gym and taking my car out for a spin. Gotta keep it up! How are you doing on your fitness goals, Sam?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:15",
+   "text": "Sam: Fitness goals have been hard to reach, but hey, that's life!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:16",
+   "text": "Evan: Yeah Sam, it's true. Progress takes time, so keep pushing.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:17",
+   "text": "Sam: Where is that? It looks gorgeous!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:18",
+   "text": "Evan: This little island is where I grew up and it's my happy place.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:19",
+   "text": "Sam: Wow, that spot looks gorgeous. Growing up there must have been so peaceful and stunning.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:20",
+   "text": "Evan: Yeah, it was. That place shaped me and will always hold a special place in my heart.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:21",
+   "text": "Sam: Yeah, it can be soul-calming.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:22",
+   "text": "Evan: Yeah, it really is. So serene and calming.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:23",
+   "text": "Sam: It's heavenly!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:24",
+   "text": "Evan: Yeah, it's like a little slice of paradise. I always feel so peaceful and serene when I'm there.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:25",
+   "text": "Sam: Wow, it really seems like a peaceful retreat. Thanks for showing me!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:26",
+   "text": "Evan: No prob, always good to chat about those tranquil times. Take it easy!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:27",
+   "text": "Sam: Take care, buddy. Hang in there!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:28",
+   "text": "Evan: Thanks, Sam. If you need to talk, I'm here for you too.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:1",
+   "text": "Evan: Hey Sam, good to hear from you. I've hit a bit of a snag - my new Prius, the one I just bought, broke down. It's a bit of a stressor since I rely on it for my active lifestyle and road trips. It's frustrating when new things go awry so soon.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:2",
+   "text": "Sam: Hey Evan, that's rough. Dealing with a new car breaking down is such a hassle, especially when it's your main mode of transport.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:3",
+   "text": "Evan: You're telling me. I was really counting on this new Prius to be reliable. It's always a challenge when you have to deal with unexpected issues like this. But, I guess it's just one of those things - even new cars can have problems.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:4",
+   "text": "Sam: It's tough when your plans get derailed by something like this. But hey, sometimes these setbacks lead to new opportunities.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:5",
+   "text": "Evan: True, I'm trying to see it as a chance to explore other ways of staying active and traveling. Maybe it's an opportunity to try something different.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:6",
+   "text": "Sam: Exactly, it's all about finding the silver lining. Speaking of new things, I attended a Weight Watchers meeting yesterday. Learned some great tips.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:7",
+   "text": "Evan: That smoothie bowl looks fantastic! How was the meeting? Yeah, I've been thinking about trying yoga, something gentle yet effective for stress relief and flexibility. What's your take on it, Sam?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:8",
+   "text": "Sam: The meeting was really insightful, and that smoothie bowl was a hit! Yoga's a great choice, it's done wonders for my flexibility and stress levels. You should definitely try it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:9",
+   "text": "Evan: I think I will. Thanks for the suggestion, Sam.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:10",
+   "text": "Sam: Anytime, Evan. If you need any yoga tips or anything else, just let me know.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:11",
+   "text": "Evan: Your support's been invaluable. Thanks again, Sam!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:12",
+   "text": "Sam: No worries, Evan. We all need a bit of help when trying new things. It's great to have support.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:13",
+   "text": "Evan: Absolutely. It makes a big difference knowing you're not alone in these situations.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:14",
+   "text": "Sam: Definitely. Take care, and let me know how the yoga goes. Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:15",
+   "text": "Evan: Will do. Thanks for everything, Sam. Talk soon. Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:1",
+   "text": "Evan: Hey Sam, hope you're doing good. Wanted to share some amazing news - my partner is pregnant! We're so excited! It's been a while since we had a kiddo around.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:2",
+   "text": "Sam: Congrats, Ev! That's great news! Parenthood is so amazing. How are you feeling about it?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:3",
+   "text": "Evan: So excited and a bit nervous! It's been a while since I had a toddler around but I'm really looking forward to it. Parenthood is so rewarding. I still remember when my first child was born, the joy was amazing. Looking forward to witness the miracle of life and build more memories with my family!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:4",
+   "text": "Sam: Wow, you're gonna be an amazing parent! Treasure those memories, they're truly special.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:5",
+   "text": "Evan: Thanks Sam! Absolutely. Talking of memories, I want to show you this. It's a collage of some of our top family memories. Each photo has an amazing moment - birthdays, holidays, vacations - so good to look back and recall all the great times we had.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:6",
+   "text": "Sam: That's so lovely, Evan. Your family looks so happy. What's the story behind that sign in the center?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:7",
+   "text": "Evan: Oh, that one? It's from our trip to Banff. We have this sign in the frame that says 'Bring it on Home' - it's our family's motto, always reminding us of the importance of togetherness, no matter where we are.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:8",
+   "text": "Sam: That's really touching, Evan. It's important to have something that keeps the family bond strong.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:9",
+   "text": "Evan: Absolutely, Sam. My family means the world to me. They're my rock. I'm looking forward to expanding our family and creating even more beautiful memories.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:10",
+   "text": "Sam: That's wonderful to hear, Evan! It's clear how much you value your family. Are you thinking of any specific plans or events to add to that collage?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:11",
+   "text": "Evan: Thanks, Sam! Yeah, we're planning a big family reunion next summer. It's going to be a blast and a perfect opportunity to add to our collage.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:12",
+   "text": "Sam: Sounds fantastic! If you need any tips on organizing such a big event, just let me know. I'm always here to support and celebrate your family's milestones.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:13",
+   "text": "Evan: Thanks, Sam! Your support means a lot. I'll keep you updated. Take care, bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:14",
+   "text": "Sam: Take care, Evan! Can't wait to hear about it. Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:15",
+   "text": "Evan: Bye Sam. I'll definitely keep you updated. Thanks for the kind words and support. Take care!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:1",
+   "text": "Evan: Hey Sam, what's up? Long time no see, huh? Lots has happened.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:2",
+   "text": "Sam: Hey Evan! Long time no see. I'm doing okay, been through a few bumps. How about you?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:3",
+   "text": "Evan: It's not easy for us right now, my son had an accident last Tuesday, he fell off his bike and it was rough. But he's doing better now. How are you dealing with all this?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:4",
+   "text": "Sam: Darn, sorry to hear that. Hope he's feeling better. Same here, it's been tough lately. After we talked, I started thinking about ways to cope with it, but it's been challenging.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:5",
+   "text": "Evan: Life can be hard sometimes. Do you have any hobbies or activities that make you happy?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:6",
+   "text": "Sam: I used to love hiking, but it's been a while since I had the chance to do it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:7",
+   "text": "Evan: I remember you mentioning that! Hiking is indeed a great way to center oneself and be one with nature. We should definitely plan a hike soon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:8",
+   "text": "Sam: Yeah, I'm struggling with my weight and it's affecting my confidence. I feel like I can't overcome all the challenges with my weight, I keep lacking motivation.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:9",
+   "text": "Evan: Yeah, I understand it can be challenging. But remember, it's important to believe in yourself and take it one day at a time, Sam. Your worth is not defined by your weight.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:10",
+   "text": "Sam: Cheers, Evan. Appreciate the help. It's tough breaking out of my comfort zone.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:11",
+   "text": "Evan: Stepping out of your comfort zone can be intimidating, but it's totally worth it. Just challenge yourself to try something new, even if it's just a little thing. You got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:12",
+   "text": "Sam: Thanks, Evan. I'll take your advice. Trying new things can be difficult.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:13",
+   "text": "Evan: Yeah, trying something new and succeeding gives a great feeling of accomplishment. Give it a go, even if it's just a little thing. You'll be amazed!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:14",
+   "text": "Sam: She looks so confident! What kind of painting is that in the background?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:15",
+   "text": "Evan: \nThis is a contemporary figurative painting that I've finished few days ago, emphasizing the emotional state through expressive brushwork and vibrant color choices. It captures a moment of introspection, where the subject is deeply immersed in thought. Very proud of it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:16",
+   "text": "Sam: That's amazing work, who's the girl standing next to painting?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D20:17",
+   "text": "Evan: That's a close friend of mine who helped me get this painting published in the exhibition!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:1",
+   "text": "Sam: Hey Evan! Long time no see, how's it going?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:2",
+   "text": "Evan: Hey Sam! Long time no see! Been up and down lately, got married last week - how about you?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:3",
+   "text": "Sam: Congratulations, Evan! Is that the woman from Canada?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:4",
+   "text": "Evan: Yes, that's her, I don't know why we didn't get married before, because I was in love with her at first sight!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:5",
+   "text": "Sam: Wow, Evan! Love at first sight? That sounds like something straight out of a fairy tale. What are your thoughts on it? Do you believe in love at first sight?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:6",
+   "text": "Evan: I totally believe in it. It was like time stopped and I felt like a spark lit inside me - it was so right.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:7",
+   "text": "Sam: That's awesome, Evan! Finding that kind of connection must feel really liberating. Love can be so powerful, huh?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:8",
+   "text": "Evan: Yeah, Sam, love is truly amazing. It brings so much happiness and fulfillment, like a beautiful sunset that lights up our lives and brings peace. Incredible!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:9",
+   "text": "Sam: Wish I could feel the same about love, but I've started to enjoy running in the mornings, and it's been a great way to clear my head. What can you do, right?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:10",
+   "text": "Evan: Yeah, I get it. Life's all about finding what works for you. Like your morning runs, they're a step towards something good, right? Keep trying new things, Sam, and you might find your own version of love in the most unexpected places. Embrace the journey \u2014 it\u2019s full of surprises!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:11",
+   "text": "Sam: Such a minimalistic and stunning piece of work, I wonder what inspired the artist to create it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:12",
+   "text": "Evan: The painting is mine, I made it when I was a mix of emotions - sad, mad, and hopeful. Art is amazing how it can portray feelings without words.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:13",
+   "text": "Sam: Wow, Evan! Art is really amazing at expressing emotions - it's truly fascinating.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:14",
+   "text": "Evan: It's amazing how art can express emotions so well. It really helps me recognize and handle my own feelings. This painting is giving me a massive rush of joy!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:15",
+   "text": "Sam: That's stunning! What emotions did you create this painting with?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:16",
+   "text": "Evan: I painted this with a sense of joy and freedom. The spontaneous strokes and bold colors reflect a playful and liberated mood, embracing the creative process without restraint.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:17",
+   "text": "Sam: Wow, Evan, this is amazing! You've got serious talent and creativity. Making this must have been so satisfying! Here's a painting that inspired me when I went to an exhibit few days ago.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:18",
+   "text": "Evan: \nThanks, Sam! I appreciate the compliment. This painting has such an inspiring vibe; you really have a knack for understanding art! How about you? How long have you been painting?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:19",
+   "text": "Sam: \nI do sketch occasionally, but I haven't created anything remarkable yet. I have a feeling I'll have something to show off before long! Seeing your passion for it is inspiring.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:20",
+   "text": "Evan: Thanks, Sam! Glad I could motivate you. If you ever want to give it a go, I'm happy to help get you started. Speaking of which, you know what? I lost my keys again, it's become a weekly ritual for me!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:21",
+   "text": "Sam: Ooh, Evan, I'd put a GPS sensor on your keys!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D21:22",
+   "text": "Evan: Great idea, I think I'll do that as soon as I find it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:1",
+   "text": "Sam: Hey Evan! I\u2019m really getting into this healthier lifestyle\u2014just took my friends on an epic hiking trip last Friday!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:2",
+   "text": "Evan: Hey Sam! That\u2019s fantastic\u2014nothing like a good hike to feel alive. We took the Prius for a long drive to the mountains last weekend. It was perfect until we got into a little scrape on the way back.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:3",
+   "text": "Sam: Oh no, were you guys okay after the accident?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:4",
+   "text": "Evan: Yeah, we were fine, thanks. Just a minor accident, but it put a bit of a damper on telling my work friends about getting married. They\u2019ve been a great support, though.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:5",
+   "text": "Sam: I bet they were thrilled to hear about your marriage, despite the mishap!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:6",
+   "text": "Evan: Absolutely, it's been a whirlwind of emotions. Good thing the accident was minor. Just a reminder to take it easy on the road, I guess.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:7",
+   "text": "Sam: True, it\u2019s important to stay safe. Glad you can still enjoy the peaceful moments after something like that.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:8",
+   "text": "Evan: Definitely, nature brings peace and clarity - it's a great experience.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:9",
+   "text": "Sam: Nature can make everything else seem small and help us find peace inside. It reminds us of the bigger picture, you know?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:10",
+   "text": "Evan: For sure, and nature has been a great healer. Speaking of which, I\u2019ve got to share some of these new healthy snacks I\u2019ve been trying.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:11",
+   "text": "Sam: They look healthy and delicious! Perfect for after a hike or, I guess, post-accident recovery, huh?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:12",
+   "text": "Evan: Exactly! They\u2019re packed with nutrients and really easy to make. You also need to try these cookies, they are awesome! I\u2019ll send you the recipes.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:13",
+   "text": "Sam: Thanks, I\u2019d appreciate that. It\u2019s good to find new ways to stay healthy. Do you have any healthier snack ideas?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:14",
+   "text": "Evan: Yeah, I've been trying to eat healthier too. Check out this cool recipe I discovered for these energy balls.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:15",
+   "text": "Sam: Do you like them? I know they can be an acquired taste.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:16",
+   "text": "Evan: I enjoy the taste of these. They're energizing and a healthy way to satisfy your sweet tooth.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:17",
+   "text": "Sam: Awesome! Always on the lookout for healthy snacks, thanks for the tip!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:18",
+   "text": "Evan: Glad to help - hope you enjoy it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:19",
+   "text": "Sam: Thanks, Evan! I'll give these a try. They look yum. Your help means a lot to me. Btw you know what? I went to the store again and, unsurprisingly, had issues with the self-checkout. It's becoming a regular annoyance.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:20",
+   "text": "Evan: That's very strange, I've never had a problem with it once!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D22:21",
+   "text": "Sam: Apparently I attract that to me, if you ever want to be in that situation, call me at the store with you!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:1",
+   "text": "Evan: Hey Sam, guess what? My partner and I told our extended fam about our marriage yesterday \u2013 it was so special! We've been totally overwhelmed by all their love and support.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:2",
+   "text": "Sam: Congrats on the news, Evan! You two look so happy in the pic. These moments make life so wonderful; super stoked for you!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:3",
+   "text": "Evan: Thanks, Sam! It was an awesome moment, and I feel really lucky to have found someone who gets me. Plus, our families are really happy for us - that's the best part!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:4",
+   "text": "Sam: Wow, Evan. It's awesome that you've found someone who gets you! Having your family's support must feel great.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:5",
+   "text": "Evan: Definitely, family support is so important. Knowing they're happy about our marriage is awesome and so comforting.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:6",
+   "text": "Sam: Yeah, it's awesome to have that support. It definitely brings more happiness and joy.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:7",
+   "text": "Evan: Yeah Sam, that means a lot to me. Our bond just keeps getting stronger and it brings such a good feeling to our lives. Family really is everything.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:8",
+   "text": "Sam: Agree, Evan! Family is everything - they bring so much love and happiness. They're always there for us no matter what. I'm grateful for their support and love.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:9",
+   "text": "Evan: For sure, Sam. That's what makes family so special. They bring so much love and happiness. It's great having their support and knowing they're always there for us. I feel really fortunate to have their never-ending love and support.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:10",
+   "text": "Sam: Yeah, definitely, Evan. We both have amazing families that are always there for us. Always a blessing.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:11",
+   "text": "Evan: Yeah, Sam. Our families give us so much joy, support, and love. They're a real blessing! I don't know what I'd do without them.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:12",
+   "text": "Sam: Hey, Evan. My family has been my rock through everything. Don't know what I'd do without them.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:13",
+   "text": "Evan: Yeah, they are our rock. We're blessed to have them.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:14",
+   "text": "Sam: Wow, you guys are awesome! What's cooking tonight?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:15",
+   "text": "Evan: Thanks, Sam! We're having a family get-together tonight and enjoying some homemade lasagna. Super excited! By the way, I've started a new diet\u2014limiting myself to just two ginger snaps a day. What's on your menu tonight?\t",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:16",
+   "text": "Sam: That's a great discipline, Evan! We're keeping it light tonight, just some homemade lasagna. Can't compete with your ginger snap limit though!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:17",
+   "text": "Evan: Oh this must be very hearty and delicious, well I'll have to stick to the diet plan, even with the family gathering!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:18",
+   "text": "Sam: Yeah, the lasagna was pretty awesome, but check out what I had for dessert, I'm sure you're drooling!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:19",
+   "text": "Evan: Looks yummy! Did you make that?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:20",
+   "text": "Sam: No, I didn't make it. This is actually a pic from my cousin's wedding. It's super special.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:21",
+   "text": "Evan: Wow Sam! Weddings are indeed special. This looks great, yum!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:22",
+   "text": "Sam: Ooh, nice cake! Reminds me of special occasions. Do you have any upcoming plans?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:23",
+   "text": "Evan: Thanks Sam! We're off to Canada next month for our honeymoon. So excited to create some awesome memories. Looking forward to exploring the beautiful snowy landscapes there.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:24",
+   "text": "Sam: Wow, that looks great! What are your plans for the trip?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:25",
+   "text": "Evan: We're planning to ski, try the local cuisine, and enjoy the beautiful views. We're really excited!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:26",
+   "text": "Sam: Sounds amazing, Ev! Skiing, trying local dishes, and enjoying the breathtaking views - the perfect honeymoon. Have an incredible time creating unforgettable memories!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:27",
+   "text": "Evan: Yeah, Sam! Gonna try some poutine while we're there - can't wait!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:28",
+   "text": "Sam: Never tried it? Can't say I blame you, it's kind of a Canadian thing. Let me know how you like it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:29",
+   "text": "Evan: Sure thing, Sam! Let's see if it lives up to the hype. I'll let you know what happens!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:30",
+   "text": "Sam: Yeah, Evan! Let me know all about it. Don't forget the details!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:31",
+   "text": "Evan: Cool, Sam. I'll keep you posted. Talk soon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:32",
+   "text": "Sam: Awesome, Evan! Catch you soon. Have a great trip!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D23:33",
+   "text": "Evan: Thanks, Sam! Catch you later. Have a great one!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:1",
+   "text": "Evan: Hey Sam, hope you're doing good. Something funny happened last night.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:2",
+   "text": "Sam: Hey Evan, what's up? What happened? Let me know.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:3",
+   "text": "Evan: Yesterday I went out with my friends and had a bit too much to drink. I ended up doing something I regret and it involved someone's roses.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:4",
+   "text": "Sam: What's up with that incident? All good now?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:5",
+   "text": "Evan: Oof, Sam, so embarrassing! I had a pee accident near some roses - can you believe it? I'm so sorry about that.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:6",
+   "text": "Sam: Uh oh, Evan! That's awkward. Did anyone get mad at you? Are you okay?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:7",
+   "text": "Evan: I was so embarrassed when I saw what happened the next morning, so I apologized and luckily they were understanding. Yeah, I was out of control--guess I gotta be more careful next time.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:8",
+   "text": "Sam: They were understanding? Phew! We all mess up sometimes, we're human after all.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:9",
+   "text": "Evan: Yeah, they were understanding, which was great. But it's a good reminder to be more careful. We all make mistakes, but it's important to learn from them. Speaking of, my partner and I tried snowshoeing this weekend. It was part of a new adventure for us and surprisingly fun.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:10",
+   "text": "Sam: Yeah, Evan, you're right. Mistakes happen, but it's good to learn from them. Snowshoeing sounds like a great way to stay active during the winter. I've been thinking and I made a meal plan and workout schedule. I'm getting motivated by something I saw, so starting today I'm gonna do my best to stay on track.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:11",
+   "text": "Evan: Good work, Sam! You've got a plan and you're dedicated to staying healthy - have you asked your doctor for advice? They could probably give you even more diet and exercise tips.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:12",
+   "text": "Sam: Thanks, Evan! Haven't seen a doctor in a while, but it's probably a good idea to get some advice. I'm going to make an appointment soon.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:13",
+   "text": "Evan: What advice are you planning to get from the doctor?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:14",
+   "text": "Sam: I'm gonna ask the doc about a balanced diet plan and getting advice on low-impact exercises, given my current situation.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:15",
+   "text": "Evan: Sounds good, Sam. That's definitely a step in the right direction. Remember to focus on a balanced diet and low-impact exercises. Let me know how it goes.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:16",
+   "text": "Sam: That looks great! Where did you get the idea for this salad? Also, do you have any suggestions for low-impact exercises?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:17",
+   "text": "Evan: I got it from a nearby restaurant. As for low-impact exercises, swimming, yoga, and walking are good options.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:18",
+   "text": "Sam: The salad idea from a restaurant is a smart move, Evan! And thanks for the exercise tips. Also I watched The Godfather last night, and it motivated me to keep up with my routine. \"I'm gonna make him an offer he can't refuse\" - now that's motivation!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:19",
+   "text": "Evan: Yoga's definitely a great start, Sam. It's helped me with stress and staying flexible, which is perfect alongside the diet. And yes, The Godfather is a legendary thing to watch, can be re-watched many times!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:20",
+   "text": "Sam: Between a healthier diet and yoga, I\u2019m hoping for some positive changes.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:21",
+   "text": "Evan:  By the way there are plenty of other low-impact exercises that can be fun. Going on beach sunsets is one of my favorites - good for exercise and totally calming.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:22",
+   "text": "Sam: That looks zen. Gonna go for some beach walks - thanks for the tip, Evan! I want to brag, I had that recurring dream again where I'm flying over skyscrapers!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:23",
+   "text": "Evan: I think a little more and you'll learn how to control those dreams, once you get the hang of it let me know haha! Enjoy the fresh air and the views. Have fun!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D24:24",
+   "text": "Sam: Thanks Evan! Gonna make the most of it. You too, have a good one!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:1",
+   "text": "Sam: Hey Evan, been a few days since we last chatted. Hope you're doing OK. A lot's happened since then. Got issues with my health, it's been rough. Feels like this weight's keeping me from fully living. Trying to stay positive, not easy.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:2",
+   "text": "Evan: Hey Sam, sorry to hear about your health. It's tough when it gets in the way of life. You're being positive, but remember to take care of yourself too. By the way, I had to apologize to my partner for that drunken night, it was pretty embarrassing.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:3",
+   "text": "Sam: Hey Evan, that does sound like a tough situation. I'm doing my best with my health. How did your partner take the news about the rose bushes?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:4",
+   "text": "Evan: Well, she wasn't thrilled, but understood it was an accident. I promised to be more careful in the future. Changing the subject, have you found any low-impact exercises that you enjoy?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:5",
+   "text": "Sam: Hey Evan, haven't found any exercises I like. But lately, I've been on a few car rides. Helps me chill and enjoy the view. Check out this cool pic I snapped last week in the country.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:6",
+   "text": "Evan: Nice pic! Does being out in the countryside help you relax and get some fresh air away from the city?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:7",
+   "text": "Sam: Yeah, being in nature really helps me relax and get some fresh air away from the city.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:8",
+   "text": "Evan: Glad to hear it! Nature really has a way of calming and reviving the soul. Last summer, I took this pic on a camping trip - it was such an amazing sunset. Moments like these remind us of the beauty of life, even during tough times.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:9",
+   "text": "Sam: Wow, that pic is amazing! It must have been a great experience being out on the lake.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:10",
+   "text": "Evan: I had a great time kayaking and watching the sunset last summer - it was truly unforgettable. Being out on the water is so peaceful.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:11",
+   "text": "Sam: Wow, that sounds amazing. Being in nature is so calming, right?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:12",
+   "text": "Evan: Nature can be super calming. It's like pushing a reset button for your mind and body.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:13",
+   "text": "Sam: Definitely, I couldn't agree more. There's something about being outdoors that rejuvenates you. I'm planning to spend more time in nature myself!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:14",
+   "text": "Evan: Got it. When health stuff cramps your style, it sucks. But small moments outdoors can make a big impact. This photo reminds me of last spring when I was feeling a bit down, but the vibrant colors brought a smile to my face, even if just for a moment. Remember to find joy in the little things.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:15",
+   "text": "Sam: That pic is gorgeous! It really brightens my day. Sometimes, it's the little things that matter, right?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:16",
+   "text": "Evan: Absolutely, Sam. It's often those little moments that make the biggest difference. Keep finding those bright spots.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:17",
+   "text": "Sam: Thanks, Evan. It's good to be reminded to appreciate the small things. They do add up.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:18",
+   "text": "Evan: Anytime, Sam. It's all about those small joys, especially when times are tough. You've got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:19",
+   "text": "Sam: Really appreciate it, Evan. Your words help a lot. Take care!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D25:20",
+   "text": "Evan: You too, Sam. And remember, I'm always here if you need to chat. Look after yourself!",
+   "action": "unit",
+   "target": null
+  }
+ ],
+ "retrieve_ms_p50": 14560.980145965004,
+ "retrieve_cost_per_query": 0.0,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {
+  "embeddings": 0.0006227504911591348,
+  "escalations": 0.0,
+  "extraction": 0.0,
+  "jev": 0.0,
+  "llm_decisions": 0.0
+ },
+ "store_size_buckets": []
+}

@@ -1,0 +1,3616 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "heldout:conv-42",
+  "sessions": [
+   1,
+   29
+  ],
+  "messages": 629,
+  "questions": 199
+ },
+ "accuracy": 0.6884422110552764,
+ "accuracy_by_category": {
+  "1": 0.5675675675675675,
+  "2": 0.725,
+  "3": 0.36363636363636365,
+  "4": 0.7477477477477478
+ },
+ "stored": 629,
+ "active": 629,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 473.7185929648241,
+ "retrieved_tokens_median": 429,
+ "memories_mean": 11.653266331658292,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.034808969999999974,
+  "claude": 0.0,
+  "openai": 0.020424449999999986
+ },
+ "cache": {
+  "hits": 584,
+  "misses": 6182
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "Is it likely that Nate has friends besides Joanna?",
+   "gold": "Yesteammates on hisvideo game team.",
+   "category": 3,
+   "evidence": [
+    "D1:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yes, he met new people.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000312058064516129,
+   "retrieved_tokens": 426,
+   "retrieve_ms": 4232.158124970738,
+   "retrieve_cost": 0.00017060806451612906
+  },
+  {
+   "idx": 1,
+   "question": "What kind of interests do Joanna and Nate share?",
+   "gold": "Watching movies, making desserts",
+   "category": 1,
+   "evidence": [
+    "D1:10",
+    "D1:11",
+    "D1:12",
+    "D3:4",
+    "D4:9",
+    "D10:9",
+    "D20:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Writing and storytelling.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00031447548387096775,
+   "retrieved_tokens": 423,
+   "retrieve_ms": 5909.634000039659,
+   "retrieve_cost": 0.00017527548387096775
+  },
+  {
+   "idx": 2,
+   "question": "When did Joanna first watch \"Eternal Sunshine of the Spotless Mind?",
+   "gold": "2019",
+   "category": 2,
+   "evidence": [
+    "D1:18"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Around January 2019.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032766387096774195,
+   "retrieved_tokens": 425,
+   "retrieve_ms": 4115.936624992173,
+   "retrieve_cost": 0.00018546387096774196
+  },
+  {
+   "idx": 3,
+   "question": "When did Nate win his first video game tournament?",
+   "gold": "the week before 21Janury, 2022",
+   "category": 2,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "January 14, 2022",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003246981290322581,
+   "retrieved_tokens": 403,
+   "retrieve_ms": 4062.046457955148,
+   "retrieve_cost": 0.00018669812903225808
+  },
+  {
+   "idx": 4,
+   "question": "What pets wouldn't cause any discomfort to Joanna?",
+   "gold": "Hairless cats or pigs,since they don't have fur, which is one of the main causes of Joanna's allergy.",
+   "category": 3,
+   "evidence": [
+    "D2:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Alternative pets not mentioned.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00032185277419354843,
+   "retrieved_tokens": 473,
+   "retrieve_ms": 4142.306749999989,
+   "retrieve_cost": 0.0001748527741935484
+  },
+  {
+   "idx": 5,
+   "question": "What are Joanna's hobbies?",
+   "gold": "Writing, watchingmovies, exploringnature, hanging withfriends.",
+   "category": 1,
+   "evidence": [
+    "D1:10",
+    "D2:25"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Writing, reading, hiking, exploring nature.",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.000342546,
+   "retrieved_tokens": 615,
+   "retrieve_ms": 4367.450000019744,
+   "retrieve_cost": 0.00017274600000000002
+  },
+  {
+   "idx": 6,
+   "question": "How long has Nate had his first two turtles?",
+   "gold": "three years",
+   "category": 2,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Three years.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032276477419354837,
+   "retrieved_tokens": 433,
+   "retrieve_ms": 4492.392665997613,
+   "retrieve_cost": 0.0001826647741935484
+  },
+  {
+   "idx": 7,
+   "question": "When did Joanna finish her first screenplay?",
+   "gold": "The Friday before 23January, 2022",
+   "category": 2,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "January 20, 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034938309677419357,
+   "retrieved_tokens": 512,
+   "retrieve_ms": 4554.215458978433,
+   "retrieve_cost": 0.00019503309677419359
+  },
+  {
+   "idx": 8,
+   "question": "When did Nate get his first two turtles?",
+   "gold": "2019",
+   "category": 2,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "2022-01-23",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00032677935483870965,
+   "retrieved_tokens": 440,
+   "retrieve_ms": 4515.652125002816,
+   "retrieve_cost": 0.0001841293548387097
+  },
+  {
+   "idx": 9,
+   "question": "What major achievement did Joanna accomplish in January 2022?",
+   "gold": "finished her screenplay and printed it",
+   "category": 2,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Finished her first full screenplay.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003225909677419355,
+   "retrieved_tokens": 404,
+   "retrieve_ms": 5104.466332995798,
+   "retrieve_cost": 0.0001844409677419355
+  },
+  {
+   "idx": 10,
+   "question": "What emotions is Joanna feeling about  the screenplay she submitted?",
+   "gold": "Relief, excitement,worry, hope,anxiety.",
+   "category": 1,
+   "evidence": [
+    "D2:7",
+    "D3:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Relief, excitement, and worry.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00042476961290322586,
+   "retrieved_tokens": 1010,
+   "retrieve_ms": 4419.110249960795,
+   "retrieve_cost": 0.00019451961290322585
+  },
+  {
+   "idx": 11,
+   "question": "What is Joanna allergic to?",
+   "gold": "Most reptiles,animals with fur,cockroaches, dairy",
+   "category": 1,
+   "evidence": [
+    "D4:4",
+    "D5:11",
+    "D2:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Cockroaches and most reptiles.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0003377713548387097,
+   "retrieved_tokens": 571,
+   "retrieve_ms": 4669.790750020184,
+   "retrieve_cost": 0.0001757713548387097
+  },
+  {
+   "idx": 12,
+   "question": "What underlying condition might Joanna have based on her allergies?",
+   "gold": "asthma",
+   "category": 3,
+   "evidence": [
+    "D5:11",
+    "D2:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Lactose intolerance and allergies.",
+   "memories": 17,
+   "label": "WRONG",
+   "query_cost": 0.0003570305806451613,
+   "retrieved_tokens": 676,
+   "retrieve_ms": 4780.037249962334,
+   "retrieve_cost": 0.00017778058064516131
+  },
+  {
+   "idx": 13,
+   "question": "When did Joanna have an audition for a writing gig?",
+   "gold": "23 March, 2022.",
+   "category": 2,
+   "evidence": [
+    "D6:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "March 23, 2022",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003398638064516129,
+   "retrieved_tokens": 472,
+   "retrieve_ms": 4933.976707980037,
+   "retrieve_cost": 0.00019121380645161293
+  },
+  {
+   "idx": 14,
+   "question": "What nickname does Nate use for Joanna?",
+   "gold": "Jo",
+   "category": 3,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nate does not use a nickname for Joanna.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0002708694193548387,
+   "retrieved_tokens": 212,
+   "retrieve_ms": 5186.957291967701,
+   "retrieve_cost": 0.00016031941935483872
+  },
+  {
+   "idx": 15,
+   "question": "When did Nate get purple hair?",
+   "gold": "The week before 15April, 2022.",
+   "category": 2,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Last week from April 15, 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002852152258064517,
+   "retrieved_tokens": 250,
+   "retrieve_ms": 5084.657667030115,
+   "retrieve_cost": 0.00016866522580645166
+  },
+  {
+   "idx": 16,
+   "question": "What physical transformation did Nate undergo in April 2022?",
+   "gold": "dyed his hair purple",
+   "category": 2,
+   "evidence": [
+    "D7:1",
+    "D7:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Dyed his hair.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002954492903225807,
+   "retrieved_tokens": 286,
+   "retrieve_ms": 5013.011333008762,
+   "retrieve_cost": 0.00017559929032258067
+  },
+  {
+   "idx": 17,
+   "question": "What movie did Joanna watch on 1 May, 2022?",
+   "gold": "Lord of the Rings",
+   "category": 2,
+   "evidence": [
+    "D10:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"The Lord of the Rings\" Trilogy",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000329424,
+   "retrieved_tokens": 426,
+   "retrieve_ms": 4973.203959001694,
+   "retrieve_cost": 0.000186774
+  },
+  {
+   "idx": 18,
+   "question": "Which outdoor spot did Joanna visit in May?",
+   "gold": "Whispering Falls waterfall",
+   "category": 2,
+   "evidence": [
+    "D11:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Whispering Falls",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003157676129032258,
+   "retrieved_tokens": 419,
+   "retrieve_ms": 4931.021583033726,
+   "retrieve_cost": 0.0001774676129032258
+  },
+  {
+   "idx": 19,
+   "question": "How many times has Joanna found new hiking trails?",
+   "gold": "twice",
+   "category": 1,
+   "evidence": [
+    "D8:4",
+    "D11:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Three times.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003133763225806452,
+   "retrieved_tokens": 421,
+   "retrieve_ms": 5207.992582989391,
+   "retrieve_cost": 0.0001750763225806452
+  },
+  {
+   "idx": 20,
+   "question": "When did Nate adopt Max?",
+   "gold": "May 2022",
+   "category": 2,
+   "evidence": [
+    "D12:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "May 20, 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00029333283870967744,
+   "retrieved_tokens": 311,
+   "retrieve_ms": 5168.4567499905825,
+   "retrieve_cost": 0.00016973283870967744
+  },
+  {
+   "idx": 21,
+   "question": "Who was the new addition to Nate's family in May 2022?",
+   "gold": "Max",
+   "category": 2,
+   "evidence": [
+    "D12:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Max",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00030414270967741935,
+   "retrieved_tokens": 371,
+   "retrieve_ms": 5486.347832949832,
+   "retrieve_cost": 0.00017304270967741938
+  },
+  {
+   "idx": 22,
+   "question": "When did Joanna start writing her third screenplay?",
+   "gold": "May 2022",
+   "category": 2,
+   "evidence": [
+    "D12:13",
+    "D12:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "November 7, 2022.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00035125200000000003,
+   "retrieved_tokens": 526,
+   "retrieve_ms": 4728.572957974393,
+   "retrieve_cost": 0.00019450200000000002
+  },
+  {
+   "idx": 23,
+   "question": "Which of Joanna's screenplay were rejected from production companies?",
+   "gold": "first screenplay on drama and romance, third screenplay on loss identity and connection",
+   "category": 1,
+   "evidence": [
+    "D14:1",
+    "D3:1",
+    "D2:7",
+    "D24:12",
+    "D24:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "First screenplay and film festival submission.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003415275483870968,
+   "retrieved_tokens": 486,
+   "retrieve_ms": 5360.919250000734,
+   "retrieve_cost": 0.0001907775483870968
+  },
+  {
+   "idx": 24,
+   "question": "When is Nate hosting a gaming party?",
+   "gold": "The weekend after 3June, 2022.",
+   "category": 2,
+   "evidence": [
+    "D14:20"
+   ],
+   "last_evidence_session": 29,
+   "answer": "June 17, 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032330729032258065,
+   "retrieved_tokens": 419,
+   "retrieve_ms": 5747.544209007174,
+   "retrieve_cost": 0.00018290729032258068
+  },
+  {
+   "idx": 25,
+   "question": "When did Joanna hike with her buddies?",
+   "gold": "The weekend after 3June, 2022.",
+   "category": 2,
+   "evidence": [
+    "D14:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "June 3, 2022",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003090863225806451,
+   "retrieved_tokens": 407,
+   "retrieve_ms": 4468.350125011057,
+   "retrieve_cost": 0.00017108632258064517
+  },
+  {
+   "idx": 26,
+   "question": "When did Nate win his third tourney?",
+   "gold": "The week before 3June, 2022",
+   "category": 2,
+   "evidence": [
+    "D14:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 21, 2022.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032337019354838713,
+   "retrieved_tokens": 398,
+   "retrieve_ms": 6190.424291999079,
+   "retrieve_cost": 0.00018582019354838712
+  },
+  {
+   "idx": 27,
+   "question": "What places has Joanna submitted her work to?",
+   "gold": "film contest, film festival.",
+   "category": 1,
+   "evidence": [
+    "D2:7",
+    "D16:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Film contests and festivals.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003393776129032258,
+   "retrieved_tokens": 515,
+   "retrieve_ms": 5391.798707947601,
+   "retrieve_cost": 0.00018607761290322583
+  },
+  {
+   "idx": 28,
+   "question": "When did Nate make vegan icecream and share it with a vegan diet group?",
+   "gold": "The Friday before 24June, 2022.",
+   "category": 2,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "June 24, 2022",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034469961290322585,
+   "retrieved_tokens": 524,
+   "retrieve_ms": 5350.377208029386,
+   "retrieve_cost": 0.00018674961290322584
+  },
+  {
+   "idx": 29,
+   "question": "When is Joanna going to make Nate's ice cream for her family?",
+   "gold": "The weekend of 24June, 2022.",
+   "category": 2,
+   "evidence": [
+    "D16:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific date mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000321657870967742,
+   "retrieved_tokens": 410,
+   "retrieve_ms": 4201.626167050563,
+   "retrieve_cost": 0.000182607870967742
+  },
+  {
+   "idx": 30,
+   "question": "What kind of writings does Joanna do?",
+   "gold": "Screenplays,books, online blog posts, journal",
+   "category": 1,
+   "evidence": [
+    "D2:3",
+    "D17:14",
+    "D18:1",
+    "D18:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Movie scripts and stories.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004111635483870968,
+   "retrieved_tokens": 976,
+   "retrieve_ms": 4757.041458040476,
+   "retrieve_cost": 0.0001890135483870968
+  },
+  {
+   "idx": 31,
+   "question": "When did Nate win his fourth video game tournament?",
+   "gold": "The Friday before 10July, 2022.",
+   "category": 2,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "July 8, 2022",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003284036129032258,
+   "retrieved_tokens": 424,
+   "retrieve_ms": 5018.776416021865,
+   "retrieve_cost": 0.00018725361290322583
+  },
+  {
+   "idx": 32,
+   "question": "Where did Joanna travel to in July 2022?",
+   "gold": "Woodhaven",
+   "category": 2,
+   "evidence": [
+    "D17:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No travel mentioned in July 2022.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0002960535483870968,
+   "retrieved_tokens": 300,
+   "retrieve_ms": 4684.234666987322,
+   "retrieve_cost": 0.0001720035483870968
+  },
+  {
+   "idx": 33,
+   "question": "When did someone write Joanna a touching letter?",
+   "gold": "The week before 14August, 2022.",
+   "category": 2,
+   "evidence": [
+    "D18:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 7, 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003499809677419356,
+   "retrieved_tokens": 558,
+   "retrieve_ms": 5793.938167043962,
+   "retrieve_cost": 0.00018843096774193553
+  },
+  {
+   "idx": 34,
+   "question": "What book recommendations has Joanna given to Nate?",
+   "gold": "\"Little Women\",'A Court of Thorns andRoses'.",
+   "category": 1,
+   "evidence": [
+    "D3:17",
+    "D19:14",
+    "D19:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific book recommendations mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00030606541935483873,
+   "retrieved_tokens": 380,
+   "retrieve_ms": 5730.511000030674,
+   "retrieve_cost": 0.00017241541935483873
+  },
+  {
+   "idx": 35,
+   "question": "When did Nate take time off to chill with his pets?",
+   "gold": "The weekend of 22August, 2022.",
+   "category": 2,
+   "evidence": [
+    "D19:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 22, 2022.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003304403225806452,
+   "retrieved_tokens": 457,
+   "retrieve_ms": 6448.310834006406,
+   "retrieve_cost": 0.00018314032258064518
+  },
+  {
+   "idx": 36,
+   "question": "When did Joanna share her book with her writers group?",
+   "gold": "The week before 22August, 2022.",
+   "category": 2,
+   "evidence": [
+    "D19:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 22, 2022",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003538391612903226,
+   "retrieved_tokens": 545,
+   "retrieve_ms": 6036.473290994763,
+   "retrieve_cost": 0.00019423916129032262
+  },
+  {
+   "idx": 37,
+   "question": "When did Nate win an international tournament?",
+   "gold": "21 August, 2022",
+   "category": 2,
+   "evidence": [
+    "D19:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 21, 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003179506451612904,
+   "retrieved_tokens": 390,
+   "retrieve_ms": 5935.140874993522,
+   "retrieve_cost": 0.00018190064516129036
+  },
+  {
+   "idx": 38,
+   "question": "When did Joanna make a desert with almond milk?",
+   "gold": "The Friday before 14September, 2022",
+   "category": 2,
+   "evidence": [
+    "D21:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "September 9, 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003211498064516129,
+   "retrieved_tokens": 413,
+   "retrieve_ms": 4500.408708001487,
+   "retrieve_cost": 0.00018104980645161292
+  },
+  {
+   "idx": 39,
+   "question": "When did Nate attend a cooking show?",
+   "gold": "The Monday before 14September, 2022",
+   "category": 2,
+   "evidence": [
+    "D21:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nate hosted a cooking show on September 12, 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003312733548387097,
+   "retrieved_tokens": 462,
+   "retrieve_ms": 4375.984416983556,
+   "retrieve_cost": 0.0001802233548387097
+  },
+  {
+   "idx": 40,
+   "question": "When did Joanna's laptop crash?",
+   "gold": "The week before 14September, 2022",
+   "category": 2,
+   "evidence": [
+    "D21:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Last week of September 2022.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003053065161290323,
+   "retrieved_tokens": 394,
+   "retrieve_ms": 4298.709291964769,
+   "retrieve_cost": 0.00016895651612903228
+  },
+  {
+   "idx": 41,
+   "question": "When did Joanna make a chocolate tart with raspberries?",
+   "gold": "5 October, 2022",
+   "category": 2,
+   "evidence": [
+    "D22:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "September 14, 2022.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00030966096774193554,
+   "retrieved_tokens": 351,
+   "retrieve_ms": 5685.4380829609,
+   "retrieve_cost": 0.00017856096774193552
+  },
+  {
+   "idx": 42,
+   "question": "What movies have both Joanna and Nate seen?",
+   "gold": "\"Little Women\", \"Lord of the Rings\"",
+   "category": 1,
+   "evidence": [
+    "D3:17",
+    "D10:1",
+    "D22:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific movies mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00029936864516129033,
+   "retrieved_tokens": 317,
+   "retrieve_ms": 5770.958916051313,
+   "retrieve_cost": 0.00017576864516129036
+  },
+  {
+   "idx": 43,
+   "question": "How long did it take for Joanna to finish writing her book?",
+   "gold": "four months",
+   "category": 2,
+   "evidence": [
+    "D17:14",
+    "D22:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "One week.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034157109677419357,
+   "retrieved_tokens": 522,
+   "retrieve_ms": 4422.92537499452,
+   "retrieve_cost": 0.0001872210967741936
+  },
+  {
+   "idx": 44,
+   "question": "When did Nate win a lot of money in a video game tournament?",
+   "gold": "September 2022",
+   "category": 2,
+   "evidence": [
+    "D22:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "October 2022",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032659664516129035,
+   "retrieved_tokens": 413,
+   "retrieve_ms": 5387.812166009098,
+   "retrieve_cost": 0.00018769664516129033
+  },
+  {
+   "idx": 45,
+   "question": "When did Joanna finish up the writing for her book?",
+   "gold": "The week before 6October, 2022",
+   "category": 2,
+   "evidence": [
+    "D22:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Last week, on September 30, 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003432081290322581,
+   "retrieved_tokens": 510,
+   "retrieve_ms": 5343.555375002325,
+   "retrieve_cost": 0.00018585812903225809
+  },
+  {
+   "idx": 46,
+   "question": "What board games has Nate played?",
+   "gold": "Chess, Catan.",
+   "category": 1,
+   "evidence": [
+    "D16:2",
+    "D23:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Catan and Chess.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003153801290322581,
+   "retrieved_tokens": 377,
+   "retrieve_ms": 5304.292665969115,
+   "retrieve_cost": 0.0001833801290322581
+  },
+  {
+   "idx": 47,
+   "question": "What places has Nate met new people?",
+   "gold": "A tournament and agaming convention.",
+   "category": 1,
+   "evidence": [
+    "D14:8",
+    "D23:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Game convention, video game tournament.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00034301283870967746,
+   "retrieved_tokens": 596,
+   "retrieve_ms": 3950.2292909892276,
+   "retrieve_cost": 0.00017666283870967746
+  },
+  {
+   "idx": 48,
+   "question": "When did Nate go to a convention and meet new people?",
+   "gold": "The Friday before 9October, 2022.",
+   "category": 2,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "October 7, 2022",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032137393548387094,
+   "retrieved_tokens": 415,
+   "retrieve_ms": 5023.985417035874,
+   "retrieve_cost": 0.000180973935483871
+  },
+  {
+   "idx": 49,
+   "question": "How many times has Joanna's scripts been rejected?",
+   "gold": "Twice",
+   "category": 1,
+   "evidence": [
+    "D14:1",
+    "D24:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Three times.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00033172200000000006,
+   "retrieved_tokens": 439,
+   "retrieve_ms": 3882.9167910153046,
+   "retrieve_cost": 0.00019072200000000005
+  },
+  {
+   "idx": 50,
+   "question": "What is something Nate gave to Joanna that brings her a lot of joy?",
+   "gold": "stuffed toy pup",
+   "category": 1,
+   "evidence": [
+    "D13:9",
+    "D24:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A cute stuffed animal.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00032920606451612906,
+   "retrieved_tokens": 463,
+   "retrieve_ms": 4973.70970796328,
+   "retrieve_cost": 0.00018190606451612905
+  },
+  {
+   "idx": 51,
+   "question": "When did Nate get Tilly for Joanna?",
+   "gold": "25 May, 2022",
+   "category": 1,
+   "evidence": [
+    "D13:9",
+    "D24:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "October 21, 2022",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00027583354838709676,
+   "retrieved_tokens": 229,
+   "retrieve_ms": 5025.1889590290375,
+   "retrieve_cost": 0.00016423354838709678
+  },
+  {
+   "idx": 52,
+   "question": "How many of Joanna's writing have made it to the big screen?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D15:1",
+    "D25:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Three writings.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.0003688407096774194,
+   "retrieved_tokens": 679,
+   "retrieve_ms": 5766.8612919515,
+   "retrieve_cost": 0.00019064070967741937
+  },
+  {
+   "idx": 53,
+   "question": "How many times has Nate taken his turtles on a walk?",
+   "gold": "Twice.",
+   "category": 1,
+   "evidence": [
+    "D5:4",
+    "D25:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Once.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032077006451612905,
+   "retrieved_tokens": 413,
+   "retrieve_ms": 5344.044041004963,
+   "retrieve_cost": 0.00018367006451612905
+  },
+  {
+   "idx": 54,
+   "question": "When was Joanna's second movie script shown on the big screens?",
+   "gold": "The Sunday before 25October, 2022.",
+   "category": 2,
+   "evidence": [
+    "D25:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "October 23, 2022",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034781012903225807,
+   "retrieved_tokens": 527,
+   "retrieve_ms": 5416.060832969379,
+   "retrieve_cost": 0.0001903101290322581
+  },
+  {
+   "idx": 55,
+   "question": "What is Joanna inspired by?",
+   "gold": "Personal experiences,her own journey ofself discovery, Nate,nature, validation,stories about findingcourage and takingrisks, people she knows, stuff she sees, imagination",
+   "category": 1,
+   "evidence": [
+    "D4:6",
+    "D7:6",
+    "D11:11",
+    "D26:3",
+    "D26:7",
+    "D25:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nature and personal experiences.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00037553303225806454,
+   "retrieved_tokens": 804,
+   "retrieve_ms": 7268.843916011974,
+   "retrieve_cost": 0.00017978303225806453
+  },
+  {
+   "idx": 56,
+   "question": "What animal do both Nate and Joanna like?",
+   "gold": "Turtles.",
+   "category": 1,
+   "evidence": [
+    "D5:6",
+    "D26:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Turtles",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00030817335483870965,
+   "retrieved_tokens": 407,
+   "retrieve_ms": 4767.571291013155,
+   "retrieve_cost": 0.0001728733548387097
+  },
+  {
+   "idx": 57,
+   "question": "When did Joanna plan to go over to Nate's and share recipes?",
+   "gold": "5 November, 2022.",
+   "category": 2,
+   "evidence": [
+    "D26:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "May 12, 2022.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003062881935483871,
+   "retrieved_tokens": 343,
+   "retrieve_ms": 5003.421749977861,
+   "retrieve_cost": 0.00017548819354838713
+  },
+  {
+   "idx": 58,
+   "question": "What things has Nate reccomended to Joanna?",
+   "gold": "A pet,\"The Lord of the Rings\" movies,a dragon book series,coconut flavoring,\"Project Hail Mary\" book,Xenoblade Chronicles, dairy-free margarine, coconut oil",
+   "category": 1,
+   "evidence": [
+    "D2:14",
+    "D9:12",
+    "D9:14",
+    "D10:11",
+    "D19:17",
+    "D27:23",
+    "D10:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"The Lord of the Rings\" Trilogy.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003133494193548387,
+   "retrieved_tokens": 411,
+   "retrieve_ms": 5030.8433750178665,
+   "retrieve_cost": 0.00017354941935483872
+  },
+  {
+   "idx": 59,
+   "question": "What does Joanna do to remember happy memories?",
+   "gold": "Hangs them on a corkboard, writes themin a notebook.",
+   "category": 1,
+   "evidence": [
+    "D15:9",
+    "D27:34"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Writes down favorite memories.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0003435183870967742,
+   "retrieved_tokens": 577,
+   "retrieve_ms": 6276.821708015632,
+   "retrieve_cost": 0.0001809183870967742
+  },
+  {
+   "idx": 60,
+   "question": "What Console does Nate own?",
+   "gold": "A Nintendo Switch; since the game \"Xenoblade 2\" is made for this console.",
+   "category": 3,
+   "evidence": [
+    "D27:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nintendo console.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00031972683870967744,
+   "retrieved_tokens": 435,
+   "retrieve_ms": 6306.688708951697,
+   "retrieve_cost": 0.00018052683870967745
+  },
+  {
+   "idx": 61,
+   "question": "What mediums does Nate use to play games?",
+   "gold": "Gamecube, PC,Playstation.",
+   "category": 1,
+   "evidence": [
+    "D22:2",
+    "D27:21",
+    "D27:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Video games and YouTube.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.0003433012258064516,
+   "retrieved_tokens": 574,
+   "retrieve_ms": 7935.925040976144,
+   "retrieve_cost": 0.00018055122580645165
+  },
+  {
+   "idx": 62,
+   "question": "How many letters has Joanna recieved?",
+   "gold": "Two",
+   "category": 1,
+   "evidence": [
+    "D14:1",
+    "D18:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "One rejection letter.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00028570819354838714,
+   "retrieved_tokens": 296,
+   "retrieve_ms": 6675.163667008746,
+   "retrieve_cost": 0.0001664581935483871
+  },
+  {
+   "idx": 63,
+   "question": "What video games does Nate play?",
+   "gold": "Valorant, Counter Strike:Global Offensive,Xenoblade Chronicles, StreetFighter, Cyberpunk 2077",
+   "category": 1,
+   "evidence": [
+    "D10:6",
+    "D27:1",
+    "D27:23",
+    "D1:7",
+    "D23:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "CS:GO, Street Fighter, Cyberpunk 2077, Xenoblade Chronicles, Catan.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.0003652867741935484,
+   "retrieved_tokens": 639,
+   "retrieve_ms": 10055.735540983733,
+   "retrieve_cost": 0.00018438677419354841
+  },
+  {
+   "idx": 64,
+   "question": "When did Nate win a big Valorant tourney?",
+   "gold": "The Saturday before 7November, 2022",
+   "category": 2,
+   "evidence": [
+    "D27:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "November 5, 2022.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003347953548387097,
+   "retrieved_tokens": 468,
+   "retrieve_ms": 5915.241416019853,
+   "retrieve_cost": 0.0001861453548387097
+  },
+  {
+   "idx": 65,
+   "question": "Which torunament did Nate win in the beginning of November 2022?",
+   "gold": "Valorant",
+   "category": 2,
+   "evidence": [
+    "D27:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A big Valorant tournament.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032764683870967746,
+   "retrieved_tokens": 411,
+   "retrieve_ms": 5873.381500015967,
+   "retrieve_cost": 0.00018724683870967746
+  },
+  {
+   "idx": 66,
+   "question": "What alternative career might Nate consider after gaming?",
+   "gold": "an animalkeeper at a localzoo and workingwith turtles; as heknows a great dealabout turtles andhow to care for them,and he enjoys it.",
+   "category": 3,
+   "evidence": [
+    "D5:8",
+    "D19:3",
+    "D25:19",
+    "D28:25"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Joining a new gaming team.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003244501935483871,
+   "retrieved_tokens": 430,
+   "retrieve_ms": 18441.252999997232,
+   "retrieve_cost": 0.00018330019354838713
+  },
+  {
+   "idx": 67,
+   "question": "What pets does Nate have?",
+   "gold": "A dog and threeturtles.",
+   "category": 1,
+   "evidence": [
+    "D8:3",
+    "D12:3",
+    "D28:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nate has turtles and a dog.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00038041819354838716,
+   "retrieved_tokens": 821,
+   "retrieve_ms": 5723.908584041055,
+   "retrieve_cost": 0.00018031819354838715
+  },
+  {
+   "idx": 68,
+   "question": "How many hikes has Joanna been on?",
+   "gold": "Four",
+   "category": 3,
+   "evidence": [
+    "D7:6",
+    "D11:5",
+    "D14:21",
+    "D28:22"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Three hikes.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00030014845161290324,
+   "retrieved_tokens": 367,
+   "retrieve_ms": 9627.911875024438,
+   "retrieve_cost": 0.00017054845161290324
+  },
+  {
+   "idx": 69,
+   "question": "How many turtles does Nate have?",
+   "gold": "Three",
+   "category": 1,
+   "evidence": [
+    "D8:3",
+    "D28:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Three turtles.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003115643225806452,
+   "retrieved_tokens": 397,
+   "retrieve_ms": 6107.78412502259,
+   "retrieve_cost": 0.0001777643225806452
+  },
+  {
+   "idx": 70,
+   "question": "What activities does Nate do with his turtles?",
+   "gold": "takes them onwalks, holds them,feeds themstrawberries, givesthem baths.",
+   "category": 1,
+   "evidence": [
+    "D25:21",
+    "D25:23",
+    "D28:31"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Takes them for walks and to the beach.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00034291703225806453,
+   "retrieved_tokens": 553,
+   "retrieve_ms": 6250.861250038724,
+   "retrieve_cost": 0.00018091703225806452
+  },
+  {
+   "idx": 71,
+   "question": "What do both Joanna and Nate appreciate the beauty of?",
+   "gold": "Nature",
+   "category": 1,
+   "evidence": [
+    "D11:9",
+    "D28:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nature's beauty.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00031929696774193547,
+   "retrieved_tokens": 429,
+   "retrieve_ms": 8802.994333964307,
+   "retrieve_cost": 0.0001788969677419355
+  },
+  {
+   "idx": 72,
+   "question": "When did Joanna plan on going to Nate's to watch him play with his turtles?",
+   "gold": "10 November, 2022",
+   "category": 2,
+   "evidence": [
+    "D28:32"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific date mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003080630322580645,
+   "retrieved_tokens": 370,
+   "retrieve_ms": 8024.5881250011735,
+   "retrieve_cost": 0.00017411303225806454
+  },
+  {
+   "idx": 73,
+   "question": "What state did Joanna visit in summer 2021?",
+   "gold": "Indiana",
+   "category": 3,
+   "evidence": [
+    "D28:22"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Joanna visited Woodhaven, Midwest.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000307698,
+   "retrieved_tokens": 354,
+   "retrieve_ms": 8216.39395901002,
+   "retrieve_cost": 0.00017614800000000002
+  },
+  {
+   "idx": 74,
+   "question": "What recommendations has Nate received from Joanna?",
+   "gold": "\"Eternal Sunshine of the Spotless Mind\" movie, \"A Court of Thorns and Roses\" book, pointers for making living room comfy, starting a cork board for memories, \"Little Women\" movie",
+   "category": 1,
+   "evidence": [
+    "D1:16",
+    "D3:17",
+    "D15:14",
+    "D15:15",
+    "D19:15",
+    "D19:16",
+    "D23:26"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Step outside comfort zones.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00029813264516129033,
+   "retrieved_tokens": 355,
+   "retrieve_ms": 8439.711083017755,
+   "retrieve_cost": 0.00016913264516129034
+  },
+  {
+   "idx": 75,
+   "question": "What are Nate's favorite desserts?",
+   "gold": "coconut milk icecream, dairy-free chocolate cake with berries, chocolate and mixed-berry icecream, dairy-free chocolate mousse",
+   "category": 1,
+   "evidence": [
+    "D3:4",
+    "D3:10",
+    "D21:10",
+    "D3:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Coconut milk ice cream, chocolate mousse.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003309003870967742,
+   "retrieved_tokens": 517,
+   "retrieve_ms": 8470.900666958187,
+   "retrieve_cost": 0.00017550038709677421
+  },
+  {
+   "idx": 76,
+   "question": "How has Nate tried to disburse his vegan ice-cream recipes?",
+   "gold": "teaching others, cooking show",
+   "category": 1,
+   "evidence": [
+    "D18:8",
+    "D21:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Through his cooking show.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003476630322580645,
+   "retrieved_tokens": 554,
+   "retrieve_ms": 5863.613249966875,
+   "retrieve_cost": 0.00018671303225806455
+  },
+  {
+   "idx": 77,
+   "question": "When did Nate win his second tournament?",
+   "gold": "The week before 2 May, 2022.",
+   "category": 2,
+   "evidence": [
+    "D10:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Last week of April 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003265242580645162,
+   "retrieved_tokens": 421,
+   "retrieve_ms": 8480.763375002425,
+   "retrieve_cost": 0.00018582425806451617
+  },
+  {
+   "idx": 78,
+   "question": "How many video game tournaments has Nate participated in?",
+   "gold": "nine",
+   "category": 1,
+   "evidence": [
+    "D1:3",
+    "D6:7",
+    "D10:4",
+    "D14:8",
+    "D17:1",
+    "D19:1",
+    "D20:1",
+    "D22:2",
+    "D27:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nate has participated in at least six tournaments.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.0003721769032258065,
+   "retrieved_tokens": 703,
+   "retrieve_ms": 7930.588999995962,
+   "retrieve_cost": 0.0001873769032258065
+  },
+  {
+   "idx": 79,
+   "question": "How many screenplays has Joanna written?",
+   "gold": "three",
+   "category": 1,
+   "evidence": [
+    "D2:3",
+    "D4:10",
+    "D5:1",
+    "D12:13",
+    "D12:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Three screenplays.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0003740696129032258,
+   "retrieved_tokens": 738,
+   "retrieve_ms": 8283.74129201984,
+   "retrieve_cost": 0.00018821961290322583
+  },
+  {
+   "idx": 80,
+   "question": "How many tournaments has Nate won?",
+   "gold": "seven",
+   "category": 1,
+   "evidence": [
+    "D1:3",
+    "D10:4",
+    "D14:8",
+    "D17:1",
+    "D19:1",
+    "D22:2",
+    "D27:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nate has won six tournaments.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.00035547406451612903,
+   "retrieved_tokens": 617,
+   "retrieve_ms": 8114.220249990467,
+   "retrieve_cost": 0.00018627406451612906
+  },
+  {
+   "idx": 81,
+   "question": "What recipes has Joanna made?",
+   "gold": "dairy free vanilla cake with strawberry filling and coconut cream frosting, parfait, strawberry chocolate cake, chocolate coconut cupcakes, chocolate raspberry tart, chocolate cake with raspberries, blueberry cheesecake bars",
+   "category": 1,
+   "evidence": [
+    "D10:9",
+    "D10:11",
+    "D19:8",
+    "D20:2",
+    "D20:10",
+    "D21:11",
+    "D22:1",
+    "D21:3",
+    "D21:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Dairy-free desserts, cakes, cookies, pies.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.00033977129032258064,
+   "retrieved_tokens": 544,
+   "retrieve_ms": 5263.52241699351,
+   "retrieve_cost": 0.00017942129032258068
+  },
+  {
+   "idx": 82,
+   "question": "What recipes has Nate made?",
+   "gold": "coconut milk icecream, chocolate and vanilla swirl",
+   "category": 1,
+   "evidence": [
+    "D3:4",
+    "D4:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Dairy-free chocolate cake, chocolate and vanilla swirl.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003269754193548387,
+   "retrieved_tokens": 490,
+   "retrieve_ms": 8581.11937501235,
+   "retrieve_cost": 0.00017472541935483873
+  },
+  {
+   "idx": 83,
+   "question": "What are the skills that Nate has helped others learn?",
+   "gold": "coconut milk ice cream recipe, reset high scores, tips to improve gaming skills",
+   "category": 1,
+   "evidence": [
+    "D18:8",
+    "D26:12",
+    "D14:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Gaming skills.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0002961027096774194,
+   "retrieved_tokens": 302,
+   "retrieve_ms": 7594.199290964752,
+   "retrieve_cost": 0.00017535270967741938
+  },
+  {
+   "idx": 84,
+   "question": "Was the first half of September 2022 a good month career-wise for Nate and Joanna? Answer yes or no.",
+   "gold": "No; because both of them faced setbacks in their career",
+   "category": 3,
+   "evidence": [
+    "D20:1",
+    "D21:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031207529032258063,
+   "retrieved_tokens": 342,
+   "retrieve_ms": 7235.113665985409,
+   "retrieve_cost": 0.00018202529032258067
+  },
+  {
+   "idx": 85,
+   "question": "What kind of job is Joanna beginning to preform the duties of because of her movie scripts?",
+   "gold": "filmmaker.",
+   "category": 3,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Filmmaker.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.0004015546451612903,
+   "retrieved_tokens": 889,
+   "retrieve_ms": 7815.141416969709,
+   "retrieve_cost": 0.00018975464516129034
+  },
+  {
+   "idx": 86,
+   "question": "When did Nate take his turtles to the beach?",
+   "gold": "10 November, 2022",
+   "category": 2,
+   "evidence": [
+    "D29:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "2022-11-10",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032128064516129034,
+   "retrieved_tokens": 412,
+   "retrieve_ms": 7601.234707981348,
+   "retrieve_cost": 0.00018253064516129033
+  },
+  {
+   "idx": 87,
+   "question": "What state did Nate visit?",
+   "gold": "Florida",
+   "category": 3,
+   "evidence": [
+    "D29:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No information about Nate's visit.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000280845870967742,
+   "retrieved_tokens": 282,
+   "retrieve_ms": 6110.0213340250775,
+   "retrieve_cost": 0.00016219587096774195
+  },
+  {
+   "idx": 88,
+   "question": "What is one of Joanna's favorite movies?",
+   "gold": "\"Eternal Sunshineof the Spotless Mind\"",
+   "category": 4,
+   "evidence": [
+    "D1:18",
+    "D",
+    "D1:20"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Little Women\"",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00031250593548387095,
+   "retrieved_tokens": 389,
+   "retrieve_ms": 7341.723249992356,
+   "retrieve_cost": 0.00017870593548387098
+  },
+  {
+   "idx": 89,
+   "question": "What color did Nate choose for his hair?",
+   "gold": "purple",
+   "category": 4,
+   "evidence": [
+    "D7:1",
+    "D7:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Bright and bold color.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0002836741935483871,
+   "retrieved_tokens": 289,
+   "retrieve_ms": 7984.159292012919,
+   "retrieve_cost": 0.00016427419354838712
+  },
+  {
+   "idx": 90,
+   "question": "What is Nate's favorite movie trilogy?",
+   "gold": "Lord of the Rings",
+   "category": 4,
+   "evidence": [
+    "D9:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"The Lord of the Rings\" Trilogy",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00030591600000000004,
+   "retrieved_tokens": 344,
+   "retrieve_ms": 7701.904624991585,
+   "retrieve_cost": 0.00017736600000000004
+  },
+  {
+   "idx": 91,
+   "question": "What is Nate's favorite book series about?",
+   "gold": "dragons",
+   "category": 4,
+   "evidence": [
+    "D9:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Adventures, magic, and great characters.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00031295012903225807,
+   "retrieved_tokens": 401,
+   "retrieve_ms": 7132.148375036195,
+   "retrieve_cost": 0.00017435012903225811
+  },
+  {
+   "idx": 92,
+   "question": "What kind of lighting does Nate's gaming room have?",
+   "gold": "red and purple lighting",
+   "category": 4,
+   "evidence": [
+    "D10:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The memories do not specify the lighting in Nate's gaming room.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003148176774193549,
+   "retrieved_tokens": 369,
+   "retrieve_ms": 5725.99787497893,
+   "retrieve_cost": 0.00017801767741935486
+  },
+  {
+   "idx": 93,
+   "question": "What game was the second tournament that Nate won based on?",
+   "gold": "Street Fighter",
+   "category": 4,
+   "evidence": [
+    "D10:4",
+    "D10:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The game is not specified.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032661774193548394,
+   "retrieved_tokens": 428,
+   "retrieve_ms": 7640.583249973133,
+   "retrieve_cost": 0.0001848677419354839
+  },
+  {
+   "idx": 94,
+   "question": "What is Joanna's third screenplay about?",
+   "gold": "loss, identity, and connection",
+   "category": 4,
+   "evidence": [
+    "D12:13",
+    "D12:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A love story with challenges.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003405807096774194,
+   "retrieved_tokens": 485,
+   "retrieve_ms": 8165.106416970957,
+   "retrieve_cost": 0.0001914807096774194
+  },
+  {
+   "idx": 95,
+   "question": "What is Nate's favorite video game?",
+   "gold": "Xenoblade Chronicles",
+   "category": 4,
+   "evidence": [
+    "D27:22",
+    "D27:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Xeonoblade Chronicles\"",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00034549509677419356,
+   "retrieved_tokens": 571,
+   "retrieve_ms": 7866.341625049245,
+   "retrieve_cost": 0.00018289509677419356
+  },
+  {
+   "idx": 96,
+   "question": "What type of movies does Nate enjoy watching the most?",
+   "gold": "action and sci-fi",
+   "category": 4,
+   "evidence": [
+    "D1:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Action and sci-fi movies.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00033305729032258064,
+   "retrieved_tokens": 528,
+   "retrieve_ms": 6127.978792006616,
+   "retrieve_cost": 0.00017660729032258069
+  },
+  {
+   "idx": 97,
+   "question": "What did Joanna just finish last Friday on 23 January, 2022?",
+   "gold": "screenplay",
+   "category": 4,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Her first full screenplay.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003218862580645161,
+   "retrieved_tokens": 432,
+   "retrieve_ms": 8698.612665990368,
+   "retrieve_cost": 0.00017893625806451614
+  },
+  {
+   "idx": 98,
+   "question": "What genre is Joanna's first screenplay?",
+   "gold": "drama and romance",
+   "category": 4,
+   "evidence": [
+    "D2:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Not specified in memories.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00034788967741935487,
+   "retrieved_tokens": 539,
+   "retrieve_ms": 6422.480459033977,
+   "retrieve_cost": 0.00019128967741935485
+  },
+  {
+   "idx": 99,
+   "question": "What are Joanna's plans for her finished screenplay in January 2022?",
+   "gold": "submit it to film festivals and get producers and directors to check it out",
+   "category": 4,
+   "evidence": [
+    "D2:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Submit to film festivals.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034979612903225806,
+   "retrieved_tokens": 507,
+   "retrieve_ms": 5693.788999982644,
+   "retrieve_cost": 0.0001958961290322581
+  },
+  {
+   "idx": 100,
+   "question": "For how long has Nate had his turtles?",
+   "gold": "3 years",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "For 3 years.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032150322580645166,
+   "retrieved_tokens": 424,
+   "retrieve_ms": 6190.105540968943,
+   "retrieve_cost": 0.00018185322580645163
+  },
+  {
+   "idx": 101,
+   "question": "What did Nate think of the coconut milk ice cream he made?",
+   "gold": "Super good, rich and creamy",
+   "category": 4,
+   "evidence": [
+    "D3:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He thought it was pretty good.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.000349099935483871,
+   "retrieved_tokens": 611,
+   "retrieve_ms": 5456.080874952022,
+   "retrieve_cost": 0.000178999935483871
+  },
+  {
+   "idx": 102,
+   "question": "Which dairy-free dessert flavors does Nate enjoy?",
+   "gold": "chocolate and mixed berry",
+   "category": 4,
+   "evidence": [
+    "D3:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Coconut, chocolate, mixed berry.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003383272258064516,
+   "retrieved_tokens": 525,
+   "retrieve_ms": 6451.831999991555,
+   "retrieve_cost": 0.00018172722580645162
+  },
+  {
+   "idx": 103,
+   "question": "What did Joanna recently watch and recommend to Nate on February 7, 2022?",
+   "gold": "\"Little Women\"",
+   "category": 4,
+   "evidence": [
+    "D3:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Little Women\"",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00031628883870967746,
+   "retrieved_tokens": 388,
+   "retrieve_ms": 9375.217333959881,
+   "retrieve_cost": 0.00017993883870967746
+  },
+  {
+   "idx": 104,
+   "question": "What is \"Little Women\" about according to Joanna?",
+   "gold": "Sisterhood, love, and reaching for your dreams",
+   "category": 4,
+   "evidence": [
+    "D3:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Sisterhood, love, and dreams.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003432015483870968,
+   "retrieved_tokens": 539,
+   "retrieve_ms": 9224.581541959196,
+   "retrieve_cost": 0.0001833015483870968
+  },
+  {
+   "idx": 105,
+   "question": "What flavor of ice cream did Nate make for his friend on 25 February, 2022?",
+   "gold": "chocolate and vanilla swirl",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Chocolate and vanilla swirl.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031902890322580644,
+   "retrieved_tokens": 389,
+   "retrieve_ms": 5138.191167032346,
+   "retrieve_cost": 0.00018132890322580645
+  },
+  {
+   "idx": 106,
+   "question": "What inspired Joanna's new screenplay on 25 February, 2022?",
+   "gold": "personal experiences and her own journey of self-discovery",
+   "category": 4,
+   "evidence": [
+    "D4:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A journey of self-discovery after a loss.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003773816129032259,
+   "retrieved_tokens": 663,
+   "retrieve_ms": 6879.287709016353,
+   "retrieve_cost": 0.00019708161290322586
+  },
+  {
+   "idx": 107,
+   "question": "Why does Nate like turtles as pets?",
+   "gold": "Their slow pace and calming nature",
+   "category": 4,
+   "evidence": [
+    "D5:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "They bring him joy and peace.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00036507987096774197,
+   "retrieved_tokens": 692,
+   "retrieve_ms": 4864.492624998093,
+   "retrieve_cost": 0.00018432987096774197
+  },
+  {
+   "idx": 108,
+   "question": "How does Nate describe the process of taking care of turtles?",
+   "gold": "Not tough; keep their area clean, feed them properly, give them enough light.",
+   "category": 4,
+   "evidence": [
+    "D5:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Keep their area clean and feed them.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00034238690322580646,
+   "retrieved_tokens": 535,
+   "retrieve_ms": 8395.61899995897,
+   "retrieve_cost": 0.00018338690322580647
+  },
+  {
+   "idx": 109,
+   "question": "What was Joanna's audition for?",
+   "gold": "writing gig",
+   "category": 4,
+   "evidence": [
+    "D6:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A writing gig.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032049600000000003,
+   "retrieved_tokens": 430,
+   "retrieve_ms": 8550.719874969218,
+   "retrieve_cost": 0.00018114600000000003
+  },
+  {
+   "idx": 110,
+   "question": "Why did Nate choose the hair color he did?",
+   "gold": "Bright and bold - like him",
+   "category": 4,
+   "evidence": [
+    "D7:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "To stand out from regular options.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002901907741935484,
+   "retrieved_tokens": 297,
+   "retrieve_ms": 8442.296084016562,
+   "retrieve_cost": 0.0001680907741935484
+  },
+  {
+   "idx": 111,
+   "question": "What are the main ingredients of the ice cream recipe shared by Nate?",
+   "gold": "Coconut milk, vanilla extract, sugar, salt",
+   "category": 4,
+   "evidence": [
+    "D8:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Coconut milk, vanilla extract, sugar, salt.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00033899303225806454,
+   "retrieved_tokens": 498,
+   "retrieve_ms": 5642.961208010092,
+   "retrieve_cost": 0.00018314303225806455
+  },
+  {
+   "idx": 112,
+   "question": "What is Joanna's project called in the writers group?",
+   "gold": "\"Finding Home\"",
+   "category": 4,
+   "evidence": [
+    "D9:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Finding Home\"",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034409148387096774,
+   "retrieved_tokens": 507,
+   "retrieve_ms": 9313.569540972821,
+   "retrieve_cost": 0.00019199148387096776
+  },
+  {
+   "idx": 113,
+   "question": "What is Nate's favorite genre of movies?",
+   "gold": "Fantasy and sci-fi",
+   "category": 4,
+   "evidence": [
+    "D9:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Sci-fi and fantasy.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003034248387096774,
+   "retrieved_tokens": 356,
+   "retrieve_ms": 5582.43783301441,
+   "retrieve_cost": 0.00017397483870967744
+  },
+  {
+   "idx": 114,
+   "question": "What kind of books does Nate enjoy?",
+   "gold": "Adventures and magic",
+   "category": 4,
+   "evidence": [
+    "D9:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Adventures, magic, real-life stories.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003154242580645162,
+   "retrieved_tokens": 434,
+   "retrieve_ms": 6720.855250023305,
+   "retrieve_cost": 0.00017217425806451614
+  },
+  {
+   "idx": 115,
+   "question": "What kind of films does Joanna enjoy?",
+   "gold": "Dramas and emotionally-driven films",
+   "category": 4,
+   "evidence": [
+    "D9:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Dramas and romcoms.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.00032975922580645166,
+   "retrieved_tokens": 506,
+   "retrieve_ms": 8942.448707995936,
+   "retrieve_cost": 0.00017630922580645162
+  },
+  {
+   "idx": 116,
+   "question": "Which activity helps Nate escape and stimulates his imagination?",
+   "gold": "watching fantasy and sci-fi movies",
+   "category": 4,
+   "evidence": [
+    "D9:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Playing video games.",
+   "memories": 16,
+   "label": "WRONG",
+   "query_cost": 0.0003480512903225807,
+   "retrieved_tokens": 636,
+   "retrieve_ms": 6452.583082951605,
+   "retrieve_cost": 0.00017690129032258068
+  },
+  {
+   "idx": 117,
+   "question": "What filling did Joanna use in the cake she made recently in May 2022?",
+   "gold": "strawberry",
+   "category": 4,
+   "evidence": [
+    "D10:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Strawberry filling.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003142352903225807,
+   "retrieved_tokens": 371,
+   "retrieve_ms": 8798.798125004396,
+   "retrieve_cost": 0.0001801352903225807
+  },
+  {
+   "idx": 118,
+   "question": "What kind of frosting did Joanna use on the cake she made recently in May 2022?",
+   "gold": "coconut cream",
+   "category": 4,
+   "evidence": [
+    "D10:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Coconut cream frosting.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003138425806451613,
+   "retrieved_tokens": 363,
+   "retrieve_ms": 6380.340958014131,
+   "retrieve_cost": 0.0001803425806451613
+  },
+  {
+   "idx": 119,
+   "question": "What does Nate feel he could do when out in cool places like Whispering Falls?",
+   "gold": "write a whole movie",
+   "category": 4,
+   "evidence": [
+    "D11:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He could enjoy nature.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00029470645161290326,
+   "retrieved_tokens": 298,
+   "retrieve_ms": 6940.120334038511,
+   "retrieve_cost": 0.00017155645161290325
+  },
+  {
+   "idx": 120,
+   "question": "What creative activity does Nate joke about pursuing after being inspired by their hikes with Jo?",
+   "gold": "Start thinking about a drama and publish a screenplay",
+   "category": 4,
+   "evidence": [
+    "D11:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Making gaming content.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003188827741935484,
+   "retrieved_tokens": 395,
+   "retrieve_ms": 6897.164291993249,
+   "retrieve_cost": 0.00018178277419354842
+  },
+  {
+   "idx": 121,
+   "question": "Who invited Nate to join her on the trails sometime?",
+   "gold": "Joanna",
+   "category": 4,
+   "evidence": [
+    "D11:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Joanna invited Nate.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00030969638709677416,
+   "retrieved_tokens": 401,
+   "retrieve_ms": 7117.3763750121,
+   "retrieve_cost": 0.0001728963870967742
+  },
+  {
+   "idx": 122,
+   "question": "What did Nate do for Joanna on 25 May, 2022?",
+   "gold": "get her a stuffed animal",
+   "category": 4,
+   "evidence": [
+    "D13:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No relevant information available.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00028108664516129033,
+   "retrieved_tokens": 245,
+   "retrieve_ms": 6175.778625009116,
+   "retrieve_cost": 0.00016648664516129034
+  },
+  {
+   "idx": 123,
+   "question": "How does Nate describe the stuffed animal he got for Joanna?",
+   "gold": "A stuffed animal to remind you of the good vibes",
+   "category": 4,
+   "evidence": [
+    "D13:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A reminder of good vibes.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00029944470967741937,
+   "retrieved_tokens": 331,
+   "retrieve_ms": 6105.211667018011,
+   "retrieve_cost": 0.00017224470967741937
+  },
+  {
+   "idx": 124,
+   "question": "What event is Nate organizing in June 2022?",
+   "gold": "A gaming party",
+   "category": 4,
+   "evidence": [
+    "D14:20"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A gaming party.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003175101290322581,
+   "retrieved_tokens": 418,
+   "retrieve_ms": 5986.194583005272,
+   "retrieve_cost": 0.00017876012903225808
+  },
+  {
+   "idx": 125,
+   "question": "Who did Nate plan to invite to his gaming party in June 2022?",
+   "gold": "Tournament friends, old friends, teammates",
+   "category": 4,
+   "evidence": [
+    "D14:22"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Old friends and teammates.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032551703225806454,
+   "retrieved_tokens": 422,
+   "retrieve_ms": 6258.3154999883845,
+   "retrieve_cost": 0.00018406703225806454
+  },
+  {
+   "idx": 126,
+   "question": "What special items did Nate get for everyone at his gaming party?",
+   "gold": "Custom controller decorations",
+   "category": 4,
+   "evidence": [
+    "D14:24"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Custom controller decorations.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031719019354838713,
+   "retrieved_tokens": 397,
+   "retrieve_ms": 6438.838207977824,
+   "retrieve_cost": 0.00018099019354838713
+  },
+  {
+   "idx": 127,
+   "question": "What did Joanna write yesterday that appeared on the big screen?",
+   "gold": "screenplay bits",
+   "category": 4,
+   "evidence": [
+    "D15:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A screenplay.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00038976425806451617,
+   "retrieved_tokens": 828,
+   "retrieve_ms": 6397.052166052163,
+   "retrieve_cost": 0.00018981425806451614
+  },
+  {
+   "idx": 128,
+   "question": "What superhero is Joanna a fan of?",
+   "gold": "Spider-Man",
+   "category": 4,
+   "evidence": [
+    "D15:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Spider-Man",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031597083870967745,
+   "retrieved_tokens": 436,
+   "retrieve_ms": 6965.294583991636,
+   "retrieve_cost": 0.00017662083870967745
+  },
+  {
+   "idx": 129,
+   "question": "Which superhero toy figure does Nate share a photo of?",
+   "gold": "Iron Man",
+   "category": 4,
+   "evidence": [
+    "D15:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Iron Man",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003196145806451613,
+   "retrieved_tokens": 460,
+   "retrieve_ms": 6911.706916987896,
+   "retrieve_cost": 0.0001757645806451613
+  },
+  {
+   "idx": 130,
+   "question": "What is displayed on Joanna's cork board for motivation and creativity?",
+   "gold": "inspiring quotes, photos, and little keepsakes",
+   "category": 4,
+   "evidence": [
+    "D15:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Inspiring quotes and pictures.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00031406187096774197,
+   "retrieved_tokens": 375,
+   "retrieve_ms": 8568.441540992353,
+   "retrieve_cost": 0.00017996187096774196
+  },
+  {
+   "idx": 131,
+   "question": "What does the photo on Joanna's cork board remind her of?",
+   "gold": "love and encouragement from her family",
+   "category": 4,
+   "evidence": [
+    "D15:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Love and encouragement from them.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031001283870967747,
+   "retrieved_tokens": 377,
+   "retrieve_ms": 6403.900332981721,
+   "retrieve_cost": 0.00017561283870967746
+  },
+  {
+   "idx": 132,
+   "question": "What did Nate make and share with his vegan diet group?",
+   "gold": "vegan ice cream",
+   "category": 4,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Vegan ice cream.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0003526511612903226,
+   "retrieved_tokens": 624,
+   "retrieve_ms": 5957.38929201616,
+   "retrieve_cost": 0.00018210116129032262
+  },
+  {
+   "idx": 133,
+   "question": "How many people attended the gaming party hosted by Nate in June 2022?",
+   "gold": "7",
+   "category": 4,
+   "evidence": [
+    "D16:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Seven people attended.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003272297419354839,
+   "retrieved_tokens": 429,
+   "retrieve_ms": 5761.691874999087,
+   "retrieve_cost": 0.0001853297419354839
+  },
+  {
+   "idx": 134,
+   "question": "What recipe Nate offer to share with Joanna?",
+   "gold": "vegan ice cream recipe",
+   "category": 4,
+   "evidence": [
+    "D16:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific recipe mentioned.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003110597419354839,
+   "retrieved_tokens": 376,
+   "retrieve_ms": 8968.370540998876,
+   "retrieve_cost": 0.0001786097419354839
+  },
+  {
+   "idx": 135,
+   "question": "What did Joanna plan to do with the recipe Nate promised to share?",
+   "gold": "make it for her family",
+   "category": 4,
+   "evidence": [
+    "D16:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Surprise her family with something delicious.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003168524516129033,
+   "retrieved_tokens": 401,
+   "retrieve_ms": 6097.197958966717,
+   "retrieve_cost": 0.00017735245161290328
+  },
+  {
+   "idx": 136,
+   "question": "How many video game tournaments has Nate won by July 10, 2022?",
+   "gold": "Four",
+   "category": 4,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nate won four tournaments.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032292503225806455,
+   "retrieved_tokens": 385,
+   "retrieve_ms": 7345.526916964445,
+   "retrieve_cost": 0.00018612503225806456
+  },
+  {
+   "idx": 137,
+   "question": "Where did Joanna go for a road trip for research?",
+   "gold": "Woodhaven",
+   "category": 4,
+   "evidence": [
+    "D17:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Woodhaven, a small town.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032405012903225807,
+   "retrieved_tokens": 430,
+   "retrieve_ms": 7708.377625036519,
+   "retrieve_cost": 0.00018170012903225808
+  },
+  {
+   "idx": 138,
+   "question": "What did Joanna discover at the library in Woodhaven?",
+   "gold": "cool old book collection",
+   "category": 4,
+   "evidence": [
+    "D17:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A cool old book collection.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003079842580645161,
+   "retrieved_tokens": 368,
+   "retrieve_ms": 8123.453540960327,
+   "retrieve_cost": 0.00017553425806451616
+  },
+  {
+   "idx": 139,
+   "question": "What specific themes are explored in Joanna's new book?",
+   "gold": "loss, redemption, and forgiveness",
+   "category": 4,
+   "evidence": [
+    "D17:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Loss, identity, and connection.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0003607616129032258,
+   "retrieved_tokens": 603,
+   "retrieve_ms": 5129.015332960989,
+   "retrieve_cost": 0.0001924616129032258
+  },
+  {
+   "idx": 140,
+   "question": "What inspired Joanna's new script in July 2022?",
+   "gold": "Woodhaven's interesting past and people",
+   "category": 4,
+   "evidence": [
+    "D17:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Woodhaven's interesting past.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00037174374193548387,
+   "retrieved_tokens": 644,
+   "retrieve_ms": 5754.888082970865,
+   "retrieve_cost": 0.0001975937419354839
+  },
+  {
+   "idx": 141,
+   "question": "What did Nate do while Joanna was on her road trip?",
+   "gold": "Won a video game tournament",
+   "category": 4,
+   "evidence": [
+    "D17:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nate won an award.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00029078070967741935,
+   "retrieved_tokens": 306,
+   "retrieve_ms": 5638.122125004884,
+   "retrieve_cost": 0.00016733070967741935
+  },
+  {
+   "idx": 142,
+   "question": "What does Nate do that he loves and can make money from?",
+   "gold": "Competing in video game tournaments",
+   "category": 4,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Gaming and creating content.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0003287283870967742,
+   "retrieved_tokens": 504,
+   "retrieve_ms": 4764.238458010368,
+   "retrieve_cost": 0.0001758783870967742
+  },
+  {
+   "idx": 143,
+   "question": "How did Joanna feel when someone wrote her a letter after reading her blog post?",
+   "gold": "Touched",
+   "category": 4,
+   "evidence": [
+    "D18:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "She felt touched and appreciated.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00039737148387096775,
+   "retrieved_tokens": 819,
+   "retrieve_ms": 7473.776249971706,
+   "retrieve_cost": 0.00019577148387096775
+  },
+  {
+   "idx": 144,
+   "question": "What kind of impact does Joanna hope to have with her writing?",
+   "gold": "share her stories and hopefully have an impact",
+   "category": 4,
+   "evidence": [
+    "D18:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Make a difference in people's lives.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003476823870967742,
+   "retrieved_tokens": 493,
+   "retrieve_ms": 9372.310790990014,
+   "retrieve_cost": 0.00019528238709677422
+  },
+  {
+   "idx": 145,
+   "question": "What kind of content did Joanna share that someone wrote her a letter about?",
+   "gold": "A blog post about a hard moment in her life",
+   "category": 4,
+   "evidence": [
+    "D18:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A hard moment in her life.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00037857154838709676,
+   "retrieved_tokens": 702,
+   "retrieve_ms": 8492.29479196947,
+   "retrieve_cost": 0.0001942215483870968
+  },
+  {
+   "idx": 146,
+   "question": "What motivates Joanna to keep writing even on tough days?",
+   "gold": "Knowing that her writing can make a difference",
+   "category": 4,
+   "evidence": [
+    "D18:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The impact of her writing.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004230069677419355,
+   "retrieved_tokens": 1020,
+   "retrieve_ms": 6456.886874977499,
+   "retrieve_cost": 0.0001927569677419355
+  },
+  {
+   "idx": 147,
+   "question": "What type of ice cream does Joanna mention that Nate makes and is delicious?",
+   "gold": "Coconut milk ice cream",
+   "category": 4,
+   "evidence": [
+    "D18:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Coconut milk ice cream.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0003631449677419355,
+   "retrieved_tokens": 672,
+   "retrieve_ms": 7470.033666992094,
+   "retrieve_cost": 0.0001838949677419355
+  },
+  {
+   "idx": 148,
+   "question": "How did Nate feel about sharing his love for dairy-free desserts with Joanna?",
+   "gold": "Happy to share",
+   "category": 4,
+   "evidence": [
+    "D18:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He felt happy and rewarded.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0003595157419354839,
+   "retrieved_tokens": 671,
+   "retrieve_ms": 8180.231750011444,
+   "retrieve_cost": 0.0001804157419354839
+  },
+  {
+   "idx": 149,
+   "question": "What did Joanna share with her writers group in August 2022?",
+   "gold": "her book",
+   "category": 4,
+   "evidence": [
+    "D19:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Her book.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003672110322580646,
+   "retrieved_tokens": 619,
+   "retrieve_ms": 8750.315500015859,
+   "retrieve_cost": 0.00019801103225806455
+  },
+  {
+   "idx": 150,
+   "question": "How did Joanna celebrate after sharing her book with her writers group?",
+   "gold": "making a delicious treat",
+   "category": 4,
+   "evidence": [
+    "D19:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Made a delicious treat.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033830574193548387,
+   "retrieved_tokens": 469,
+   "retrieve_ms": 5410.8623749925755,
+   "retrieve_cost": 0.0001907057419354839
+  },
+  {
+   "idx": 151,
+   "question": "How did Nate celebrate winning the international tournament?",
+   "gold": "Taking time off to chill with pets",
+   "category": 4,
+   "evidence": [
+    "D19:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific celebration mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003211201935483871,
+   "retrieved_tokens": 395,
+   "retrieve_ms": 9382.77512503555,
+   "retrieve_cost": 0.00018582019354838712
+  },
+  {
+   "idx": 152,
+   "question": "Why is Joanna experimenting with dairy-free options in her dessert recipes?",
+   "gold": "lactose intolerance",
+   "category": 4,
+   "evidence": [
+    "D20:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "She's lactose intolerant.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00035702612903225806,
+   "retrieved_tokens": 646,
+   "retrieve_ms": 9605.300624971278,
+   "retrieve_cost": 0.00018287612903225808
+  },
+  {
+   "idx": 153,
+   "question": "What substitution does Nate suggest for butter in dairy-free baking?",
+   "gold": "dairy-free margarine or coconut oil",
+   "category": 4,
+   "evidence": [
+    "D20:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Dairy-free margarine or coconut oil.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032452025806451617,
+   "retrieved_tokens": 406,
+   "retrieve_ms": 9515.98354097223,
+   "retrieve_cost": 0.00018427025806451618
+  },
+  {
+   "idx": 154,
+   "question": "What type of show did Nate host where he taught vegan ice cream recipes?",
+   "gold": "a cooking show",
+   "category": 4,
+   "evidence": [
+    "D21:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Cooking show",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033860980645161287,
+   "retrieved_tokens": 507,
+   "retrieve_ms": 9756.108958972618,
+   "retrieve_cost": 0.0001865098064516129
+  },
+  {
+   "idx": 155,
+   "question": "What is Nate's favorite dish from the cooking show he hosted?",
+   "gold": "Coconut milk ice cream",
+   "category": 4,
+   "evidence": [
+    "D21:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Not specified in memories.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000315315870967742,
+   "retrieved_tokens": 391,
+   "retrieve_ms": 7705.063167028129,
+   "retrieve_cost": 0.00017941587096774195
+  },
+  {
+   "idx": 156,
+   "question": "What is one of Nate's favorite dairy-free treats besides coconut milk ice cream?",
+   "gold": "dairy-free chocolate mousse",
+   "category": 4,
+   "evidence": [
+    "D21:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Dairy-free chocolate mousse.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003284167741935484,
+   "retrieved_tokens": 438,
+   "retrieve_ms": 7938.953916018363,
+   "retrieve_cost": 0.00018396677419354841
+  },
+  {
+   "idx": 157,
+   "question": "What dessert did Joanna share a photo of that has an almond flour crust, chocolate ganache, and fresh raspberries?",
+   "gold": "chocolate raspberry tart",
+   "category": 4,
+   "evidence": [
+    "D21:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Chocolate raspberry tart.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003188372903225807,
+   "retrieved_tokens": 397,
+   "retrieve_ms": 9285.704542009626,
+   "retrieve_cost": 0.00017933729032258068
+  },
+  {
+   "idx": 158,
+   "question": "What kind of cake did Joanna share a photo of that she likes making for birthdays and special days?",
+   "gold": "chocolate cake with raspberries",
+   "category": 4,
+   "evidence": [
+    "D21:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Dairy-free chocolate cake.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003197763870967742,
+   "retrieved_tokens": 400,
+   "retrieve_ms": 9335.760916990694,
+   "retrieve_cost": 0.0001798263870967742
+  },
+  {
+   "idx": 159,
+   "question": "What two main ingredients are part of the dessert Joanna shared a photo of with blueberries, coconut milk, and a gluten-free crust?",
+   "gold": "blueberries and coconut milk",
+   "category": 4,
+   "evidence": [
+    "D21:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Blueberries, coconut milk.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003267410322580645,
+   "retrieved_tokens": 421,
+   "retrieve_ms": 8181.145291018765,
+   "retrieve_cost": 0.00018184103225806454
+  },
+  {
+   "idx": 160,
+   "question": "What movie did Nate recently watch and enjoy on October 6, 2022?",
+   "gold": "Little Women",
+   "category": 4,
+   "evidence": [
+    "D22:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Little Women\"",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032115445161290325,
+   "retrieved_tokens": 396,
+   "retrieve_ms": 8137.635582999792,
+   "retrieve_cost": 0.00018390445161290325
+  },
+  {
+   "idx": 161,
+   "question": "What did Joanna make for one of the ladies at her writing club?",
+   "gold": "a bookmark",
+   "category": 4,
+   "evidence": [
+    "D22:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A cute little bookmark.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032634870967741933,
+   "retrieved_tokens": 416,
+   "retrieve_ms": 8060.209000017494,
+   "retrieve_cost": 0.00018639870967741937
+  },
+  {
+   "idx": 162,
+   "question": "What game did Nate play at the game convention he attended on 9 October, 2022?",
+   "gold": "Catan",
+   "category": 4,
+   "evidence": [
+    "D23:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The game is not specified.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003364097419354839,
+   "retrieved_tokens": 470,
+   "retrieve_ms": 8892.481666000094,
+   "retrieve_cost": 0.0001859597419354839
+  },
+  {
+   "idx": 163,
+   "question": "What movie has Nate recently seen that blew his mind?",
+   "gold": "\"Inception\"",
+   "category": 4,
+   "evidence": [
+    "D23:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Inception\"",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00031056077419354844,
+   "retrieved_tokens": 367,
+   "retrieve_ms": 8788.800375012215,
+   "retrieve_cost": 0.00018006077419354842
+  },
+  {
+   "idx": 164,
+   "question": "What game has Nate been playing nonstop with a futuristic setting and gameplay on October 9, 2022?",
+   "gold": "Cyberpunk 2077",
+   "category": 4,
+   "evidence": [
+    "D23:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Cyberpunk 2077",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003217089677419355,
+   "retrieved_tokens": 388,
+   "retrieve_ms": 8417.204375029542,
+   "retrieve_cost": 0.0001835589677419355
+  },
+  {
+   "idx": 165,
+   "question": "What did Nate share a photo of when mentioning unwinding at home?",
+   "gold": "a bookcase filled with dvds and movies",
+   "category": 4,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nate shared a photo of turtles.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003053169677419355,
+   "retrieved_tokens": 325,
+   "retrieve_ms": 9282.33650000766,
+   "retrieve_cost": 0.0001772169677419355
+  },
+  {
+   "idx": 166,
+   "question": "How did Joanna describe the classic movie he watched?",
+   "gold": "gripping with great actors",
+   "category": 4,
+   "evidence": [
+    "D23:18"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Gripping story, great actors.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003318481935483871,
+   "retrieved_tokens": 496,
+   "retrieve_ms": 8931.051457999274,
+   "retrieve_cost": 0.00017989819354838712
+  },
+  {
+   "idx": 167,
+   "question": "What does Joanna recommend to make a living room comfy like hers?",
+   "gold": "couch for multiple people, fluffy blanket, lights that can be dimmed",
+   "category": 4,
+   "evidence": [
+    "D23:26"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A fluffy couch and weighted blanket.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003145072258064516,
+   "retrieved_tokens": 407,
+   "retrieve_ms": 5238.475000020117,
+   "retrieve_cost": 0.00017500722580645163
+  },
+  {
+   "idx": 168,
+   "question": "What helps Joanna stay focused and brings her joy?",
+   "gold": "stuffed animal dog named Tilly",
+   "category": 4,
+   "evidence": [
+    "D24:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tilly, her stuffed animal.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00039190954838709676,
+   "retrieved_tokens": 874,
+   "retrieve_ms": 8782.661791017745,
+   "retrieve_cost": 0.0001832595483870968
+  },
+  {
+   "idx": 169,
+   "question": "What does Joanna do while she writes?",
+   "gold": "have a stuffed animal dog named Tilly with her",
+   "category": 4,
+   "evidence": [
+    "D24:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Creates wild worlds with characters.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.0003489870967741935,
+   "retrieved_tokens": 563,
+   "retrieve_ms": 8969.39654101152,
+   "retrieve_cost": 0.00018818709677419356
+  },
+  {
+   "idx": 170,
+   "question": "Why did Joanna name the stuffed animal dog Tilly?",
+   "gold": "after a dog she had in Michigan",
+   "category": 4,
+   "evidence": [
+    "D24:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tilly helps her stay focused.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00029988309677419356,
+   "retrieved_tokens": 334,
+   "retrieve_ms": 5828.424375038594,
+   "retrieve_cost": 0.00017193309677419357
+  },
+  {
+   "idx": 171,
+   "question": "What does Joanna do after receiving a rejection from a production company?",
+   "gold": "keep grinding and moving ahead",
+   "category": 4,
+   "evidence": [
+    "D24:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "She continues writing scripts.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035500122580645163,
+   "retrieved_tokens": 585,
+   "retrieve_ms": 6647.617165988777,
+   "retrieve_cost": 0.00019000122580645163
+  },
+  {
+   "idx": 172,
+   "question": "How does Nate feel about Joanna's ability to bounce back from setbacks?",
+   "gold": "respect Joanna for being able to bounce back",
+   "category": 4,
+   "evidence": [
+    "D24:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nate is proud and supportive.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003433995483870968,
+   "retrieved_tokens": 537,
+   "retrieve_ms": 6530.269540962763,
+   "retrieve_cost": 0.0001840995483870968
+  },
+  {
+   "idx": 173,
+   "question": "What encouragement does Nate give to Joanna after her setback?",
+   "gold": "rejections don't define her, keep grinding and she'll find the perfect opportunity",
+   "category": 4,
+   "evidence": [
+    "D24:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Believe in yourself and your talent.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032570787096774194,
+   "retrieved_tokens": 449,
+   "retrieve_ms": 6449.865041999146,
+   "retrieve_cost": 0.00018050787096774196
+  },
+  {
+   "idx": 174,
+   "question": "What does Nate rely on for cheer and joy?",
+   "gold": "his turtles",
+   "category": 4,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "His pets.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00039038380645161296,
+   "retrieved_tokens": 866,
+   "retrieve_ms": 9230.058290995657,
+   "retrieve_cost": 0.00018533380645161294
+  },
+  {
+   "idx": 175,
+   "question": "What does Joanna use to remember her dog from Michigan?",
+   "gold": "naming a stuffed animal dog Tilly",
+   "category": 4,
+   "evidence": [
+    "D24:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The dog's name.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00030392670967741936,
+   "retrieved_tokens": 351,
+   "retrieve_ms": 8611.739666957874,
+   "retrieve_cost": 0.00017522670967741938
+  },
+  {
+   "idx": 176,
+   "question": "What did Joanna contribute to that was shown on the big screen on the Sunday before October 25, 2022?",
+   "gold": "movie script",
+   "category": 4,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A movie script.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00035673193548387103,
+   "retrieved_tokens": 583,
+   "retrieve_ms": 9029.990040988196,
+   "retrieve_cost": 0.00018933193548387103
+  },
+  {
+   "idx": 177,
+   "question": "What inspires Joanna to create drawings of her characters?",
+   "gold": "visuals to help bring the characters alive in her head so she can write better",
+   "category": 4,
+   "evidence": [
+    "D25:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Personal experiences and imagination.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00032324748387096774,
+   "retrieved_tokens": 417,
+   "retrieve_ms": 8944.887582969386,
+   "retrieve_cost": 0.00018434748387096775
+  },
+  {
+   "idx": 178,
+   "question": "Where does Joanna get her ideas for the characters from?",
+   "gold": "people she knows, things she saw, her imagination",
+   "category": 4,
+   "evidence": [
+    "D25:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "From personal experiences and imagination.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003262447741935484,
+   "retrieved_tokens": 466,
+   "retrieve_ms": 8827.746417024173,
+   "retrieve_cost": 0.0001790947741935484
+  },
+  {
+   "idx": 179,
+   "question": "How did Joanna feel on October 25, 2022 about seeing her characters come alive on the big screen?",
+   "gold": "surreal and cool",
+   "category": 4,
+   "evidence": [
+    "D25:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "It was surreal and rewarding.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00037416019354838707,
+   "retrieved_tokens": 655,
+   "retrieve_ms": 9388.46787501825,
+   "retrieve_cost": 0.0001950601935483871
+  },
+  {
+   "idx": 180,
+   "question": "What type of diet do Nate's turtles have?",
+   "gold": "combination of vegetables, fruits, and insects",
+   "category": 4,
+   "evidence": [
+    "D25:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Combination of vegetables, fruits, and insects.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003235885161290323,
+   "retrieved_tokens": 430,
+   "retrieve_ms": 9230.260792013723,
+   "retrieve_cost": 0.00018033851612903227
+  },
+  {
+   "idx": 181,
+   "question": "What ingredient did Nate use to make the ice cream lactose-free?",
+   "gold": "coconut milk",
+   "category": 4,
+   "evidence": [
+    "D26:18"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Coconut milk.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00033644129032258063,
+   "retrieved_tokens": 533,
+   "retrieve_ms": 7747.981458029244,
+   "retrieve_cost": 0.00017984129032258065
+  },
+  {
+   "idx": 182,
+   "question": "What did Joanna find in old notebooks last week that prompted her to reflect on her progress as a writer?",
+   "gold": "early writings",
+   "category": 4,
+   "evidence": [
+    "D26:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Her early writings.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003565078064516129,
+   "retrieved_tokens": 531,
+   "retrieve_ms": 6873.103874968365,
+   "retrieve_cost": 0.00019780780645161294
+  },
+  {
+   "idx": 183,
+   "question": "What game is Nate currently playing and recommends to others on November 7, 2022?",
+   "gold": "\"Xenoblade Chronicles\"",
+   "category": 4,
+   "evidence": [
+    "D27:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Xeonoblade Chronicles",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00032953722580645163,
+   "retrieved_tokens": 450,
+   "retrieve_ms": 9380.329666018952,
+   "retrieve_cost": 0.00018298722580645162
+  },
+  {
+   "idx": 184,
+   "question": "What did Joanna receive from her brother that brought back childhood memories?",
+   "gold": "a handwritten letter",
+   "category": 4,
+   "evidence": [
+    "D27:29"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Cute notes.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003061865806451613,
+   "retrieved_tokens": 351,
+   "retrieve_ms": 9290.014958009124,
+   "retrieve_cost": 0.00017748658064516132
+  },
+  {
+   "idx": 185,
+   "question": "What is the type of game \"Xenoblade Chronicles\" that Nate is playing?",
+   "gold": "fantasy RPG",
+   "category": 4,
+   "evidence": [
+    "D27:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fantasy RPG",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00030785167741935487,
+   "retrieved_tokens": 331,
+   "retrieve_ms": 9241.137375007384,
+   "retrieve_cost": 0.00018125167741935488
+  },
+  {
+   "idx": 186,
+   "question": "What dish did Nate make on 9 November, 2022?",
+   "gold": "Homemade coconut ice cream",
+   "category": 4,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Homemade coconut ice cream.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032068200000000003,
+   "retrieved_tokens": 424,
+   "retrieve_ms": 8113.06008300744,
+   "retrieve_cost": 0.00017833200000000004
+  },
+  {
+   "idx": 187,
+   "question": "What project is Joanna working on in her notebook on November 9, 2022?",
+   "gold": "A suspenseful thriller set in a small Midwestern town",
+   "category": 4,
+   "evidence": [
+    "D28:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A suspenseful thriller.",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.00037469303225806455,
+   "retrieved_tokens": 738,
+   "retrieve_ms": 8187.407624965999,
+   "retrieve_cost": 0.00018524303225806455
+  },
+  {
+   "idx": 188,
+   "question": "What is Nate creating for YouTube on 9 November, 2022?",
+   "gold": "gaming content",
+   "category": 4,
+   "evidence": [
+    "D28:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Gaming content.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00031517400000000004,
+   "retrieved_tokens": 399,
+   "retrieve_ms": 7906.775750045199,
+   "retrieve_cost": 0.00017837400000000002
+  },
+  {
+   "idx": 189,
+   "question": "What inspired Nate to start making gaming videos?",
+   "gold": "Love of gaming and connecting with others who enjoy it too",
+   "category": 4,
+   "evidence": [
+    "D28:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Encouragement from others.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00031779561290322584,
+   "retrieved_tokens": 394,
+   "retrieve_ms": 8404.74725002423,
+   "retrieve_cost": 0.00018204561290322582
+  },
+  {
+   "idx": 190,
+   "question": "What new content is Nate creating for YouTube?",
+   "gold": "Gaming videos",
+   "category": 4,
+   "evidence": [
+    "D28:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Gaming content.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032129612903225807,
+   "retrieved_tokens": 454,
+   "retrieve_ms": 8736.082374991383,
+   "retrieve_cost": 0.00017804612903225809
+  },
+  {
+   "idx": 191,
+   "question": "What advice does Joanna give to Nate about making YouTube videos?",
+   "gold": "Watch other people's videos to understand what the audience likes",
+   "category": 4,
+   "evidence": [
+    "D28:18"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Watch other people's videos first.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032141496774193553,
+   "retrieved_tokens": 423,
+   "retrieve_ms": 7327.017042029183,
+   "retrieve_cost": 0.00018011496774193551
+  },
+  {
+   "idx": 192,
+   "question": "What did Joanna take a picture of near Fort Wayne last summer?",
+   "gold": "Sunset",
+   "category": 4,
+   "evidence": [
+    "D28:22"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A sunset and surrounding beauty.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031450529032258067,
+   "retrieved_tokens": 381,
+   "retrieve_ms": 7202.59908301523,
+   "retrieve_cost": 0.00017950529032258067
+  },
+  {
+   "idx": 193,
+   "question": "What inspired Joanna to take a picture of the sunset in the field near Fort Wayne?",
+   "gold": "The incredible sunset and surrounding beauty",
+   "category": 4,
+   "evidence": [
+    "D28:22"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The surrounding beauty and nature.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003301672258064516,
+   "retrieved_tokens": 457,
+   "retrieve_ms": 7680.318666971289,
+   "retrieve_cost": 0.00018256722580645162
+  },
+  {
+   "idx": 194,
+   "question": "Why did Nate get a third turtle?",
+   "gold": "He saw another one at a pet store and wanted to get it",
+   "category": 4,
+   "evidence": [
+    "D28:25"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The tank is big enough now.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00033389283870967747,
+   "retrieved_tokens": 489,
+   "retrieve_ms": 7906.861957977526,
+   "retrieve_cost": 0.00018359283870967745
+  },
+  {
+   "idx": 195,
+   "question": "What does Nate want to do when he goes over to Joanna's place?",
+   "gold": "Watch one of Joanna's movies together or go to the park",
+   "category": 4,
+   "evidence": [
+    "D28:29"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The memories do not specify what Nate wants to do at Joanna's place.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00027721819354838714,
+   "retrieved_tokens": 213,
+   "retrieve_ms": 6011.266375018749,
+   "retrieve_cost": 0.00016141819354838712
+  },
+  {
+   "idx": 196,
+   "question": "What did Nate take to the beach in Tampa?",
+   "gold": "turtles",
+   "category": 4,
+   "evidence": [
+    "D29:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "His turtles.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002913065806451613,
+   "retrieved_tokens": 325,
+   "retrieve_ms": 5718.286167015322,
+   "retrieve_cost": 0.0001674065806451613
+  },
+  {
+   "idx": 197,
+   "question": "What does Nate love most about having turtles?",
+   "gold": "They make him feel calm and don't require much looking after",
+   "category": 4,
+   "evidence": [
+    "D29:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "They bring him joy and peace.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.0003890432903225807,
+   "retrieved_tokens": 857,
+   "retrieve_ms": 7100.181707995944,
+   "retrieve_cost": 0.00018324329032258068
+  },
+  {
+   "idx": 198,
+   "question": "What did Nate share a photo of as a part of his experimentation in November 2022?",
+   "gold": "colorful bowls of coconut milk ice cream",
+   "category": 4,
+   "evidence": [
+    "D29:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific photo mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00030474212903225807,
+   "retrieved_tokens": 314,
+   "retrieve_ms": 5887.0142080122605,
+   "retrieve_cost": 0.0001785921290322581
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 11376.950334000867,
+ "retrieve_cost_per_query": 0.00018119870254498303,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

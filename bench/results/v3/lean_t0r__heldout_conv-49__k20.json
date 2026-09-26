@@ -1,0 +1,2945 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "heldout:conv-49",
+  "sessions": [
+   1,
+   25
+  ],
+  "messages": 509,
+  "questions": 156
+ },
+ "accuracy": 0.75,
+ "accuracy_by_category": {
+  "1": 0.7297297297297297,
+  "2": 0.6363636363636364,
+  "3": 0.7692307692307693,
+  "4": 0.8082191780821918
+ },
+ "stored": 509,
+ "active": 509,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 518.5576923076923,
+ "retrieved_tokens_median": 480.0,
+ "memories_mean": 11.711538461538462,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.031298442000000024,
+  "claude": 0.0,
+  "openai": 0.017926049999999995
+ },
+ "cache": {
+  "hits": 286,
+  "misses": 5018
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "What kind of car does Evan drive?",
+   "gold": "Prius",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D1:4",
+    "D18:1",
+    "D18:3",
+    "D22:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan drives a Prius.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000332352,
+   "retrieved_tokens": 438,
+   "retrieve_ms": 8132.826708024368,
+   "retrieve_cost": 0.00019030200000000002
+  },
+  {
+   "idx": 1,
+   "question": "What kinds of things did Evan have broken?",
+   "gold": "His old Prius and his new Prius.",
+   "category": 1,
+   "evidence": [
+    "D18:1",
+    "D18:2",
+    "D18:3",
+    "D1:2",
+    "D1:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His Prius and son's ankle.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.000370218,
+   "retrieved_tokens": 654,
+   "retrieve_ms": 3034.964416990988,
+   "retrieve_cost": 0.00019546800000000002
+  },
+  {
+   "idx": 2,
+   "question": "Where has Evan been on roadtrips with his family?",
+   "gold": "Rockies, Jasper",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D1:4",
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Jasper and the Rocky Mountains.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035885400000000003,
+   "retrieved_tokens": 559,
+   "retrieve_ms": 3170.2613750239834,
+   "retrieve_cost": 0.00019685400000000002
+  },
+  {
+   "idx": 3,
+   "question": "How many Prius has Evan owned?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D1:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Two Prius.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000328476,
+   "retrieved_tokens": 413,
+   "retrieve_ms": 3295.2407500124536,
+   "retrieve_cost": 0.00019227600000000001
+  },
+  {
+   "idx": 4,
+   "question": "Which hobby did Sam take up in May 2023?",
+   "gold": "painting",
+   "category": 2,
+   "evidence": [
+    "D1:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000348324,
+   "retrieved_tokens": 489,
+   "retrieve_ms": 3039.4493750063702,
+   "retrieve_cost": 0.00020042400000000002
+  },
+  {
+   "idx": 5,
+   "question": "Which country was Evan visiting in May 2023?",
+   "gold": "Canada",
+   "category": 3,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Canada",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033927,
+   "retrieved_tokens": 448,
+   "retrieve_ms": 3169.1497499705292,
+   "retrieve_cost": 0.00019782000000000003
+  },
+  {
+   "idx": 6,
+   "question": "How many roadtrips did Evan take in May 2023?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D1:4",
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "One road trip.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0003522600000000001,
+   "retrieved_tokens": 504,
+   "retrieve_ms": 3093.2352080126293,
+   "retrieve_cost": 0.00019971000000000002
+  },
+  {
+   "idx": 7,
+   "question": "What new hobbies did Sam consider trying?",
+   "gold": "Painting, kayaking, hiking, cooking, running",
+   "category": 1,
+   "evidence": [
+    "D1:11",
+    "D2:10",
+    "D10:8",
+    "D13:6",
+    "D13:8",
+    "D20:6",
+    "D7:2",
+    "D7:4",
+    "D7:6",
+    "D21:19"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting and kayaking.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00036246,
+   "retrieved_tokens": 605,
+   "retrieve_ms": 3047.1090829814784,
+   "retrieve_cost": 0.00019656000000000003
+  },
+  {
+   "idx": 8,
+   "question": "What hobby did Evan start practicing a few years ago that he enjoys?",
+   "gold": "Watercolor painting",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D1:16",
+    "D8:13",
+    "D8:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00039228600000000005,
+   "retrieved_tokens": 803,
+   "retrieve_ms": 3212.8711250261404,
+   "retrieve_cost": 0.00019668600000000003
+  },
+  {
+   "idx": 9,
+   "question": "When did Evan go to Jasper with his family?",
+   "gold": "weekend before May 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "May 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033936000000000003,
+   "retrieved_tokens": 433,
+   "retrieve_ms": 3343.9664589823224,
+   "retrieve_cost": 0.00019866000000000003
+  },
+  {
+   "idx": 10,
+   "question": "Which type of vacation would Evan prefer with his family, walking tours in metropolitan cities or camping trip in the outdoors?",
+   "gold": "camping trip in the outdoors",
+   "category": 3,
+   "evidence": [
+    "D2:1",
+    "D2:3",
+    "D19:1",
+    "D19:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Camping trip in the outdoors.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.00040800600000000004,
+   "retrieved_tokens": 846,
+   "retrieve_ms": 3473.913708003238,
+   "retrieve_cost": 0.00020025600000000003
+  },
+  {
+   "idx": 11,
+   "question": "What health issue did Sam face that motivated him to change his lifestyle?",
+   "gold": "Weight problem",
+   "category": 1,
+   "evidence": [
+    "D2:6",
+    "D3:4",
+    "D24:12",
+    "D24:14",
+    "D5:5",
+    "D6:2",
+    "D7:2",
+    "D7:12",
+    "D8:1",
+    "D10:6",
+    "D12:1",
+    "D13:2",
+    "D14:1",
+    "D15:1",
+    "D16:3",
+    "D17:3",
+    "D24:20",
+    "D25:1",
+    "D25:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Gastritis and weight concerns.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.000400272,
+   "retrieved_tokens": 746,
+   "retrieve_ms": 3358.45529200742,
+   "retrieve_cost": 0.00020962200000000002
+  },
+  {
+   "idx": 12,
+   "question": "When did Sam first go to the doctor and find out he had a weight problem?",
+   "gold": "A few days before May 24, 2023.",
+   "category": 2,
+   "evidence": [
+    "D2:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "May 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037269,
+   "retrieved_tokens": 539,
+   "retrieve_ms": 3477.498124993872,
+   "retrieve_cost": 0.00021399000000000003
+  },
+  {
+   "idx": 13,
+   "question": "When did Evan have his sudden heart palpitation incident that really shocked him up?",
+   "gold": "first week of June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Last week of May 2023.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000385962,
+   "retrieved_tokens": 651,
+   "retrieve_ms": 3553.4950000001118,
+   "retrieve_cost": 0.00020836200000000002
+  },
+  {
+   "idx": 14,
+   "question": "What is Evan's favorite food?",
+   "gold": "Ginger snaps",
+   "category": 1,
+   "evidence": [
+    "D3:3",
+    "D5:5",
+    "D23:15",
+    "D22:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Ginger snaps.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000340182,
+   "retrieved_tokens": 475,
+   "retrieve_ms": 5532.453624997288,
+   "retrieve_cost": 0.00019408200000000002
+  },
+  {
+   "idx": 15,
+   "question": "What kind of unhealthy snacks does Sam enjoy eating?",
+   "gold": "soda, candy",
+   "category": 1,
+   "evidence": [
+    "D3:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Soda and candy.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00035343,
+   "retrieved_tokens": 506,
+   "retrieve_ms": 5193.5425830306485,
+   "retrieve_cost": 0.00020118000000000002
+  },
+  {
+   "idx": 16,
+   "question": "What recurring issue frustrates Sam at the grocery store?",
+   "gold": "Malfunctioning self-checkout machines.",
+   "category": 1,
+   "evidence": [
+    "D3:16",
+    "D22:19"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Self-checkout machines malfunctioning.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035827200000000003,
+   "retrieved_tokens": 500,
+   "retrieve_ms": 5266.9059580075555,
+   "retrieve_cost": 0.00020542200000000003
+  },
+  {
+   "idx": 17,
+   "question": "When did Sam's friends mock him for being overweight?",
+   "gold": "Friday before 27 July 2023",
+   "category": 2,
+   "evidence": [
+    "D4:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "July 21, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036645000000000004,
+   "retrieved_tokens": 506,
+   "retrieve_ms": 3175.998750026338,
+   "retrieve_cost": 0.00021210000000000003
+  },
+  {
+   "idx": 18,
+   "question": "What kind of healthy food suggestions has Evan given to Sam?",
+   "gold": "flavored seltzer water, dark chocolate with high cocoa content, air-popped popcorn and fruit, veggies, healthy sandwich snacks, energy balls, grilled chicken salad with avocado",
+   "category": 1,
+   "evidence": [
+    "D3:5",
+    "D4:10",
+    "D22:10",
+    "D22:14",
+    "D24:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Vegetable recipes and low-calorie snacks.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003589740000000001,
+   "retrieved_tokens": 493,
+   "retrieve_ms": 3226.921666995622,
+   "retrieve_cost": 0.00020567400000000004
+  },
+  {
+   "idx": 19,
+   "question": "Considering their conversations and personal growth, what advice might Evan and Sam give to someone facing a major life transition or challenge?",
+   "gold": "Evan and Sam would likely advise embracing small, consistent changes\u200b\u200b, finding stress-relieving activities like hiking\u200b\u200b, painting, and road trips\u200b\u200b, and the importance of friendship and support in navigating challenges\u200b\u200b.",
+   "category": 3,
+   "evidence": [
+    "D3:10",
+    "D3:15",
+    "D22:1",
+    "D8:17",
+    "D8:22",
+    "D9:8",
+    "D9:11",
+    "D14:7",
+    "D14:12",
+    "D12:7",
+    "D12:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Stay positive and embrace support.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.000411468,
+   "retrieved_tokens": 871,
+   "retrieve_ms": 3340.556084003765,
+   "retrieve_cost": 0.000199668
+  },
+  {
+   "idx": 20,
+   "question": "In light of the health and dietary changes discussed, what would be an appropriate gift for both Evan and Sam to encourage their healthy lifestyles?",
+   "gold": "a cookbook with healthy recipes or a subscription to a healthy meal delivery service.",
+   "category": 3,
+   "evidence": [
+    "D2:9",
+    "D3:1",
+    "D3:3",
+    "D3:5",
+    "D4:10",
+    "D14:12",
+    "D5:9",
+    "D7:3",
+    "D7:2",
+    "D7:5",
+    "D7:12",
+    "D8:1",
+    "D8:5",
+    "D8:7",
+    "D8:8",
+    "D8:12",
+    "D9:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Healthy recipe book.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000421872,
+   "retrieved_tokens": 911,
+   "retrieve_ms": 3538.828667020425,
+   "retrieve_cost": 0.00020437200000000003
+  },
+  {
+   "idx": 21,
+   "question": "How does Evan describe the woman and his feelings for her that he met in Canada?",
+   "gold": "He says she's cool, incredible, like something out of a movie, and that he feels alive around her. Every moment with her is fun and energetic, also Evan feels really lucky to have someone who gets him.",
+   "category": 1,
+   "evidence": [
+    "D5:1",
+    "D5:3",
+    "D23:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Incredible, makes him feel alive.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000364104,
+   "retrieved_tokens": 552,
+   "retrieve_ms": 3590.502250008285,
+   "retrieve_cost": 0.00020105400000000002
+  },
+  {
+   "idx": 22,
+   "question": "When Evan did meet his future wife?",
+   "gold": "week before August 7, 2023.",
+   "category": 2,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Last week, in early December 2023.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00033114600000000004,
+   "retrieved_tokens": 377,
+   "retrieve_ms": 3664.9727919721045,
+   "retrieve_cost": 0.00019584600000000004
+  },
+  {
+   "idx": 23,
+   "question": "When did Sam start working out at the gym?",
+   "gold": "July 28, 2023",
+   "category": 2,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "August 21, 2023.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034794000000000003,
+   "retrieved_tokens": 456,
+   "retrieve_ms": 3015.5199579894543,
+   "retrieve_cost": 0.00020139000000000002
+  },
+  {
+   "idx": 24,
+   "question": "What significant event happened in Sam's life towards the end of summer 2023?",
+   "gold": "He fell in love with a Canadian woman",
+   "category": 2,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No significant event mentioned for Sam.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034143,
+   "retrieved_tokens": 446,
+   "retrieve_ms": 3620.50287501188,
+   "retrieve_cost": 0.00019488000000000003
+  },
+  {
+   "idx": 25,
+   "question": "Which year did Evan start taking care of his health seriously?",
+   "gold": "2021",
+   "category": 2,
+   "evidence": [
+    "D5:6",
+    "D5:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "2021",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.000384972,
+   "retrieved_tokens": 696,
+   "retrieve_ms": 3127.861541986931,
+   "retrieve_cost": 0.00020542200000000003
+  },
+  {
+   "idx": 26,
+   "question": "What motivates Evan to take care of his health?",
+   "gold": "family, fitness tracker, thirst for adventure on interesting hikes",
+   "category": 1,
+   "evidence": [
+    "D5:9",
+    "D5:11",
+    "D5:13"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His family motivates him.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00038864400000000006,
+   "retrieved_tokens": 694,
+   "retrieve_ms": 3510.743167018518,
+   "retrieve_cost": 0.00020819400000000003
+  },
+  {
+   "idx": 27,
+   "question": "What electronic device could Evan gift Sam to help him keep up with his fitness goals?",
+   "gold": "fitness tracker",
+   "category": 3,
+   "evidence": [
+    "D5:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A GPS sensor for tracking.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00039289800000000003,
+   "retrieved_tokens": 708,
+   "retrieve_ms": 3565.6655420316383,
+   "retrieve_cost": 0.00020764800000000003
+  },
+  {
+   "idx": 28,
+   "question": "What kind of writing does Sam do to relax and cope with his health issues?",
+   "gold": "journalling, creative writing",
+   "category": 1,
+   "evidence": [
+    "D6:4",
+    "D11:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Creative writing and journaling.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000370944,
+   "retrieved_tokens": 497,
+   "retrieve_ms": 3350.100084033329,
+   "retrieve_cost": 0.00021764400000000002
+  },
+  {
+   "idx": 29,
+   "question": "Who did Evan meet on his trip to Canada, and who did he come back from Canada with?",
+   "gold": "Evan met the woman he fell in love with and returned with her.",
+   "category": 1,
+   "evidence": [
+    "D5:1",
+    "D6:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A Canadian woman; his new SO.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000347724,
+   "retrieved_tokens": 469,
+   "retrieve_ms": 4167.169333028141,
+   "retrieve_cost": 0.00019622400000000002
+  },
+  {
+   "idx": 30,
+   "question": "When Evan get back from a vacation with his SO?",
+   "gold": "August 13, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "August 13, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000315684,
+   "retrieved_tokens": 328,
+   "retrieve_ms": 3357.2832079953514,
+   "retrieve_cost": 0.00018803400000000004
+  },
+  {
+   "idx": 31,
+   "question": "How might Evan and Sam's experiences with health and lifestyle changes influence their approach to stress and challenges?",
+   "gold": "Their experiences likely lead them to view challenges as opportunities for growth and change. They both have embraced healthier lifestyles, indicating a proactive approach to managing stress and challenges.",
+   "category": 3,
+   "evidence": [
+    "D9:1 D4:4 D4:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "They prioritize health and positive changes.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000487614,
+   "retrieved_tokens": 1274,
+   "retrieve_ms": 3826.155749964528,
+   "retrieve_cost": 0.00021596400000000002
+  },
+  {
+   "idx": 32,
+   "question": "What recurring frustration does Evan experience?",
+   "gold": "Evan consistently misplaces his keys every week.",
+   "category": 1,
+   "evidence": [
+    "D6:13",
+    "D21:20"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Car problems and job hunting.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00036234600000000004,
+   "retrieved_tokens": 561,
+   "retrieve_ms": 4064.0387919847853,
+   "retrieve_cost": 0.00020214600000000003
+  },
+  {
+   "idx": 33,
+   "question": "What is the recurring dream that Sam keeps having?",
+   "gold": "he's flying over a cityscape.",
+   "category": 1,
+   "evidence": [
+    "D6:14",
+    "D24:22"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Flying over skyscrapers.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000331446,
+   "retrieved_tokens": 388,
+   "retrieve_ms": 3625.470500031952,
+   "retrieve_cost": 0.00019689600000000003
+  },
+  {
+   "idx": 34,
+   "question": "What accidents has Evan's son faced lately?",
+   "gold": "injured at a soccer game, fell off his bike",
+   "category": 1,
+   "evidence": [
+    "D7:1",
+    "D20:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Soccer accident and bike fall.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035757,
+   "retrieved_tokens": 494,
+   "retrieve_ms": 3588.489541958552,
+   "retrieve_cost": 0.00020622000000000001
+  },
+  {
+   "idx": 35,
+   "question": "When was Evan's son injured at soccer?",
+   "gold": "Saturday before August 15, 2023.",
+   "category": 2,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "August 12, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033886800000000004,
+   "retrieved_tokens": 437,
+   "retrieve_ms": 3631.6072909976356,
+   "retrieve_cost": 0.00019546800000000002
+  },
+  {
+   "idx": 36,
+   "question": "What kind of foods or recipes has Sam recommended to Evan?",
+   "gold": "grilled vegetables, grilled chicken and veggie stir-fry, poutine",
+   "category": 1,
+   "evidence": [
+    "D7:8",
+    "D8:7",
+    "D23:26"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Roasted vegetables and lasagna.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0003669,
+   "retrieved_tokens": 574,
+   "retrieve_ms": 3843.0602500448003,
+   "retrieve_cost": 0.00020265000000000002
+  },
+  {
+   "idx": 37,
+   "question": "What kind of healthy meals did Sam start eating after getting a health scare?",
+   "gold": "salad, grilled salmon and vegetables, grilled chicken and veggie stir-fry, Beef Merlot, fruit bowl, smoothie bowl",
+   "category": 1,
+   "evidence": [
+    "D3:2",
+    "D8:1",
+    "D7:4",
+    "D8:7",
+    "D10:2",
+    "D11:1",
+    "D18:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Nutritious meals and healthier snacks.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00037971600000000005,
+   "retrieved_tokens": 594,
+   "retrieve_ms": 4239.9540829937905,
+   "retrieve_cost": 0.00021096600000000004
+  },
+  {
+   "idx": 38,
+   "question": "What role does nature and the outdoors play in Evan and Sam's mental well-being?",
+   "gold": "Nature and outdoor activities seem to be significant stress relievers and sources of joy for both Evan and Sam. These activities likely contribute positively to their mental well-being.",
+   "category": 3,
+   "evidence": [
+    "D22:1 D22:2 D9:10 D9:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Nature helps them relax and rejuvenate.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00041415600000000005,
+   "retrieved_tokens": 884,
+   "retrieve_ms": 3878.835292009171,
+   "retrieve_cost": 0.00020130600000000003
+  },
+  {
+   "idx": 39,
+   "question": "How many months lapsed between Sam's first and second doctor's appointment?",
+   "gold": "three months",
+   "category": 2,
+   "evidence": [
+    "D2:6",
+    "D7:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Five months.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00035746800000000005,
+   "retrieved_tokens": 529,
+   "retrieve_ms": 3895.5102500040084,
+   "retrieve_cost": 0.00020176800000000004
+  },
+  {
+   "idx": 40,
+   "question": "When did Evan start taking painting classes?",
+   "gold": "Few days before 19 August, 2023.",
+   "category": 2,
+   "evidence": [
+    "D8:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A few days before August 19, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000355524,
+   "retrieved_tokens": 466,
+   "retrieve_ms": 4329.399457958061,
+   "retrieve_cost": 0.00020567400000000004
+  },
+  {
+   "idx": 41,
+   "question": "Which classes did Evan join in mid-August 2023?",
+   "gold": "painting classes",
+   "category": 2,
+   "evidence": [
+    "D8:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No specific classes mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00031029,
+   "retrieved_tokens": 288,
+   "retrieve_ms": 3491.951333999168,
+   "retrieve_cost": 0.00018984
+  },
+  {
+   "idx": 42,
+   "question": "How did Evan get into painting?",
+   "gold": "His friend got him into it by gifting him a painting and giving him some advice. The painting inspired Evan.",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D1:15",
+    "D1:16",
+    "D8:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A friend gave him a painting.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000345894,
+   "retrieved_tokens": 435,
+   "retrieve_ms": 4063.300125009846,
+   "retrieve_cost": 0.00020399400000000004
+  },
+  {
+   "idx": 43,
+   "question": "How often does Sam get health checkups?",
+   "gold": "every three months",
+   "category": 3,
+   "evidence": [
+    "D2:6",
+    "D7:2",
+    "D12:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam had a check-up a few days ago.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00037366800000000007,
+   "retrieved_tokens": 584,
+   "retrieve_ms": 4084.069292002823,
+   "retrieve_cost": 0.00020701800000000003
+  },
+  {
+   "idx": 44,
+   "question": "What kind of subjects does Evan enjoy painting?",
+   "gold": "nature landscapes, portraits, abstract minimalism",
+   "category": 1,
+   "evidence": [
+    "D8:20",
+    "D20:13",
+    "D20:15",
+    "D21:10",
+    "D21:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Landscapes and nature.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035338800000000005,
+   "retrieved_tokens": 490,
+   "retrieve_ms": 3875.449249986559,
+   "retrieve_cost": 0.00020323800000000004
+  },
+  {
+   "idx": 45,
+   "question": "Which places in Canada was Evan visiting in July 2023?",
+   "gold": "Banff, Rocky Mountains",
+   "category": 2,
+   "evidence": [
+    "D8:27",
+    "D9:8",
+    "D9:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan visited Canada in July 2023.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00036472800000000004,
+   "retrieved_tokens": 564,
+   "retrieve_ms": 3897.545000014361,
+   "retrieve_cost": 0.000199878
+  },
+  {
+   "idx": 46,
+   "question": "How do Evan and Sam use creative outlets to cope with life's challenges?",
+   "gold": "Evan and Sam use creative activities, like painting and writing, as therapeutic tools to express themselves and cope with stress.",
+   "category": 3,
+   "evidence": [
+    "D21:18 D21:22 D11:15 D11:19"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan paints; Sam writes in a journal.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.000418368,
+   "retrieved_tokens": 879,
+   "retrieve_ms": 3959.5805419958197,
+   "retrieve_cost": 0.00020596800000000003
+  },
+  {
+   "idx": 47,
+   "question": "When did Evan go skiing in Banff?",
+   "gold": "July 2023",
+   "category": 2,
+   "evidence": [
+    "D8:26",
+    "D8:27",
+    "D8:28"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Next year (2024).",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000339882,
+   "retrieved_tokens": 433,
+   "retrieve_ms": 3524.3084999965504,
+   "retrieve_cost": 0.00019828200000000004
+  },
+  {
+   "idx": 48,
+   "question": "What new diet and lifestyle change did Sam adopt over time?",
+   "gold": "Healthy eating, exercise routine, running, hiking",
+   "category": 1,
+   "evidence": [
+    "D8:1",
+    "D9:1",
+    "D21:9",
+    "D22:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Healthier diet and exercise routine.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00035908800000000003,
+   "retrieved_tokens": 560,
+   "retrieve_ms": 3679.8113330150954,
+   "retrieve_cost": 0.00019693800000000002
+  },
+  {
+   "idx": 49,
+   "question": "Who was injured in Evan's family?",
+   "gold": "Evan's son and Evan himself",
+   "category": 1,
+   "evidence": [
+    "D7:1",
+    "D7:9",
+    "D7:10",
+    "D9:2",
+    "D11:2",
+    "D11:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan's son.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033144,
+   "retrieved_tokens": 376,
+   "retrieve_ms": 3528.801541950088,
+   "retrieve_cost": 0.00019929000000000002
+  },
+  {
+   "idx": 50,
+   "question": "What kind of hobbies does Evan pursue?",
+   "gold": "painting, hiking, reading books, biking, skiing, snowboarding, ice skating, swimming, camping, kayaking",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D1:6",
+    "D4:8",
+    "D6:1",
+    "D8:30",
+    "D9:6",
+    "D25:8",
+    "D25:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting, hiking, and outdoor activities.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.000393276,
+   "retrieved_tokens": 795,
+   "retrieve_ms": 3568.770374986343,
+   "retrieve_cost": 0.00019647600000000003
+  },
+  {
+   "idx": 51,
+   "question": "What challenges does Sam face in his quest for a healthier lifestyle, and how does he address them?",
+   "gold": "Sam faces challenges like maintaining motivation and making dietary changes. He addresses them by enrolling in cooking classes and seeking support from friends like Evan.",
+   "category": 3,
+   "evidence": [
+    "D4:2",
+    "D4:6",
+    "D14:1",
+    "D14:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Struggling with weight and cravings.",
+   "memories": 19,
+   "label": "WRONG",
+   "query_cost": 0.000404214,
+   "retrieved_tokens": 816,
+   "retrieve_ms": 4283.750707982108,
+   "retrieve_cost": 0.00020126400000000002
+  },
+  {
+   "idx": 52,
+   "question": "Which activity do Evan and Sam plan on doing together during September 2023?",
+   "gold": "painting",
+   "category": 2,
+   "evidence": [
+    "D10:12",
+    "D10:13",
+    "D10:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting session.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00034875,
+   "retrieved_tokens": 517,
+   "retrieve_ms": 4502.312041993719,
+   "retrieve_cost": 0.00019425000000000003
+  },
+  {
+   "idx": 53,
+   "question": "When did Evan and Sam decide to paint together?",
+   "gold": "Saturday after 11 September, 2023.",
+   "category": 2,
+   "evidence": [
+    "D10:12",
+    "D10:13",
+    "D10:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "September 11, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000341046,
+   "retrieved_tokens": 412,
+   "retrieve_ms": 4136.994208965916,
+   "retrieve_cost": 0.00020109600000000003
+  },
+  {
+   "idx": 54,
+   "question": "What personal health incidents does Evan face in 2023?",
+   "gold": "heart palpitations, twisted ankle, twisted ankle",
+   "category": 1,
+   "evidence": [
+    "D3:1",
+    "D9:2",
+    "D11:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Health scare and knee injury.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00041317200000000006,
+   "retrieved_tokens": 805,
+   "retrieve_ms": 4363.541875034571,
+   "retrieve_cost": 0.00021487200000000004
+  },
+  {
+   "idx": 55,
+   "question": "What recurring adventure does Evan have with strangers?",
+   "gold": "Helping lost tourists and experiencing unexpected adventures in the city.",
+   "category": 1,
+   "evidence": [
+    "D11:6",
+    "D14:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Helping lost tourists.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034903200000000004,
+   "retrieved_tokens": 467,
+   "retrieve_ms": 4191.817291022744,
+   "retrieve_cost": 0.00020353200000000003
+  },
+  {
+   "idx": 56,
+   "question": "What is Sam's persistent problem with his phone?",
+   "gold": "His new phone malfunctioning, particularly with the navigation app.",
+   "category": 1,
+   "evidence": [
+    "D11:15",
+    "D14:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Navigation app malfunctions.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036109200000000003,
+   "retrieved_tokens": 540,
+   "retrieve_ms": 4302.2677910048515,
+   "retrieve_cost": 0.00020374200000000003
+  },
+  {
+   "idx": 57,
+   "question": "Which US state was Sam travelling in during October 2023?",
+   "gold": "California",
+   "category": 3,
+   "evidence": [
+    "D13:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "California",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000333768,
+   "retrieved_tokens": 423,
+   "retrieve_ms": 5042.8767499979585,
+   "retrieve_cost": 0.00019546800000000002
+  },
+  {
+   "idx": 58,
+   "question": "When did Evan start lifting weights?",
+   "gold": "October 2022",
+   "category": 2,
+   "evidence": [
+    "D12:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "One year ago from October 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034896000000000005,
+   "retrieved_tokens": 490,
+   "retrieve_ms": 5099.2501670261845,
+   "retrieve_cost": 0.00019761000000000003
+  },
+  {
+   "idx": 59,
+   "question": "When did Sam and his friend decide to try kayaking?",
+   "gold": "October 14, 2023",
+   "category": 2,
+   "evidence": [
+    "D13:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "October 14, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032666400000000006,
+   "retrieved_tokens": 348,
+   "retrieve_ms": 5801.651291025337,
+   "retrieve_cost": 0.00019601400000000002
+  },
+  {
+   "idx": 60,
+   "question": "Which new activity does Sam take up in October 2023?",
+   "gold": "kayaking",
+   "category": 2,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Kayaking.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000335682,
+   "retrieved_tokens": 395,
+   "retrieve_ms": 4519.381000020076,
+   "retrieve_cost": 0.00020038200000000003
+  },
+  {
+   "idx": 61,
+   "question": "What kind of stress was Sam dealing with in October 2023?",
+   "gold": "work-related stress",
+   "category": 2,
+   "evidence": [
+    "D13:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Work stress and health concerns.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000393798,
+   "retrieved_tokens": 678,
+   "retrieve_ms": 4883.994915988296,
+   "retrieve_cost": 0.00021394800000000002
+  },
+  {
+   "idx": 62,
+   "question": "What health scares did Sam and Evan experience?",
+   "gold": "Sam faced a health scare with stomach pains that turned out to be gastritis, prompting him to rethink his health habits. Evan, on the other hand, experienced two separate incidents: a sudden heart palpitation incident and a different event involving a misunderstanding during a medical check-up. These experiences have significantly influenced their perspectives on health and well-being.",
+   "category": 1,
+   "evidence": [
+    "D3:1",
+    "D14:1",
+    "D14:2",
+    "D17:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan had heart palpitations; Sam had gastritis.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0004263,
+   "retrieved_tokens": 882,
+   "retrieve_ms": 3908.219624951016,
+   "retrieve_cost": 0.00021315000000000003
+  },
+  {
+   "idx": 63,
+   "question": "When was Sam in the ER?",
+   "gold": "weekend before 17 October, 2023.",
+   "category": 2,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Last weekend, October 14-15, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036969,
+   "retrieved_tokens": 559,
+   "retrieve_ms": 3927.8522079694085,
+   "retrieve_cost": 0.00020559000000000002
+  },
+  {
+   "idx": 64,
+   "question": "Which ailment does Sam have to face due to his weight?",
+   "gold": "gastritis",
+   "category": 1,
+   "evidence": [
+    "D2:6",
+    "D7:2",
+    "D12:1",
+    "D14:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Serious health risk.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000379986,
+   "retrieved_tokens": 581,
+   "retrieve_ms": 4305.573042016476,
+   "retrieve_cost": 0.00021558600000000003
+  },
+  {
+   "idx": 65,
+   "question": "Does Evan live close to a beach or mountains?",
+   "gold": "beach",
+   "category": 3,
+   "evidence": [
+    "D16:16",
+    "D16:18",
+    "D16:20"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Close to a beach.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.000342828,
+   "retrieved_tokens": 479,
+   "retrieve_ms": 4165.597249986604,
+   "retrieve_cost": 0.00019462800000000002
+  },
+  {
+   "idx": 66,
+   "question": "When did Evan lose his job?",
+   "gold": "end of October 2023",
+   "category": 2,
+   "evidence": [
+    "D16:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "October 2023",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00033151200000000006,
+   "retrieved_tokens": 413,
+   "retrieve_ms": 4254.481375042815,
+   "retrieve_cost": 0.00019471200000000002
+  },
+  {
+   "idx": 67,
+   "question": "When did Evan and Sam planned a trip to the beach together?",
+   "gold": "December, 2023",
+   "category": 2,
+   "evidence": [
+    "D16:24"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No specific trip planned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00033854400000000003,
+   "retrieved_tokens": 410,
+   "retrieve_ms": 4495.082666981034,
+   "retrieve_cost": 0.00019979400000000002
+  },
+  {
+   "idx": 68,
+   "question": "What was Sam doing on December 4, 2023?",
+   "gold": "Attending a Weight Watchers meeting",
+   "category": 2,
+   "evidence": [
+    "D18:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No information available for that date.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00030946200000000004,
+   "retrieved_tokens": 277,
+   "retrieve_ms": 3922.3402499919757,
+   "retrieve_cost": 0.00018946200000000002
+  },
+  {
+   "idx": 69,
+   "question": "Which two significant life events occur in Evan's life in December 2023 with his partner?",
+   "gold": "his partner gets pregnant and they get married",
+   "category": 1,
+   "evidence": [
+    "D19:1",
+    "D21:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Marriage and pregnancy announcement.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000350334,
+   "retrieved_tokens": 457,
+   "retrieve_ms": 4455.134999996517,
+   "retrieve_cost": 0.00020273400000000001
+  },
+  {
+   "idx": 70,
+   "question": "How long did Evan and his partner date before getting married?",
+   "gold": "four months",
+   "category": 2,
+   "evidence": [
+    "D5:1",
+    "D21:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not specify the duration of Evan and his partner's dating period before marriage.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000338856,
+   "retrieved_tokens": 401,
+   "retrieve_ms": 3973.9750000298955,
+   "retrieve_cost": 0.00019395600000000004
+  },
+  {
+   "idx": 71,
+   "question": "Which major holiday season conincides with Evan's wedding?",
+   "gold": "Christmas",
+   "category": 3,
+   "evidence": [
+    "D21:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Christmas season.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032507400000000007,
+   "retrieved_tokens": 382,
+   "retrieve_ms": 4316.217250016052,
+   "retrieve_cost": 0.00019202400000000003
+  },
+  {
+   "idx": 72,
+   "question": "Which activity did Sam resume in December 2023 after a long time?",
+   "gold": "hiking",
+   "category": 1,
+   "evidence": [
+    "D20:6",
+    "D22:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Hiking",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034546200000000005,
+   "retrieved_tokens": 435,
+   "retrieve_ms": 4466.941415972542,
+   "retrieve_cost": 0.00020416200000000003
+  },
+  {
+   "idx": 73,
+   "question": "When is Evan planning a big family reunion?",
+   "gold": "Summer 2024",
+   "category": 2,
+   "evidence": [
+    "D19:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Next summer.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034369200000000004,
+   "retrieved_tokens": 469,
+   "retrieve_ms": 4488.609791034833,
+   "retrieve_cost": 0.00019849200000000004
+  },
+  {
+   "idx": 74,
+   "question": "When did Evan's son fall off his bike?",
+   "gold": "Thursday before December 17, 2023.",
+   "category": 2,
+   "evidence": [
+    "D20:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "December 12, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034380600000000005,
+   "retrieved_tokens": 450,
+   "retrieve_ms": 4511.992582993116,
+   "retrieve_cost": 0.00019815600000000003
+  },
+  {
+   "idx": 75,
+   "question": "When did Evan announce his marriage to his extended family?",
+   "gold": "January 5, 2024",
+   "category": 2,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "January 5, 2024",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000331956,
+   "retrieved_tokens": 373,
+   "retrieve_ms": 4764.90787504008,
+   "retrieve_cost": 0.00019815600000000003
+  },
+  {
+   "idx": 76,
+   "question": "When did Evan finish the painting that's hanging in the exhibit?",
+   "gold": "few days before 17 December, 2023.",
+   "category": 2,
+   "evidence": [
+    "D20:13",
+    "D20:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "December 14, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034662600000000005,
+   "retrieved_tokens": 434,
+   "retrieve_ms": 4210.852499993052,
+   "retrieve_cost": 0.00020277600000000003
+  },
+  {
+   "idx": 77,
+   "question": "How does Evan spend his time with his bride after the wedding?",
+   "gold": "family get-together, honeymoon in Canada to see snowy landscapes, ski, taste local cuisine and do some snowshoeing",
+   "category": 1,
+   "evidence": [
+    "D23:15",
+    "D23:23",
+    "D23:25",
+    "D24:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Skiing and exploring Canada.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00034023,
+   "retrieved_tokens": 439,
+   "retrieve_ms": 7075.753499986604,
+   "retrieve_cost": 0.00019593000000000003
+  },
+  {
+   "idx": 78,
+   "question": "Who did Evan tell about his marriage?",
+   "gold": "To Sam, to his friends from work, and to his and his wife's families.",
+   "category": 1,
+   "evidence": [
+    "D21:2",
+    "D22:4",
+    "D22:5",
+    "D23:1",
+    "D23:5"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Extended family.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000323106,
+   "retrieved_tokens": 392,
+   "retrieve_ms": 7088.827916013543,
+   "retrieve_cost": 0.00018975600000000002
+  },
+  {
+   "idx": 79,
+   "question": "When will Evan and his partner have their honeymoon in Canada?",
+   "gold": "February 2024",
+   "category": 2,
+   "evidence": [
+    "D23:23"
+   ],
+   "last_evidence_session": 25,
+   "answer": "February 2024",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000345384,
+   "retrieved_tokens": 470,
+   "retrieve_ms": 7113.000333949458,
+   "retrieve_cost": 0.00019853400000000002
+  },
+  {
+   "idx": 80,
+   "question": "When did Evan have a drunken night with his friends?",
+   "gold": "January 9, 2023",
+   "category": 2,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "January 9, 2024",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000324768,
+   "retrieved_tokens": 371,
+   "retrieve_ms": 7203.965083986986,
+   "retrieve_cost": 0.00019126800000000003
+  },
+  {
+   "idx": 81,
+   "question": "What is a stress reliever for Evan?",
+   "gold": "Drawing, traveling, places with a beautiful view, yoga, sunsets or something comfortable for Evan",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D2:10",
+    "D2:11",
+    "D2:14",
+    "D8:18",
+    "D10:8",
+    "D11:8",
+    "D16:23",
+    "D18:7",
+    "D24:19",
+    "D24:21"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.000389748,
+   "retrieved_tokens": 793,
+   "retrieve_ms": 7165.913416014519,
+   "retrieve_cost": 0.00019714800000000002
+  },
+  {
+   "idx": 82,
+   "question": "What is a stress reliever for Sam?",
+   "gold": "Unhealthy snacks, sweets, yoga, places with beautiful views",
+   "category": 1,
+   "evidence": [
+    "D10:6",
+    "D13:2",
+    "D13:4",
+    "D16:17",
+    "D16:23",
+    "D18:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting and being in nature.",
+   "memories": 17,
+   "label": "WRONG",
+   "query_cost": 0.00038210399999999997,
+   "retrieved_tokens": 731,
+   "retrieve_ms": 7224.398582999129,
+   "retrieve_cost": 0.00019580400000000002
+  },
+  {
+   "idx": 83,
+   "question": "What type of car did Evan get after his old Prius broke down?",
+   "gold": "new Prius",
+   "category": 4,
+   "evidence": [
+    "D1:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A new Prius.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035061,
+   "retrieved_tokens": 507,
+   "retrieve_ms": 6955.59750002576,
+   "retrieve_cost": 0.00019761000000000003
+  },
+  {
+   "idx": 84,
+   "question": "How did Evan get into watercolor painting?",
+   "gold": "friend's advice",
+   "category": 4,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A friend gave him a painting.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034728,
+   "retrieved_tokens": 433,
+   "retrieve_ms": 6789.877709001303,
+   "retrieve_cost": 0.00020538000000000002
+  },
+  {
+   "idx": 85,
+   "question": "What did Evan start doing a few years back as a stress-buster?",
+   "gold": "watercolor painting",
+   "category": 4,
+   "evidence": [
+    "D1:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan started painting.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.000378684,
+   "retrieved_tokens": 654,
+   "retrieve_ms": 5969.324917008635,
+   "retrieve_cost": 0.00020273400000000001
+  },
+  {
+   "idx": 86,
+   "question": "What advice did Evan give Sam about finding a passion?",
+   "gold": "keep trying new things until something sparks excitement",
+   "category": 4,
+   "evidence": [
+    "D1:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Keep trying new things.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00034617000000000003,
+   "retrieved_tokens": 499,
+   "retrieve_ms": 4319.460999977309,
+   "retrieve_cost": 0.00019467000000000003
+  },
+  {
+   "idx": 87,
+   "question": "Where did Evan take his family for a road trip on 24 May, 2023?",
+   "gold": "Jasper",
+   "category": 4,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Jasper",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035707200000000005,
+   "retrieved_tokens": 517,
+   "retrieve_ms": 5411.484666983597,
+   "retrieve_cost": 0.00020227200000000003
+  },
+  {
+   "idx": 88,
+   "question": "What did Evan find relaxing about his road trip to Jasper?",
+   "gold": "fresh air, peacefulness, cozy cabin surrounded by mountains and forests",
+   "category": 4,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Fresh air and peacefulness.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.000370722,
+   "retrieved_tokens": 599,
+   "retrieve_ms": 4018.248332955409,
+   "retrieve_cost": 0.00020332200000000003
+  },
+  {
+   "idx": 89,
+   "question": "What habit is Sam trying to change in terms of diet?",
+   "gold": "consuming soda and candy",
+   "category": 4,
+   "evidence": [
+    "D3:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Reducing soda and candy intake.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035376,
+   "retrieved_tokens": 506,
+   "retrieve_ms": 4735.834666993469,
+   "retrieve_cost": 0.00019971000000000002
+  },
+  {
+   "idx": 90,
+   "question": "What new suggestion did Evan give to Sam regarding his soda and candy consumption?",
+   "gold": "try flavored seltzer water and dark chocolate with high cocoa content",
+   "category": 4,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Swap soda for flavored seltzer water.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034737000000000006,
+   "retrieved_tokens": 455,
+   "retrieve_ms": 5052.686457987875,
+   "retrieve_cost": 0.00019887000000000003
+  },
+  {
+   "idx": 91,
+   "question": "What did Sam agree to try instead of soda and candy?",
+   "gold": "flavored seltzer water and dark chocolate with high cocoa content",
+   "category": 4,
+   "evidence": [
+    "D3:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Flavored seltzer water and dark chocolate.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034019400000000004,
+   "retrieved_tokens": 431,
+   "retrieve_ms": 4654.56258301856,
+   "retrieve_cost": 0.00019559400000000003
+  },
+  {
+   "idx": 92,
+   "question": "What frustrating issue did Sam face at the supermarket?",
+   "gold": "broken self-checkout machines",
+   "category": 4,
+   "evidence": [
+    "D3:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Self-checkout machines were broken.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000358308,
+   "retrieved_tokens": 465,
+   "retrieve_ms": 4948.410834011156,
+   "retrieve_cost": 0.00021100800000000002
+  },
+  {
+   "idx": 93,
+   "question": "What novel is Evan reading that he finds gripping?",
+   "gold": "The Great Gatsby",
+   "category": 4,
+   "evidence": [
+    "D4:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The Great Gatsby",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000324552,
+   "retrieved_tokens": 359,
+   "retrieve_ms": 4908.4212090238,
+   "retrieve_cost": 0.00019555200000000001
+  },
+  {
+   "idx": 94,
+   "question": "What kind of water does Evan suggest Sam try as an alternative to soda?",
+   "gold": "Flavored seltzer water",
+   "category": 4,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Flavored seltzer water.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000343746,
+   "retrieved_tokens": 438,
+   "retrieve_ms": 4420.8461249945685,
+   "retrieve_cost": 0.00019899600000000003
+  },
+  {
+   "idx": 95,
+   "question": "What does the smartwatch help Evan with?",
+   "gold": "tracks progress and serves as a constant reminder to keep going",
+   "category": 4,
+   "evidence": [
+    "D5:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Tracks progress and health goals.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034644600000000004,
+   "retrieved_tokens": 460,
+   "retrieve_ms": 4301.57174996566,
+   "retrieve_cost": 0.00020109600000000003
+  },
+  {
+   "idx": 96,
+   "question": "What does the bonsai tree symbolize for Evan?",
+   "gold": "strength and resilience",
+   "category": 4,
+   "evidence": [
+    "D5:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Strength and resilience.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00033711000000000006,
+   "retrieved_tokens": 446,
+   "retrieve_ms": 4757.451833982486,
+   "retrieve_cost": 0.00019446000000000003
+  },
+  {
+   "idx": 97,
+   "question": "Why did Evan decide to get the bonsai tree?",
+   "gold": "motivates him to keep going through tough times",
+   "category": 4,
+   "evidence": [
+    "D5:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "It symbolizes strength and resilience.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000329214,
+   "retrieved_tokens": 373,
+   "retrieve_ms": 4130.884624959435,
+   "retrieve_cost": 0.00019601400000000002
+  },
+  {
+   "idx": 98,
+   "question": "According to Sam, what is more important than perfection?",
+   "gold": "progress",
+   "category": 4,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Progress is more important than perfection.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000325608,
+   "retrieved_tokens": 371,
+   "retrieve_ms": 4604.433125001378,
+   "retrieve_cost": 0.00019210800000000002
+  },
+  {
+   "idx": 99,
+   "question": "What did Evan suggest Sam to check out for insights into his dream?",
+   "gold": "dream interpretation book",
+   "category": 4,
+   "evidence": [
+    "D6:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A dream interpretation book.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00033423000000000003,
+   "retrieved_tokens": 419,
+   "retrieve_ms": 4198.529500048608,
+   "retrieve_cost": 0.00019383000000000003
+  },
+  {
+   "idx": 100,
+   "question": "What did Evan mention he had been searching for fruitlessly for half an hour?",
+   "gold": "his keys",
+   "category": 4,
+   "evidence": [
+    "D6:13"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His keys.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00033024000000000004,
+   "retrieved_tokens": 374,
+   "retrieve_ms": 4272.546041000169,
+   "retrieve_cost": 0.00019719000000000003
+  },
+  {
+   "idx": 101,
+   "question": "What class is Sam taking to learn how to make healthier meals?",
+   "gold": "cooking class",
+   "category": 4,
+   "evidence": [
+    "D7:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Cooking class",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000353148,
+   "retrieved_tokens": 502,
+   "retrieve_ms": 5073.667209013365,
+   "retrieve_cost": 0.00020239800000000004
+  },
+  {
+   "idx": 102,
+   "question": "What dish did Sam make on 18 August, 2023 that turned out flavorful?",
+   "gold": "grilled dish with salmon and vegetables",
+   "category": 4,
+   "evidence": [
+    "D7:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Grilled chicken and veggie stir-fry.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00033630600000000003,
+   "retrieved_tokens": 394,
+   "retrieve_ms": 5368.106583016925,
+   "retrieve_cost": 0.00019605600000000004
+  },
+  {
+   "idx": 103,
+   "question": "What kind of recipe did Evan request from Sam on 19 August, 2023?",
+   "gold": "recipes with more vegetables",
+   "category": 4,
+   "evidence": [
+    "D7:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Vegetable recipes.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034172400000000006,
+   "retrieved_tokens": 456,
+   "retrieve_ms": 4355.06820800947,
+   "retrieve_cost": 0.00019517400000000003
+  },
+  {
+   "idx": 104,
+   "question": "What food did Sam share a photo of on 19 August, 2023?",
+   "gold": "bowl of spinach, avocado, and strawberries",
+   "category": 4,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Grilled chicken and veggie stir-fry.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00035309400000000003,
+   "retrieved_tokens": 518,
+   "retrieve_ms": 4721.010749984998,
+   "retrieve_cost": 0.00019454400000000003
+  },
+  {
+   "idx": 105,
+   "question": "What type of painting classes did Evan start taking in 2023?",
+   "gold": "watercolor painting classes",
+   "category": 4,
+   "evidence": [
+    "D8:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Watercolor painting classes.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00037071,
+   "retrieved_tokens": 595,
+   "retrieve_ms": 4612.913666001987,
+   "retrieve_cost": 0.00020391000000000002
+  },
+  {
+   "idx": 106,
+   "question": "What did Evan start painting years ago due to being inspired by a friend's gift?",
+   "gold": "forest scene",
+   "category": 4,
+   "evidence": [
+    "D8:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan started painting landscapes.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034910400000000004,
+   "retrieved_tokens": 448,
+   "retrieve_ms": 4443.547500006389,
+   "retrieve_cost": 0.00020315400000000001
+  },
+  {
+   "idx": 107,
+   "question": "What nature concept do watercolor painting classes emphasize according to Evan?",
+   "gold": "observing nature and painting what is seen",
+   "category": 4,
+   "evidence": [
+    "D8:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Observing nature.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000341652,
+   "retrieved_tokens": 416,
+   "retrieve_ms": 4791.6326250415295,
+   "retrieve_cost": 0.00020290200000000003
+  },
+  {
+   "idx": 108,
+   "question": "What type of landscapes does Evan love painting the most?",
+   "gold": "sunsets over the ocean",
+   "category": 4,
+   "evidence": [
+    "D8:20"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Nature's beauty.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003369,
+   "retrieved_tokens": 402,
+   "retrieve_ms": 4889.819667034317,
+   "retrieve_cost": 0.00020055000000000002
+  },
+  {
+   "idx": 109,
+   "question": "What fun activity did Evan mention doing in July 2023?",
+   "gold": "skiing",
+   "category": 4,
+   "evidence": [
+    "D8:26"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Kayaking and watching the sunset.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00034494600000000005,
+   "retrieved_tokens": 450,
+   "retrieve_ms": 5004.061291983817,
+   "retrieve_cost": 0.00019899600000000003
+  },
+  {
+   "idx": 110,
+   "question": "What injury did Evan suffer from in August 2023?",
+   "gold": "Twisted knee",
+   "category": 4,
+   "evidence": [
+    "D9:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Twisted knee.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036869400000000003,
+   "retrieved_tokens": 512,
+   "retrieve_ms": 4619.991082989145,
+   "retrieve_cost": 0.00021554400000000002
+  },
+  {
+   "idx": 111,
+   "question": "What sports activity has Evan been doing to stay active while dealing with the knee injury?",
+   "gold": "Swimming",
+   "category": 4,
+   "evidence": [
+    "D9:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Swimming.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035196,
+   "retrieved_tokens": 476,
+   "retrieve_ms": 4514.944457972888,
+   "retrieve_cost": 0.00020391000000000002
+  },
+  {
+   "idx": 112,
+   "question": "What suggestion did Sam give to Evan to help with his knee issue?",
+   "gold": "Consider low-impact exercises or physical therapy",
+   "category": 4,
+   "evidence": [
+    "D9:5"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Explore fun indoor activities.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00034707,
+   "retrieved_tokens": 422,
+   "retrieve_ms": 4653.804000001401,
+   "retrieve_cost": 0.00020622000000000001
+  },
+  {
+   "idx": 113,
+   "question": "What did Evan suggest Sam try as a calming hobby?",
+   "gold": "Painting",
+   "category": 4,
+   "evidence": [
+    "D10:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Painting",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.000383646,
+   "retrieved_tokens": 729,
+   "retrieve_ms": 5999.334124964662,
+   "retrieve_cost": 0.00020004600000000003
+  },
+  {
+   "idx": 114,
+   "question": "What did Evan recommend Sam acquire to get started with painting?",
+   "gold": "Acrylic paints, brushes, canvas/paper, palette",
+   "category": 4,
+   "evidence": [
+    "D10:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Acrylic paints, brushes, canvas/paper, palette.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034794000000000003,
+   "retrieved_tokens": 443,
+   "retrieve_ms": 4851.089000003412,
+   "retrieve_cost": 0.00020034000000000002
+  },
+  {
+   "idx": 115,
+   "question": "What activity does Evan do to keep himself busy while healing his knee?",
+   "gold": "Watercolor painting",
+   "category": 4,
+   "evidence": [
+    "D11:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Swimming.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00036132600000000003,
+   "retrieved_tokens": 538,
+   "retrieve_ms": 5272.251832997426,
+   "retrieve_cost": 0.00020487600000000002
+  },
+  {
+   "idx": 116,
+   "question": "What painting did Evan share with Sam in October?",
+   "gold": "a cactus in the desert",
+   "category": 4,
+   "evidence": [
+    "D11:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A sunset painting.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00034725,
+   "retrieved_tokens": 466,
+   "retrieve_ms": 5224.120167025831,
+   "retrieve_cost": 0.00020160000000000002
+  },
+  {
+   "idx": 117,
+   "question": "What kind of writing does Sam enjoy as a form of expression?",
+   "gold": "creative writing",
+   "category": 4,
+   "evidence": [
+    "D11:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Creative writing and journaling.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000345828,
+   "retrieved_tokens": 461,
+   "retrieve_ms": 5163.751042040531,
+   "retrieve_cost": 0.00019882800000000001
+  },
+  {
+   "idx": 118,
+   "question": "What electronics issue has been frustrating Sam lately?",
+   "gold": "malfunctioning navigation app on the new phone",
+   "category": 4,
+   "evidence": [
+    "D11:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Malfunctioning navigation app on phone.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0004047240000000001,
+   "retrieved_tokens": 787,
+   "retrieve_ms": 5017.004124994855,
+   "retrieve_cost": 0.00020882400000000003
+  },
+  {
+   "idx": 119,
+   "question": "What activity did Evan start one year ago?",
+   "gold": "lifting weights",
+   "category": 4,
+   "evidence": [
+    "D12:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Lifting weights.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000329034,
+   "retrieved_tokens": 402,
+   "retrieve_ms": 5291.612541012,
+   "retrieve_cost": 0.00019328400000000003
+  },
+  {
+   "idx": 120,
+   "question": "What advice did Evan give to Sam to avoid injuries while starting weightlifting?",
+   "gold": "Find a trainer",
+   "category": 4,
+   "evidence": [
+    "D12:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Find a trainer for guidance.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000356346,
+   "retrieved_tokens": 505,
+   "retrieve_ms": 5059.470416046679,
+   "retrieve_cost": 0.00020214600000000003
+  },
+  {
+   "idx": 121,
+   "question": "Where did Sam and his mate plan to try kayaking?",
+   "gold": "Lake Tahoe",
+   "category": 4,
+   "evidence": [
+    "D13:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Lake Tahoe",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032031000000000003,
+   "retrieved_tokens": 340,
+   "retrieve_ms": 4669.5682919817045,
+   "retrieve_cost": 0.00019446000000000003
+  },
+  {
+   "idx": 122,
+   "question": "What digestive issue did Sam experience lately?",
+   "gold": "Gastritis",
+   "category": 4,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Gastritis",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003799560000000001,
+   "retrieved_tokens": 596,
+   "retrieve_ms": 4796.8663750216365,
+   "retrieve_cost": 0.00021600600000000003
+  },
+  {
+   "idx": 123,
+   "question": "What adventurous theme is emerging in Evan's life as mentioned by Sam?",
+   "gold": "helping lost tourists",
+   "category": 4,
+   "evidence": [
+    "D14:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Hiking and outdoor activities.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00035982600000000005,
+   "retrieved_tokens": 547,
+   "retrieve_ms": 4905.772333033383,
+   "retrieve_cost": 0.00019962600000000003
+  },
+  {
+   "idx": 124,
+   "question": "What does Evan mention about his progress at the gym to Sam?",
+   "gold": "gaining strength",
+   "category": 4,
+   "evidence": [
+    "D14:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan is seeing gains.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00037443000000000003,
+   "retrieved_tokens": 636,
+   "retrieve_ms": 5587.623083032668,
+   "retrieve_cost": 0.00020118000000000002
+  },
+  {
+   "idx": 125,
+   "question": "How did Evan start his transformation journey two years ago?",
+   "gold": "Changed his diet and started walking regularly",
+   "category": 4,
+   "evidence": [
+    "D15:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Changed diet, started walking regularly.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000344688,
+   "retrieved_tokens": 459,
+   "retrieve_ms": 4853.715208009817,
+   "retrieve_cost": 0.00019798800000000002
+  },
+  {
+   "idx": 126,
+   "question": "What gift did Evan receive from a close friend?",
+   "gold": "1968 Kustom K-200A vintage guitar",
+   "category": 4,
+   "evidence": [
+    "D16:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A 1968 Kustom K-200A vintage guitar.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032114400000000004,
+   "retrieved_tokens": 345,
+   "retrieve_ms": 5769.967875035945,
+   "retrieve_cost": 0.00018824400000000004
+  },
+  {
+   "idx": 127,
+   "question": "Why had Evan been going through a tough time lately?",
+   "gold": "Lost their job due to downsizing",
+   "category": 4,
+   "evidence": [
+    "D16:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Job loss and son's accidents.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.00044443200000000003,
+   "retrieved_tokens": 1028,
+   "retrieve_ms": 5031.619084009435,
+   "retrieve_cost": 0.00021298200000000002
+  },
+  {
+   "idx": 128,
+   "question": "How does Evan describe the island he grew up on?",
+   "gold": "A happy place",
+   "category": 4,
+   "evidence": [
+    "D17:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A little slice of paradise.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000320946,
+   "retrieved_tokens": 347,
+   "retrieve_ms": 5163.419832999352,
+   "retrieve_cost": 0.00019164600000000001
+  },
+  {
+   "idx": 129,
+   "question": "What was the main reason for Evan's frustration with his new Prius breaking down?",
+   "gold": "He relied on it for his active lifestyle and road trips",
+   "category": 4,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "It disrupted his active lifestyle.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035120400000000003,
+   "retrieved_tokens": 448,
+   "retrieve_ms": 5853.4373749862425,
+   "retrieve_cost": 0.00020525400000000004
+  },
+  {
+   "idx": 130,
+   "question": "How did Sam suggest Evan view the setback with his broken Prius?",
+   "gold": "As a chance to explore other ways of staying active and traveling",
+   "category": 4,
+   "evidence": [
+    "D18:5"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam empathized with Evan's situation.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000351078,
+   "retrieved_tokens": 488,
+   "retrieve_ms": 5187.780458014458,
+   "retrieve_cost": 0.00019882800000000001
+  },
+  {
+   "idx": 131,
+   "question": "What did Sam suggest Evan try for stress relief and flexibility?",
+   "gold": "Yoga",
+   "category": 4,
+   "evidence": [
+    "D18:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Yoga.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035352,
+   "retrieved_tokens": 502,
+   "retrieve_ms": 5370.210416032933,
+   "retrieve_cost": 0.00020307000000000002
+  },
+  {
+   "idx": 132,
+   "question": "What did Sam offer Evan regarding yoga?",
+   "gold": "Support and tips",
+   "category": 4,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Yoga tips and support.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034881,
+   "retrieved_tokens": 489,
+   "retrieve_ms": 5326.85366703663,
+   "retrieve_cost": 0.00019971000000000002
+  },
+  {
+   "idx": 133,
+   "question": "What news did Evan share with Sam on 9th December 2023?",
+   "gold": "partner is pregnant",
+   "category": 4,
+   "evidence": [
+    "D19:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan's partner is pregnant.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032176199999999996,
+   "retrieved_tokens": 332,
+   "retrieve_ms": 5550.747582979966,
+   "retrieve_cost": 0.00019261200000000002
+  },
+  {
+   "idx": 134,
+   "question": "What family event is Evan planning for next summer?",
+   "gold": "big family reunion",
+   "category": 4,
+   "evidence": [
+    "D19:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Family reunion.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032526600000000005,
+   "retrieved_tokens": 345,
+   "retrieve_ms": 5711.374666017946,
+   "retrieve_cost": 0.00019836600000000003
+  },
+  {
+   "idx": 135,
+   "question": "What is the motto of Evan's family?",
+   "gold": "'Bring it on Home'",
+   "category": 4,
+   "evidence": [
+    "D19:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "\"Bring it on Home\"",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000331326,
+   "retrieved_tokens": 416,
+   "retrieve_ms": 5425.522000005003,
+   "retrieve_cost": 0.00019227600000000001
+  },
+  {
+   "idx": 136,
+   "question": "According to Evan, what is important for Sam to believe in concerning his weight?",
+   "gold": "Your worth is not defined by your weight",
+   "category": 4,
+   "evidence": [
+    "D20:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His worth is not defined by weight.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000352524,
+   "retrieved_tokens": 481,
+   "retrieve_ms": 5548.337624990381,
+   "retrieve_cost": 0.00020042400000000002
+  },
+  {
+   "idx": 137,
+   "question": "Who helped Evan get the painting published in the exhibition?",
+   "gold": "a close friend",
+   "category": 4,
+   "evidence": [
+    "D20:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A close friend of Evan.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033784799999999997,
+   "retrieved_tokens": 409,
+   "retrieve_ms": 5249.410333984997,
+   "retrieve_cost": 0.00019924800000000001
+  },
+  {
+   "idx": 138,
+   "question": "What did Sam recently start enjoying to clear his head?",
+   "gold": "running in the mornings",
+   "category": 4,
+   "evidence": [
+    "D21:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Running in the mornings.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.000391128,
+   "retrieved_tokens": 743,
+   "retrieve_ms": 5471.694834006485,
+   "retrieve_cost": 0.00020302800000000004
+  },
+  {
+   "idx": 139,
+   "question": "What did Sam suggest Evan should do with his keys?",
+   "gold": "put a GPS sensor on them",
+   "category": 4,
+   "evidence": [
+    "D21:21"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Put a GPS sensor on them.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000314718,
+   "retrieved_tokens": 353,
+   "retrieve_ms": 5310.963291965891,
+   "retrieve_cost": 0.00018391800000000004
+  },
+  {
+   "idx": 140,
+   "question": "How did Evan feel when he painted the piece with the bird flying over it?",
+   "gold": "a sense of joy and freedom",
+   "category": 4,
+   "evidence": [
+    "D21:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not mention a specific painting with a bird flying over it. Therefore, I cannot provide an answer regarding Evan's feelings about that particular piece.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.00038986800000000003,
+   "retrieved_tokens": 615,
+   "retrieve_ms": 5185.105874959845,
+   "retrieve_cost": 0.00020386800000000003
+  },
+  {
+   "idx": 141,
+   "question": "What did Evan suggest Sam should keep doing to find his own version of love?",
+   "gold": "Keep trying new things",
+   "category": 4,
+   "evidence": [
+    "D21:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Keep trying new things.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00033721200000000004,
+   "retrieved_tokens": 429,
+   "retrieve_ms": 5102.997084031813,
+   "retrieve_cost": 0.00019471200000000002
+  },
+  {
+   "idx": 142,
+   "question": "How did Evan describe the process of creating the painting with the bird flying over it?",
+   "gold": "embracing the creative process without restraint",
+   "category": 4,
+   "evidence": [
+    "D21:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No specific description found.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00033694800000000005,
+   "retrieved_tokens": 388,
+   "retrieve_ms": 6092.260874982458,
+   "retrieve_cost": 0.00020029800000000004
+  },
+  {
+   "idx": 143,
+   "question": "What did Evan want to share with his work friends?",
+   "gold": "getting married",
+   "category": 4,
+   "evidence": [
+    "D22:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Getting married.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00034263600000000006,
+   "retrieved_tokens": 484,
+   "retrieve_ms": 5119.130250008311,
+   "retrieve_cost": 0.00019458600000000004
+  },
+  {
+   "idx": 144,
+   "question": "What did Evan share with Sam after their hiking trip?",
+   "gold": "a photo of a man standing on a rock looking out over a valley",
+   "category": 4,
+   "evidence": [
+    "D22:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan shared about a long drive to the mountains.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00035115000000000005,
+   "retrieved_tokens": 483,
+   "retrieve_ms": 5795.13683298137,
+   "retrieve_cost": 0.00019845000000000003
+  },
+  {
+   "idx": 145,
+   "question": "What did Evan offer to share with Sam after talking about healthy snacks?",
+   "gold": "the recipes for cookies",
+   "category": 4,
+   "evidence": [
+    "D22:12"
+   ],
+   "last_evidence_session": 25,
+   "answer": "New healthy snacks.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034329600000000004,
+   "retrieved_tokens": 414,
+   "retrieve_ms": 5483.671291964129,
+   "retrieve_cost": 0.00020424600000000002
+  },
+  {
+   "idx": 146,
+   "question": "What did Evan and his partner share with their extended family on January 5, 2024?",
+   "gold": "their marriage",
+   "category": 4,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Their marriage news.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035287800000000005,
+   "retrieved_tokens": 467,
+   "retrieve_ms": 5526.299541990738,
+   "retrieve_cost": 0.00020407800000000003
+  },
+  {
+   "idx": 147,
+   "question": "What was Evan limiting himself to on his new diet?",
+   "gold": "just two ginger snaps a day",
+   "category": 4,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Two ginger snaps a day.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000353946,
+   "retrieved_tokens": 483,
+   "retrieve_ms": 5833.199542015791,
+   "retrieve_cost": 0.00020424600000000002
+  },
+  {
+   "idx": 148,
+   "question": "What sports activity did Evan and his partner try in a recent weekend?",
+   "gold": "Snowshoeing",
+   "category": 4,
+   "evidence": [
+    "D24:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Snowshoeing",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.000370584,
+   "retrieved_tokens": 610,
+   "retrieve_ms": 5698.07604199741,
+   "retrieve_cost": 0.00020273400000000001
+  },
+  {
+   "idx": 149,
+   "question": "What advice did Evan suggest Sam seek from a doctor?",
+   "gold": "diet plan and low-impact exercises",
+   "category": 4,
+   "evidence": [
+    "D24:11",
+    "D24:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Diet and exercise tips.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000364596,
+   "retrieved_tokens": 530,
+   "retrieve_ms": 5868.12162498245,
+   "retrieve_cost": 0.00020844600000000002
+  },
+  {
+   "idx": 150,
+   "question": "What suggestions did Evan give for low-impact exercises?",
+   "gold": "swimming, yoga, walking",
+   "category": 4,
+   "evidence": [
+    "D24:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Swimming, yoga, and walking.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000351546,
+   "retrieved_tokens": 451,
+   "retrieve_ms": 5674.302542000078,
+   "retrieve_cost": 0.00020634600000000002
+  },
+  {
+   "idx": 151,
+   "question": "What movie did Sam watch that motivated him to keep up with his routine?",
+   "gold": "The Godfather",
+   "category": 4,
+   "evidence": [
+    "D24:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The Godfather",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035250000000000006,
+   "retrieved_tokens": 467,
+   "retrieve_ms": 5814.905499981251,
+   "retrieve_cost": 0.00020580000000000002
+  },
+  {
+   "idx": 152,
+   "question": "What activity helped Evan with stress and flexibility?",
+   "gold": "Yoga",
+   "category": 4,
+   "evidence": [
+    "D24:19"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Yoga",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00038086200000000004,
+   "retrieved_tokens": 708,
+   "retrieve_ms": 5899.801958003081,
+   "retrieve_cost": 0.00020101200000000003
+  },
+  {
+   "idx": 153,
+   "question": "What did Evan share a photo of that was taken on a camping trip?",
+   "gold": "a kayak",
+   "category": 4,
+   "evidence": [
+    "D25:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "An amazing sunset.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00035898600000000005,
+   "retrieved_tokens": 497,
+   "retrieve_ms": 5769.763209042139,
+   "retrieve_cost": 0.00020718600000000002
+  },
+  {
+   "idx": 154,
+   "question": "Why did Evan apologize to his partner?",
+   "gold": "for a drunken night",
+   "category": 4,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "For a drunken night incident.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035553,
+   "retrieved_tokens": 527,
+   "retrieve_ms": 5913.509832986165,
+   "retrieve_cost": 0.00020013000000000002
+  },
+  {
+   "idx": 155,
+   "question": "How does Evan describe being out on the water while kayaking and watching the sunset?",
+   "gold": "peaceful",
+   "category": 4,
+   "evidence": [
+    "D25:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Peaceful and unforgettable.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035352,
+   "retrieved_tokens": 503,
+   "retrieve_ms": 5686.564500036184,
+   "retrieve_cost": 0.00019992000000000002
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 15874.827374500455,
+ "retrieve_cost_per_query": 0.00020063103846153848,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

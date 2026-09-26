@@ -1,0 +1,1522 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "heldout:conv-30",
+  "sessions": [
+   1,
+   19
+  ],
+  "messages": 369,
+  "questions": 81
+ },
+ "accuracy": 0.8148148148148148,
+ "accuracy_by_category": {
+  "1": 0.5454545454545454,
+  "2": 0.9230769230769231,
+  "4": 0.8181818181818182
+ },
+ "stored": 369,
+ "active": 369,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 521.0,
+ "retrieved_tokens_median": 503,
+ "memories_mean": 11.91358024691358,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.014521038,
+  "claude": 0.0,
+  "openai": 0.008460299999999995
+ },
+ "cache": {
+  "hits": 237,
+  "misses": 2517
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "When Jon has lost his job as a banker?",
+   "gold": "19 January, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "January 19, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003429245806451614,
+   "retrieved_tokens": 557,
+   "retrieve_ms": 2964.5368329947814,
+   "retrieve_cost": 0.00018122458064516133
+  },
+  {
+   "idx": 1,
+   "question": "When Gina has lost her job at Door Dash?",
+   "gold": "January, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "January 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033402967741935483,
+   "retrieved_tokens": 504,
+   "retrieve_ms": 2806.4795000245795,
+   "retrieve_cost": 0.00018267967741935484
+  },
+  {
+   "idx": 2,
+   "question": "How do Jon and Gina both like to destress?",
+   "gold": "by dancing",
+   "category": 4,
+   "evidence": [
+    "D1:7",
+    "D1:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Through dancing.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00035342845161290325,
+   "retrieved_tokens": 649,
+   "retrieve_ms": 2295.6218339968473,
+   "retrieve_cost": 0.00018062845161290328
+  },
+  {
+   "idx": 3,
+   "question": "What do Jon and Gina both have in common?",
+   "gold": "They lost their jobs and decided to start their own businesses.",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D1:3",
+    "D1:4",
+    "D2:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A passion for dancing.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00030619316129032264,
+   "retrieved_tokens": 381,
+   "retrieve_ms": 2659.3390409834683,
+   "retrieve_cost": 0.00017269316129032262
+  },
+  {
+   "idx": 4,
+   "question": "Why did Jon decide to start his dance studio?",
+   "gold": "He lost his job and decided to start his own business to share his passion.",
+   "category": 4,
+   "evidence": [
+    "D1:2",
+    "D1:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Losing his job gave him a push.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00036979587096774196,
+   "retrieved_tokens": 663,
+   "retrieve_ms": 2719.868124986533,
+   "retrieve_cost": 0.00019159587096774196
+  },
+  {
+   "idx": 5,
+   "question": "What Jon thinks the ideal dance studio should look like?",
+   "gold": "By the water, with natural light and Marley flooring",
+   "category": 1,
+   "evidence": [
+    "D1:20",
+    "D2:4",
+    "D2:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Great natural light and good flooring.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00035433,
+   "retrieved_tokens": 586,
+   "retrieve_ms": 2755.328958039172,
+   "retrieve_cost": 0.00018858000000000001
+  },
+  {
+   "idx": 6,
+   "question": "When is Jon's group performing at a festival?",
+   "gold": "February, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:24"
+   ],
+   "last_evidence_session": 19,
+   "answer": "February 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003003478064516129,
+   "retrieved_tokens": 362,
+   "retrieve_ms": 2823.663499963004,
+   "retrieve_cost": 0.00017029780645161293
+  },
+  {
+   "idx": 7,
+   "question": "When did Gina launch an ad campaign for her store?",
+   "gold": "29 January, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "January 29, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003341881935483871,
+   "retrieved_tokens": 441,
+   "retrieve_ms": 2668.7634580302984,
+   "retrieve_cost": 0.00019018819354838713
+  },
+  {
+   "idx": 8,
+   "question": "When was Jon in Paris?",
+   "gold": "28 January 2023",
+   "category": 2,
+   "evidence": [
+    "D2:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "January 28, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002863366451612903,
+   "retrieved_tokens": 293,
+   "retrieve_ms": 2767.377541982569,
+   "retrieve_cost": 0.00016543664516129034
+  },
+  {
+   "idx": 9,
+   "question": "Which city have both Jean and John visited?",
+   "gold": "Rome",
+   "category": 1,
+   "evidence": [
+    "D2:5",
+    "D15:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Rome",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002937373548387097,
+   "retrieved_tokens": 359,
+   "retrieve_ms": 2870.2648340258747,
+   "retrieve_cost": 0.0001662373548387097
+  },
+  {
+   "idx": 10,
+   "question": "When did Gina team up with a local artist for some cool designs?",
+   "gold": "February, 2023",
+   "category": 2,
+   "evidence": [
+    "D5:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "February 8, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033982025806451616,
+   "retrieved_tokens": 463,
+   "retrieve_ms": 2683.3250829949975,
+   "retrieve_cost": 0.00019162025806451614
+  },
+  {
+   "idx": 11,
+   "question": "When did Gina get her tattoo?",
+   "gold": "A few years ago",
+   "category": 2,
+   "evidence": [
+    "D5:15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A few years ago.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002904247741935484,
+   "retrieved_tokens": 277,
+   "retrieve_ms": 2760.4396250098944,
+   "retrieve_cost": 0.00017342477419354842
+  },
+  {
+   "idx": 12,
+   "question": "When did Jon start to go to the gym?",
+   "gold": "March, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "March 9, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002954907096774194,
+   "retrieved_tokens": 311,
+   "retrieve_ms": 2823.647917015478,
+   "retrieve_cost": 0.00017069070967741938
+  },
+  {
+   "idx": 13,
+   "question": "When did Gina open her online clothing store?",
+   "gold": "16 March, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "March 16, 2023",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003492822580645161,
+   "retrieved_tokens": 526,
+   "retrieve_ms": 2781.2269590212964,
+   "retrieve_cost": 0.00019313225806451615
+  },
+  {
+   "idx": 14,
+   "question": "When did Jon start expanding his studio's social media presence?",
+   "gold": "April, 2023",
+   "category": 2,
+   "evidence": [
+    "D8:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "April 3, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003449554838709678,
+   "retrieved_tokens": 532,
+   "retrieve_ms": 2210.918082972057,
+   "retrieve_cost": 0.00018640548387096776
+  },
+  {
+   "idx": 15,
+   "question": "When did Jon host a dance competition?",
+   "gold": "May, 2023",
+   "category": 2,
+   "evidence": [
+    "D8:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "May 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000335736,
+   "retrieved_tokens": 503,
+   "retrieve_ms": 3834.9646670394577,
+   "retrieve_cost": 0.00018513600000000002
+  },
+  {
+   "idx": 16,
+   "question": "When did Jon go to a fair to get more exposure for his dance studio?",
+   "gold": "24 April, 2023",
+   "category": 2,
+   "evidence": [
+    "D10:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "April 24, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035747206451612905,
+   "retrieved_tokens": 551,
+   "retrieve_ms": 2569.919583038427,
+   "retrieve_cost": 0.00019547206451612907
+  },
+  {
+   "idx": 17,
+   "question": "Why did Gina decide to start her own clothing store?",
+   "gold": "She always loved fashion trends and finding unique pieces and she lost her job so decided it was time to start her own business.",
+   "category": 1,
+   "evidence": [
+    "D6:8",
+    "D1:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To combine her passions for dance and fashion.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00037626425806451617,
+   "retrieved_tokens": 660,
+   "retrieve_ms": 4169.239290989935,
+   "retrieve_cost": 0.00019821425806451615
+  },
+  {
+   "idx": 18,
+   "question": "Do Jon and Gina start businesses out of what they love?",
+   "gold": "Yes",
+   "category": 1,
+   "evidence": [
+    "D1:4",
+    "D6:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Yes, they do.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0003703217419354839,
+   "retrieved_tokens": 678,
+   "retrieve_ms": 4207.668833027128,
+   "retrieve_cost": 0.0001916717419354839
+  },
+  {
+   "idx": 19,
+   "question": "When did Gina interview for a design internship?",
+   "gold": "10 May, 2023",
+   "category": 2,
+   "evidence": [
+    "D11:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "2023-05-10",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034259419354838705,
+   "retrieved_tokens": 500,
+   "retrieve_ms": 3627.613416989334,
+   "retrieve_cost": 0.0001909441935483871
+  },
+  {
+   "idx": 20,
+   "question": "When did Gina get accepted for the design internship?",
+   "gold": "27 May, 2023",
+   "category": 2,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Gina had an interview for a design internship on May 10, 2023. However, there is no mention of her being accepted for it in the provided memories.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034145206451612905,
+   "retrieved_tokens": 396,
+   "retrieve_ms": 2729.2856670101173,
+   "retrieve_cost": 0.00018770206451612905
+  },
+  {
+   "idx": 21,
+   "question": "When did Jon start reading \"The Lean Startup\"?",
+   "gold": "May, 2023",
+   "category": 2,
+   "evidence": [
+    "D12:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "May 27, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003210247741935484,
+   "retrieved_tokens": 407,
+   "retrieve_ms": 3266.9606669805944,
+   "retrieve_cost": 0.0001818247741935484
+  },
+  {
+   "idx": 22,
+   "question": "When did Gina develop a video presentation to teach how to style her fashion pieces? ",
+   "gold": "June, 2023",
+   "category": 2,
+   "evidence": [
+    "D13:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 13, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003559962580645162,
+   "retrieved_tokens": 536,
+   "retrieve_ms": 3973.476750019472,
+   "retrieve_cost": 0.00019594625806451616
+  },
+  {
+   "idx": 23,
+   "question": "How did Gina promote her clothes store?",
+   "gold": "worked with an artist to make unique fashion pieces, made limited-edition sweatshirts, got some new offers and promotions for online store, developed a video presentation showing how to style her pieces",
+   "category": 1,
+   "evidence": [
+    "D5:5",
+    "D16:3",
+    "D8:4",
+    "D13:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Through ads and influencer collaborations.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.00041107103225806454,
+   "retrieved_tokens": 910,
+   "retrieve_ms": 3406.9552079890855,
+   "retrieve_cost": 0.00019822103225806454
+  },
+  {
+   "idx": 24,
+   "question": "Which events has Jon participated in to promote his business venture?",
+   "gold": "fair, networking events, dance competition",
+   "category": 1,
+   "evidence": [
+    "D10:1",
+    "D16:6",
+    "D8:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Dance competition and networking events.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003489243870967742,
+   "retrieved_tokens": 570,
+   "retrieve_ms": 3870.6722920178436,
+   "retrieve_cost": 0.00018587438709677422
+  },
+  {
+   "idx": 25,
+   "question": "What does Jon's dance studio offer?",
+   "gold": "one-on-one metoring and training to dancers,  workshops and classes to local schools and centers",
+   "category": 1,
+   "evidence": [
+    "D13:7",
+    "D8:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Workshops, classes, and mentoring.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003550052903225807,
+   "retrieved_tokens": 590,
+   "retrieve_ms": 3884.2869169893675,
+   "retrieve_cost": 0.00018895529032258068
+  },
+  {
+   "idx": 26,
+   "question": "When did Jon receive mentorship to promote his venture?",
+   "gold": "15 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 15, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000315814064516129,
+   "retrieved_tokens": 376,
+   "retrieve_ms": 4065.382500004489,
+   "retrieve_cost": 0.00018186406451612904
+  },
+  {
+   "idx": 27,
+   "question": "Did Jon and Gina both participate in dance competitions?",
+   "gold": "Yes",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D14:14",
+    "D1:16",
+    "D1:17",
+    "D9:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Yes, both participated in competitions.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0003818974838709678,
+   "retrieved_tokens": 744,
+   "retrieve_ms": 3514.716000005137,
+   "retrieve_cost": 0.00019274748387096776
+  },
+  {
+   "idx": 28,
+   "question": "When was Jon in Rome?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D15:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 12, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00027092941935483877,
+   "retrieved_tokens": 237,
+   "retrieve_ms": 3528.6134579801,
+   "retrieve_cost": 0.00015842941935483875
+  },
+  {
+   "idx": 29,
+   "question": "Which cities has Jon visited?",
+   "gold": "Paris, Rome",
+   "category": 1,
+   "evidence": [
+    "D2:4",
+    "D15:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Paris and Rome.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000287448,
+   "retrieved_tokens": 315,
+   "retrieve_ms": 3932.6122499769554,
+   "retrieve_cost": 0.000165648
+  },
+  {
+   "idx": 30,
+   "question": "When Jon is planning to open his dance studio?",
+   "gold": "20 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D15:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No specific opening date mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032919251612903227,
+   "retrieved_tokens": 413,
+   "retrieve_ms": 3714.6691670059226,
+   "retrieve_cost": 0.00019029251612903225
+  },
+  {
+   "idx": 31,
+   "question": "How long did it take for Jon to open his studio?",
+   "gold": "six months",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D15:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No specific opening date provided.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00031198993548387096,
+   "retrieved_tokens": 364,
+   "retrieve_ms": 3846.0020000347868,
+   "retrieve_cost": 0.000179839935483871
+  },
+  {
+   "idx": 32,
+   "question": "When did Gina design a limited collection of hoodies?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D16:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 14, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003488692258064517,
+   "retrieved_tokens": 500,
+   "retrieve_ms": 3370.9718749742024,
+   "retrieve_cost": 0.00019541922580645164
+  },
+  {
+   "idx": 33,
+   "question": "When did Jon visit networking events for his store?",
+   "gold": "20 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D16:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 20, 2023",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00033134709677419354,
+   "retrieved_tokens": 464,
+   "retrieve_ms": 3343.1772079784423,
+   "retrieve_cost": 0.0001841970967741936
+  },
+  {
+   "idx": 34,
+   "question": "When did Gina start being recognized by fashion editors?",
+   "gold": "July 2023",
+   "category": 2,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035083587096774196,
+   "retrieved_tokens": 530,
+   "retrieve_ms": 4848.385042045265,
+   "retrieve_cost": 0.00019558587096774196
+  },
+  {
+   "idx": 35,
+   "question": "When did Jon start learning marketing and analytics tools?",
+   "gold": "July, 2023",
+   "category": 2,
+   "evidence": [
+    "D17:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 9, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033216503225806453,
+   "retrieved_tokens": 437,
+   "retrieve_ms": 4019.4749999791384,
+   "retrieve_cost": 0.00018906503225806453
+  },
+  {
+   "idx": 36,
+   "question": "When did Jon and Gina decide to collaborate to create dance content?",
+   "gold": "21 July 2023",
+   "category": 2,
+   "evidence": [
+    "D18:18"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 21, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003638562580645161,
+   "retrieved_tokens": 574,
+   "retrieve_ms": 4724.542415991891,
+   "retrieve_cost": 0.00019930625806451616
+  },
+  {
+   "idx": 37,
+   "question": "When did Gina mention Shia Labeouf?",
+   "gold": " 23 July, 2023",
+   "category": 2,
+   "evidence": [
+    "D19:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 23, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002812300645161291,
+   "retrieved_tokens": 209,
+   "retrieve_ms": 3894.9712910107337,
+   "retrieve_cost": 0.00017233006451612906
+  },
+  {
+   "idx": 38,
+   "question": "When did Gina go to a dance class with a group of friends?",
+   "gold": "21 July 2023",
+   "category": 2,
+   "evidence": [
+    "D19:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 21, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034163167741935483,
+   "retrieved_tokens": 466,
+   "retrieve_ms": 3657.495040970389,
+   "retrieve_cost": 0.00019238167741935484
+  },
+  {
+   "idx": 39,
+   "question": "What is Gina's favorite style of dance?",
+   "gold": "Contemporary",
+   "category": 4,
+   "evidence": [
+    "D1:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Contemporary dance.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003200489032258065,
+   "retrieved_tokens": 384,
+   "retrieve_ms": 3670.273374998942,
+   "retrieve_cost": 0.00018699890322580647
+  },
+  {
+   "idx": 40,
+   "question": "What is Jon's favorite style of dance?",
+   "gold": "Contemporary",
+   "category": 4,
+   "evidence": [
+    "D1:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Contemporary dance.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032399516129032267,
+   "retrieved_tokens": 413,
+   "retrieve_ms": 4071.6364169493318,
+   "retrieve_cost": 0.00018659516129032264
+  },
+  {
+   "idx": 41,
+   "question": "What was Gina's favorite dancing memory?",
+   "gold": "Winning first place at a regionals dance competition",
+   "category": 4,
+   "evidence": [
+    "D1:17"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Winning first place at regionals.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033657948387096775,
+   "retrieved_tokens": 447,
+   "retrieve_ms": 6878.044249955565,
+   "retrieve_cost": 0.00019257948387096778
+  },
+  {
+   "idx": 42,
+   "question": "What kind of dance piece did Gina's team perform to win first place?",
+   "gold": "\"Finding Freedom\"",
+   "category": 4,
+   "evidence": [
+    "D1:19"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Contemporary piece \"Finding Freedom.\"",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033959825806451614,
+   "retrieved_tokens": 471,
+   "retrieve_ms": 6845.541667018551,
+   "retrieve_cost": 0.00018989825806451616
+  },
+  {
+   "idx": 43,
+   "question": "What do the dancers in the photo represent?",
+   "gold": "They are performing at the festival",
+   "category": 4,
+   "evidence": [
+    "D1:25"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Passion and commitment to dancing.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003414584516129032,
+   "retrieved_tokens": 511,
+   "retrieve_ms": 6721.562125021592,
+   "retrieve_cost": 0.00018755845161290327
+  },
+  {
+   "idx": 44,
+   "question": "What does Gina say about the dancers in the photo?",
+   "gold": "They look graceful",
+   "category": 4,
+   "evidence": [
+    "D1:26"
+   ],
+   "last_evidence_session": 19,
+   "answer": "They look great and graceful!",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0003607364516129032,
+   "retrieved_tokens": 616,
+   "retrieve_ms": 6655.3184580407105,
+   "retrieve_cost": 0.00019108645161290325
+  },
+  {
+   "idx": 45,
+   "question": "What is Jon's attitude towards being part of the dance festival?",
+   "gold": "Glad",
+   "category": 4,
+   "evidence": [
+    "D1:28"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Excited and passionate.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004161845806451613,
+   "retrieved_tokens": 980,
+   "retrieve_ms": 6620.144792017527,
+   "retrieve_cost": 0.00019193458064516132
+  },
+  {
+   "idx": 46,
+   "question": "What kind of flooring is Jon looking for in his dance studio?",
+   "gold": "Marley flooring",
+   "category": 4,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Marley flooring.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00033367141935483873,
+   "retrieved_tokens": 468,
+   "retrieve_ms": 6653.978917049244,
+   "retrieve_cost": 0.00018682141935483874
+  },
+  {
+   "idx": 47,
+   "question": "What did Gina find for her clothing store on 1 February, 2023?",
+   "gold": "The perfect spot for her store",
+   "category": 4,
+   "evidence": [
+    "D3:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "She emailed wholesalers.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00036800361290322583,
+   "retrieved_tokens": 637,
+   "retrieve_ms": 6568.024125008378,
+   "retrieve_cost": 0.00019460361290322582
+  },
+  {
+   "idx": 48,
+   "question": "What did Gina design for her store?",
+   "gold": "the space, furniture, and decor",
+   "category": 4,
+   "evidence": [
+    "D3:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A cozy and inviting space.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00038584587096774194,
+   "retrieved_tokens": 765,
+   "retrieve_ms": 6696.740082988981,
+   "retrieve_cost": 0.00019474587096774196
+  },
+  {
+   "idx": 49,
+   "question": "What did Gina want her customers to feel in her store?",
+   "gold": "cozy and comfortable",
+   "category": 4,
+   "evidence": [
+    "D3:6",
+    "D3:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Cozy and inviting.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003653591612903226,
+   "retrieved_tokens": 611,
+   "retrieve_ms": 6249.90275001619,
+   "retrieve_cost": 0.00019675916129032261
+  },
+  {
+   "idx": 50,
+   "question": "What did Jon say about Gina's progress with her store?",
+   "gold": "hard work's paying off",
+   "category": 4,
+   "evidence": [
+    "D3:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Congrats on your store, Gina!",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.0003572278064516129,
+   "retrieved_tokens": 581,
+   "retrieve_ms": 6361.988582997583,
+   "retrieve_cost": 0.00019192780645161292
+  },
+  {
+   "idx": 51,
+   "question": "What made Gina choose the furniture and decor for her store?",
+   "gold": "personal style and customer comfort",
+   "category": 4,
+   "evidence": [
+    "D3:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To make customers feel cozy.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036400800000000003,
+   "retrieved_tokens": 601,
+   "retrieve_ms": 6505.918790993746,
+   "retrieve_cost": 0.00019630800000000005
+  },
+  {
+   "idx": 52,
+   "question": "What did Jon say about creating a special experience for customers?",
+   "gold": "It's the key to making them feel welcome and coming back",
+   "category": 4,
+   "evidence": [
+    "D3:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Creating a space for customers to feel welcome.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003299301290322581,
+   "retrieved_tokens": 448,
+   "retrieve_ms": 6321.5867090038955,
+   "retrieve_cost": 0.0001833801290322581
+  },
+  {
+   "idx": 53,
+   "question": "What did Gina say about creating an experience for her customers?",
+   "gold": "making them want to come back",
+   "category": 4,
+   "evidence": [
+    "D3:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Creating a cozy oasis experience.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036349432258064515,
+   "retrieved_tokens": 570,
+   "retrieve_ms": 6286.922291968949,
+   "retrieve_cost": 0.00020044432258064517
+  },
+  {
+   "idx": 54,
+   "question": "How is Gina's store doing?",
+   "gold": "The store is doing great.",
+   "category": 4,
+   "evidence": [
+    "D4:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Gina's store is doing great!",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00040393645161290325,
+   "retrieved_tokens": 925,
+   "retrieve_ms": 6235.782790987287,
+   "retrieve_cost": 0.00018793645161290325
+  },
+  {
+   "idx": 55,
+   "question": "What does Gina's tattoo symbolize?",
+   "gold": "Freedom and expressing herself through dance",
+   "category": 4,
+   "evidence": [
+    "D5:15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Freedom and self-expression.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00030403587096774196,
+   "retrieved_tokens": 332,
+   "retrieve_ms": 6174.30916702142,
+   "retrieve_cost": 0.00017878587096774196
+  },
+  {
+   "idx": 56,
+   "question": "What did Jon and Gina compare their entrepreneurial journeys to?",
+   "gold": "dancing together and supporting each other",
+   "category": 4,
+   "evidence": [
+    "D6:15",
+    "D6:16"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A roller coaster.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034802554838709676,
+   "retrieved_tokens": 550,
+   "retrieve_ms": 6148.436999996193,
+   "retrieve_cost": 0.00018947554838709678
+  },
+  {
+   "idx": 57,
+   "question": "What advice does Gina give to Jon about running a successful business?",
+   "gold": "build relationships with customers, create a strong brand image, stay positive",
+   "category": 4,
+   "evidence": [
+    "D7:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Stay passionate, focused, and resilient.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0003700438064516129,
+   "retrieved_tokens": 661,
+   "retrieve_ms": 6098.340084019583,
+   "retrieve_cost": 0.0001918438064516129
+  },
+  {
+   "idx": 58,
+   "question": "Why did Jon shut down his bank account?",
+   "gold": "for his business",
+   "category": 4,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To help his business grow.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00030887148387096777,
+   "retrieved_tokens": 390,
+   "retrieve_ms": 6107.6642500120215,
+   "retrieve_cost": 0.00017372148387096776
+  },
+  {
+   "idx": 59,
+   "question": "Why did Gina combine her clothing business with dance?",
+   "gold": "she is passionate about dance and fashion",
+   "category": 4,
+   "evidence": [
+    "D8:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To show creativity and share her love.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003499370322580645,
+   "retrieved_tokens": 505,
+   "retrieve_ms": 6552.131416974589,
+   "retrieve_cost": 0.00019603703225806455
+  },
+  {
+   "idx": 60,
+   "question": "What does Jon's dance make him?",
+   "gold": "happy",
+   "category": 4,
+   "evidence": [
+    "D9:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Happy and fulfilled.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.0003784329677419355,
+   "retrieved_tokens": 764,
+   "retrieve_ms": 5907.845916983206,
+   "retrieve_cost": 0.00018868296774193552
+  },
+  {
+   "idx": 61,
+   "question": "What did Gina receive from a dance contest?",
+   "gold": "a trophy",
+   "category": 4,
+   "evidence": [
+    "D9:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A trophy.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003428657419354839,
+   "retrieved_tokens": 521,
+   "retrieve_ms": 5917.241999995895,
+   "retrieve_cost": 0.0001898657419354839
+  },
+  {
+   "idx": 62,
+   "question": "How does Gina stay confident in her business?",
+   "gold": "By reminding herself of her successes and progress, having a support system, and focusing on why she started",
+   "category": 4,
+   "evidence": [
+    "D10:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "By reminding herself of her successes.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00042099987096774196,
+   "retrieved_tokens": 1018,
+   "retrieve_ms": 6005.756374972407,
+   "retrieve_cost": 0.00019104987096774196
+  },
+  {
+   "idx": 63,
+   "question": "What kind of professional experience did Gina get accepted for on May 23, 2023?",
+   "gold": "fashion internship",
+   "category": 4,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Fashion internship.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032135612903225804,
+   "retrieved_tokens": 386,
+   "retrieve_ms": 5824.784208962228,
+   "retrieve_cost": 0.00018560612903225808
+  },
+  {
+   "idx": 64,
+   "question": "Where is Gina's fashion internship?",
+   "gold": "fashion department of an international company",
+   "category": 4,
+   "evidence": [
+    "D12:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "International company, fashion department.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000347994,
+   "retrieved_tokens": 495,
+   "retrieve_ms": 6159.7409170353785,
+   "retrieve_cost": 0.00019769400000000002
+  },
+  {
+   "idx": 65,
+   "question": "What book is Jon currently reading?",
+   "gold": "The Lean Startup",
+   "category": 4,
+   "evidence": [
+    "D12:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "\"The Lean Startup\"",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00027816348387096776,
+   "retrieved_tokens": 274,
+   "retrieve_ms": 5833.629375032615,
+   "retrieve_cost": 0.00016221348387096776
+  },
+  {
+   "idx": 66,
+   "question": "What is Jon offering to the dancers at his dance studio?",
+   "gold": "One-on-one mentoring and training",
+   "category": 4,
+   "evidence": [
+    "D13:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "One-on-one mentoring and training.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003403211612903226,
+   "retrieved_tokens": 503,
+   "retrieve_ms": 5918.915166985244,
+   "retrieve_cost": 0.0001867211612903226
+  },
+  {
+   "idx": 67,
+   "question": "How does Jon use the clipboard with a notepad attached to it?",
+   "gold": "To set goals, track achievements, and find areas for improvement",
+   "category": 4,
+   "evidence": [
+    "D13:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No specific information available.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00029245296774193554,
+   "retrieved_tokens": 333,
+   "retrieve_ms": 5985.878707957454,
+   "retrieve_cost": 0.0001649529677419355
+  },
+  {
+   "idx": 68,
+   "question": "What does Jon tell Gina he won't do?",
+   "gold": "quit",
+   "category": 4,
+   "evidence": [
+    "D14:17"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Give up.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00030442316129032263,
+   "retrieved_tokens": 403,
+   "retrieve_ms": 5628.171916003339,
+   "retrieve_cost": 0.0001691231612903226
+  },
+  {
+   "idx": 69,
+   "question": "What did Jon take a trip to Rome for?",
+   "gold": "To clear his mind",
+   "category": 4,
+   "evidence": [
+    "D15:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To clear his mind.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002800205806451613,
+   "retrieved_tokens": 230,
+   "retrieve_ms": 5915.6803749501705,
+   "retrieve_cost": 0.0001691705806451613
+  },
+  {
+   "idx": 70,
+   "question": "What is Jon working on opening?",
+   "gold": "a dance studio",
+   "category": 4,
+   "evidence": [
+    "D15:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A dance studio.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.0003436652903225807,
+   "retrieved_tokens": 643,
+   "retrieve_ms": 3411.5757920080796,
+   "retrieve_cost": 0.00017236529032258068
+  },
+  {
+   "idx": 71,
+   "question": "How does Gina describe the studio that Jon has opened?",
+   "gold": "amazing",
+   "category": 4,
+   "evidence": [
+    "D15:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Awesome and inspiring.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0003534305806451613,
+   "retrieved_tokens": 601,
+   "retrieve_ms": 3165.7336250063963,
+   "retrieve_cost": 0.0001872305806451613
+  },
+  {
+   "idx": 72,
+   "question": "How does Jon feel about the opening night of his dance studio?",
+   "gold": "excited",
+   "category": 4,
+   "evidence": [
+    "D15:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Excited and hopeful.",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.0003848250967741936,
+   "retrieved_tokens": 792,
+   "retrieve_ms": 3597.3897500080056,
+   "retrieve_cost": 0.00018877509677419355
+  },
+  {
+   "idx": 73,
+   "question": "How does Gina describe the feeling that dance brings?",
+   "gold": "magical",
+   "category": 4,
+   "evidence": [
+    "D15:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Dance brings joy and stress relief.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0004078871612903226,
+   "retrieved_tokens": 944,
+   "retrieve_ms": 3257.2963749989867,
+   "retrieve_cost": 0.00018873716129032262
+  },
+  {
+   "idx": 74,
+   "question": "What does Jon plan to do at the grand opening of his dance studio?",
+   "gold": "savor all the good vibes",
+   "category": 4,
+   "evidence": [
+    "D15:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Host a dance competition.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003500607096774194,
+   "retrieved_tokens": 541,
+   "retrieve_ms": 3603.09608298121,
+   "retrieve_cost": 0.00019106070967741937
+  },
+  {
+   "idx": 75,
+   "question": "What does Gina say to Jon about the grand opening?",
+   "gold": "Let's live it up and make some great memories",
+   "category": 4,
+   "evidence": [
+    "D15:12"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Can't wait for tomorrow's grand opening!",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00032004909677419357,
+   "retrieved_tokens": 416,
+   "retrieve_ms": 3526.8695420236327,
+   "retrieve_cost": 0.0001791990967741936
+  },
+  {
+   "idx": 76,
+   "question": "What is the general sentiment about the upcoming grand opening?",
+   "gold": "excitement",
+   "category": 4,
+   "evidence": [
+    "D15:18",
+    "D15:19"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Excitement and positivity.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00037134580645161293,
+   "retrieved_tokens": 736,
+   "retrieve_ms": 3456.4901249832474,
+   "retrieve_cost": 0.00018369580645161295
+  },
+  {
+   "idx": 77,
+   "question": "What did Gina make a limited edition line of?",
+   "gold": "Hoodies",
+   "category": 4,
+   "evidence": [
+    "D16:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Hoodies.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033006174193548384,
+   "retrieved_tokens": 433,
+   "retrieve_ms": 3155.928790976759,
+   "retrieve_cost": 0.0001893617419354839
+  },
+  {
+   "idx": 78,
+   "question": "According to Gina, what makes Jon a perfect mentor and guide?",
+   "gold": "His positivity and determination",
+   "category": 4,
+   "evidence": [
+    "D17:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "His positivity and determination.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003355710967741936,
+   "retrieved_tokens": 495,
+   "retrieve_ms": 3123.4538329881616,
+   "retrieve_cost": 0.00018407109677419356
+  },
+  {
+   "idx": 80,
+   "question": "What plans does Jon have after receiving advice at the networking event?",
+   "gold": "Sprucing up his business plan, tweaking his pitch to investors, and working on an online platform.",
+   "category": 4,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Sprucing up his business plan.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00033927522580645166,
+   "retrieved_tokens": 529,
+   "retrieve_ms": 3165.9015000332147,
+   "retrieve_cost": 0.00018147522580645167
+  },
+  {
+   "idx": 81,
+   "question": "What offer does Gina make to Jon regarding social media?",
+   "gold": "Helping with making content and managing his social media accounts.",
+   "category": 4,
+   "evidence": [
+    "D18:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Help with content and management.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003240178064516129,
+   "retrieved_tokens": 444,
+   "retrieve_ms": 3208.824542001821,
+   "retrieve_cost": 0.0001801678064516129
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 4248.5943749779835,
+ "retrieve_cost_per_query": 0.00018546377060931903,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

@@ -1551,6 +1551,11 @@ async def run_arm(
 
         async def swept(q: dict) -> dict:
             out = {}
+            if spec["system"] in ("engram", "full_context"):  # retrieval does not depend on k: slice one list
+                every, _ = await system.memories(q["question"], top_k=None, no_dates=no_dates)
+                for k in sweep:
+                    out[k] = await tokens(json.dumps(every[:k], indent=4)) - empty_block
+                return out
             for k in sweep:
                 lines, _ = await system.memories(q["question"], top_k=k, no_dates=no_dates)
                 out[k] = await tokens(json.dumps(lines, indent=4)) - empty_block
