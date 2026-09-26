@@ -64,9 +64,10 @@ def engram_jev_per_question() -> list[float]:
     for line in LEDGER.read_text().splitlines():
         row = json.loads(line)
         if row.get("stage") == "5" and row["run_id"].startswith("e4_frozen_sameattr:lme:"):
-            per[row["run_id"]] = per.get(row["run_id"], 0.0) + row["spend"].get("jev", 0.0)
+            key = ":".join(row["run_id"].split(":")[:3])  # later run ids also carry the k
+            per[key] = per.get(key, 0.0) + row["spend"].get("jev", 0.0)
     # only questions with a result on file: results written while Jev fell back were deleted and are re-run
-    return [v for rid, v in per.items() if done("e4_frozen_sameattr", rid.split(":lme:")[1])]
+    return [v for rid, v in per.items() if done("e4_frozen_sameattr", rid.split(":lme:")[1].split(":")[0])]
 
 
 def projection() -> dict:

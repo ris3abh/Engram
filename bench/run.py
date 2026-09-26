@@ -78,6 +78,8 @@ ARMS_DIR = ROOT / "bench" / ".cache" / "arms"
 CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
 RESULTS_V2 = RESULTS / "v2"  # OpenAI-stack results (phase 3); v1 files are never overwritten
+RESULTS_V3 = RESULTS / "v3"  # docs/V3_PLAN.md
+ADVERSARIAL_GOLD = "Not mentioned in the conversation"  # LoCoMo category 5 gold for the judge (as bench/heldout_extra)
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
 # per-run stop $20; phase cap $12 -> $20 -> $30 -> $45 -> $90 -> $95 -> $105 (user; the last raise, 2026-09-24, for
@@ -329,6 +331,20 @@ ARMS: dict[str, dict] = {
     },
     # Jev-Mem on conv-26 (lean comparison): its retrieved lines, answered and judged with the shared prompt and judge.
     "jevmem_conv26": {"system": "jevmem_lines", "run_dir": "bench/.cache/jevmem_conv26"},
+    # V3 (docs/V3_PLAN.md section 4). Jev-Mem per LoCoMo conversation (bench/jevmem_run.py --conv <id>).
+    "jevmem": {"system": "jevmem_lines", "run_dir": "bench/.cache/jevmem_v3/{conv}"},
+    # T0R-LLM: T0R's store and read path with gpt-4o-mini listwise reranking of the 30-turn shortlist instead of Jev.
+    "lean_t0r_llm": {
+        "system": "engram",
+        "store_from": "lean_l0",
+        "flags": Flags(
+            **{**LEAN_BASE, "retrieval_rerank": True, "retrieval_history": True},
+            retrieval_floor=config.RETRIEVAL_FLOOR,
+            retrieval_reranker="llm",
+        ),
+    },
+    # Full context: every turn in the answer prompt.
+    "full_context": {"system": "full_context"},
     "mem0": {"system": "mem0"},
     # v2 baseline (V2_PLAN section 4): Graphiti on the OpenAI stack's shared models; see GraphitiArm.
     "graphiti": {"system": "graphiti"},
@@ -386,9 +402,32 @@ def load_heldout(conv_id: str) -> dict:
     }
 
 
+def load_adversarial(conv_id: str) -> dict:
+    """LoCoMo category 5 of one conversation, gold an abstention, over the same turns as load_heldout."""
+    sl = load_heldout(conv_id)
+    conv = next(
+        c for c in json.loads((ROOT / "bench" / "data" / "locomo10.json").read_text()) if c["sample_id"] == conv_id
+    )
+    sl["questions"] = [
+        {
+            "idx": i,
+            "question": q["question"],
+            "gold": ADVERSARIAL_GOLD,
+            "category": 5,
+            "evidence": q.get("evidence", []),
+            "last_evidence_session": sl["checkpoints"][0],
+        }
+        for i, q in enumerate(conv["qa"])
+        if q.get("category") == 5
+    ]
+    return sl
+
+
 def load_slice(name: str) -> dict:
     if name.startswith("heldout:"):
         return load_heldout(name.split(":", 1)[1])
+    if name.startswith("adv:"):  # a conversation's adversarial questions, answered from its scored run's store
+        return load_adversarial(name.split(":", 1)[1])
     if name == "conv26":  # the whole tuning conversation (v2 Stage 2), loaded like a held-out one
         return load_heldout("conv-26")
     if name.startswith("lme:"):  # one LongMemEval question and its haystack (V2_PLAN section 10)
@@ -701,6 +740,25 @@ class JevMemLines:
 
     def stored(self) -> dict:
         return {"stored": self.run["turns"], "active": self.run["turns"], "tentative": 0}
+
+
+class FullContext:
+    """Every turn of the slice (LongMemEval: every user turn of the haystack) as the memory block, rendered as the lean
+    arms render a line ("[date] speaker: text"). k is ignored. Writes nothing (docs/V3_PLAN.md section 4)."""
+
+    def __init__(self, sl: dict):
+        self.lines = [f"[{m['at']:%Y-%m-%d}] {m['speaker']}: {m['text']}" for m in sl["messages"]]
+
+    async def memories(
+        self, question: str, top_k: int | None = None, no_dates: bool = False
+    ) -> tuple[list[str], float]:
+        return self.lines, 0.0
+
+    def fact_records(self) -> list[tuple[str, str | None, bool]]:
+        return []
+
+    def stored(self) -> dict:
+        return {"stored": len(self.lines), "active": len(self.lines), "tentative": 0}
 
 
 class Mem0Arm:
@@ -1219,6 +1277,7 @@ async def run_arm(
     stack: str = "anthropic",
     sweep: list[int] | None = None,
     reuse_from: str | None = None,
+    results_dir: Path | None = None,
 ) -> dict:
     """`sweep`: after the final answers, retrieval-only token counts per question at each k (LongMemEval token
     matching, V2_PLAN section 10). `reuse_from`: read the store another pass of this arm built on this slice (its
@@ -1227,7 +1286,15 @@ async def run_arm(
     sl = load_slice(slice_name)
     suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "") + ("__noanswer" if no_answer else "")
     arms_dir, results = (ARMS_DIR / "openai", RESULTS_V2) if stack == "openai" else (ARMS_DIR, RESULTS)
-    arm_dir = arms_dir / name / (slice_name.replace(":", "_") + (reuse_from or suffix))  # a store per option set
+    results = results_dir or results
+    # A store per option set. reuse_from is a suffix of this slice ("__k20") or another slice's directory
+    # ("heldout_conv-44__k3", for its adversarial questions).
+    stored_as = (
+        reuse_from
+        if reuse_from and not reuse_from.startswith("__")
+        else slice_name.replace(":", "_") + (reuse_from or suffix)
+    )
+    arm_dir = arms_dir / name / stored_as
     if reuse_from:
         if not arm_dir.exists():
             raise FileNotFoundError(f"--reuse-from: no store at {arm_dir}")
@@ -1254,7 +1321,9 @@ async def run_arm(
             keep=bool(reuse_from),
         )
     elif spec["system"] == "jevmem_lines":
-        system = JevMemLines(ROOT / spec["run_dir"])
+        system = JevMemLines(ROOT / spec["run_dir"].format(conv=slice_name.split(":", 1)[-1]))
+    elif spec["system"] == "full_context":
+        system = FullContext(sl)
     else:
         system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False), stack=stack)
 
@@ -1362,7 +1431,7 @@ async def run_arm(
 
     last_of_session = {m["session"]: m["id"] for m in sl["messages"]}
     outcome_log: list[tuple[str, list[dict]]] = []
-    read_only = bool(frozen_store or reuse_from) or spec["system"] == "jevmem_lines"
+    read_only = bool(frozen_store or reuse_from) or spec["system"] in ("jevmem_lines", "full_context")
     for n, m in enumerate(sl["messages"], 1):
         if not read_only:
             writes.append(await system.write(m))
@@ -1894,9 +1963,11 @@ class V2Budget(Budget):
 
 async def run_v2(args, extra: list[int]) -> dict:
     """An OpenAI-stack run under bench/v2_spend.py's guard; the ledger row is written even if the run stops."""
-    from .v2_spend import RunBudget, ledger_totals
+    from .v2_spend import LEDGER, V3_LEDGER, RunBudget, ledger_totals
 
-    with RunBudget(stage=args.stage, system=args.arm, run_id=f"{args.arm}:{args.slice}") as run_budget:
+    ledger = V3_LEDGER if args.study == "v3" else LEDGER
+    run_id = f"{args.arm}:{args.slice}:k{args.top_k}" + (f":from{args.reuse_from}" if args.reuse_from else "")
+    with RunBudget(stage=args.stage, system=args.arm, run_id=run_id, ledger=ledger) as run_budget:
         budget = V2Budget(run_budget, args.max_jev)
         result = await run_arm(
             args.arm,
@@ -1909,9 +1980,10 @@ async def run_v2(args, extra: list[int]) -> dict:
             stack="openai",
             sweep=args.sweep,
             reuse_from=args.reuse_from,
+            results_dir=RESULTS_V3 if args.study == "v3" else None,
         )
     print(table([result]))
-    totals = ledger_totals()
+    totals = ledger_totals(ledger)
     print(
         "real spend this run: "
         + ", ".join(f"{p} ${v:.4f}" for p, v in run_budget.spent.items())
@@ -1937,6 +2009,9 @@ async def main() -> None:
         "--sweep",
         type=lambda v: list(range(int(v.split("-")[0]), int(v.split("-")[1]) + 1)),
         help="with --stack openai: retrieval-only token counts per question at each k in this range, e.g. 3-10",
+    )
+    parser.add_argument(
+        "--study", choices=["v2", "v3"], default="v2", help="with --stack openai: results dir and ledger"
     )
     parser.add_argument(
         "--reuse-from", help="with --stack openai: answer from the store this arm's run with that suffix built (__k20)"

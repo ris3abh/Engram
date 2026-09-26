@@ -20,6 +20,9 @@ RUN_CAPS = {"openai": 40.0, "jev": 10.0, "anthropic": 15.0}
 NON_OPENAI_CAP = 55.0
 # Caps on a stage's total over every run in the ledger, this one included (the lean-extraction task, 2026-09-26).
 STAGE_CAPS = {"lean": {"openai": 2.0, "jev": 1.0}}
+# A study with its own ledger and caps on that ledger's whole total (docs/V3_PLAN.md section 11).
+V3_LEDGER = LEDGER.parent.parent / "v3" / "spend.jsonl"
+LEDGER_CAPS = {V3_LEDGER: {"openai": 23.0, "jev": 6.5}}
 PROVIDERS = tuple(RUN_CAPS)
 
 
@@ -46,6 +49,7 @@ class RunBudget:
         self.spent = dict.fromkeys(PROVIDERS, 0.0)
         self.prior = ledger_totals(ledger)
         self.stage_prior = ledger_totals(ledger, stage) if stage in STAGE_CAPS else None
+        self.ledger_caps = LEDGER_CAPS.get(ledger, {})
         self.started = datetime.now(UTC)
 
     def non_openai_total(self) -> float:
@@ -59,6 +63,9 @@ class RunBudget:
             raise SpendStop(
                 f"{provider} spend ${self.spent[provider]:.2f} passed the ${RUN_CAPS[provider]:.0f} run cap"
             )
+        cap = self.ledger_caps.get(provider)
+        if cap is not None and self.prior[provider] + self.spent[provider] > cap:
+            raise SpendStop(f"{provider} spend passed the study cap of ${cap:.2f} ({self.ledger})")
         if self.stage_prior is not None:
             total = self.stage_prior[provider] + self.spent[provider]
             cap = STAGE_CAPS[self.stage].get(provider)
@@ -83,6 +90,9 @@ class RunBudget:
             f.write(json.dumps(row) + "\n")
 
     def __enter__(self) -> "RunBudget":
+        for provider, cap in self.ledger_caps.items():
+            if self.prior[provider] >= cap:
+                raise SpendStop(f"the study cap of ${cap:.2f} {provider} is already reached ({self.ledger})")
         for provider, cap in STAGE_CAPS.get(self.stage, {}).items():
             if self.stage_prior[provider] >= cap:
                 raise SpendStop(f"stage {self.stage}'s ${cap:.2f} {provider} cap is already reached")
