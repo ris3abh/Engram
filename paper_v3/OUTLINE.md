@@ -22,7 +22,7 @@ LLM-Extracted Memory at a Fraction of the Write Cost". That title is not used, f
 
 The paper records this as a presentation change (Appendix B).
 
-## 2. Abstract draft (178 words)
+## 2. Abstract draft (200 words, the limit)
 
 > Recent work argues that conversational memory does not need LLM extraction when raw history is ranked well
 > (SmartSearch; Fidelity Before Structure). We test this claim confirmatorily, and ask how it depends on the context
