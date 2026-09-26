@@ -25,7 +25,7 @@ import build  # noqa: E402
 
 OUT = ROOT / "paper_v3"
 OPEN, SEP, CLOSE = "\x00", "\x01", "\x02"  # sourced-number markers inside the intermediate Markdown
-WIDE_FIGS = {"arch", "example", "context"}  # figure*: the two diagrams and the two-panel accuracy-context figure
+WIDE_FIGS = {"arch", "example", "counter", "context"}  # figure*: the three diagrams and the two-panel context figure
 COLUMN_PT = 219.0  # one column in acl.sty: A4, 2.5 cm margins, 0.6 cm column sep
 CHAR_PT = 4.2  # average character width at \footnotesize (9 pt Times in acl.sty)
 TT_PT = 4.75  # typewriter (inconsolata) at \footnotesize
@@ -60,6 +60,8 @@ TEXT_MAP = {
     "π": r"$\pi$",
     "≥": r"$\geq$",
     "≤": r"$\leq$",
+    "≈": r"$\approx$",
+    "†": r"$^\dagger$",
     "ε": r"$\varepsilon$",
     "©": r"\textcopyright{}",
     "é": r"\'{e}",
@@ -118,7 +120,7 @@ TOKEN = re.compile(
     r"|(?P<citet>(?<![\w@])@(?P<tk>[a-z]+\d{4}[a-z]+)\b)"
     r"|(?P<eqref>\[\[(?P<eqk>eq:[\w,:-]+)\]\])"
     r"|(?P<sref>§(?P<s1>\d+(?:\.\d+)?)(?:–(?P<s2>\d+(?:\.\d+)?))?)"
-    r"|(?P<aref>\bAppendix (?P<ax>[A-I])\b)"
+    r"|(?P<aref>(?<!their )\bAppendix (?P<ax>[A-J])\b(?!\.\d))"  # ours only: "their Appendix J.4" is a cited paper's
     r"|(?P<code>`(?P<c>[^`]+)`)"
     r"|(?P<dmath>\$\$(?P<dm>.+?)\$\$)"
     r"|(?P<math>(?<![\w\\])\$(?![\d/ ])(?P<m>[^$\n]+?)(?<! )\$)"
@@ -437,11 +439,11 @@ def convert(md: str) -> tuple[str, str, str, str]:
                     if ONECOLUMN_FROM and text.startswith(ONECOLUMN_FROM) and not onecolumn:
                         cur.append(r"\onecolumn")
                         onecolumn = True
-                    letter = re.match(r"^Appendix ([A-I])", text).group(1)
+                    letter = re.match(r"^Appendix ([A-J])", text).group(1)
                     cur.append(r"\FloatBarrier")
                     cur.append(
                         r"\section{"
-                        + inline(re.sub(r"^Appendix [A-I]\.\s*", "", text))
+                        + inline(re.sub(r"^Appendix [A-J]\.\s*", "", text))
                         + r"}\label{app:"
                         + letter
                         + "}"

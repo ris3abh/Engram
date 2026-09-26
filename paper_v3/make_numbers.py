@@ -819,17 +819,19 @@ def main() -> None:
     ):
         N(key, v, f"cite:{cite} (checked against the paper's text; paper_v3/bib_verification.md)", fmt)
 
-    # --- the worked example (Figure 2): one H1 question replayed offline from the frozen stores and the call cache
-    WE = V3 / "worked_example.json"
-    w = load(WE)
-    N("ex.candidates", w["candidates_meeting_rule"], f"{rel(WE)}#candidates_meeting_rule", "int")
-    N("ex.t0r.k", w["t0r"]["k"], f"{rel(WE)}#t0r/k", "int")
-    N("ex.t0r.tokens", w["t0r"]["recorded_tokens"], f"{rel(WE)}#t0r/recorded_tokens", "int")
-    N("ex.engram.tokens", w["engram_v2"]["recorded_tokens"], f"{rel(WE)}#engram_v2/recorded_tokens", "int")
-    N("ex.shortlist", len(w["t0r"]["shortlist"]), f"{rel(WE)}#t0r/shortlist (length)", "int")
-    for side, key in (("t0r", "t0r"), ("engram", "engram_v2")):
-        for i, row in enumerate(w[key]["shortlist"]):
-            N(f"ex.{side}.p{row['rank']}", row["p_relevant"], f"{rel(WE)}#{key}/shortlist/{i}/p_relevant", "f2")
+    # --- the worked examples (Figure 2; Appendix J): H1 questions replayed offline from the frozen stores and the cache
+    for pre, name in (("ex", "worked_example.json"), ("ex2", "counter_example.json")):
+        WE = V3 / name
+        w = load(WE)
+        N(f"{pre}.candidates", w["candidates_meeting_rule"], f"{rel(WE)}#candidates_meeting_rule", "int")
+        N(f"{pre}.t0r.k", w["t0r"]["k"], f"{rel(WE)}#t0r/k", "int")
+        N(f"{pre}.t0r.tokens", w["t0r"]["recorded_tokens"], f"{rel(WE)}#t0r/recorded_tokens", "int")
+        N(f"{pre}.engram.tokens", w["engram_v2"]["recorded_tokens"], f"{rel(WE)}#engram_v2/recorded_tokens", "int")
+        N(f"{pre}.shortlist", len(w["t0r"]["shortlist"]), f"{rel(WE)}#t0r/shortlist (length)", "int")
+        for side, key in (("t0r", "t0r"), ("engram", "engram_v2")):
+            for i, row in enumerate(w[key]["shortlist"]):
+                N(f"{pre}.{side}.p{row['rank']}", row["p_relevant"], f"{rel(WE)}#{key}/shortlist/{i}/p_relevant", "f2")
+                N(f"{pre}.{side}.rank{row['rank']}", row["rank"], f"{rel(WE)}#{key}/shortlist/{i}/rank", "int")
 
     out = Path(__file__).parent / "numbers.json"
     out.write_text(json.dumps(NUM, indent=1, ensure_ascii=False) + "\n")

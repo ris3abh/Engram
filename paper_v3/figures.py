@@ -1,12 +1,12 @@
 """Figures for the v3 paper, drawn only from paper_v3/numbers.json (every plotted or printed value is a sourced number).
 
-Figures 1 (architecture) and 2 (worked example) are hand-built SVGs in the v1 pipeline figure's design
-(paper_v3/diagram.py). Figures 3-8 are matplotlib in the same design system: its palette with one fixed colour per
-system, a light panel background and Helvetica Neue, text at 8 pt at printed size (single-column figures 3.3 in
-wide, full-width ones 6.8 in), direct labels instead of legends. Each figure is written as PDF (LaTeX), SVG
+Figures 1 and 2 and the Appendix J figure are TikZ diagrams (paper_v3/diagram.py). Figures 3-8 are matplotlib in
+the same design: the diagrams' palette with one fixed colour per system (red only for the non-inferiority margin),
+Computer Modern sans, text at 8 pt at printed size (single-column figures 3.3 in wide, full-width ones 6.8 in), and
+direct labels instead of legends. Each figure is written as PDF (LaTeX), SVG
 (Markdown) and PNG (review) in paper_v3/figures/.
 
-    uv run --with matplotlib --with pillow python paper_v3/figures.py
+    uv run --with matplotlib --with pymupdf python paper_v3/figures.py
 """
 
 import json
@@ -23,22 +23,25 @@ HERE = Path(__file__).parent
 OUT = HERE / "figures"
 NUM = json.loads((HERE / "numbers.json").read_text())
 
-COL = {  # the design system of Figure 1 (paper_v3/diagram.py): one fixed colour per system
-    "T0R": "#4453C4",  # Jev blue
-    "engram v2": "#E8762C",  # LLM orange
-    "mem0": "#2E9E6B",  # green
-    "Jev-Mem": "#8E5BB5",  # purple
-    "T0R-LLM": "#8FA3E8",  # light blue: T0R's store with an LLM reranker
-    "L0": "#8A94A6",  # code-only grey
-    "full context": "#1F2430",  # near-black
+P = diagram.PALETTE  # the diagrams' palette: (border, fill) per role
+COL = {  # one fixed colour per system, from the diagram roles
+    "T0R": P["jev"][0],  # purple: selection by one Jev request
+    "engram v2": "#D4921C",  # amber (the LLM role, a shade darker for lines)
+    "mem0": P["store"][0],  # green
+    "Jev-Mem": P["code"][0],  # blue
+    "T0R-LLM": P["judge"][0],  # teal: T0R's store with an LLM reranker
+    "L0": "#8A9BA5",  # slate grey: similarity search, no model call
+    "full context": "#263238",  # near-black
 }
-VERMILLION, LIGHT, GREY = "#C8402F", "#D5DAE3", "#5B6577"  # margins and rerank drops; missed; secondary ink
-PANEL = "#F5F7FA"  # light panel background
+VERMILLION = P["answer"][0]  # red: reserved for the non-inferiority margin
+LIGHT, GREY, SLATE = "#D5DCE0", "#56707C", diagram.SLATE  # not shortlisted; secondary ink; axes
+PANEL = "white"
 SINGLE, FULL = 3.3, 6.8
 plt.rcParams.update(
     {
-        "font.family": "sans-serif",
-        "font.sans-serif": ["Helvetica Neue", "Helvetica", "Arial", "DejaVu Sans"],
+        "font.family": ["cmss10", "DejaVu Sans"],  # Computer Modern sans, as in the TikZ diagrams (glyph fallback)
+        "axes.unicode_minus": False,
+        "axes.formatter.use_mathtext": False,  # plain tick labels in Computer Modern sans; log axes get plain labels
         "font.size": 8,
         "axes.labelsize": 8,
         "axes.titlesize": 8,
@@ -50,11 +53,11 @@ plt.rcParams.update(
         "xtick.major.width": 0.6,
         "ytick.major.width": 0.6,
         "axes.facecolor": PANEL,
-        "axes.edgecolor": "#8A94A6",
-        "xtick.color": "#4B5566",
-        "ytick.color": "#4B5566",
-        "axes.labelcolor": "#1F2430",
-        "text.color": "#1F2430",
+        "axes.edgecolor": SLATE,
+        "xtick.color": SLATE,
+        "ytick.color": SLATE,
+        "axes.labelcolor": "#263238",
+        "text.color": "#263238",
         "pdf.fonttype": 42,
         "svg.fonttype": "none",
     }
@@ -178,8 +181,8 @@ def secondary_forest() -> None:
 def budget_gain() -> None:
     fig, ax = plt.subplots(figsize=(SINGLE, 2.1))
     series = [
-        ("LoCoMo", "#1F2430", [3, 6, 20], ["rer.locomo.k3", "rer.locomo.k6", "rer.locomo.k20"], 0.93, (6.6, 12.5), -1),
-        ("LongMemEval", VERMILLION, [3, 20], ["rer.lme.k3", "rer.lme.k20"], 1.07, (3.7, 2.6), 1),
+        ("LoCoMo", "#37474F", [3, 6, 20], ["rer.locomo.k3", "rer.locomo.k6", "rer.locomo.k20"], 0.93, (6.6, 12.5), -1),
+        ("LongMemEval", P["code"][0], [3, 20], ["rer.lme.k3", "rer.lme.k20"], 1.07, (3.7, 2.6), 1),
     ]
     for name, colour, ks, keys, dodge, (lx, ly), side in series:
         xs = [k * dodge for k in ks]
@@ -216,11 +219,11 @@ def context() -> None:
     n_loc, n_lme = int(v("data.fresh.questions")), int(v("data.lme.scored"))
     tight = v("fig.tight_tokens")
     for ax in (a1, a2):
-        ax.axvspan(80, tight, color="#E3E7F0", zorder=0, lw=0)
+        ax.axvspan(80, tight, color="#ECEFF1", zorder=0, lw=0)
         ax.text(
             88,
             0.985,
-            f"tight budget\n(≤ {d('fig.tight_tokens')} tokens)",
+            f"tight budget\n(up to {d('fig.tight_tokens')} tokens)",
             transform=ax.get_xaxis_transform(),
             va="top",
             color=GREY,
@@ -302,6 +305,8 @@ def context() -> None:
     a1.set_xlim(80, 60000)
     a1.set_ylim(55, 88)
     a2.set_xlim(80, 400000)
+    for ax, top in ((a1, 4), (a2, 5)):
+        ax.set_xticks([10**e for e in range(2, top + 1)], [f"{10**e:,}" for e in range(2, top + 1)])
     a1.set_ylabel("accuracy (%)")
     fig.tight_layout(w_pad=2.0)
     save(fig, "context")
@@ -327,6 +332,7 @@ def cost() -> None:
         ax.annotate(s, (x, y), xytext=(dx, dy), textcoords="offset points", ha=ha, va="center", color=COL[s])
     ax.set_xscale("log")
     ax.set_xlim(5e-5, 2e-2)
+    ax.set_xticks([1e-4, 1e-3, 1e-2], ["$0.0001", "$0.001", "$0.01"])
     ax.set_ylim(55, 83)
     ax.set_xlabel("total cost per question, USD (log scale)")
     ax.set_ylabel("accuracy (%)")
@@ -340,7 +346,7 @@ def recall() -> None:
     cats = ["multi-hop", "temporal", "open-domain", "single-hop", "all"]
     parts = (
         ("kept", COL["T0R"], "white", "kept by rerank"),
-        ("dropped", VERMILLION, "white", "dropped by rerank"),
+        ("dropped", P["llm"][0], "#263238", "dropped by rerank"),
         ("missed", LIGHT, "black", "not shortlisted"),
     )
     fig, ax = plt.subplots(figsize=(SINGLE, 3.3))
@@ -398,7 +404,7 @@ def recall() -> None:
 
 def main() -> None:
     diagram.arch()
-    diagram.example()
+    diagram.examples()
     h1_forest()
     secondary_forest()
     budget_gain()

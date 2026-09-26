@@ -110,7 +110,7 @@ agreement depended on the system's answer style (§5.4, §6).
 All systems use gpt-4o-mini to answer, text-embedding-3-small to embed and jev-1.13.0 for every Jev decision.
 Figure 1 contrasts the write and read paths of T0R, engram v2 and Jev-Mem.
 
-![Figure 1: Write path (per turn) and read path (per question) of T0R, engram v2 and Jev-Mem. The outline colour says what does the work: an LLM call (orange), a Jev typed decision (blue), code (grey) or a store (green); dashed arrows are reads from the store. The chip on each panel gives the LLM calls and Jev requests per turn and the Jev requests per question, from each system's code (Jev-Mem: its default profile). A design diagram; no measured data.](figures/arch.svg)
+![Figure 1: Write path (per turn, top) and read path (per question, bottom) of T0R, L0, engram v2 and Jev-Mem. Border colour says what does the work: code (blue), an LLM call (amber), a Jev typed decision (purple), a store (green), the answer model (red) and the judge (teal). The grid gives LLM calls and Jev requests per turn and Jev requests per question, from each system's code (Jev-Mem: its default profile). A design diagram; no measured data.](figures/arch.svg)
 
 **T0R.** The write path embeds each turn and stores it as "[date] speaker: text", with no extraction and no LLM
 call. The read path takes a 30<!-- n:plan.shortlist -->-turn cosine shortlist and asks Jev, in one request, whether each turn
@@ -138,10 +138,13 @@ text" and answered with our prompt; its own prompts, best-of-three selection and
 **A worked example.** Figure 2 traces one held-out question through T0R and engram v2 at the H1 budgets. It was
 chosen by a fixed rule, not for effect: among the 8<!-- n:ex.candidates --> temporal H1 questions that the judge and the human
 grader both scored correct for T0R and wrong for engram v2, the one with the shortest T0R context among those whose
-evidence turn Jev kept and whose replayed contexts match the recorded ones. engram v2 extracted the evidence turn, but under the wrong speaker, and three
-other facts outranked it at k=3; T0R kept the verbatim turn with its date.
+evidence turn Jev kept and whose replayed contexts match the recorded ones. engram v2 extracted the evidence turn, but
+under the wrong speaker, and three other facts outranked it at k=3; T0R kept the verbatim turn with its date.
+Appendix J shows the opposite case by the same kind of rule (the first H1 question, by conversation and question
+index, that engram v2 answered correctly and T0R did not, by both the judge and the human grader): there the evidence
+turn never reached T0R's shortlist, while engram v2's extracted fact did.
 
-![Figure 2: One held-out question traced through both read paths, replayed offline from the frozen stores and the call cache (no API call; both contexts match the recorded token counts: T0R 292<!-- n:ex.t0r.tokens -->, engram v2 309<!-- n:ex.engram.tokens -->). Left: T0R's 30<!-- n:ex.shortlist -->-turn cosine shortlist, ranks shown in cosine order, with Jev's P(relevant) (tick at the threshold); blue rows were kept by Jev, grey rows by the cosine floor, and the answer model reads the first k=6<!-- n:ex.t0r.k -->. Right: engram v2's fact shortlist; Jev kept four facts, and the evidence fact (dashed) was cut at k=3. An illustration chosen by the rule in §3, not evidence.](figures/example.svg)
+![Figure 2: One held-out question traced through both read paths, replayed offline from the frozen stores and the call cache (no API call; both contexts match the recorded token counts: T0R 292<!-- n:ex.t0r.tokens -->, engram v2 309<!-- n:ex.engram.tokens -->). Each column lists the top four of the 30<!-- n:ex.shortlist -->-item cosine shortlist and every item the answer model read, in cosine order, with Jev's P(relevant): purple rows were kept by Jev, blue rows by the cosine floor, and the dashed row was kept by Jev but ranked below the cut at k=3. An illustration chosen by the rule in §3, not evidence. Appendix J shows a question where extraction wins, chosen by the same kind of rule.](figures/example.svg)
 
 ## 4. Study Design
 
@@ -279,31 +282,33 @@ scored 78.3%<!-- n:sys.fc.acc -->, and T0R stays near 77.6%<!-- n:sys.t0r.k20.ac
 registered test, and the systems are not token-matched.
 
 *Table 3. LoCoMo, five held-out conversations, 778<!-- n:data.fresh.questions --> scored questions: accuracy (%), tokens per
-question, write cost per 1,000 turns and read cost per query at list prices (as in Table 5; the read cost excludes
-the answer call; "–": none), and accuracy by category. Rows are grouped by budget. Bold: best in column within the
-budget group (highest accuracy, lowest cost).*
+question, write cost per 1,000 turns and read cost per query at list prices (as in Table 5: the read cost is the
+Jev or LLM rerank call, excluding the answer call; ≈0†: embedding only, the read path makes no model call, only a query embedding,
+which is not priced; "–": none), and accuracy by category. Rows are grouped by budget. Bold: best in
+column within the budget group (highest accuracy, lowest write cost); read costs are not bolded, because the
+lowest are the unpriced embedding-only reads.*
 
 | System, setting | Accuracy | Tokens | Write $/1k turns | Read $/query | Multi-hop | Temporal | Open-domain | Single-hop |
 |---|---|---|---|---|---|---|---|---|
 | *Tight budget (k=3 or k=6)* |
-| L0, k=3 | 59.9%<!-- n:sys.l0.k3.acc --> | 130<!-- n:sys.l0.k3.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | **$0.00000<!-- n:sys.l0.k3.read -->** | 54.3<!-- n:sys.l0.k3.multi-hop --> | 55.2<!-- n:sys.l0.k3.temporal --> | 42.0<!-- n:sys.l0.k3.open-domain --> | 65.7<!-- n:sys.l0.k3.single-hop --> |
-| L0, k=6 | 68.6%<!-- n:sys.l0.k6.acc --> | 254<!-- n:sys.l0.k6.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | **$0.00000<!-- n:sys.l0.k6.read -->** | 61.4<!-- n:sys.l0.k6.multi-hop --> | 60.6<!-- n:sys.l0.k6.temporal --> | 54.0<!-- n:sys.l0.k6.open-domain --> | 75.9<!-- n:sys.l0.k6.single-hop --> |
+| L0, k=3 | 59.9%<!-- n:sys.l0.k3.acc --> | 130<!-- n:sys.l0.k3.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | ≈0† | 54.3<!-- n:sys.l0.k3.multi-hop --> | 55.2<!-- n:sys.l0.k3.temporal --> | 42.0<!-- n:sys.l0.k3.open-domain --> | 65.7<!-- n:sys.l0.k3.single-hop --> |
+| L0, k=6 | 68.6%<!-- n:sys.l0.k6.acc --> | 254<!-- n:sys.l0.k6.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | ≈0† | 61.4<!-- n:sys.l0.k6.multi-hop --> | 60.6<!-- n:sys.l0.k6.temporal --> | 54.0<!-- n:sys.l0.k6.open-domain --> | 75.9<!-- n:sys.l0.k6.single-hop --> |
 | T0R, k=3 | 77.2%<!-- n:sys.t0r.k3.acc --> | 139<!-- n:sys.t0r.k3.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | $0.00020<!-- n:sys.t0r.k3.read --> | **75.7<!-- n:sys.t0r.k3.multi-hop -->** | 69.1<!-- n:sys.t0r.k3.temporal --> | 58.0<!-- n:sys.t0r.k3.open-domain --> | **83.2<!-- n:sys.t0r.k3.single-hop -->** |
 | T0R, k=6 | 77.0%<!-- n:sys.t0r.k6.acc --> | 265<!-- n:sys.t0r.k6.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | $0.00020<!-- n:sys.t0r.k6.read --> | 74.3<!-- n:sys.t0r.k6.multi-hop --> | 72.1<!-- n:sys.t0r.k6.temporal --> | 56.0<!-- n:sys.t0r.k6.open-domain --> | 82.3<!-- n:sys.t0r.k6.single-hop --> |
 | T0R-LLM, k=3 | **77.6%<!-- n:sys.t0rllm.k3.acc -->** | 143<!-- n:sys.t0rllm.k3.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | $0.00023<!-- n:sys.t0rllm.k3.read --> | 73.6<!-- n:sys.t0rllm.k3.multi-hop --> | 72.7<!-- n:sys.t0rllm.k3.temporal --> | 58.0<!-- n:sys.t0rllm.k3.open-domain --> | **83.2<!-- n:sys.t0rllm.k3.single-hop -->** |
 | engram v2, k=3 | 77.5%<!-- n:sys.engram.k3.acc --> | 251<!-- n:sys.engram.k3.tok --> | $1.865<!-- n:write.engram.total --> | $0.00018<!-- n:sys.engram.k3.read --> | 72.1<!-- n:sys.engram.k3.multi-hop --> | **77.6<!-- n:sys.engram.k3.temporal -->** | **60.0<!-- n:sys.engram.k3.open-domain -->** | 81.3<!-- n:sys.engram.k3.single-hop --> |
-| mem0, k=3 | 68.5%<!-- n:sys.mem0.k3.acc --> | 129<!-- n:sys.mem0.k3.tok --> | $1.321<!-- n:write.mem0.total --> | **$0.00000<!-- n:sys.mem0.k3.read -->** | 56.4<!-- n:sys.mem0.k3.multi-hop --> | 67.3<!-- n:sys.mem0.k3.temporal --> | 56.0<!-- n:sys.mem0.k3.open-domain --> | 74.5<!-- n:sys.mem0.k3.single-hop --> |
+| mem0, k=3 | 68.5%<!-- n:sys.mem0.k3.acc --> | 129<!-- n:sys.mem0.k3.tok --> | $1.321<!-- n:write.mem0.total --> | ≈0† | 56.4<!-- n:sys.mem0.k3.multi-hop --> | 67.3<!-- n:sys.mem0.k3.temporal --> | 56.0<!-- n:sys.mem0.k3.open-domain --> | 74.5<!-- n:sys.mem0.k3.single-hop --> |
 | Jev-Mem, k=3 | 70.6%<!-- n:sys.jevmem.k3.acc --> | 162<!-- n:sys.jevmem.k3.tok --> | $0.212<!-- n:write.jevmem.total --> | $0.00120<!-- n:sys.jevmem.k3.read --> | 57.9<!-- n:sys.jevmem.k3.multi-hop --> | 64.2<!-- n:sys.jevmem.k3.temporal --> | 50.0<!-- n:sys.jevmem.k3.open-domain --> | 79.7<!-- n:sys.jevmem.k3.single-hop --> |
 | *Generous budget (k=20 or k=40, and full context)* |
-| L0, k=20 | 76.1%<!-- n:sys.l0.k20.acc --> | 826<!-- n:sys.l0.k20.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | **$0.00000<!-- n:sys.l0.k20.read -->** | 68.6<!-- n:sys.l0.k20.multi-hop --> | 68.5<!-- n:sys.l0.k20.temporal --> | 58.0<!-- n:sys.l0.k20.open-domain --> | 83.7<!-- n:sys.l0.k20.single-hop --> |
+| L0, k=20 | 76.1%<!-- n:sys.l0.k20.acc --> | 826<!-- n:sys.l0.k20.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | ≈0† | 68.6<!-- n:sys.l0.k20.multi-hop --> | 68.5<!-- n:sys.l0.k20.temporal --> | 58.0<!-- n:sys.l0.k20.open-domain --> | 83.7<!-- n:sys.l0.k20.single-hop --> |
 | T0R, k=20 | 77.6%<!-- n:sys.t0r.k20.acc --> | 496<!-- n:sys.t0r.k20.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | $0.00020<!-- n:sys.t0r.k20.read --> | 75.0<!-- n:sys.t0r.k20.multi-hop --> | 72.7<!-- n:sys.t0r.k20.temporal --> | 58.0<!-- n:sys.t0r.k20.open-domain --> | 82.7<!-- n:sys.t0r.k20.single-hop --> |
 | T0R-LLM, k=20 | 78.0%<!-- n:sys.t0rllm.k20.acc --> | 456<!-- n:sys.t0rllm.k20.tok --> | **$0.0006<!-- n:write.t0r.emb -->** | $0.00023<!-- n:sys.t0rllm.k20.read --> | 72.9<!-- n:sys.t0rllm.k20.multi-hop --> | 71.5<!-- n:sys.t0rllm.k20.temporal --> | 60.0<!-- n:sys.t0rllm.k20.open-domain --> | 84.4<!-- n:sys.t0rllm.k20.single-hop --> |
 | engram v2, k=20 | **82.4%<!-- n:sys.engram.k20.acc -->** | 1,238<!-- n:sys.engram.k20.tok --> | $1.865<!-- n:write.engram.total --> | $0.00018<!-- n:sys.engram.k20.read --> | 77.9<!-- n:sys.engram.k20.multi-hop --> | **80.0<!-- n:sys.engram.k20.temporal -->** | **64.0<!-- n:sys.engram.k20.open-domain -->** | 87.0<!-- n:sys.engram.k20.single-hop --> |
-| mem0, k=20 | 78.7%<!-- n:sys.mem0.k20.acc --> | 839<!-- n:sys.mem0.k20.tok --> | $1.321<!-- n:write.mem0.total --> | **$0.00000<!-- n:sys.mem0.k20.read -->** | 74.3<!-- n:sys.mem0.k20.multi-hop --> | 76.4<!-- n:sys.mem0.k20.temporal --> | 54.0<!-- n:sys.mem0.k20.open-domain --> | 83.9<!-- n:sys.mem0.k20.single-hop --> |
+| mem0, k=20 | 78.7%<!-- n:sys.mem0.k20.acc --> | 839<!-- n:sys.mem0.k20.tok --> | $1.321<!-- n:write.mem0.total --> | ≈0† | 74.3<!-- n:sys.mem0.k20.multi-hop --> | 76.4<!-- n:sys.mem0.k20.temporal --> | 54.0<!-- n:sys.mem0.k20.open-domain --> | 83.9<!-- n:sys.mem0.k20.single-hop --> |
 | Jev-Mem, k=40 | 80.3%<!-- n:sys.jevmem.k40.acc --> | 1,987<!-- n:sys.jevmem.k40.tok --> | $0.212<!-- n:write.jevmem.total --> | $0.00174<!-- n:sys.jevmem.k40.read --> | 76.4<!-- n:sys.jevmem.k40.multi-hop --> | 73.9<!-- n:sys.jevmem.k40.temporal --> | 54.0<!-- n:sys.jevmem.k40.open-domain --> | 87.2<!-- n:sys.jevmem.k40.single-hop --> |
 | Full context | 78.3%<!-- n:sys.fc.acc --> | 23,631<!-- n:sys.fc.tok --> | – | – | **78.6<!-- n:sys.fc.multi-hop -->** | 57.0<!-- n:sys.fc.temporal --> | **64.0<!-- n:sys.fc.open-domain -->** | **88.2<!-- n:sys.fc.single-hop -->** |
 
-![Figure 6: Accuracy against retrieved tokens per question (log scale), with Wilson 95% intervals. Left: LoCoMo, 778<!-- n:data.fresh.questions --> questions of the five held-out conversations, each system at each k it was run. Right: LongMemEval, 470<!-- n:data.lme.scored --> non-abstention questions, user and assistant turns. Shaded: the tight budget (at most 300<!-- n:fig.tight_tokens --> tokens). T0R-wide (hollow) is post-hoc; the other points are registered runs, compared descriptively except in the tests of §5.1–§5.3.](figures/context.svg)
+![Figure 6: Accuracy against retrieved tokens per question (log scale), with Wilson 95% intervals. Left: LoCoMo, 778<!-- n:data.fresh.questions --> questions of the five held-out conversations, each system at each k it was run. Right: LongMemEval, 470<!-- n:data.lme.scored --> non-abstention questions, user and assistant turns; only T0R, L0 and full context ran on all 500<!-- n:data.lme.all --> LongMemEval questions (mem0 ran only on the 30<!-- n:data.lme.sample_ku --> knowledge-update questions of the registered sample, and engram v2 and Jev-Mem not at all), which is why the right panel has three systems. Shaded: the tight budget (at most 300<!-- n:fig.tight_tokens --> tokens). T0R-wide (hollow) is post-hoc; the other points are registered runs, compared descriptively except in the tests of §5.1–§5.3.](figures/context.svg)
 
 ### 5.4 Robustness: a second answer model and blind human grading
 
@@ -364,7 +369,7 @@ among questions with evidence in the shortlist, the rerank kept none of it for 1
 
 Figure 7 shows the same decomposition by category on the five held-out conversations.
 
-![Figure 7: Where T0R's accuracy stops, by category, on the 778<!-- n:fig7.reg.all.n --> questions of the five held-out conversations: the rerank kept at least one evidence turn (blue), evidence was in the shortlist but the rerank kept none of it (red), or no evidence turn was in the shortlist (grey). Upper bar of each pair: T0R's 30<!-- n:plan.shortlist -->-turn shortlist (shortlist recall, exploratory as registered). Lower, lighter bar: T0R-wide's 150<!-- n:wide.shortlist -->-turn shortlist (post-hoc). Percentages are printed where the segment is wide enough.](figures/recall.svg)
+![Figure 7: Where T0R's accuracy stops, by category, on the 778<!-- n:fig7.reg.all.n --> questions of the five held-out conversations: the rerank kept at least one evidence turn (purple), evidence was in the shortlist but the rerank kept none of it (amber), or no evidence turn was in the shortlist (grey). Upper bar of each pair: T0R's 30<!-- n:plan.shortlist -->-turn shortlist (shortlist recall, exploratory as registered). Lower, lighter bar: T0R-wide's 150<!-- n:wide.shortlist -->-turn shortlist (post-hoc). Percentages are printed where the segment is wide enough.](figures/recall.svg)
 
 The categories differ. Open-domain evidence reaches the shortlist least often (63.0%<!-- n:rec.open-domain.any -->) and is
 dropped most often (31.4%<!-- n:rec.open-domain.drop -->), consistent with T0R trailing engram v2 on open-domain questions.
@@ -387,16 +392,17 @@ path rather than from storing raw turns, a hypothesis for new data, not a findin
 and embeddings; read cost per query; read latency measured live on a fixed sample of 40<!-- n:plan.latency_sample --> questions at k=3, one query at
 a time, including the query-embedding call. Jev-Mem's latency comes from its reads of the same questions, measured
 live when they ran (42<!-- n:lat.jevmem.queries --> reads: two question texts repeat). A write-latency range spans the
-conversations and is compared by its lower end. Bold: best in column within the budget group (lowest cost and
-latency).*
+conversations and is compared by its lower end. ≈0†: embedding only, no model call on the read path, only an
+unpriced query embedding. Bold: best in column within the budget group (lowest cost and latency); read costs are
+not bolded, as in Table 3.*
 
 | System | Write $/1k turns | LLM | Jev | Embeddings | Write p50 (s) | Read $/query | Jev calls/query | Read p50 (ms) | Read p90 (ms) |
 |---|---|---|---|---|---|---|---|---|---|
 | T0R | **$0.0006<!-- n:write.t0r.emb -->** | – | – | **$0.0006<!-- n:write.t0r.emb -->** | **0.2<!-- n:write.t0r.lat -->** | $0.00020<!-- n:sys.t0r.k3.read --> | one | 273<!-- n:lat.t0r.p50 --> | 359<!-- n:lat.t0r.p90 --> |
-| L0 | **$0.0006<!-- n:write.t0r.emb -->** | – | – | **$0.0006<!-- n:write.t0r.emb -->** | **0.2<!-- n:write.t0r.lat -->** | **$0.00000<!-- n:sys.l0.k3.read -->** | none | **219<!-- n:lat.l0.p50 -->** | **263<!-- n:lat.l0.p90 -->** |
+| L0 | **$0.0006<!-- n:write.t0r.emb -->** | – | – | **$0.0006<!-- n:write.t0r.emb -->** | **0.2<!-- n:write.t0r.lat -->** | ≈0† | none | **219<!-- n:lat.l0.p50 -->** | **263<!-- n:lat.l0.p90 -->** |
 | T0R-LLM | **$0.0006<!-- n:write.t0r.emb -->** | – | – | **$0.0006<!-- n:write.t0r.emb -->** | **0.2<!-- n:write.t0r.lat -->** | $0.00023<!-- n:sys.t0rllm.k3.read --> | one (no-op) | 816<!-- n:lat.t0rllm.p50 --> | 1,107<!-- n:lat.t0rllm.p90 --> |
 | engram v2 | $1.865<!-- n:write.engram.total --> | $1.322<!-- n:write.engram.llm --> | $0.542<!-- n:write.engram.jev --> | $0.0015<!-- n:write.engram.emb --> | 2.0<!-- n:write.engram.lat_lo -->–2.1<!-- n:write.engram.lat_hi --> | $0.00018<!-- n:sys.engram.k3.read --> | one | 276<!-- n:lat.engram.p50 --> | 319<!-- n:lat.engram.p90 --> |
-| mem0 | $1.321<!-- n:write.mem0.total --> | **$1.319<!-- n:write.mem0.llm -->** | – | $0.0017<!-- n:write.mem0.emb --> | 2.1<!-- n:write.mem0.lat_lo -->–2.3<!-- n:write.mem0.lat_hi --> | **$0.00000<!-- n:sys.mem0.k3.read -->** | none | 486<!-- n:lat.mem0.p50 --> | 718<!-- n:lat.mem0.p90 --> |
+| mem0 | $1.321<!-- n:write.mem0.total --> | **$1.319<!-- n:write.mem0.llm -->** | – | $0.0017<!-- n:write.mem0.emb --> | 2.1<!-- n:write.mem0.lat_lo -->–2.3<!-- n:write.mem0.lat_hi --> | ≈0† | none | 486<!-- n:lat.mem0.p50 --> | 718<!-- n:lat.mem0.p90 --> |
 | Jev-Mem | $0.212<!-- n:write.jevmem.total --> | – | **$0.211<!-- n:write.jevmem.jev -->** | $0.0011<!-- n:write.jevmem.emb --> | 0.5<!-- n:write.jevmem.lat --> | $0.00120<!-- n:sys.jevmem.k3.read --> | 5.3<!-- n:jevmem.k3.calls --> | 1,329<!-- n:lat.jevmem.p50 --> | 1,622<!-- n:lat.jevmem.p90 --> |
 
 Jev reads about 3.0<!-- n:lat.ratio.llm -->× faster than the LLM reranker and 4.9<!-- n:lat.ratio.jevmem -->× faster than Jev-Mem at
@@ -657,13 +663,30 @@ reads-per-write assumption (Figure 8).
 Each table and figure is rebuilt from the committed result files, with no API calls:
 
 - numbers: `uv run --extra bench python paper_v3/make_numbers.py`
-- figures: `uv run --with matplotlib --with pillow python paper_v3/figures.py` (Figures 1 and 2 are SVGs from
-  `paper_v3/diagram.py`, printed to PDF with headless Chrome)
-- the worked example of Figure 2: `bench/v3_worked_example.py`, which replays both read paths from the frozen stores
-  through the call cache opened read-only (a cache miss stops it, so it cannot call an API)
+- figures: `uv run --with matplotlib --with pymupdf python paper_v3/figures.py` (Figures 1 and 2 and the Appendix J
+  figure are TikZ, from `paper_v3/diagram.py`, compiled with pdflatex)
+- the worked examples of Figure 2 and Appendix J: `bench/v3_worked_example.py`, which replays both read paths from
+  the frozen stores through the call cache opened read-only (a cache miss stops it, so it cannot call an API)
 - paper: `make -C paper_v3 paper` (renders `main.md` and `main.tex`, builds the PDF, runs `paper_v3/check.py`)
 - reports behind the tables: `bench/v3_report.py` (Batches A–C), `bench/v3_human_audit.py`,
   `bench/v3_shortlist_recall.py`, `bench/v3_latency.py`, `bench/v3_second_model.py`, `bench/v3_posthoc.py`
 
 The runs themselves are `bench/run.py` with `--study v3`, `bench/jevmem_run.py` and `bench/v3_batch_c.py`, from tag
 `v3-frozen` onward, as recorded in the plan.
+
+## Appendix J. A counter-example
+
+Figure 2 shows a question where selection wins. Figure 9 shows the opposite, chosen by the same kind of rule and
+replayed the same way (no API call): among the 44<!-- n:ex2.candidates --> H1 questions that the judge and the human grader both
+scored correct for engram v2 and wrong for T0R, the first by conversation and question index whose replayed contexts
+match the recorded ones.
+
+The question asks where Audrey got Pixie; the answer, a breeder, is in a turn that does not name Pixie ("I got lucky
+finding a breeder nearby that has the dogs I wanted"). That turn did not reach T0R's 30<!-- n:ex2.shortlist -->-turn cosine
+shortlist, which turns about Pixie fill; Jev kept the turn about her adoption (P = 0.65<!-- n:ex2.t0r.p2 -->) and one unrelated
+turn (P = 0.66<!-- n:ex2.t0r.p18 -->), and T0R answered that the memories do not say. engram v2's extraction had rewritten the
+turn as a fact, "Audrey found a nearby breeder that had the dogs she wanted", which ranked 16<!-- n:ex2.engram.rank16 -->th in
+its fact shortlist; Jev kept it (P = 0.74<!-- n:ex2.engram.p16 -->), and it reached the answer model at k=3. This is the
+shortlist-miss failure of §5.6: a fact extracted from a turn can be retrieved when the turn itself is not.
+
+![Figure 9: The counter-example of Appendix J, drawn as Figure 2 (both contexts match the recorded token counts: T0R 279<!-- n:ex2.t0r.tokens -->, engram v2 199<!-- n:ex2.engram.tokens -->). The evidence turn for "a breeder" is not in T0R's 30<!-- n:ex2.shortlist -->-turn shortlist; engram v2's fact from it is, and Jev keeps it. An illustration chosen by the rule above, not evidence.](figures/counter.svg)

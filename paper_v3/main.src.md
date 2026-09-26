@@ -108,7 +108,7 @@ agreement depended on the system's answer style (§5.4, §6).
 All systems use gpt-4o-mini to answer, text-embedding-3-small to embed and jev-1.13.0 for every Jev decision.
 Figure 1 contrasts the write and read paths of T0R, engram v2 and Jev-Mem.
 
-![Figure 1: Write path (per turn) and read path (per question) of T0R, engram v2 and Jev-Mem. The outline colour says what does the work: an LLM call (orange), a Jev typed decision (blue), code (grey) or a store (green); dashed arrows are reads from the store. The chip on each panel gives the LLM calls and Jev requests per turn and the Jev requests per question, from each system's code (Jev-Mem: its default profile). A design diagram; no measured data.](figures/arch.svg)
+![Figure 1: Write path (per turn, top) and read path (per question, bottom) of T0R, L0, engram v2 and Jev-Mem. Border colour says what does the work: code (blue), an LLM call (amber), a Jev typed decision (purple), a store (green), the answer model (red) and the judge (teal). The grid gives LLM calls and Jev requests per turn and Jev requests per question, from each system's code (Jev-Mem: its default profile). A design diagram; no measured data.](figures/arch.svg)
 
 **T0R.** The write path embeds each turn and stores it as "[date] speaker: text", with no extraction and no LLM
 call. The read path takes a {{plan.shortlist}}-turn cosine shortlist and asks Jev, in one request, whether each turn
@@ -136,10 +136,13 @@ text" and answered with our prompt; its own prompts, best-of-three selection and
 **A worked example.** Figure 2 traces one held-out question through T0R and engram v2 at the H1 budgets. It was
 chosen by a fixed rule, not for effect: among the {{ex.candidates}} temporal H1 questions that the judge and the human
 grader both scored correct for T0R and wrong for engram v2, the one with the shortest T0R context among those whose
-evidence turn Jev kept and whose replayed contexts match the recorded ones. engram v2 extracted the evidence turn, but under the wrong speaker, and three
-other facts outranked it at k=3; T0R kept the verbatim turn with its date.
+evidence turn Jev kept and whose replayed contexts match the recorded ones. engram v2 extracted the evidence turn, but
+under the wrong speaker, and three other facts outranked it at k=3; T0R kept the verbatim turn with its date.
+Appendix J shows the opposite case by the same kind of rule (the first H1 question, by conversation and question
+index, that engram v2 answered correctly and T0R did not, by both the judge and the human grader): there the evidence
+turn never reached T0R's shortlist, while engram v2's extracted fact did.
 
-![Figure 2: One held-out question traced through both read paths, replayed offline from the frozen stores and the call cache (no API call; both contexts match the recorded token counts: T0R {{ex.t0r.tokens}}, engram v2 {{ex.engram.tokens}}). Left: T0R's {{ex.shortlist}}-turn cosine shortlist, ranks shown in cosine order, with Jev's P(relevant) (tick at the threshold); blue rows were kept by Jev, grey rows by the cosine floor, and the answer model reads the first k={{ex.t0r.k}}. Right: engram v2's fact shortlist; Jev kept four facts, and the evidence fact (dashed) was cut at k=3. An illustration chosen by the rule in §3, not evidence.](figures/example.svg)
+![Figure 2: One held-out question traced through both read paths, replayed offline from the frozen stores and the call cache (no API call; both contexts match the recorded token counts: T0R {{ex.t0r.tokens}}, engram v2 {{ex.engram.tokens}}). Each column lists the top four of the {{ex.shortlist}}-item cosine shortlist and every item the answer model read, in cosine order, with Jev's P(relevant): purple rows were kept by Jev, blue rows by the cosine floor, and the dashed row was kept by Jev but ranked below the cut at k=3. An illustration chosen by the rule in §3, not evidence. Appendix J shows a question where extraction wins, chosen by the same kind of rule.](figures/example.svg)
 
 ## 4. Study Design
 
@@ -277,33 +280,35 @@ we measured ({{sys.engram.k20.acc}} with {{sys.engram.k20.tok}} tokens), above J
 scored {{sys.fc.acc}}, and T0R stays near {{sys.t0r.k20.acc}} at any k (§5.6). This comparison is descriptive, not a
 registered test, and the systems are not token-matched.
 
-<!-- bold: none,max,none,min,min,max,max,max,max -->
+<!-- bold: none,max,none,min,none,max,max,max,max -->
 *Table 3. LoCoMo, five held-out conversations, {{data.fresh.questions}} scored questions: accuracy (%), tokens per
-question, write cost per 1,000 turns and read cost per query at list prices (as in Table 5; the read cost excludes
-the answer call; "–": none), and accuracy by category. Rows are grouped by budget. Bold: best in column within the
-budget group (highest accuracy, lowest cost).*
+question, write cost per 1,000 turns and read cost per query at list prices (as in Table 5: the read cost is the
+Jev or LLM rerank call, excluding the answer call; ≈0†: embedding only, the read path makes no model call, only a query embedding,
+which is not priced; "–": none), and accuracy by category. Rows are grouped by budget. Bold: best in
+column within the budget group (highest accuracy, lowest write cost); read costs are not bolded, because the
+lowest are the unpriced embedding-only reads.*
 
 | System, setting | Accuracy | Tokens | Write $/1k turns | Read $/query | Multi-hop | Temporal | Open-domain | Single-hop |
 |---|---|---|---|---|---|---|---|---|
 | *Tight budget (k=3 or k=6)* |
-| L0, k=3 | {{sys.l0.k3.acc}} | {{sys.l0.k3.tok}} | {{write.t0r.emb}} | {{sys.l0.k3.read}} | {{sys.l0.k3.multi-hop}} | {{sys.l0.k3.temporal}} | {{sys.l0.k3.open-domain}} | {{sys.l0.k3.single-hop}} |
-| L0, k=6 | {{sys.l0.k6.acc}} | {{sys.l0.k6.tok}} | {{write.t0r.emb}} | {{sys.l0.k6.read}} | {{sys.l0.k6.multi-hop}} | {{sys.l0.k6.temporal}} | {{sys.l0.k6.open-domain}} | {{sys.l0.k6.single-hop}} |
+| L0, k=3 | {{sys.l0.k3.acc}} | {{sys.l0.k3.tok}} | {{write.t0r.emb}} | ≈0† | {{sys.l0.k3.multi-hop}} | {{sys.l0.k3.temporal}} | {{sys.l0.k3.open-domain}} | {{sys.l0.k3.single-hop}} |
+| L0, k=6 | {{sys.l0.k6.acc}} | {{sys.l0.k6.tok}} | {{write.t0r.emb}} | ≈0† | {{sys.l0.k6.multi-hop}} | {{sys.l0.k6.temporal}} | {{sys.l0.k6.open-domain}} | {{sys.l0.k6.single-hop}} |
 | T0R, k=3 | {{sys.t0r.k3.acc}} | {{sys.t0r.k3.tok}} | {{write.t0r.emb}} | {{sys.t0r.k3.read}} | {{sys.t0r.k3.multi-hop}} | {{sys.t0r.k3.temporal}} | {{sys.t0r.k3.open-domain}} | {{sys.t0r.k3.single-hop}} |
 | T0R, k=6 | {{sys.t0r.k6.acc}} | {{sys.t0r.k6.tok}} | {{write.t0r.emb}} | {{sys.t0r.k6.read}} | {{sys.t0r.k6.multi-hop}} | {{sys.t0r.k6.temporal}} | {{sys.t0r.k6.open-domain}} | {{sys.t0r.k6.single-hop}} |
 | T0R-LLM, k=3 | {{sys.t0rllm.k3.acc}} | {{sys.t0rllm.k3.tok}} | {{write.t0r.emb}} | {{sys.t0rllm.k3.read}} | {{sys.t0rllm.k3.multi-hop}} | {{sys.t0rllm.k3.temporal}} | {{sys.t0rllm.k3.open-domain}} | {{sys.t0rllm.k3.single-hop}} |
 | engram v2, k=3 | {{sys.engram.k3.acc}} | {{sys.engram.k3.tok}} | {{write.engram.total}} | {{sys.engram.k3.read}} | {{sys.engram.k3.multi-hop}} | {{sys.engram.k3.temporal}} | {{sys.engram.k3.open-domain}} | {{sys.engram.k3.single-hop}} |
-| mem0, k=3 | {{sys.mem0.k3.acc}} | {{sys.mem0.k3.tok}} | {{write.mem0.total}} | {{sys.mem0.k3.read}} | {{sys.mem0.k3.multi-hop}} | {{sys.mem0.k3.temporal}} | {{sys.mem0.k3.open-domain}} | {{sys.mem0.k3.single-hop}} |
+| mem0, k=3 | {{sys.mem0.k3.acc}} | {{sys.mem0.k3.tok}} | {{write.mem0.total}} | ≈0† | {{sys.mem0.k3.multi-hop}} | {{sys.mem0.k3.temporal}} | {{sys.mem0.k3.open-domain}} | {{sys.mem0.k3.single-hop}} |
 | Jev-Mem, k=3 | {{sys.jevmem.k3.acc}} | {{sys.jevmem.k3.tok}} | {{write.jevmem.total}} | {{sys.jevmem.k3.read}} | {{sys.jevmem.k3.multi-hop}} | {{sys.jevmem.k3.temporal}} | {{sys.jevmem.k3.open-domain}} | {{sys.jevmem.k3.single-hop}} |
 | *Generous budget (k=20 or k=40, and full context)* |
-| L0, k=20 | {{sys.l0.k20.acc}} | {{sys.l0.k20.tok}} | {{write.t0r.emb}} | {{sys.l0.k20.read}} | {{sys.l0.k20.multi-hop}} | {{sys.l0.k20.temporal}} | {{sys.l0.k20.open-domain}} | {{sys.l0.k20.single-hop}} |
+| L0, k=20 | {{sys.l0.k20.acc}} | {{sys.l0.k20.tok}} | {{write.t0r.emb}} | ≈0† | {{sys.l0.k20.multi-hop}} | {{sys.l0.k20.temporal}} | {{sys.l0.k20.open-domain}} | {{sys.l0.k20.single-hop}} |
 | T0R, k=20 | {{sys.t0r.k20.acc}} | {{sys.t0r.k20.tok}} | {{write.t0r.emb}} | {{sys.t0r.k20.read}} | {{sys.t0r.k20.multi-hop}} | {{sys.t0r.k20.temporal}} | {{sys.t0r.k20.open-domain}} | {{sys.t0r.k20.single-hop}} |
 | T0R-LLM, k=20 | {{sys.t0rllm.k20.acc}} | {{sys.t0rllm.k20.tok}} | {{write.t0r.emb}} | {{sys.t0rllm.k20.read}} | {{sys.t0rllm.k20.multi-hop}} | {{sys.t0rllm.k20.temporal}} | {{sys.t0rllm.k20.open-domain}} | {{sys.t0rllm.k20.single-hop}} |
 | engram v2, k=20 | {{sys.engram.k20.acc}} | {{sys.engram.k20.tok}} | {{write.engram.total}} | {{sys.engram.k20.read}} | {{sys.engram.k20.multi-hop}} | {{sys.engram.k20.temporal}} | {{sys.engram.k20.open-domain}} | {{sys.engram.k20.single-hop}} |
-| mem0, k=20 | {{sys.mem0.k20.acc}} | {{sys.mem0.k20.tok}} | {{write.mem0.total}} | {{sys.mem0.k20.read}} | {{sys.mem0.k20.multi-hop}} | {{sys.mem0.k20.temporal}} | {{sys.mem0.k20.open-domain}} | {{sys.mem0.k20.single-hop}} |
+| mem0, k=20 | {{sys.mem0.k20.acc}} | {{sys.mem0.k20.tok}} | {{write.mem0.total}} | ≈0† | {{sys.mem0.k20.multi-hop}} | {{sys.mem0.k20.temporal}} | {{sys.mem0.k20.open-domain}} | {{sys.mem0.k20.single-hop}} |
 | Jev-Mem, k=40 | {{sys.jevmem.k40.acc}} | {{sys.jevmem.k40.tok}} | {{write.jevmem.total}} | {{sys.jevmem.k40.read}} | {{sys.jevmem.k40.multi-hop}} | {{sys.jevmem.k40.temporal}} | {{sys.jevmem.k40.open-domain}} | {{sys.jevmem.k40.single-hop}} |
 | Full context | {{sys.fc.acc}} | {{sys.fc.tok}} | – | – | {{sys.fc.multi-hop}} | {{sys.fc.temporal}} | {{sys.fc.open-domain}} | {{sys.fc.single-hop}} |
 
-![Figure 6: Accuracy against retrieved tokens per question (log scale), with Wilson 95% intervals. Left: LoCoMo, {{data.fresh.questions}} questions of the five held-out conversations, each system at each k it was run. Right: LongMemEval, {{data.lme.scored}} non-abstention questions, user and assistant turns. Shaded: the tight budget (at most {{fig.tight_tokens}} tokens). T0R-wide (hollow) is post-hoc; the other points are registered runs, compared descriptively except in the tests of §5.1–§5.3.](figures/context.svg)
+![Figure 6: Accuracy against retrieved tokens per question (log scale), with Wilson 95% intervals. Left: LoCoMo, {{data.fresh.questions}} questions of the five held-out conversations, each system at each k it was run. Right: LongMemEval, {{data.lme.scored}} non-abstention questions, user and assistant turns; only T0R, L0 and full context ran on all {{data.lme.all}} LongMemEval questions (mem0 ran only on the {{data.lme.sample_ku}} knowledge-update questions of the registered sample, and engram v2 and Jev-Mem not at all), which is why the right panel has three systems. Shaded: the tight budget (at most {{fig.tight_tokens}} tokens). T0R-wide (hollow) is post-hoc; the other points are registered runs, compared descriptively except in the tests of §5.1–§5.3.](figures/context.svg)
 
 ### 5.4 Robustness: a second answer model and blind human grading
 
@@ -365,7 +370,7 @@ among questions with evidence in the shortlist, the rerank kept none of it for {
 
 Figure 7 shows the same decomposition by category on the five held-out conversations.
 
-![Figure 7: Where T0R's accuracy stops, by category, on the {{fig7.reg.all.n}} questions of the five held-out conversations: the rerank kept at least one evidence turn (blue), evidence was in the shortlist but the rerank kept none of it (red), or no evidence turn was in the shortlist (grey). Upper bar of each pair: T0R's {{plan.shortlist}}-turn shortlist (shortlist recall, exploratory as registered). Lower, lighter bar: T0R-wide's {{wide.shortlist}}-turn shortlist (post-hoc). Percentages are printed where the segment is wide enough.](figures/recall.svg)
+![Figure 7: Where T0R's accuracy stops, by category, on the {{fig7.reg.all.n}} questions of the five held-out conversations: the rerank kept at least one evidence turn (purple), evidence was in the shortlist but the rerank kept none of it (amber), or no evidence turn was in the shortlist (grey). Upper bar of each pair: T0R's {{plan.shortlist}}-turn shortlist (shortlist recall, exploratory as registered). Lower, lighter bar: T0R-wide's {{wide.shortlist}}-turn shortlist (post-hoc). Percentages are printed where the segment is wide enough.](figures/recall.svg)
 
 The categories differ. Open-domain evidence reaches the shortlist least often ({{rec.open-domain.any}}) and is
 dropped most often ({{rec.open-domain.drop}}), consistent with T0R trailing engram v2 on open-domain questions.
@@ -384,21 +389,22 @@ path rather than from storing raw turns, a hypothesis for new data, not a findin
 
 ### 5.7 Cost and latency
 
-<!-- bold: none,min,min,min,min,min,min,none,min,min -->
+<!-- bold: none,min,min,min,min,min,none,none,min,min -->
 *Table 5. Cost and latency (exploratory as registered), all at k=3 (the tight budget). Write cost per 1,000 turns at list prices, split by LLM, Jev
 and embeddings; read cost per query; read latency measured live on a fixed sample of {{plan.latency_sample}} questions at k=3, one query at
 a time, including the query-embedding call. Jev-Mem's latency comes from its reads of the same questions, measured
 live when they ran ({{lat.jevmem.queries}} reads: two question texts repeat). A write-latency range spans the
-conversations and is compared by its lower end. Bold: best in column within the budget group (lowest cost and
-latency).*
+conversations and is compared by its lower end. ≈0†: embedding only, no model call on the read path, only an
+unpriced query embedding. Bold: best in column within the budget group (lowest cost and latency); read costs are
+not bolded, as in Table 3.*
 
 | System | Write $/1k turns | LLM | Jev | Embeddings | Write p50 (s) | Read $/query | Jev calls/query | Read p50 (ms) | Read p90 (ms) |
 |---|---|---|---|---|---|---|---|---|---|
 | T0R | {{write.t0r.emb}} | – | – | {{write.t0r.emb}} | {{write.t0r.lat}} | {{sys.t0r.k3.read}} | one | {{lat.t0r.p50}} | {{lat.t0r.p90}} |
-| L0 | {{write.t0r.emb}} | – | – | {{write.t0r.emb}} | {{write.t0r.lat}} | {{sys.l0.k3.read}} | none | {{lat.l0.p50}} | {{lat.l0.p90}} |
+| L0 | {{write.t0r.emb}} | – | – | {{write.t0r.emb}} | {{write.t0r.lat}} | ≈0† | none | {{lat.l0.p50}} | {{lat.l0.p90}} |
 | T0R-LLM | {{write.t0r.emb}} | – | – | {{write.t0r.emb}} | {{write.t0r.lat}} | {{sys.t0rllm.k3.read}} | one (no-op) | {{lat.t0rllm.p50}} | {{lat.t0rllm.p90}} |
 | engram v2 | {{write.engram.total}} | {{write.engram.llm}} | {{write.engram.jev}} | {{write.engram.emb}} | {{write.engram.lat_lo}}–{{write.engram.lat_hi}} | {{sys.engram.k3.read}} | one | {{lat.engram.p50}} | {{lat.engram.p90}} |
-| mem0 | {{write.mem0.total}} | {{write.mem0.llm}} | – | {{write.mem0.emb}} | {{write.mem0.lat_lo}}–{{write.mem0.lat_hi}} | {{sys.mem0.k3.read}} | none | {{lat.mem0.p50}} | {{lat.mem0.p90}} |
+| mem0 | {{write.mem0.total}} | {{write.mem0.llm}} | – | {{write.mem0.emb}} | {{write.mem0.lat_lo}}–{{write.mem0.lat_hi}} | ≈0† | none | {{lat.mem0.p50}} | {{lat.mem0.p90}} |
 | Jev-Mem | {{write.jevmem.total}} | – | {{write.jevmem.jev}} | {{write.jevmem.emb}} | {{write.jevmem.lat}} | {{sys.jevmem.k3.read}} | {{jevmem.k3.calls}} | {{lat.jevmem.p50}} | {{lat.jevmem.p90}} |
 
 Jev reads about {{lat.ratio.llm}}× faster than the LLM reranker and {{lat.ratio.jevmem}}× faster than Jev-Mem at
@@ -660,13 +666,30 @@ reads-per-write assumption (Figure 8).
 Each table and figure is rebuilt from the committed result files, with no API calls:
 
 - numbers: `uv run --extra bench python paper_v3/make_numbers.py`
-- figures: `uv run --with matplotlib --with pillow python paper_v3/figures.py` (Figures 1 and 2 are SVGs from
-  `paper_v3/diagram.py`, printed to PDF with headless Chrome)
-- the worked example of Figure 2: `bench/v3_worked_example.py`, which replays both read paths from the frozen stores
-  through the call cache opened read-only (a cache miss stops it, so it cannot call an API)
+- figures: `uv run --with matplotlib --with pymupdf python paper_v3/figures.py` (Figures 1 and 2 and the Appendix J
+  figure are TikZ, from `paper_v3/diagram.py`, compiled with pdflatex)
+- the worked examples of Figure 2 and Appendix J: `bench/v3_worked_example.py`, which replays both read paths from
+  the frozen stores through the call cache opened read-only (a cache miss stops it, so it cannot call an API)
 - paper: `make -C paper_v3 paper` (renders `main.md` and `main.tex`, builds the PDF, runs `paper_v3/check.py`)
 - reports behind the tables: `bench/v3_report.py` (Batches A–C), `bench/v3_human_audit.py`,
   `bench/v3_shortlist_recall.py`, `bench/v3_latency.py`, `bench/v3_second_model.py`, `bench/v3_posthoc.py`
 
 The runs themselves are `bench/run.py` with `--study v3`, `bench/jevmem_run.py` and `bench/v3_batch_c.py`, from tag
 `v3-frozen` onward, as recorded in the plan.
+
+## Appendix J. A counter-example
+
+Figure 2 shows a question where selection wins. Figure 9 shows the opposite, chosen by the same kind of rule and
+replayed the same way (no API call): among the {{ex2.candidates}} H1 questions that the judge and the human grader both
+scored correct for engram v2 and wrong for T0R, the first by conversation and question index whose replayed contexts
+match the recorded ones.
+
+The question asks where Audrey got Pixie; the answer, a breeder, is in a turn that does not name Pixie ("I got lucky
+finding a breeder nearby that has the dogs I wanted"). That turn did not reach T0R's {{ex2.shortlist}}-turn cosine
+shortlist, which turns about Pixie fill; Jev kept the turn about her adoption (P = {{ex2.t0r.p2}}) and one unrelated
+turn (P = {{ex2.t0r.p18}}), and T0R answered that the memories do not say. engram v2's extraction had rewritten the
+turn as a fact, "Audrey found a nearby breeder that had the dogs she wanted", which ranked {{ex2.engram.rank16}}th in
+its fact shortlist; Jev kept it (P = {{ex2.engram.p16}}), and it reached the answer model at k=3. This is the
+shortlist-miss failure of §5.6: a fact extracted from a turn can be retrieved when the turn itself is not.
+
+![Figure 9: The counter-example of Appendix J, drawn as Figure 2 (both contexts match the recorded token counts: T0R {{ex2.t0r.tokens}}, engram v2 {{ex2.engram.tokens}}). The evidence turn for "a breeder" is not in T0R's {{ex2.shortlist}}-turn shortlist; engram v2's fact from it is, and Jev keeps it. An illustration chosen by the rule above, not evidence.](figures/counter.svg)

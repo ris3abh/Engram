@@ -22,6 +22,7 @@ ALLOWED = [
     r"\[[a-z][\w-]*\d{4}[\w-]*(?:; ?[a-z][\w-]*\d{4}[\w-]*)*\]",  # rendered citations [key; key], first
     r"Figures? \d+ and \d+",  # before the general reference pattern
     r"categories 1–[345]",  # a cited paper's protocol scope
+    r"≈0†",  # a read path with no model call (Tables 3 and 5)
     r"their Appendix [A-Z](\.\d+)?",  # a cited paper's appendix
     r"bge-reranker-v2-m3",
     r"^\s*\d+\. ",  # numbered-list markers
@@ -46,7 +47,7 @@ ALLOWED = [
     r"MiniLM-L-?\d+",
     r"conv-\d+",
     r"LongMemEval(_S|-S)?",
-    r"\b(Table|Figure|Tables|Figures|Appendix|Section|§) ?[A-I]?\d*(\.\d+)?",
+    r"\b(Table|Figure|Tables|Figures|Appendix|Section|§) ?[A-J]?\d*(\.\d+)?",
     r"§\d+(\.\d+)?",
     r"\d{4}-\d{2}-\d{2}",  # dates (registration, deviations), before bare years
     r"\b(19|20)\d\d[a-z]?\b",  # years

@@ -1,12 +1,19 @@
-"""The worked example of the v3 paper (Figure 2): one H1 question traced through T0R and engram v2, offline.
+"""The worked examples of the v3 paper: one H1 question traced through T0R and engram v2 (Figure 2), and one where
+extraction wins (Appendix J), both offline.
 
 Each system's read path is replayed from a copy of its frozen held-out store through the call cache, opened read-only:
 a cache miss raises instead of calling any API, so the replay spends nothing and reproduces exactly what the recorded
-run saw (the rebuilt context is checked against the recorded token count). The question is chosen by a fixed rule
-from the H1 comparison (T0R k=6 against engram v2 k=3, five held-out conversations): judged correct for T0R and wrong
-for engram v2, with the blind human grades agreeing on both, a temporal question (the category where extraction and
-selection differ most), an evidence turn kept by Jev's rerank
-(not by the cosine floor), and the shortest T0R context among those. Output: bench/results/v3/worked_example.json.
+run saw (the rebuilt context is checked against the recorded token count). Both questions come from the H1 comparison
+(T0R k=6 against engram v2 k=3, five held-out conversations) by fixed rules:
+
+- example (Figure 2): judged correct for T0R and wrong for engram v2, the blind human grades agreeing on both, a
+  temporal question (the category where extraction and selection differ most), an evidence turn kept by Jev's rerank
+  (not by the cosine floor), and the shortest T0R context among those;
+- counter-example (Appendix J): judged correct for engram v2 and wrong for T0R, the blind human grades agreeing on both,
+  the first by conversation (conv-44, 47, 48, 49, 50) and question index.
+
+In both, a candidate whose replayed contexts do not match the recorded token counts is skipped and listed.
+Output: bench/results/v3/worked_example.json and bench/results/v3/counter_example.json.
 
     uv run python -m bench.v3_worked_example
 """
@@ -24,7 +31,7 @@ from engram.cache import CallCache
 from . import run as R
 from .v3_report import FRESH
 
-OUT = R.RESULTS_V3 / "worked_example.json"
+OUT = {"example": R.RESULTS_V3 / "worked_example.json", "counter": R.RESULTS_V3 / "counter_example.json"}
 AUDIT = R.RESULTS_V3 / "human_audit"
 
 
@@ -62,8 +69,9 @@ def human_grades() -> dict[tuple[str, int, str], str]:
     return out
 
 
-def candidates() -> list[dict]:
+def candidates(kind: str) -> list[dict]:
     grades = human_grades()
+    want = ("CORRECT", "WRONG") if kind == "example" else ("WRONG", "CORRECT")  # (T0R, engram v2)
     rows = []
     for conv in FRESH:
         t = {
@@ -73,15 +81,24 @@ def candidates() -> list[dict]:
         e = json.loads((R.RESULTS_V3 / f"e4_frozen_sameattr__heldout_{conv}__k3.json").read_text())["answers"]
         for b in e:
             a = t[b["idx"]]
-            if (a["label"], b["label"]) != ("CORRECT", "WRONG") or a["category"] != 2:
+            if (a["label"], b["label"]) != want or (kind == "example" and a["category"] != 2):
                 continue
-            if (
-                grades.get((conv, a["idx"], "T0R k=6")) != "CORRECT"
-                or grades.get((conv, a["idx"], "engram v2 k=3")) != "WRONG"
-            ):
+            if (grades.get((conv, a["idx"], "T0R k=6")), grades.get((conv, a["idx"], "engram v2 k=3"))) != want:
                 continue
             rows.append({"conv": conv, "idx": a["idx"], "t0r": a, "engram": b})
-    return sorted(rows, key=lambda r: (r["t0r"]["retrieved_tokens"], r["conv"], r["idx"]))
+    if kind == "example":
+        return sorted(rows, key=lambda r: (r["t0r"]["retrieved_tokens"], r["conv"], r["idx"]))
+    return sorted(rows, key=lambda r: (FRESH.index(r["conv"]), r["idx"]))
+
+
+RULES = {
+    "example": "H1 question (T0R k=6 vs engram v2 k=3), judged CORRECT for T0R and WRONG for engram v2, blind human "
+    "grades agreeing on both, temporal category, an evidence turn kept by Jev's rerank (P > 0.5), rebuilt contexts "
+    "matching the recorded token counts; the shortest T0R context (ties: conversation, index)",
+    "counter": "H1 question (T0R k=6 vs engram v2 k=3), judged CORRECT for engram v2 and WRONG for T0R, blind human "
+    "grades agreeing on both, rebuilt contexts matching the recorded token counts; the first by conversation "
+    "(conv-44, 47, 48, 49, 50) and question index",
+}
 
 
 async def replay(arm: str, store_arm: str, conv: str, question: str, k: int, cache: CallCache) -> dict:
@@ -118,11 +135,10 @@ async def replay(arm: str, store_arm: str, conv: str, question: str, k: int, cac
     return {"lines": lines, "tokens": tokens, "shortlist": shortlist, "shortlist_size": r.shortlist}
 
 
-async def main() -> None:
-    cache = ReadOnlyCache(R.CACHE)
-    pick = candidates()
+async def build(kind: str, cache: CallCache) -> None:
+    pick = candidates(kind)
     if not pick:
-        raise SystemExit("no question meets the rule")
+        raise SystemExit(f"{kind}: no question meets the rule")
     skipped = []
     for c in pick:  # the first candidate whose rebuilt contexts match the recorded token counts for both systems
         q = c["t0r"]
@@ -130,7 +146,7 @@ async def main() -> None:
         eng = await replay("e4_frozen_sameattr", "e4_frozen_sameattr", c["conv"], q["question"], 3, cache)
         by_rerank = {x["source_message_id"] for x in t0r["shortlist"] if x["kept_by"] == "rerank"}
         matches = t0r["tokens"] == q["retrieved_tokens"] and eng["tokens"] == c["engram"]["retrieved_tokens"]
-        if matches and by_rerank & set(q["evidence"]):
+        if matches and (kind == "counter" or by_rerank & set(q["evidence"])):
             break
         skipped.append(
             {
@@ -142,15 +158,14 @@ async def main() -> None:
             }
         )
     else:
-        raise SystemExit("no candidate's rebuilt contexts match the recorded ones")
+        raise SystemExit(f"{kind}: no candidate's rebuilt contexts match the recorded ones")
     out = {
-        "rule": "H1 question (T0R k=6 vs engram v2 k=3), judged CORRECT for T0R and WRONG for engram v2, blind human "
-        "grades agreeing on both, temporal category, an evidence turn kept by Jev's rerank (P > 0.5), rebuilt contexts "
-        "matching the recorded token counts; the shortest T0R context (ties: conversation, index)",
+        "rule": RULES[kind],
         "candidates_meeting_rule": len(pick),
-        "skipped_context_mismatch": skipped,
+        "skipped": skipped,
         "conversation": c["conv"],
         "question_index": q["idx"],
+        "category": q["category"],
         "question": q["question"],
         "gold": q["gold"],
         "evidence": q["evidence"],
@@ -170,10 +185,17 @@ async def main() -> None:
             "context": eng["lines"],
             "shortlist": eng["shortlist"],
         },
-        "replay": {"cache_hits": cache.hits, "cache_misses": cache.misses, "api_calls": 0},
+        "replay": {"cache_misses": cache.misses, "api_calls": 0},
     }
-    OUT.write_text(json.dumps(out, indent=1, default=str))
-    print(f"{c['conv']} q{q['idx']}: {q['question']} | gold {q['gold']} | {len(pick)} candidates | {cache.hits} hits")
+    OUT[kind].write_text(json.dumps(out, indent=1, default=str))
+    print(f"{kind}: {c['conv']} q{q['idx']}: {q['question']} | gold {q['gold']} | {len(pick)} candidates")
+
+
+async def main() -> None:
+    cache = ReadOnlyCache(R.CACHE)
+    for kind in ("example", "counter"):
+        await build(kind, cache)
+    print(f"{cache.hits} cache hits, {cache.misses} misses, no API call")
 
 
 if __name__ == "__main__":
