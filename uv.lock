@@ -632,6 +632,14 @@ wheels = [
 ]
 
 [[package]]
+name = "en-core-web-sm"
+version = "3.8.0"
+source = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" }
+wheels = [
+    { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl", hash = "sha256:1932429db727d4bff3deed6b34cfc05df17794f4a52eeb26cf8928f7c1a0fb85" },
+]
+
+[[package]]
 name = "engram"
 version = "0.1.0"
 source = { editable = "." }
@@ -649,8 +657,10 @@ dependencies = [
 
 [package.optional-dependencies]
 bench = [
+    { name = "en-core-web-sm" },
     { name = "graphiti-core" },
     { name = "mem0ai", extra = ["extras", "nlp"] },
+    { name = "spacy" },
     { name = "tiktoken" },
 ]
 
@@ -664,6 +674,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=1.8.0" },
+    { name = "en-core-web-sm", marker = "extra == 'bench'", url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" },
     { name = "fastapi", specifier = ">=0.141.1" },
     { name = "graphiti-core", marker = "extra == 'bench'", specifier = "==0.30.2" },
     { name = "httpx", extras = ["http2"], specifier = ">=0.28,<1" },
@@ -672,6 +683,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=1.26" },
     { name = "openai", specifier = ">=3.19.0" },
     { name = "sentence-transformers", specifier = ">=6.1.0" },
+    { name = "spacy", marker = "extra == 'bench'", specifier = ">=3.8" },
     { name = "tiktoken", marker = "extra == 'bench'", specifier = ">=0.9" },
     { name = "typer", specifier = ">=0.27.2" },
     { name = "uvicorn", specifier = ">=0.53.0" },

@@ -25,11 +25,17 @@ bench = [
     "graphiti-core==0.30.2",
     "mem0ai[extras,nlp]>=2.1.0",
     "tiktoken>=0.9",
+    # lean extraction arms: sentence splitting
+    "spacy>=3.8",
+    "en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl",
 ]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true  # the spaCy model wheel (bench extra)
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/engram"]

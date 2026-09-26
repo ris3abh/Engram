@@ -124,6 +124,7 @@ E4_V2 = dict(
 
 E4_FROZEN = {**E4_V2, "temporal_gate": "not_planned_mass", "temporal_version": 2, "render": "compact"}
 
+LEAN_BASE = {"extraction": "lean", "retrieval_rerank": False, "retrieval_history": False, "render": "lean"}
 V2_SYSTEM = "e4_frozen_sameattr"  # the engram arm every v2 held-out and LongMemEval run uses (tag v2-frozen)
 ARMS: dict[str, dict] = {
     "e0_baseline": {"system": "engram", "flags": Flags()},
@@ -288,6 +289,19 @@ ARMS: dict[str, dict] = {
     "e2_jev_spec": {
         "system": "engram",
         "flags": Flags(**E2_FLAGS, extract_last_k=20, extract_recent=20, extract_observation_date="session"),
+    },
+    # Lean arms (2026-09-26, dev only, conv-26): conversation units instead of LLM extraction (pipeline/lean.py).
+    # L0 raw turns; L1 spaCy sentences with relative dates resolved in code; L2 + Jev worth_sentence gate. L0-L2
+    # retrieve by cosine alone (no Jev on the read path); each step adds one component to the one before.
+    **{
+        f"lean_l{i}": {"system": "engram", "flags": Flags(**LEAN_BASE, **extra)}
+        for i, extra in enumerate(
+            (
+                {},
+                {"lean_units": "sentence", "lean_dates": True},
+                {"lean_units": "sentence", "lean_dates": True, "lean_worth_gate": True},
+            )
+        )
     },
     "mem0": {"system": "mem0"},
     # v2 baseline (V2_PLAN section 4): Graphiti on the OpenAI stack's shared models; see GraphitiArm.
@@ -599,7 +613,9 @@ class EngramArm:
             # currently valid facts (otherwise closes could not matter at all).
             lines = [x.fact.text for x in facts if x.fact.is_valid]
         else:
-            if self.engine.flags.render == "compact":
+            if self.engine.flags.render == "lean":  # the unit as stored, under the date it was said
+                lines = [f"[{x.said_at:%Y-%m-%d}] {x.fact.text}" for x in facts]
+            elif self.engine.flags.render == "compact":
                 from engram.pipeline.answer import render_fact_compact
 
                 lines = [render_fact_compact(x)[2:] for x in facts]

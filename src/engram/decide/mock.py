@@ -187,6 +187,9 @@ class MockBackend(DecisionBackend):
             old = ask.refs["existing_fact"]
             same = old.get("subject") == fact.get("subject") and old.get("predicate") == fact.get("predicate")
             probs = noul_probs(0.9 if same else 0.1)
+        elif qid == "worth_sentence":  # lean arms: a statement with some content, not a question or a greeting
+            sentence = ask.refs["sentence"].split(": ", 1)[-1]
+            probs = noul_probs(0.8 if len(tokens(sentence)) >= 4 and not sentence.rstrip().endswith("?") else 0.2)
         elif qid == "same_fact":
             probs = noul_probs(0.95 if jaccard(ask.refs["fact_a"], ask.refs["fact_b"]) >= 0.8 else 0.05)
         else:

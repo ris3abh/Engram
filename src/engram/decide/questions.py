@@ -378,3 +378,17 @@ ALL_QUESTIONS: dict[str, Question] = {
 
 for _q in ALL_QUESTIONS.values():
     assert len(_q.options) <= MAX_OPTIONS, _q.id
+
+
+# Lean write path (pipeline/lean.py, L2 on): one per sentence unit. State: {"source_message": "[date] speaker: text"}
+
+WORTH_SENTENCE = NoulQuestion(
+    id="worth_sentence",
+    instructions=(
+        "Does `sentence` state something worth remembering about a person (a fact, preference, plan, event or "
+        "relationship)?"
+    ),
+    true="It states a fact, preference, plan, event or relationship about a person.",
+    false="A greeting, small talk, filler, a question, or a remark with nothing to remember about a person.",
+    version=1,
+)

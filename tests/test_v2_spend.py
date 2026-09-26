@@ -31,3 +31,15 @@ def test_openai_does_not_count_toward_the_phase_cap(tmp_path):
     with RunBudget("5", "mem0", "a", tmp_path / "spend.jsonl") as b:
         b.charge("openai", 39.0)
         assert b.non_openai_total() == 0.0
+
+
+def test_stage_cap_counts_every_run_of_that_stage_only(tmp_path):
+    ledger = tmp_path / "spend.jsonl"
+    with RunBudget("6", "engram", "other", ledger) as b:
+        b.charge("openai", 5.0)  # another stage: not counted against lean
+    with RunBudget("lean", "lean_l0", "a", ledger) as b:
+        b.charge("openai", 1.5)
+    with pytest.raises(SpendStop, match="stage lean"), RunBudget("lean", "lean_l1", "b", ledger) as b:
+        b.charge("openai", 0.6)
+    with pytest.raises(SpendStop, match="already reached"), RunBudget("lean", "lean_l2", "c", ledger):
+        pass
