@@ -16,6 +16,7 @@ answers every question at that k from pass 1's store (--reuse-from __k20).
 
 import asyncio
 import json
+import shutil
 import statistics
 import sys
 from pathlib import Path
@@ -39,6 +40,7 @@ FIRST_SUFFIX = {"e4_frozen_sameattr": "__k3", "mem0": "__k20", "graphiti": "__k2
 # v2 system's measured conv-26 rate ($0.37 -> $0.60 per 1,000 messages), Jev-Mem, the claude-sonnet-4-6 judges.
 REST_OF_PHASE = 2.61 * 0.60 / 0.37 + 3.54 + 20.21
 REPROJECT_AFTER = 10
+MIN_FREE_GB = 5  # a full disk crashed Neo4j once (2026-09-26); below this no question starts until space returns
 
 
 def result_path(arm: str, qid: str, suffix: str) -> Path:
@@ -85,6 +87,9 @@ def projection() -> dict:
 
 
 async def one(arm: str, qid: str, extra: list[str]) -> int:
+    while (free := shutil.disk_usage(ROOT).free / 1e9) < MIN_FREE_GB:
+        print(f"[stage5] {free:.1f} GB free, under {MIN_FREE_GB} GB: {arm} {qid} waits", flush=True)
+        await asyncio.sleep(300)
     LOGS.mkdir(parents=True, exist_ok=True)
     log = LOGS / f"{arm}__{qid}{'__match' if '--reuse-from' in extra else ''}.log"
     cmd = [
