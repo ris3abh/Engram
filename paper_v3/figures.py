@@ -25,12 +25,12 @@ NUM = json.loads((HERE / "numbers.json").read_text())
 
 P = diagram.PALETTE  # the diagrams' palette: (border, fill) per role
 COL = {  # one fixed colour per system, from the diagram roles
-    "T0R": P["jev"][0],  # purple: selection by one Jev request
+    "Turns + Jev": P["jev"][0],  # purple: selection by one Jev request
     "engram v2": "#D4921C",  # amber (the LLM role, a shade darker for lines)
     "mem0": P["store"][0],  # green
     "Jev-Mem": "#8B5A2B",  # brown: a colour no diagram role uses
-    "T0R-LLM": P["judge"][0],  # teal: T0R's store with an LLM reranker
-    "L0": "#8A9BA5",  # slate grey: similarity search, no model call
+    "Turns + LLM": P["judge"][0],  # teal: Turns + Jev's store with an LLM reranker
+    "Turns + cosine": "#8A9BA5",  # slate grey: similarity search, no model call
     "full context": "#263238",  # near-black
 }
 VERMILLION = P["answer"][0]  # red: reserved for the non-inferiority margin
@@ -84,10 +84,11 @@ def wilson(p: float, n: int) -> tuple[float, float]:
     return 100 * (p - (centre - half)), 100 * ((centre + half) - p)
 
 
-def save(fig, name: str) -> None:
+def save(fig, name: str, tight: bool = True) -> None:
     OUT.mkdir(exist_ok=True)
+    box = {"bbox_inches": "tight", "pad_inches": 0.02} if tight else {}
     for ext, kw in (("pdf", {}), ("svg", {}), ("png", {"dpi": 250})):  # noqa: B007
-        fig.savefig(OUT / f"{name}.{ext}", bbox_inches="tight", pad_inches=0.02, **kw)
+        fig.savefig(OUT / f"{name}.{ext}", **box, **kw)
     plt.close(fig)
 
 
@@ -119,7 +120,7 @@ def h1_forest() -> None:
         return (label, pts(f"{pre}.d"), pts(f"{pre}.ci_lo"), pts(f"{pre}.ci_hi"), pts(f"{pre}.lb"), colour, bold)
 
     rows = [
-        row("Judge (registered)", "h1", COL["T0R"], True),
+        row("Judge (registered)", "h1", COL["Turns + Jev"], True),
         row("Human, strict", "h1.strict", GREY),
         row("Human, lenient", "h1.lenient", GREY),
         row("Llama 3.3 70B answers", "h1.llama", GREY),
@@ -138,7 +139,7 @@ def h1_forest() -> None:
     )
     ax.set_xlim(margin - 1.3, 4.0)
     ax.set_ylim(-0.6, 4.3)
-    ax.set_xlabel("T0R minus engram v2 (points)")
+    ax.set_xlabel("Turns + Jev minus engram v2 (points)")
     ax.plot([], [], color=GREY, lw=1.6, label="two-sided 95% CI")
     ax.plot([], [], marker="|", color=VERMILLION, ms=8, mew=1.6, ls="", label="one-sided 95% bound")
     ax.legend(
@@ -148,31 +149,43 @@ def h1_forest() -> None:
 
 
 def secondary_forest() -> None:
-    labels = {
-        "s1": "S1  vs L0",
-        "s2": "S2  vs Jev-Mem",
-        "s3": "S3  vs mem0",
-        "s4": "S4  vs T0R-LLM (NI)",
-        "s5": f"S5  vs mem0 (LME, {d('s5.n')})",
-        "s6": f"S6  vs L0 (LME, {d('s6.n')})",
-        "s7": f"S7  vs L0 (LME, {d('s7.n')})",
+    labels = {  # the comparator of each test; "Turns + Jev vs" heads the column
+        "s1": "S1  Turns + cosine",
+        "s2": "S2  Jev-Mem",
+        "s3": "S3  mem0",
+        "s4": "S4  Turns + LLM (NI)",
+        "s5": f"S5  mem0\nLME, {d('s5.n')}",
+        "s6": f"S6  Turns + cosine\nLME, {d('s6.n')}",
+        "s7": f"S7  Turns + cosine\nLME, {d('s7.n')}",
     }
     rows, holm = [], []
     for t, label in labels.items():
-        colour = COL["T0R"] if v(f"{t}.holm") < 0.05 else COL["L0"]
+        colour = COL["Turns + Jev"] if v(f"{t}.holm") < 0.05 else COL["Turns + cosine"]
         rows.append((label, pts(f"{t}.dbar"), pts(f"{t}.ci_lo"), pts(f"{t}.ci_hi"), None, colour, False))
         holm.append(d(f"{t}.holm"))
-    fig, ax = plt.subplots(figsize=(SINGLE, 2.3))
+    fig, ax = plt.subplots(figsize=(SINGLE, 2.9))
+    fig.subplots_adjust(left=0.38, right=0.8, top=0.92, bottom=0.2)  # exactly one column, labels inside
     forest(ax, rows, right_text=holm)
     y4 = len(rows) - 1 - 3
     margin = -v("plan.margin")
     ax.plot([margin, margin], [y4 - 0.4, y4 + 0.4], color=VERMILLION, lw=1.0, ls="--")
-    ax.text(margin - 0.8, y4, f"margin {d('h1.lb')[0]}{d('plan.margin')}", color=VERMILLION, ha="right", va="center")
+    ax.text(
+        margin + 0.6, y4 + 0.48, f"margin {d('h1.lb')[0]}{d('plan.margin')}", color=VERMILLION, ha="right", va="bottom"
+    )
     ax.text(1.02, len(rows) - 0.3, "Holm p", transform=ax.get_yaxis_transform(), va="center", style="italic")
+    ax.text(
+        -0.02,
+        len(rows) - 0.3,
+        "Turns + Jev vs",
+        transform=ax.get_yaxis_transform(),
+        ha="right",
+        va="center",
+        style="italic",
+    )
     ax.set_xlim(-21, 23)
     ax.set_ylim(-0.6, len(rows) - 0.1)
-    ax.set_xlabel("T0R minus comparator (points, 95% CI)")
-    save(fig, "secondary")
+    ax.set_xlabel("Turns + Jev minus comparator\n(points, 95% CI)")
+    save(fig, "secondary", tight=False)  # exactly one column wide
 
 
 # ---------------------------------------------------------------- Figure 4: budget dependence of the rerank
@@ -207,7 +220,7 @@ def budget_gain() -> None:
     ax.minorticks_off()
     ax.set_xlim(1.45, 40)
     ax.set_xlabel("k (items the answer model reads)")
-    ax.set_ylabel("T0R minus L0 (points)")
+    ax.set_ylabel("Turns + Jev minus\nTurns + cosine (points)")
     save(fig, "gain")
 
 
@@ -276,14 +289,17 @@ def context() -> None:
         )
 
     loc = {
-        "L0": ["l0.k3", "l0.k6", "l0.k20"],
-        "T0R": ["t0r.k3", "t0r.k4", "t0r.k6", "t0r.k20"],
-        "T0R-LLM": ["t0rllm.k3", "t0rllm.k20"],
+        "Turns + cosine": ["l0.k3", "l0.k6", "l0.k20"],
+        "Turns + Jev": ["t0r.k3", "t0r.k4", "t0r.k6", "t0r.k20"],
+        "Turns + LLM": ["t0rllm.k3", "t0rllm.k20"],
         "engram v2": ["engram.k3", "engram.k20"],
         "mem0": ["mem0.k3", "mem0.k20"],
         "Jev-Mem": ["jevmem.k3", "jevmem.k40"],
     }
-    dodge = {"T0R": 0.94, "T0R-LLM": 1.06}  # T0R and T0R-LLM sit at nearly the same token counts
+    dodge = {
+        "Turns + Jev": 0.94,
+        "Turns + LLM": 1.06,
+    }  # Turns + Jev and Turns + LLM sit at nearly the same token counts
     ends = []
     for s, ks in loc.items():
         xs = [v(f"sys.{k}.tok") * dodge.get(s, 1.0) for k in ks]
@@ -294,13 +310,13 @@ def context() -> None:
     a1.annotate(
         "full context",
         (v("sys.fc.tok"), pts("sys.fc.acc")),
-        xytext=(0, -24),
+        xytext=(7, 0),
         textcoords="offset points",
-        ha="center",
+        ha="left",
         va="center",
     )
-    point(a1, v("wide.tok"), v("wide.acc"), n_loc, COL["T0R"], hollow=True, marker="o")
-    ends.append((pts("wide.acc"), v("wide.tok"), "T0R-wide (post-hoc)", COL["T0R"]))
+    point(a1, v("wide.tok"), v("wide.acc"), n_loc, COL["Turns + Jev"], hollow=True, marker="o")
+    ends.append((pts("wide.acc"), v("wide.tok"), "Turns + Jev (wide), post-hoc", COL["Turns + Jev"]))
     # direct labels in a column right of the lines, in the order of the line ends, with thin leaders
     lab_x, top, step = 3300, 85.2, 1.9
     slots = [top - i * step for i in range(len(ends))]
@@ -308,8 +324,8 @@ def context() -> None:
         a1.plot([x * 1.08, lab_x * 0.93], [y, ly], color=colour, lw=0.5, alpha=0.7)
         a1.text(lab_x, ly, name, color=colour, va="center")
     a1.set_title(f"LoCoMo ({d('data.fresh.questions')} questions)")
-    for s, off in (("L0", (-6, 0)), ("T0R", (-6, 0))):
-        ks = ["l0.k3", "l0.k20"] if s == "L0" else ["t0r.k3", "t0r.k20"]
+    for s, off in (("Turns + cosine", (-6, 0)), ("Turns + Jev", (-6, 0))):
+        ks = ["l0.k3", "l0.k20"] if s == "Turns + cosine" else ["t0r.k3", "t0r.k20"]
         xs = [v(f"lme.{k}.tok") for k in ks]
         accs = [v(f"lme.{k}.acc") for k in ks]
         line(a2, s, xs, accs, n_lme)
@@ -329,7 +345,7 @@ def context() -> None:
     for ax in (a1, a2):
         ax.set_xscale("log")
         ax.set_xlabel("retrieved tokens per question (log scale)")
-    a1.set_xlim(80, 60000)
+    a1.set_xlim(80, 150000)
     a1.set_ylim(55, 88)
     a2.set_xlim(80, 400000)
     for ax, top in ((a1, 4), (a2, 5)):
@@ -344,9 +360,9 @@ def context() -> None:
 
 def cost() -> None:
     pts_ = [
-        ("T0R", "t0r.k3", (0, 9, "center")),
-        ("L0", "l0.k3", (6, 0, "left")),
-        ("T0R-LLM", "t0rllm.k3", (6, 0, "left")),
+        ("Turns + Jev", "t0r.k3", (0, 9, "center")),
+        ("Turns + cosine", "l0.k3", (6, 0, "left")),
+        ("Turns + LLM", "t0rllm.k3", (6, 0, "left")),
         ("engram v2", "engram.k3", (0, -9, "center")),
         ("mem0", "mem0.k3", (0, -9, "center")),
         ("Jev-Mem", "jevmem.k3", (-6, 0, "right")),
@@ -366,13 +382,13 @@ def cost() -> None:
     save(fig, "cost")
 
 
-# ---------------------------------------------------------------- Figure 7: where T0R's accuracy stops
+# ---------------------------------------------------------------- Figure 7: where Turns + Jev's accuracy stops
 
 
 def recall() -> None:
     cats = ["multi-hop", "temporal", "open-domain", "single-hop", "all"]
     parts = (
-        ("kept", COL["T0R"], "white", "kept by rerank"),
+        ("kept", COL["Turns + Jev"], "white", "kept by rerank"),
         ("dropped", P["llm"][0], "#263238", "dropped by rerank"),
         ("missed", LIGHT, "black", "not shortlisted"),
     )

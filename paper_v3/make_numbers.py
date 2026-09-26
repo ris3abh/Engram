@@ -154,6 +154,19 @@ def main() -> None:
             "pts2" if abs(h["ci95_two_sided"][1]) < 0.001 else "pts",
         )
         N(f"h1.{mode}.worst", -h["lower_bound_95_one_sided"], f"{src}/lower_bound_95_one_sided (negated)", "p1")
+        h, src = at(AUD, mode, "H1_with_human_grades_ungraded_dropped")  # (b): the ungraded question dropped
+        N(f"h1.{mode}.drop.n", h["questions"], f"{src}/questions", "int")
+        N(f"h1.{mode}.drop.t0r", h["acc_t0r"], f"{src}/acc_t0r", "pct")
+        N(f"h1.{mode}.drop.engram", h["acc_engram"], f"{src}/acc_engram", "pct")
+        N(f"h1.{mode}.drop.d", h["d_bar"], f"{src}/d_bar", "pts")
+        N(f"h1.{mode}.drop.lb", h["lower_bound_95_one_sided"], f"{src}/lower_bound_95_one_sided", "pts")
+        N(f"h1.{mode}.drop.ci_lo", h["ci95_two_sided"][0], f"{src}/ci95_two_sided/0", "pts")
+        N(
+            f"h1.{mode}.drop.ci_hi",
+            h["ci95_two_sided"][1],
+            f"{src}/ci95_two_sided/1",
+            "pts2" if abs(h["ci95_two_sided"][1]) < 0.001 else "pts",
+        )
         a, s2 = at(AUD, mode)
         N(f"audit.{mode}.agree", a["agreement_with_judge"], f"{s2}/agreement_with_judge", "pct0")
         N(

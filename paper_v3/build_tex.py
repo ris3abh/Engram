@@ -287,7 +287,7 @@ def column_widths(header: list[str], body: list[list[str]], total: float, sep: f
     avail = total - 2 * sep * (ncol - 1)
     floor, want, text = [], [], []
     for j in range(ncol):
-        head = max((text_pt(w, bold=True) for w in plain(header[j]).split()), default=4.0) + 1.0
+        head = max((text_pt(w, bold=True) for w in plain(header[j]).split()), default=4.0) + 2.0
         cells = max((cell_pt(r[j]) for r in body), default=0.0)
         is_text = j == 0 or not numeric_col(body, j)
         text.append(is_text)

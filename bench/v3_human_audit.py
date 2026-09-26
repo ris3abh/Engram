@@ -6,7 +6,9 @@ The grades are free text. Two mappings, both reported (§8 did not fix one for p
 - lenient: also PARTIAL and the hedged CAN BE / MAYBE / PROBABLE CORRECT grades.
 Any grade containing WRONG (or WRNG) is wrong under both. A question with an ungraded row is left out.
 H1 with human grades: over all 778 questions, each discordant question's two judge labels are replaced by the human
-grades (concordant questions keep the judge's labels, which the audit did not cover).
+grades (concordant questions keep the judge's labels, which the audit did not cover). The one discordant question with
+an ungraded row is handled two ways, both reported: (a) it keeps the judge's labels (H1_with_human_grades, the version
+the paper reports), and (b) it is dropped (H1_with_human_grades_ungraded_dropped).
 Output: bench/results/v3/human_audit/audit_report.json.
 
     uv run --extra bench python -m bench.v3_human_audit
@@ -72,6 +74,7 @@ def main() -> None:
                 raw[rid], mode == "lenient"
             )
         graded = {q: g for q, g in human.items() if None not in g.values() and len(g) == 2}
+        ungraded = set(human) - set(graded)
         rows = [(rid, k) for rid, k in key.items() if (k["conversation"], int(k["question_index"])) in graded]
         agree = [grade(raw[rid], mode == "lenient") == (k["gpt-4o-mini_judge_label"] == "CORRECT") for rid, k in rows]
         t = {q: (graded[q]["T0R"] if q in graded else v) for q, v in judge_t.items()}
@@ -88,7 +91,11 @@ def main() -> None:
             "human_both_wrong": sum(not g["T0R"] and not g["engram"] for g in graded.values()),
             "human_only_t0r": sum(g["T0R"] and not g["engram"] for g in graded.values()),
             "human_only_engram": sum(g["engram"] and not g["T0R"] for g in graded.values()),
-            "H1_with_human_grades": bound(t, e),
+            "H1_with_human_grades": bound(t, e),  # (a) the ungraded question keeps the judge's labels
+            "H1_with_human_grades_ungraded_dropped": bound(
+                {q: v for q, v in t.items() if q not in ungraded}, {q: v for q, v in e.items() if q not in ungraded}
+            ),  # (b) the ungraded question is dropped
+            "ungraded_questions": sorted(f"{c} q{i}" for c, i in ungraded),
         }
     report["H1_judge"] = bound(judge_t, judge_e)
     (AUDIT / "audit_report.json").write_text(json.dumps(report, indent=1) + "\n")

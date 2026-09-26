@@ -319,6 +319,10 @@ re-registered in `tests/test_v3_plan.py`.
   tokens for that question crashed. Counting now passes `disallowed_special=()` (`bench/run.py`), so text that spells a
   special token is counted as ordinary text; that question was re-run, and every other count is unchanged (commit
   23acbb0).
+- 2026-09-26, system names in the paper (presentation change, no analysis change): the paper calls T0R, L0, T0R-LLM
+  and T0R-wide "Turns + Jev", "Turns + cosine", "Turns + LLM" and "Turns + Jev (wide)", and defines the mapping once.
+  The systems, the tests and the test ids (H1, S1-S7) are unchanged; the registered outcome paragraph is quoted with
+  the plan's names.
 
 ## AI assistance
 
