@@ -10,7 +10,7 @@ Pass 2 (`match`): pools each baseline's sweep over the 72 non-abstention questio
 to engram's at k=3 (ties to the larger k), saves the sweep and the choice to stage5_token_match.json, and only then
 answers every question at that k from pass 1's store (--reuse-from __k20).
 
-    caffeinate -i uv run --env-file .env --extra bench python -m bench.v2_stage5 run
+    caffeinate -i uv run --env-file .env --extra bench python -m bench.v2_stage5 run [arm ...]
     caffeinate -i uv run --env-file .env --extra bench python -m bench.v2_stage5 match
 """
 
@@ -56,12 +56,13 @@ def done(arm: str, qid: str) -> bool:
 
 
 def engram_jev_per_question() -> list[float]:
-    """Jev charged per engram LongMemEval question (its largest ledger row: re-runs replay from the cache)."""
+    """Jev charged per engram LongMemEval question, summed over its ledger rows (a re-run pays only what the cache
+    lacks, so a run cut short and its re-run add up to one question's cost)."""
     per: dict[str, float] = {}
     for line in LEDGER.read_text().splitlines():
         row = json.loads(line)
         if row.get("stage") == "5" and row["run_id"].startswith("e4_frozen_sameattr:lme:"):
-            per[row["run_id"]] = max(per.get(row["run_id"], 0.0), row["spend"].get("jev", 0.0))
+            per[row["run_id"]] = per.get(row["run_id"], 0.0) + row["spend"].get("jev", 0.0)
     return list(per.values())
 
 
@@ -132,10 +133,11 @@ async def run_system(arm: str, stop: asyncio.Event) -> list[str]:
     return failed
 
 
-async def run() -> None:
+async def run(*arms: str) -> None:
+    arms = arms or tuple(PARALLEL)
     stop = asyncio.Event()
-    failed = await asyncio.gather(*(run_system(arm, stop) for arm in PARALLEL))
-    print(f"[stage5] pass 1 finished; failed: {dict(zip(PARALLEL, failed, strict=True))}", flush=True)
+    failed = await asyncio.gather(*(run_system(arm, stop) for arm in arms))
+    print(f"[stage5] pass 1 finished; failed: {dict(zip(arms, failed, strict=True))}", flush=True)
 
 
 SCORED = [q for q in IDS if not q.endswith("_abs")]  # S10-S11: the 72 non-abstention questions
@@ -175,4 +177,4 @@ async def match() -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run({"run": run, "match": match}[sys.argv[1]]())
+    asyncio.run({"run": run, "match": match}[sys.argv[1]](*sys.argv[2:]))

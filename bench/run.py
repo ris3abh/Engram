@@ -537,6 +537,11 @@ class EngramArm:
         embedded = getattr(self.embedder, "cost_usd", 0.0)
         r = await self.engine.ingest(m["text"], speaker=m["speaker"], created_at=m["at"], message_id=m["id"])
         embed_cost = getattr(self.embedder, "cost_usd", 0.0) - embedded
+        # The pipeline stores a fact as tentative when Jev fails, which is right for a transient error. An account
+        # error (no credits, bad key) would fail every later decision the same way, so the run stops instead.
+        for d in r.decisions:
+            if d.backend == "fallback" and (d.error or "").startswith(("HTTP 401", "HTTP 402", "HTTP 403")):
+                raise RuntimeError(f"Jev account error on message {m['id']}, run stopped: {d.error}")
         closed = []
         for o in r.outcomes:
             if o.closed_target and o.target_id:
