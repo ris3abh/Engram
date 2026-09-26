@@ -426,6 +426,7 @@ one.
   (cl100k_base), the embedding is taken from its first 8,000 tokens; extraction still sees the whole turn, and every
   shorter text is embedded exactly as before (same input, same cache entry). Graphiti embeds only its extracted
   entity names and facts. The question is re-run for engram; mem0 and Graphiti had not reached it.
+- 2026-09-26: Study paused on 2026-09-26 before any held-out LoCoMo run; superseded by a new design (lean extraction).
 
 ### Where this plan differs from the phase-3 brief
 
