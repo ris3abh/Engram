@@ -55,15 +55,16 @@ def parse_date(s: str):
 _QUESTIONS: dict[str, dict] | None = None
 
 
-def load_question(question_id: str) -> dict:
-    """One selected question as a bench/run.py slice (V2_PLAN section 10): its haystack's user turns only, one
+def load_question(question_id: str, roles: tuple[str, ...] = ("user",)) -> dict:
+    """One question as a bench/run.py slice (V2_PLAN section 10): its haystack's turns of the given roles (user only,
+    as registered in v2 and for the v3 sample; user and assistant for the v3 expansion, docs/V3_PLAN.md §12), one
     message each, sessions sorted by date (the file does not store them in date order; ties keep file order), each
-    turn at its session date plus its index in seconds; one question, asked after ingestion, with its question_date."""
+    turn at its session date plus its index in seconds; one question, asked after ingestion, with its question_date.
+    A user-only slice is unchanged from v2 (same ids, texts and times)."""
     global _QUESTIONS
     if _QUESTIONS is None:
-        selected = {i for ids in json.loads(IDS.read_text())["ids"].values() for i in ids}
         raw = json.loads((DATA_DIR / FILENAME).read_text())
-        _QUESTIONS = {q["question_id"]: q for q in raw if q["question_id"] in selected}
+        _QUESTIONS = {q["question_id"]: q for q in raw}
     from datetime import timedelta
 
     q = _QUESTIONS[question_id]
@@ -71,14 +72,14 @@ def load_question(question_id: str) -> dict:
     messages = []
     for n, i in enumerate(order, start=1):
         date = q["haystack_dates"][i]
-        turns = [m for m in q["haystack_sessions"][i] if m["role"] == "user"]
+        turns = [m for m in q["haystack_sessions"][i] if m["role"] in roles]
         for k, m in enumerate(turns):
             messages.append(
                 {
                     "id": f"{q['haystack_session_ids'][i]}:{k}",
                     "session": n,
                     "index": k,
-                    "speaker": "User",
+                    "speaker": m["role"].capitalize(),
                     "text": m["content"],
                     "session_date": date,
                     "at": parse_date(date) + timedelta(seconds=k),
@@ -87,7 +88,7 @@ def load_question(question_id: str) -> dict:
     last = max(m["session"] for m in messages)
     return {
         "conversation": question_id,
-        "speakers": ["User"],
+        "speakers": [r.capitalize() for r in roles],
         "sessions": [1, last],
         "checkpoints": [last],
         "messages": messages,

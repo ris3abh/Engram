@@ -434,6 +434,10 @@ def load_slice(name: str) -> dict:
         from .longmemeval import load_question
 
         return load_question(name.split(":", 1)[1])
+    if name.startswith("lmefull:"):  # user and assistant turns (docs/V3_PLAN.md §12, the LongMemEval expansion)
+        from .longmemeval import load_question
+
+        return load_question(name.split(":", 1)[1], roles=("user", "assistant"))
     path, checkpoints = SLICES[name]
     s = json.loads(path.read_text())
     if name in ("dev_updates", "dev_updates2"):
