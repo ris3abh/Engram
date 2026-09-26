@@ -63,7 +63,8 @@ def engram_jev_per_question() -> list[float]:
         row = json.loads(line)
         if row.get("stage") == "5" and row["run_id"].startswith("e4_frozen_sameattr:lme:"):
             per[row["run_id"]] = per.get(row["run_id"], 0.0) + row["spend"].get("jev", 0.0)
-    return list(per.values())
+    # only questions with a result on file: results written while Jev fell back were deleted and are re-run
+    return [v for rid, v in per.items() if done("e4_frozen_sameattr", rid.split(":lme:")[1])]
 
 
 def projection() -> dict:
