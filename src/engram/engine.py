@@ -38,6 +38,8 @@ class Engram:
             history=self.flags.retrieval_history,
             rerank=self.flags.retrieval_rerank,
             reranker=self.flags.retrieval_reranker,
+            shortlist=self.flags.retrieval_shortlist,
+            keep=self.flags.rerank_keep,
             llm=self.llm,
         )
 

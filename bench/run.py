@@ -79,6 +79,7 @@ CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
 RESULTS_V2 = RESULTS / "v2"  # OpenAI-stack results (phase 3); v1 files are never overwritten
 RESULTS_V3 = RESULTS / "v3"  # docs/V3_PLAN.md
+RESULTS_V3_POSTHOC = RESULTS / "v3_posthoc"  # post-hoc exploratory (T0R-wide), its own ledger
 ADVERSARIAL_GOLD = "Not mentioned in the conversation"  # LoCoMo category 5 gold for the judge (as bench/heldout_extra)
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
@@ -342,6 +343,15 @@ ARMS: dict[str, dict] = {
             retrieval_floor=config.RETRIEVAL_FLOOR,
             retrieval_reranker="llm",
         ),
+    },
+    # POST-HOC EXPLORATORY (docs/V3_PLAN.md §12, approved after Batch C; own ledger): T0R-wide. T0R's raw-turn store
+    # (L0's k=3 store) with a 150-turn cosine shortlist, Jev relevance on every shortlisted turn (30 per request),
+    # and the top k by Jev's score with no 0.5 cut, floor, pull, history or expansion.
+    "lean_t0r_wide": {
+        "system": "engram",
+        "store_from": "lean_l0",
+        "store_suffix": "__k3",
+        "flags": Flags(**{**LEAN_BASE, "retrieval_rerank": True}, retrieval_shortlist=150, rerank_keep="ranked"),
     },
     # Full context: every turn in the answer prompt.
     "full_context": {"system": "full_context"},
@@ -1319,7 +1329,8 @@ async def run_arm(
     cache = CallCache(CACHE, budget=budget)
     frozen_store = spec.get("store_from")  # Stage 4 reranker arms: read a copy of another arm's store, write nothing
     if frozen_store and not reuse_from:  # a reused directory already holds its copy
-        shutil.copy(arms_dir / frozen_store / (slice_name.replace(":", "_") + suffix) / "engram.db", arm_dir)
+        source_suffix = spec.get("store_suffix", suffix)  # the frozen store's own option suffix, when fixed
+        shutil.copy(arms_dir / frozen_store / (slice_name.replace(":", "_") + source_suffix) / "engram.db", arm_dir)
     if spec["system"] == "engram":
         system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"), stack)
         if spec.get("extraction_trace"):  # Stage 4 frozen-extraction ablation
@@ -1983,9 +1994,9 @@ class V2Budget(Budget):
 
 async def run_v2(args, extra: list[int]) -> dict:
     """An OpenAI-stack run under bench/v2_spend.py's guard; the ledger row is written even if the run stops."""
-    from .v2_spend import LEDGER, V3_LEDGER, RunBudget, ledger_totals
+    from .v2_spend import LEDGER, POSTHOC_LEDGER, V3_LEDGER, RunBudget, ledger_totals
 
-    ledger = V3_LEDGER if args.study == "v3" else LEDGER
+    ledger = {"v3": V3_LEDGER, "v3posthoc": POSTHOC_LEDGER}.get(args.study, LEDGER)
     run_id = f"{args.arm}:{args.slice}:k{args.top_k}" + (f":from{args.reuse_from}" if args.reuse_from else "")
     with RunBudget(stage=args.stage, system=args.arm, run_id=run_id, ledger=ledger) as run_budget:
         budget = V2Budget(run_budget, args.max_jev)
@@ -2000,7 +2011,7 @@ async def run_v2(args, extra: list[int]) -> dict:
             stack="openai",
             sweep=args.sweep,
             reuse_from=args.reuse_from,
-            results_dir=RESULTS_V3 if args.study == "v3" else None,
+            results_dir={"v3": RESULTS_V3, "v3posthoc": RESULTS_V3_POSTHOC}.get(args.study),
         )
     print(table([result]))
     totals = ledger_totals(ledger)
@@ -2031,7 +2042,7 @@ async def main() -> None:
         help="with --stack openai: retrieval-only token counts per question at each k in this range, e.g. 3-10",
     )
     parser.add_argument(
-        "--study", choices=["v2", "v3"], default="v2", help="with --stack openai: results dir and ledger"
+        "--study", choices=["v2", "v3", "v3posthoc"], default="v2", help="with --stack openai: results dir and ledger"
     )
     parser.add_argument(
         "--reuse-from", help="with --stack openai: answer from the store this arm's run with that suffix built (__k20)"

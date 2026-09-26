@@ -63,6 +63,8 @@ class Retriever:
         rerank: bool = True,
         reranker: str = "jev",
         llm=None,
+        shortlist: int = config.RETRIEVE_K,
+        keep: str = "threshold",
     ):
         self.store = store
         self.backend = backend
@@ -72,11 +74,14 @@ class Retriever:
         self.rerank = rerank  # False: no Jev on the read path at all; cosine order, no query_relation pull
         self.reranker = reranker  # jev | cross_encoder | llm: what scores the shortlist (Jev still pulls by relation)
         self.llm = llm
+        self.shortlist = shortlist  # shortlist length (config.RETRIEVE_K for every registered arm)
+        self.keep = keep  # threshold: Jev's P > 0.5 kept (registered) | ranked: all, by P (T0R-wide, post-hoc)
         self._cross_encoder = None
         self._cross_encoder_lock = threading.Lock()  # torch is not re-entrant; questions are answered concurrently
 
-    async def retrieve(self, query: str, k: int = config.RETRIEVE_K) -> Retrieval:
+    async def retrieve(self, query: str, k: int | None = None) -> Retrieval:
         started = time.perf_counter()
+        k = k or self.shortlist
         ids, matrix = self.store.embeddings(valid_only=False)
         if not ids:
             return Retrieval(query, [])
@@ -97,6 +102,8 @@ class Retriever:
             return self._finish(query, results, [], started, len(shortlist), None, None)
         if self.reranker != "jev":
             return await self._other_reranker(query, shortlist, rank, started)
+        if self.keep == "ranked":
+            return await self._ranked(query, shortlist, asks[:-1], rank, started)
         try:
             scored_at = time.perf_counter()
             d = await self.backend.ask({"query": query}, asks)
@@ -134,6 +141,21 @@ class Retriever:
         results += self._expand([f for f, _ in kept], {r.fact.id for r in results})
         out = self._finish(query, results, decisions, started, len(shortlist), degraded, relation)
         out.rerank_ms = rerank_ms
+        return out
+
+    async def _ranked(self, query: str, shortlist: list[Fact], asks: list[Ask], rank: dict[str, int], started: float):
+        """T0R-wide (post-hoc exploratory): Jev's relevance on every shortlisted unit, 30 per request, and all of
+        them returned by P(relevant), highest first (ties and fallbacks in cosine order). No cut, floor, pull or
+        expansion."""
+        scored_at = time.perf_counter()
+        batches = [asks[i : i + config.RETRIEVE_K] for i in range(0, len(asks), config.RETRIEVE_K)]
+        answers = await asyncio.gather(*(self.backend.ask({"query": query}, b) for b in batches))
+        d = {key: dec for a in answers for key, dec in a.items()}
+        p = {a.target: d[a.key].probs.get("yes", 0.0) if d[a.key].backend != "fallback" else -1.0 for a in asks}
+        ordered = sorted(shortlist, key=lambda f: (-p[f.id], rank[f.id]))
+        results = [RetrievedFact(f, p[f.id] if p[f.id] >= 0 else None, "rerank") for f in ordered]
+        out = self._finish(query, results, list(d.values()), started, len(shortlist), None, None)
+        out.rerank_ms = (time.perf_counter() - scored_at) * 1000
         return out
 
     async def _other_reranker(self, query: str, shortlist: list[Fact], rank: dict[str, int], started: float):

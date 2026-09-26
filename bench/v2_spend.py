@@ -23,7 +23,11 @@ STAGE_CAPS = {"lean": {"openai": 2.0, "jev": 1.0}}
 # A study with its own ledger and caps on that ledger's whole total (docs/V3_PLAN.md section 11).
 V3_LEDGER = LEDGER.parent.parent / "v3" / "spend.jsonl"
 # OpenRouter joined 2026-09-26 (docs/V3_PLAN.md §12): a cap that only lived in the plan text did not stop mem0.
-LEDGER_CAPS = {V3_LEDGER: {"openai": 32.0, "jev": 6.5, "openrouter": 2.0}}
+POSTHOC_LEDGER = LEDGER.parent.parent / "v3_posthoc" / "spend.jsonl"  # T0R-wide, outside the registered budget
+LEDGER_CAPS = {
+    V3_LEDGER: {"openai": 32.0, "jev": 6.5, "openrouter": 2.0},
+    POSTHOC_LEDGER: {"openai": 0.5, "jev": 1.0},
+}
 PROVIDERS = tuple(RUN_CAPS)
 
 

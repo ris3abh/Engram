@@ -58,3 +58,13 @@ async def test_jev_reranker_is_the_default(store):
     await stored(store)
     out = await Retriever(store, MockBackend(), HashEmbedder()).retrieve("where does the user live")
     assert any(d.question == "relevant_to_query" for d in out.decisions)
+
+
+async def test_ranked_keep_returns_every_shortlisted_fact_by_jev_score(store):
+    await stored(store)
+    r = Retriever(store, MockBackend(), HashEmbedder(), shortlist=3, keep="ranked")
+    out = await r.retrieve("where does the user work")
+    assert len(out.facts) == 3 and all(x.source == "rerank" for x in out.facts)  # no 0.5 cut: all three kept
+    ps = [x.relevance for x in out.facts]
+    assert ps == sorted(ps, reverse=True)
+    assert [d.question for d in out.decisions] == ["relevant_to_query"] * 3  # no query_relation in ranked mode

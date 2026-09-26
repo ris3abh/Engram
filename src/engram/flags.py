@@ -67,6 +67,10 @@ class Flags:
     lean_dates: bool = False  # write relative dates, resolved against the session date, into each unit (L1 on)
     lean_worth_gate: bool = False  # Jev worth_sentence per unit; only units above the threshold are indexed (L2 on)
     lean_worth_threshold: float = 0.5
+    # T0R-wide (post-hoc exploratory, docs/V3_PLAN.md §12): a longer cosine shortlist, and "ranked" = keep every
+    # shortlisted unit ordered by Jev's P(relevant), no 0.5 cut, no floor, pull, history or expansion.
+    retrieval_shortlist: int = 30
+    rerank_keep: str = "threshold"  # threshold (every registered arm) | ranked
 
     def describe(self) -> dict:
         return asdict(self)
