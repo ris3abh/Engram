@@ -201,10 +201,9 @@ by the same judge; a result is called model-robust only if it holds under both a
 every question on which the judge found exactly one of H1's two answers correct, blind to system and judge label
 (§5.4, Appendix C). Shortlist recall measures where the LoCoMo evidence turns fall (§5.6, Appendix D).
 
-**Deviations.** All are recorded in the plan with dates (Appendix B): the amendment; mem0's extraction calls, which
-were served through OpenRouter (half of them by Azure) rather than the OpenAI API; runs repeated after rate limits;
-a token-counting fix for one LongMemEval haystack; the audit sheet's layout and grading standard; and the replacement
-of the title the registered outcome rule selected.
+**Deviations.** Every change after registration is dated in the plan and listed in Appendix B. Apart from the
+amendment above, none changed a test, the margin or the planned interpretation; the mem0 serving deviation adds a
+caveat to S3.
 
 ## 5. Results
 
@@ -585,32 +584,22 @@ and 15<!-- n:expl.s1.only_b --> only for Turns + cosine (p = 1.6e−20<!-- n:exp
 
 ## Appendix B. Registered plan and deviations
 
-The plan (its guarded sections in `docs/V3_PLAN.md`, checked by a test that fails on any undated change, fixed the
-systems, data, token-matching rule, tests, predictions, human check, run order and budget before any run. Every change
-is a dated entry in its Deviations section:
+The plan's guarded sections in `docs/V3_PLAN.md`, checked by a test that fails on any undated change, fixed the
+systems, data, token-matching rule, tests, predictions, human check, run order and budget before any run. Every
+later change is a dated entry in its Deviations section, one row each below; presentation changes share a row.
 
-- **2026-09-26, amendment**, deposited after Batch A (so S1 and S2 were known) and before any primary-test (H1)
-  result was seen. It added shortlist recall; LongMemEval on all 500<!-- n:data.lme.all --> questions with user and assistant
-  turns, with the new test S7; the second answer model; the outcome paragraphs and the rule for "LongMemEval holds";
-  and budget caps.
-- **2026-09-26, outcome paragraphs revised** before upload, before any primary-test result was seen.
-- **2026-09-26, Batch B execution**: mem0's extraction was routed to OpenRouter by a library default (Appendix G);
-  runs hit OpenAI's rate limit and were repeated with more retries and a Jev throttle, completed calls replaying
-  from a call cache; Turns + LLM also asks Jev one query-relation question per query, a no-op on turns.
-- **2026-09-26, mem0 via OpenRouter resolved**: model and serving provider established, billed amount corrected in
-  the ledger, guards added before any later run.
-- **2026-09-27, human check layout** (record only): each answer on its own row, all 284<!-- n:audit.rows --> rows shuffled
-  together, rather than randomising the order within each question.
-- **2026-09-27, human check grading standard** (record only): the sheet asked for CORRECT or WRONG; partial grades
-  appeared, so two mappings are reported.
-- **2026-09-27, paper title** (presentation change): the title the outcome rule selected, "Selection, Not Extraction:
-  One Rerank Call Matches LLM-Extracted Memory at a Fraction of the Write Cost", was replaced because it presents a
-  published idea as new and its "matches" overstates a non-inferiority result.
-- **2026-09-26, system names** (presentation change): the paper calls T0R, L0, T0R-LLM and T0R-wide "Turns + Jev",
-  "Turns + cosine", "Turns + LLM" and "Turns + Jev (wide)". The systems, tests and test ids are unchanged.
-- **2026-09-26, token counting** (record only): one LongMemEval haystack contains the literal text `<|endoftext|>`,
-  which the token counter refused; counting now treats it as ordinary text, the affected question was re-run, and every
-  other count is unchanged.
+*Table 8. Deviations from the registered plan.*
+
+| Date | Change | Reason | Effect on results |
+|---|---|---|---|
+| 2026-09-26 | Amendment, deposited after Batch A (S1 and S2 known) and before any H1 result: shortlist recall; LongMemEval on all 500<!-- n:data.lme.all --> questions with user and assistant turns, with the new test S7; the second answer model; the outcome paragraphs and the rule for "LongMemEval holds"; budget caps | Extend the study before the primary test was run | S7 joins the Holm family; new robustness checks; H1, its margin and the other tests unchanged |
+| 2026-09-26 | Outcome paragraphs revised before upload | The author's own wording | None; made before any H1 result |
+| 2026-09-26 | mem0's extraction calls went through OpenRouter, about half served by Azure, instead of the OpenAI API; the ledger was corrected and guards added before any later run | A mem0 library default routes calls to OpenRouter when its key is set (Appendix G) | S3 is reported with a caveat; no other test involves mem0 |
+| 2026-09-26 | Runs repeated after OpenAI rate limits, with more retries and a Jev throttle; completed calls replayed from the call cache | Rate limits | None: replayed calls are identical |
+| 2026-09-26 | Turns + LLM also asks Jev's query-relation question once per query | Shared read-path code | None: the question is a no-op on turns |
+| 2026-09-26 | Token counting treats text that spells a special token (`<|endoftext|>`, in one LongMemEval haystack) as ordinary text | The tokenizer refused that text | One question re-run; every other count unchanged |
+| 2026-09-27 | Human-check grades: the sheet asked for CORRECT or WRONG, and partial grades appeared, so two mappings are reported | The plan fixed no rule for partial grades | Both mappings reported (Table 1, Appendix C); H1 is decided by the judge |
+| 2026-09-26 and 2026-09-27 | Presentation only: the paper title replaced; systems renamed Turns + Jev, Turns + cosine, Turns + LLM and Turns + Jev (wide) (registered as T0R, L0, T0R-LLM and T0R-wide); the audit sheet put each answer on its own row and shuffled all 284<!-- n:audit.rows --> rows, rather than shuffling within each question | The selected title presented a published idea as new and its "matches" overstated a non-inferiority result; readability; sheet layout | None |
 
 An implementation note not in the Deviations section: two retrieval-only sweeps were stopped by mistake and re-run from
 the cache.
@@ -636,7 +625,7 @@ can treat it two ways: (a) it keeps the judge's labels, or (b) it is dropped. Th
 engram v2 correct on this question. The strict 78.0%<!-- n:h1.strict.engram --> and lenient 79.9%<!-- n:h1.lenient.engram --> for engram v2
 are the (a) values.
 
-*Table 8. H1 with human grades under both treatments of the ungraded question. Differences and bounds in points.*
+*Table 9. H1 with human grades under both treatments of the ungraded question. Differences and bounds in points.*
 
 | Mapping, treatment | Questions | Turns + Jev | engram v2 | Difference | One-sided 95% bound | Two-sided 95% CI |
 |---|---|---|---|---|---|---|
