@@ -314,6 +314,11 @@ re-registered in `tests/test_v3_plan.py`.
   the Write Cost") is replaced by "When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a
   Typed Decision Model". The replaced title presents a published idea (SmartSearch; Fidelity Before Structure) as new,
   and its "matches" overstates a non-inferiority result, most of all after the human audit.
+- 2026-09-26, token counting (record only, no analysis change): one LongMemEval haystack contains the literal text
+  `<|endoftext|>` ("Skipped 1 messages<|endoftext|>"), which tiktoken refuses by default, so counting the full-context
+  tokens for that question crashed. Counting now passes `disallowed_special=()` (`bench/run.py`), so text that spells a
+  special token is counted as ordinary text; that question was re-run, and every other count is unchanged (commit
+  23acbb0).
 
 ## AI assistance
 

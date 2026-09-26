@@ -25,7 +25,7 @@ import build  # noqa: E402
 
 OUT = ROOT / "paper_v3"
 OPEN, SEP, CLOSE = "\x00", "\x01", "\x02"  # sourced-number markers inside the intermediate Markdown
-WIDE_FIGS = {"paths"}  # figure*: the write and read paths diagram
+WIDE_FIGS = {"arch", "context"}  # figure*: the architecture diagram and the two-panel accuracy-context figure
 COLUMN_PT = 219.0  # one column in acl.sty: A4, 2.5 cm margins, 0.6 cm column sep
 CHAR_PT = 4.2  # average character width at \footnotesize (9 pt Times in acl.sty)
 TT_PT = 4.75  # typewriter (inconsolata) at \footnotesize

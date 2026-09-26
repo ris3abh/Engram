@@ -58,7 +58,10 @@ ingestion nor learned retrieval policies are necessary, and ranks raw history wi
 fusion stage. Fidelity Before Structure [an2026fidelity] swaps only the stored representation inside one pipeline
 and finds verbatim chunks ahead of LLM-extracted artifacts by 15.9<!-- n:ext.fidelity.locomo --> points on LoCoMo (categories 1–3,
 699<!-- n:ext.fidelity.locomo_q --> questions) and 22.0<!-- n:ext.fidelity.lme --> on LongMemEval-S (500<!-- n:ext.fidelity.lme_q --> questions),
-with gpt-4o answering and a gpt-4o-mini judge giving binary grades. Nano-Memory [nanomemory2026]
+with gpt-4o answering and a gpt-4o-mini judge giving binary grades. In an external-system anchor (their Appendix D),
+the official Mem0 package also trails verbatim chunks: 36.6<!-- n:ext.fidelity.mem0_mini -->% against
+47.9<!-- n:ext.fidelity.chunks_mini -->% with a gpt-4o-mini answerer (categories 1–3), and 54.7<!-- n:ext.fidelity.mem0_4o -->% against
+69.9<!-- n:ext.fidelity.chunks_4o -->% with gpt-4o (1,540<!-- n:ext.fidelity.anchor_4o_q --> questions, categories 1–4). Nano-Memory [nanomemory2026]
 answers from raw turns with retrieval and generation alone; EMem [zhou2025emem] builds a strong baseline from
 near-verbatim discourse units; zeng2024structural sweep chunks, triples, facts and summaries and find chunk-based
 and mixed stores strongest on LoCoMo; the LongMemEval design study [wu2025longmemeval] finds round-level storage best
@@ -85,15 +88,16 @@ conversation. Our budget analysis offers one way these findings fit together (§
 **Evaluation validity.** Held-out conversation splits of LoCoMo already exist [yan2025split; useraware2026]; our
 design adds pre-registration and a non-inferiority margin. Same Ranking, Different Winner [samerank2026] shows that
 retrieval credit depends on the stored form; we score shortlist recall on raw turns only. Fidelity reports
-judge–human agreement of κ = 0.897<!-- n:ext.fidelity.kappa --> on 100<!-- n:ext.fidelity.kappa_n --> questions; with mem0's lenient LoCoMo
-judge, we found that agreement depended on the system's answer style (§5.4).
+judge–human agreement of κ = 0.897<!-- n:ext.fidelity.kappa --> on 100<!-- n:ext.fidelity.kappa_n --> questions, similar for short and long
+answers, with a judge instructed to be strict (their Appendix J.4); with mem0's lenient LoCoMo judge, we found that
+agreement depended on the system's answer style (§5.4, §6).
 
 ## 3. Systems
 
 All systems use gpt-4o-mini to answer, text-embedding-3-small to embed and jev-1.13.0 for every Jev decision.
 Figure 1 contrasts the write and read paths of T0R, engram v2 and Jev-Mem.
 
-![Figure 1: Write and read paths of T0R, engram v2 and Jev-Mem. T0R writes raw turns with no LLM or Jev call and makes one Jev request per question; engram v2 extracts facts with an LLM and makes Jev decisions per fact at write time, then reads like T0R; Jev-Mem writes turns into a graph with two Jev requests each and makes several Jev requests per question.](figures/paths.svg)
+![Figure 1: Write path (per turn) and read path (per question) of T0R, engram v2 and Jev-Mem. The outline colour says what does the work: an LLM call (orange), a Jev typed decision (blue), code (grey) or a store (green); dashed arrows are reads from the store. The chip on each panel gives the LLM calls and Jev requests per turn and the Jev requests per question, from each system's code (Jev-Mem: its default profile). A design diagram; no measured data.](figures/arch.svg)
 
 **T0R.** The write path embeds each turn and stores it as "[date] speaker: text", with no extraction and no LLM
 call. The read path takes a 30<!-- n:plan.shortlist -->-turn cosine shortlist and asks Jev, in one request, whether each turn
@@ -194,10 +198,12 @@ The one-sided p-value is 0.0017<!-- n:h1.p -->, and the conversation bootstrap p
 −2.3<!-- n:h1.boot --> points. 69<!-- n:h1.only_t0r --> questions were answered correctly only by T0R and 73<!-- n:h1.only_engram --> only by
 engram v2. Human grading moves the difference to between −1.7<!-- n:h1.strict.d --> and −2.6<!-- n:h1.lenient.d --> points and the bound to
 between −3.9<!-- n:h1.strict.lb --> and −4.7<!-- n:h1.lenient.lb -->; under lenient grading the two-sided interval lies just below zero, so
-by that grading engram v2 is more accurate, still inside the margin. We therefore state the result as: non-inferior
+by that grading engram v2 is more accurate, still inside the margin (Figure 2). We therefore state the result as: non-inferior
 within a 5<!-- n:plan.margin -->-point margin under every grading we applied, with extraction adding at most
 4.7<!-- n:h1.lenient.worst --> points at this budget. The category comparisons are descriptive; the categories are small and
 the differences are not tested.
+
+![Figure 2: H1 (registered) as a forest plot: T0R at k=6<!-- n:h1.k --> minus engram v2 at k=3, in points, on the 778<!-- n:data.fresh.questions --> questions of the five held-out conversations. Bars are two-sided 95% intervals; the vermillion tick is the one-sided 95% lower bound, tested against the −5<!-- n:plan.margin -->-point margin (dashed). The judge row is the registered test; the human rows replace the judge's labels on the 141<!-- n:audit.graded --> graded discordant questions (§5.4); the Llama 3.3 70B row re-answers from the same contexts (the answer-model check of §4).](figures/h1.svg)
 
 G, the share of the gap between similarity search and extraction that the rerank closes, uses L0 at its own matched
 k (6<!-- n:g.l0_k -->, 68.6%<!-- n:g.l0 --> accuracy): at the same token budget, one rerank call closes G = 94%<!-- n:g.value --> of the accuracy gap
@@ -229,21 +235,22 @@ OpenRouter, about half of it by Azure (Appendix G). On the LongMemEval sample, S
 and mem0 on 30<!-- n:s5.n --> knowledge-update questions, which is too few to establish equivalence, and S6 detected none
 between T0R and L0 on 70<!-- n:s6.n --> questions. On the full set, S7 found T0R more accurate than L0 by +9.1<!-- n:s7.diff --> points.
 By the registered rule, LongMemEval holds: S7 favours T0R after Holm correction and S5 does not favour mem0.
+Figure 3 shows the paired differences with their intervals.
+
+![Figure 3: Secondary tests S1–S7 (registered): T0R minus the comparator, in points, with paired 95% intervals; the Holm-adjusted p is printed at the right, and blue rows are rejected after Holm correction. S4 is a non-inferiority test against the −5<!-- n:plan.margin -->-point margin (dashed). LoCoMo tests use 778<!-- n:data.fresh.questions --> questions; S5 and S6 use the LongMemEval sample (30<!-- n:s5.n --> and 70<!-- n:s6.n --> questions), S7 the full set (470<!-- n:s7.n -->).](figures/secondary.svg)
 
 ### 5.3 The budget dependence of reranking
 
-The rerank's value depends on how many candidates the budget keeps (Figures 2 and 3). On LoCoMo its gain over
+The rerank's value depends on how many candidates the budget keeps (Figure 4). On LoCoMo its gain over
 similarity search is +17.4<!-- n:rerank.locomo.k3 --> points at k=3 and +1.5<!-- n:rerank.locomo.k20 --> at k=20. On the full LongMemEval
 set it is +9.1<!-- n:rerank.lme.k3 --> points at k=3 (S7) and +1.1<!-- n:rerank.lme.k20 --> at k=20. With three of 30<!-- n:plan.shortlist -->
 candidates kept, ordering decides which evidence reaches the answer model; with twenty kept, cosine order already
 includes most of it. The k=3 gains are registered tests (S1, S7); the k=20 differences are descriptive.
 
-![Figure 2: LoCoMo accuracy against retrieved tokens per question (log scale), five held-out conversations, 778 questions, Wilson 95% intervals. T0R at every measured k; T0R-wide is post-hoc (hollow marker).](figures/budget_locomo.svg)
-
-![Figure 3: LongMemEval accuracy against retrieved tokens per question (log scale), 470 non-abstention questions, user and assistant turns, Wilson 95% intervals.](figures/budget_lme.svg)
+![Figure 4: The rerank's gain over similarity search (T0R minus L0, paired, in points, with 95% intervals) against k. LoCoMo: 778<!-- n:data.fresh.questions --> questions of the five held-out conversations at k=3, k=6 and k=20; LongMemEval: 470<!-- n:data.lme.scored --> non-abstention questions, user and assistant turns, at k=3 and k=20. The k=3 points are registered tests (S1, S7); the others are descriptive.](figures/gain.svg)
 
 T0R at k=3 is within 1.0<!-- n:fc.vs.t0r.k3 --> points of full context on LoCoMo while reading 139<!-- n:sys.t0r.k3.tok --> tokens per
-question instead of 23,631<!-- n:sys.fc.tok -->. At generous budgets the ordering reverses (Table 3): engram v2 at k=20 reaches
+question instead of 23,631<!-- n:sys.fc.tok -->. At generous budgets the ordering reverses (Table 3, Figure 5): engram v2 at k=20 reaches
 82.4%<!-- n:sys.engram.k20.acc -->, Jev-Mem at k=40 80.3%<!-- n:sys.jevmem.k40.acc -->, mem0 at k=20 78.7%<!-- n:sys.mem0.k20.acc --> and full context
 78.3%<!-- n:sys.fc.acc -->, while T0R stays near 77.6%<!-- n:sys.t0r.k20.acc --> at any k (§5.6).
 
@@ -267,6 +274,8 @@ question and accuracy by category.*
 | Jev-Mem, k=3 | 70.6%<!-- n:sys.jevmem.k3.acc --> | 162<!-- n:sys.jevmem.k3.tok --> | 57.9<!-- n:sys.jevmem.k3.multi-hop --> | 64.2<!-- n:sys.jevmem.k3.temporal --> | 50.0<!-- n:sys.jevmem.k3.open-domain --> | 79.7<!-- n:sys.jevmem.k3.single-hop --> |
 | Jev-Mem, k=40 | 80.3%<!-- n:sys.jevmem.k40.acc --> | 1,987<!-- n:sys.jevmem.k40.tok --> | 76.4<!-- n:sys.jevmem.k40.multi-hop --> | 73.9<!-- n:sys.jevmem.k40.temporal --> | 54.0<!-- n:sys.jevmem.k40.open-domain --> | 87.2<!-- n:sys.jevmem.k40.single-hop --> |
 | Full context | 78.3%<!-- n:sys.fc.acc --> | 23,631<!-- n:sys.fc.tok --> | 78.6<!-- n:sys.fc.multi-hop --> | 57.0<!-- n:sys.fc.temporal --> | 64.0<!-- n:sys.fc.open-domain --> | 88.2<!-- n:sys.fc.single-hop --> |
+
+![Figure 5: Accuracy against retrieved tokens per question (log scale), with Wilson 95% intervals. Left: LoCoMo, 778<!-- n:data.fresh.questions --> questions of the five held-out conversations, each system at each k it was run. Right: LongMemEval, 470<!-- n:data.lme.scored --> non-abstention questions, user and assistant turns. Shaded: the tight budget (at most 300<!-- n:fig.tight_tokens --> tokens). T0R-wide (hollow) is post-hoc; the other points are registered runs, compared descriptively except in the tests of §5.1–§5.3.](figures/context.svg)
 
 ### 5.4 Robustness: a second answer model and blind human grading
 
@@ -316,12 +325,14 @@ scored 70.0%<!-- n:lmes.mem0.k3.acc --> on the knowledge-update questions at k=3
 
 T0R levels off near 77.6%<!-- n:sys.t0r.k20.acc -->: at k=20 it reads only 496<!-- n:sys.t0r.k20.tok --> tokens, because its rerank keeps
 only shortlisted turns scored above 0.5<!-- n:plan.threshold -->. Shortlist recall (exploratory as registered) locates the
-loss on all nine held-out conversations (1,388<!-- n:rec.all_nine.n --> questions, Figure 4). All evidence turns were in the
+loss on all nine held-out conversations (1,388<!-- n:rec.all_nine.n --> questions). All evidence turns were in the
 30<!-- n:plan.shortlist -->-turn shortlist for 76.9%<!-- n:rec.all_nine.all --> of questions and at least one for 88.5%<!-- n:rec.all_nine.any -->;
 among questions with evidence in the shortlist, the rerank kept none of it for 10.4%<!-- n:rec.all_nine.drop -->. About
 11.5%<!-- n:rec.all_nine.miss --> of questions are lost to the shortlist and another 9.2%<!-- n:rec.all_nine.lost --> to the rerank.
 
-![Figure 4: Where the evidence goes, by category, nine held-out conversations: missed by the 30-turn cosine shortlist, dropped by the rerank, or kept.](figures/recall.svg)
+Figure 6 shows the same decomposition by category on the five held-out conversations.
+
+![Figure 6: Where T0R's accuracy stops, by category, on the 778<!-- n:fig7.reg.all.n --> questions of the five held-out conversations: the rerank kept at least one evidence turn (blue), evidence was in the shortlist but the rerank kept none of it (vermillion), or no evidence turn was in the shortlist (grey). Upper bar of each pair: T0R's 30<!-- n:plan.shortlist -->-turn shortlist (shortlist recall, exploratory as registered). Lower, lighter bar: T0R-wide's 150<!-- n:wide.shortlist -->-turn shortlist (post-hoc). Percentages are printed where the segment is wide enough.](figures/recall.svg)
 
 The categories differ. Open-domain evidence reaches the shortlist least often (63.0%<!-- n:rec.open-domain.any -->) and is
 dropped most often (31.4%<!-- n:rec.open-domain.drop -->), consistent with T0R trailing engram v2 on open-domain questions.
@@ -335,7 +346,7 @@ outside the Holm family and in its own ledger: T0R-wide takes a 150<!-- n:wide.s
 shortlisted turn, and keeps the top k by Jev's score with no cut-off, with k=47<!-- n:wide.k --> matched to Jev-Mem at k=40
 (2,000<!-- n:wide.tok --> tokens against 1,987<!-- n:wide.target -->). It scored 81.5%<!-- n:wide.acc -->, against 80.3%<!-- n:sys.jevmem.k40.acc --> for Jev-Mem at
 k=40 and 82.4%<!-- n:sys.engram.k20.acc --> for engram v2 at k=20 (1,238<!-- n:sys.engram.k20.tok --> tokens); all-evidence recall rose to
-91.9%<!-- n:wide.rec.all --> and the rerank's losses fell to 0.9%<!-- n:wide.rec.drop -->. This suggests the ceiling comes from T0R's read
+91.9%<!-- n:wide.rec.all --> and the rerank's losses fell to 0.9%<!-- n:wide.rec.drop --> (Figure 6, lower bars). This suggests the ceiling comes from T0R's read
 path rather than from storing raw turns, a hypothesis for new data, not a finding of this study.
 
 ### 5.7 Cost and latency
@@ -361,9 +372,9 @@ two Jev requests per turn cost $0.211<!-- n:write.jevmem.jev --> per 1,000 turns
 Jev calls per query (up to 11<!-- n:jevmem.k40.calls_max -->) and $0.00174<!-- n:sys.jevmem.k40.read --> per query. Mem0's read cost is a query
 embedding only.
 
-![Figure 5: Accuracy against total cost per question (log scale), five held-out conversations: write cost amortised at the benchmark's ratio of about 4 turns written per question asked (filled), and at one turn per question, a read-heavy use (hollow), plus read cost and answer cost (judge excluded), at list prices.](figures/cost.svg)
+![Figure 7: Accuracy against total cost per question (log scale) at k=3, on the 778<!-- n:data.fresh.questions --> questions of the five held-out conversations (exploratory as registered): write cost amortised at the benchmark's 4.0<!-- n:fig5.turns_per_question --> turns written per question, plus read cost and answer cost (judge excluded), at list prices; full context has no write or read cost. In a read-heavy use with one turn written per question, engram v2's total falls to $0.00216<!-- n:fig5.engram.k3.read_heavy -->, mem0's to $0.00142<!-- n:fig5.mem0.k3.read_heavy --> and Jev-Mem's to $0.00151<!-- n:fig5.jevmem.k3.read_heavy -->; the other systems' totals do not change at this precision.](figures/cost.svg)
 
-Figure 5 amortises write cost at the benchmark's own ratio (4.0<!-- n:fig5.turns_per_question --> turns written per scored
+Figure 7 amortises write cost at the benchmark's own ratio (4.0<!-- n:fig5.turns_per_question --> turns written per scored
 question). At that ratio T0R's total cost per question is $0.00030<!-- n:fig5.t0r.k3.bench --> and engram v2's
 $0.00778<!-- n:fig5.engram.k3.bench -->; full context costs $0.00362<!-- n:fig5.fc.bench -->. In a read-heavy use with one turn written per
 question, the write cost weighs less: engram v2's total falls to $0.00216<!-- n:fig5.engram.k3.read_heavy -->.
@@ -413,7 +424,12 @@ request per question, and one Jev request beat Jev-Mem's multi-request graph wal
 typed question returns a probability over fixed options in one short call, which is what a reranker needs.
 
 **Judge leniency and answer style.** mem0's LoCoMo judge is lenient, and in our audit it credited short answers more
-readily than list-style ones, so its agreement with human grading differed by system. Memory benchmarks that compare
+readily than list-style ones, so its agreement with human grading differed by system. Fidelity Before Structure's human
+study found no such dependence on answer length, but its LoCoMo judge is instructed to be strict ("Binary - strict":
+"partial answers or answers with significant missing information should be marked INCORRECT", their Appendix J.4),
+while mem0's asks the judge to "be generous with your grading - as long as it touches on the same topic as the gold
+answer". A strict instruction leaves less room for style to matter, which may explain why their audit found no
+short-answer bias and ours did. Memory benchmarks that compare
 systems with different answer styles should report judge–human agreement by system.
 
 **Not state of the art.** SmartSearch reports 91.9<!-- n:ext.smartsearch.locomo -->% on LoCoMo under its own protocol
@@ -592,7 +608,7 @@ others did not get. Billed amounts are reported separately: the registered ledge
 $5.55<!-- n:spend.jev --> of Jev and $0.31<!-- n:spend.openrouter --> of OpenRouter for the second answer model (at $0.10<!-- n:plan.llama.in --> and
 $0.32<!-- n:plan.llama.out --> per million input and output tokens), plus mem0's $2.42<!-- n:spend.mem0.billed --> through OpenRouter.
 Write-cost ratios use the held-out measurements; read costs are per query; totals per question state their
-reads-per-write assumption (Figure 5).
+reads-per-write assumption (Figure 7).
 
 ## Appendix I. Reproduction
 

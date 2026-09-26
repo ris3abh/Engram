@@ -18,9 +18,11 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 ALLOWED = [
+    r"\]\(figures/[\w.-]+\)",  # figure file paths (the caption text itself is checked)
     r"\[[a-z][\w-]*\d{4}[\w-]*(?:; ?[a-z][\w-]*\d{4}[\w-]*)*\]",  # rendered citations [key; key], first
     r"Figures? \d+ and \d+",  # before the general reference pattern
     r"categories 1–[345]",  # a cited paper's protocol scope
+    r"their Appendix [A-Z](\.\d+)?",  # a cited paper's appendix
     r"bge-reranker-v2-m3",
     r"^\s*\d+\. ",  # numbered-list markers
     r"(?<![\w@])[a-z]+\d{4}[a-z]+\b",  # bare citation keys (\citet)
@@ -62,7 +64,6 @@ ALLOWED = [
     r"^#+ .*$",  # headings
     r"\[@[\w:-]+(; ?@[\w:-]+)*\]",  # citations
     r"`[^`]*`",  # code spans (file paths, identifiers)
-    r"!\[[^\]]*\]\([^)]*\)",  # figure includes
     r"\(#[\w:-]+\)|\{#[\w:-]+\}",  # anchors
     r"\bone|two|three|four|five|six|seven|nine\b",
     r"\b[1-5] (multi-hop|temporal|open-domain|single-hop|adversarial)\b",  # the category mapping

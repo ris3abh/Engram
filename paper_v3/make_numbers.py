@@ -660,6 +660,88 @@ def main() -> None:
     ):
         N(key, v, "docs/V3_PLAN.md §1, §2, §4", fmt)
 
+    # --- paired differences with 95% CIs (figures 2-4): per question d = correct(T0R) - correct(other)
+    from math import sqrt
+
+    def paired(a_rows: list[dict], b_rows: list[dict]) -> tuple[float, float, float]:
+        kb = {(r["conv"], r["idx"]): r["label"] == "CORRECT" for r in b_rows}
+        d = [int(r["label"] == "CORRECT") - int(kb[(r["conv"], r["idx"])]) for r in a_rows]
+        assert len(d) == len(kb)
+        m, se = statistics.fmean(d), statistics.stdev(d) / sqrt(len(d))
+        return m, m - 1.96 * se, m + 1.96 * se
+
+    def rows(arm: str, prefix: str, ids: list[str], suffix: str) -> list[dict]:
+        out = []
+        for i in ids:
+            f = V3 / f"{arm}__{prefix}_{i}{suffix}.json"
+            out += [{**r, "conv": i} for r in load(f)["answers"]]
+        return out
+
+    from bench.v3_batch_c import KU, SAMPLE
+
+    lme_scored = [q for q in all_ids() if not q.endswith("_abs")]
+    tk = {t: NUM[f"{t}.k"]["value"] for t in ("s1", "s2", "s3", "s4", "s5", "s6", "s7")}
+    pairs = {
+        "s1": (("lean_t0r", "heldout", FRESH, f"__k{tk['s1']}"), ("lean_l0", "heldout", FRESH, "__k3")),
+        "s2": (("lean_t0r", "heldout", FRESH, f"__k{tk['s2']}"), ("jevmem", "heldout", FRESH, "__k3")),
+        "s3": (("lean_t0r", "heldout", FRESH, f"__k{tk['s3']}"), ("mem0", "heldout", FRESH, "__k3")),
+        "s4": (("lean_t0r", "heldout", FRESH, f"__k{tk['s4']}"), ("lean_t0r_llm", "heldout", FRESH, "__k3")),
+        "s5": (("lean_t0r", "lme", KU, f"__k{tk['s5']}"), ("mem0", "lme", KU, "__k3")),
+        "s6": (("lean_t0r", "lme", SAMPLE, f"__k{tk['s6']}"), ("lean_l0", "lme", SAMPLE, "__k3")),
+        "s7": (("lean_t0r", "lmefull", lme_scored, f"__k{tk['s7']}"), ("lean_l0", "lmefull", lme_scored, "__k3")),
+        "rer.locomo.k3": (("lean_t0r", "heldout", FRESH, "__k3"), ("lean_l0", "heldout", FRESH, "__k3")),
+        "rer.locomo.k6": (("lean_t0r", "heldout", FRESH, "__k6"), ("lean_l0", "heldout", FRESH, "__k6")),
+        "rer.locomo.k20": (("lean_t0r", "heldout", FRESH, "__k20"), ("lean_l0", "heldout", FRESH, "__k20")),
+        "rer.lme.k3": (("lean_t0r", "lmefull", lme_scored, "__k3"), ("lean_l0", "lmefull", lme_scored, "__k3")),
+        "rer.lme.k20": (("lean_t0r", "lmefull", lme_scored, "__k20"), ("lean_l0", "lmefull", lme_scored, "__k20")),
+    }
+    for key, (a_spec, b_spec) in pairs.items():
+        m, lo, hi = paired(rows(*a_spec), rows(*b_spec))
+        src = f"{a_spec[0]}{a_spec[3]} vs {b_spec[0]}{b_spec[3]} ({a_spec[1]}; paired d-bar +/- 1.96 se)"
+        N(f"{key}.dbar", m, src, "pts")
+        N(f"{key}.ci_lo", lo, src, "pts")
+        N(f"{key}.ci_hi", hi, src, "pts")
+    lh = load(SM)["H1"]["llama-3.3-70b"]
+    N("h1.llama.ci_lo", lh["d_bar"] - 1.96 * lh["se"], f"{rel(SM)}#H1/llama-3.3-70b (d_bar - 1.96 se)", "pts")
+    N("h1.llama.ci_hi", lh["d_bar"] + 1.96 * lh["se"], f"{rel(SM)}#H1/llama-3.3-70b (d_bar + 1.96 se)", "pts")
+
+    # --- Figure 7: recall on the five fresh conversations, registered 30-turn and post-hoc 150-turn shortlists
+    fr = rec["fresh_five"]
+    for cat, b in {**fr["by_category"], "all": fr["all"]}.items():
+        anyv, drop = b["shortlist_recall_any"], b["rerank_drops_all_shortlisted_evidence"]
+        src = f"{rel(REC)}#fresh_five/{'all' if cat == 'all' else 'by_category/' + cat}"
+        N(f"fig7.reg.{cat}.kept", anyv * (1 - drop), f"{src} (any x (1 - drop))", "pct0")
+        N(f"fig7.reg.{cat}.dropped", anyv * drop, f"{src} (any x drop)", "pct0")
+        N(f"fig7.reg.{cat}.missed", 1 - anyv, f"{src} (1 - any)", "pct0")
+        N(f"fig7.reg.{cat}.n", b["questions"], f"{src}/questions", "int")
+    wr = ph["shortlist_recall"]
+    for cat, b in {**wr["by_category"], "all": wr["all"]}.items():
+        anyv, drop = b["shortlist_recall_any"], b["top_k_drops_all_shortlisted_evidence"]
+        src = f"{rel(PH)}#shortlist_recall/{'all' if cat == 'all' else 'by_category/' + cat}"
+        N(f"fig7.wide.{cat}.kept", anyv * (1 - drop), f"{src} (any x (1 - drop))", "pct0")
+        N(f"fig7.wide.{cat}.dropped", anyv * drop, f"{src} (any x drop)", "pct0")
+        N(f"fig7.wide.{cat}.missed", 1 - anyv, f"{src} (1 - any)", "pct0")
+
+    # --- Figure 1: calls per turn and per question (write path code; Jev-Mem from docs/JEVMEM_COMPARISON.md)
+    for key, v, src in (
+        ("arch.t0r.llm", "0", "bench/run.py LEAN arms: the write path embeds only (src/engram/pipeline/lean.py)"),
+        ("arch.t0r.jev_write", "0", "src/engram/pipeline/lean.py (no worth gate in T0R)"),
+        ("arch.t0r.jev_read", "1", "src/engram/pipeline/retrieve.py (one request over the shortlist)"),
+        ("arch.engram.llm", "1", "src/engram/pipeline/write.py (one extraction call per message)"),
+        ("arch.engram.jev_write", "about 1", "src/engram/pipeline/write.py (one request per extracted fact)"),
+        ("arch.engram.jev_read", "1", "src/engram/pipeline/retrieve.py"),
+        ("arch.jevmem.llm", "0", "docs/JEVMEM_COMPARISON.md §1 (no LLM on a successful write)"),
+        ("arch.jevmem.jev_write", "2", "docs/JEVMEM_COMPARISON.md §1 (memory_type and relations per turn)"),
+        ("arch.jevmem.jev_read", "2-16", "docs/JEVMEM_COMPARISON.md §1 (2 to 16 requests per query)"),
+    ):
+        N(key, v, src, "raw")
+    N(
+        "arch.engram.facts_per_turn",
+        load(B)["write"]["engram v2"]["units_stored"] / load(B)["write"]["engram v2"]["turns"],
+        f"{rel(B)}#write/engram v2 (units_stored / turns)",
+        "d1",
+    )
+
     # --- design and pricing constants quoted in the text (source: the code or plan that fixes them)
     from engram import config
     from engram.llm.openai import PRICES
@@ -682,6 +764,7 @@ def main() -> None:
         "src/engram/config.py#JEV_PRICE_PER_INPUT_TOKEN (per million)",
         "usd3",
     )
+    N("fig.tight_tokens", 300, "figure setting: the tight-budget region shaded in the accuracy-context figure (paper_v3/figures.py)", "int")
     N("wide.shortlist", 150, "bench/run.py#ARMS/lean_t0r_wide/flags/retrieval_shortlist", "raw")
     N("plan.latency_sample", 40, "docs/V3_PLAN.md §7 (fixed sample of 40 questions); bench/v3_latency.py", "raw")
     J("expl.k", A, ("token_match", "L0 (exploratory)", "t0r_k"), "raw")
@@ -713,6 +796,11 @@ def main() -> None:
         ("ext.fidelity.lme_q", 500, "int", "an2026fidelity"),
         ("ext.smartsearch.questions", 1540, "int", "derehag2026smartsearch"),
         ("ext.smartsearch.budget_words", 2000, "int", "derehag2026smartsearch"),
+        ("ext.fidelity.mem0_mini", 36.6, "d1", "an2026fidelity"),  # Appendix D, External-system anchor
+        ("ext.fidelity.chunks_mini", 47.9, "d1", "an2026fidelity"),
+        ("ext.fidelity.mem0_4o", 54.7, "d1", "an2026fidelity"),
+        ("ext.fidelity.chunks_4o", 69.9, "d1", "an2026fidelity"),
+        ("ext.fidelity.anchor_4o_q", 1540, "int", "an2026fidelity"),
     ):
         N(key, v, f"cite:{cite} (checked against the paper's text; paper_v3/bib_verification.md)", fmt)
 

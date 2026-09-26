@@ -18,7 +18,7 @@ numbers:
 	$(UV) --extra bench python paper_v3/make_numbers.py
 
 figures:
-	$(UV) --with matplotlib python paper_v3/figures.py
+	$(UV) --with matplotlib --with pillow python paper_v3/figures.py
 
 md:
 	$(UV) python paper_v3/build.py
