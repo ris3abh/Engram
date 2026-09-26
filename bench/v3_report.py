@@ -25,7 +25,14 @@ CATEGORIES = {1: "multi-hop", 2: "temporal", 3: "open-domain", 4: "single-hop"}
 # batch: comparison name -> (comparator arm, conversations)
 COMPARISONS = {
     "A": {"L0": ("lean_l0", FRESH), "Jev-Mem": ("jevmem", FRESH), "L0 (exploratory)": ("lean_l0", EXPLORATORY)},
+    "B": {
+        "engram v2": ("e4_frozen_sameattr", FRESH),
+        "mem0": ("mem0", FRESH),
+        "T0R-LLM": ("lean_t0r_llm", FRESH),
+        "L0 for G": ("e4_frozen_sameattr", FRESH, "lean_l0"),  # docs/V3_OUTCOMES.md: L0 matched to engram v2 k=3
+    },
 }
+MARGIN = 0.05  # non-inferiority margin (sections 1 and 6)
 
 
 def load(arm: str, slice_name: str, suffix: str) -> dict | None:
@@ -43,14 +50,16 @@ def answers(arm: str, convs: list[str], suffix: str, prefix: str = "heldout") ->
 
 def match(batch: str) -> None:
     out = {}
-    for name, (arm, convs) in COMPARISONS[batch].items():
+    for name, (arm, convs, *swept) in COMPARISONS[batch].items():
+        swept_arm = swept[0] if swept else "lean_t0r"  # the matched system: T0R unless stated
         target = statistics.fmean(a["retrieved_tokens"] for a in answers(arm, convs, "__k3"))
-        sweeps = [load("lean_t0r", f"heldout:{c}", "__k3__noanswer")["sweep_tokens"] for c in convs]
+        sweeps = [load(swept_arm, f"heldout:{c}", "__k3__noanswer")["sweep_tokens"] for c in convs]
         per_q = [q for s in sweeps for q in s.values()]
         means = {int(k): statistics.fmean(q[k] for q in per_q) for k in per_q[0]}
         chosen = min(means, key=lambda k: (abs(means[k] - target), -k))
         out[name] = {
             "comparator": arm,
+            "matched_system": swept_arm,
             "conversations": convs,
             "questions": len(per_q),
             "comparator_k3_mean_tokens": target,
@@ -78,6 +87,66 @@ def mcnemar(a: list[dict], b: list[dict]) -> dict:
         "only_b": only_b,
         "p_two_sided": p,
     }
+
+
+def paired_d(a: list[dict], b: list[dict]) -> tuple[list[int], list[str]]:
+    """Per question d = 1 if only a is correct, -1 if only b, else 0; with each question's conversation."""
+    kb = {(x["conv"], x["idx"]): x["label"] == "CORRECT" for x in b}
+    d, convs = [], []
+    for x in a:
+        ya, yb = x["label"] == "CORRECT", kb[(x["conv"], x["idx"])]
+        d.append(int(ya) - int(yb))
+        convs.append(x["conv"])
+    assert len(d) == len(kb)
+    return d, convs
+
+
+def noninferiority(a: list[dict], b: list[dict], margin: float = MARGIN) -> dict:
+    """Section 1: one-sided 95% lower bound d-bar - 1.645 s/sqrt(n) against -margin; one-sided p of
+    z = (d-bar + margin)/(s/sqrt(n)); and the conversation bootstrap (10,000 resamples of conversations, seed 0)."""
+    import random
+    from math import erf, sqrt
+
+    d, convs = paired_d(a, b)
+    n = len(d)
+    mean = statistics.fmean(d)
+    se = statistics.stdev(d) / sqrt(n)
+    z = (mean + margin) / se
+    by_conv: dict[str, list[int]] = {}
+    for x, c in zip(d, convs, strict=True):
+        by_conv.setdefault(c, []).append(x)
+    names = sorted(by_conv)
+    rng = random.Random(0)
+    boot = []
+    for _ in range(10_000):
+        picked = [by_conv[rng.choice(names)] for _ in names]
+        boot.append(sum(map(sum, picked)) / sum(map(len, picked)))
+    boot.sort()
+    return {
+        "questions": n,
+        "acc_a": statistics.fmean(x["label"] == "CORRECT" for x in a),
+        "acc_b": statistics.fmean(x["label"] == "CORRECT" for x in b),
+        "only_a": d.count(1),
+        "only_b": d.count(-1),
+        "d_bar": mean,
+        "se": se,
+        "lower_bound_95_one_sided": mean - 1.645 * se,
+        "margin": -margin,
+        "non_inferior": mean - 1.645 * se > -margin,
+        "p_one_sided": 0.5 * (1 - erf(z / sqrt(2))),
+        "bootstrap_conversations_5th_percentile": boot[int(0.05 * len(boot))],
+    }
+
+
+def holm(pvalues: dict[str, float], alpha: float = 0.05) -> dict[str, dict]:
+    order = sorted(pvalues, key=pvalues.get)
+    m, out, stop = len(order), {}, False
+    for i, name in enumerate(order):
+        adjusted = min(1.0, max(pvalues[o] * (m - j) for j, o in enumerate(order[: i + 1])))
+        reject = not stop and pvalues[name] <= alpha / (m - i)
+        stop = stop or not reject
+        out[name] = {"p": pvalues[name], "holm_adjusted_p": adjusted, "rejected": reject}
+    return out
 
 
 def summary(rows: list[dict]) -> dict:
@@ -199,5 +268,85 @@ def batch_a() -> None:
     print(json.dumps(rep, indent=1))
 
 
+def batch_b() -> None:
+    a_rep = json.loads((RESULTS_V3 / "batch_a_report.json").read_text())
+    tm = json.loads((RESULTS_V3 / "token_match_B.json").read_text())
+    k = {n: v["t0r_k"] for n, v in tm.items() if v["matched_system"] == "lean_t0r"}
+    k_l0_g = tm["L0 for G"]["t0r_k"]  # L0's k matched to engram v2 at k=3 (stored under the same key)
+    t0r = {n: answers("lean_t0r", FRESH, f"__k{kk}") for n, kk in k.items()}
+    rep: dict = {
+        "token_match": {
+            n: {"comparator_k3": v["comparator_k3_mean_tokens"], "t0r_k": v["t0r_k"]} for n, v in tm.items()
+        },
+        "fresh": {},
+    }
+    for name, arm, suffixes in (
+        ("T0R-LLM", "lean_t0r_llm", ("__k3", "__k20")),
+        ("mem0", "mem0", ("__k3", "__k20")),
+        ("engram v2", "e4_frozen_sameattr", ("__k3", "__k20")),
+        ("full context", "full_context", ("",)),
+    ):
+        for s in suffixes:
+            rows = answers(arm, FRESH, s)
+            rep["fresh"][f"{name} {s.strip('_') or 'all turns'}"] = summary(rows)
+            if s:
+                adv = adversarial(arm, FRESH, s)
+                rep.setdefault("fresh_adversarial", {})[f"{name} {s.strip('_')}"] = adv
+    for n, kk in k.items():
+        rep["fresh"][f"T0R k{kk} (matched to {n})"] = summary(t0r[n])
+    rep["fresh"][f"L0 k{k_l0_g} (matched to engram v2, for G)"] = summary(answers("lean_l0", FRESH, f"__k{k_l0_g}"))
+    rep["write"] = {
+        "engram v2": write_side("e4_frozen_sameattr", FRESH),
+        "mem0": write_side("mem0", FRESH),
+    }
+    rep["H1"] = {
+        "comparison": f"T0R k={k['engram v2']} vs engram v2 k=3",
+        **noninferiority(t0r["engram v2"], answers("e4_frozen_sameattr", FRESH, "__k3")),
+    }
+    rep["S3"] = {
+        "comparison": f"T0R k={k['mem0']} vs mem0 k=3",
+        **mcnemar(t0r["mem0"], answers("mem0", FRESH, "__k3")),
+    }
+    rep["S4"] = {
+        "comparison": f"T0R k={k['T0R-LLM']} vs T0R-LLM k=3 (non-inferiority, 5 points)",
+        **noninferiority(t0r["T0R-LLM"], answers("lean_t0r_llm", FRESH, "__k3")),
+    }
+    rep["holm_so_far"] = holm(
+        {
+            "S1": a_rep["S1"]["p_two_sided"],
+            "S2": a_rep["S2"]["p_two_sided"],
+            "S3": rep["S3"]["p_two_sided"],
+            "S4": rep["S4"]["p_one_sided"],
+        }
+    )
+    e3 = answers("e4_frozen_sameattr", FRESH, "__k3")
+
+    def acc(rows: list[dict]) -> float:
+        return statistics.fmean(x["label"] == "CORRECT" for x in rows)
+
+    a_t, a_e, a_l = acc(t0r["engram v2"]), acc(e3), acc(answers("lean_l0", FRESH, f"__k{k_l0_g}"))
+    rep["G"] = {
+        "t0r": a_t,
+        "engram_v2": a_e,
+        "l0": a_l,
+        "l0_k": k_l0_g,
+        "G": None if a_e <= a_l else ("over 100%" if a_t > a_e else (a_t - a_l) / (a_e - a_l)),
+    }
+    w_t0r = sum(a_rep["write"]["L0 / T0R (one store)"]["write_cost_per_1k"].values())
+    w_eng = sum(rep["write"]["engram v2"]["write_cost_per_1k"].values())
+    rep["write_cost_ratio_engram_over_t0r"] = {"engram_v2_per_1k": w_eng, "t0r_per_1k": w_t0r, "ratio": w_eng / w_t0r}
+    rep["predictions"] = {
+        cat: {
+            "t0r": statistics.fmean(x["label"] == "CORRECT" for x in t0r["engram v2"] if x["category"] == c),
+            "engram_v2": statistics.fmean(x["label"] == "CORRECT" for x in e3 if x["category"] == c),
+        }
+        for c, cat in ((1, "multi-hop"), (3, "open-domain"))
+    }
+    latency = RESULTS_V3 / "read_latency_live.json"
+    rep["read_latency_live"] = json.loads(latency.read_text()) if latency.exists() else None
+    (RESULTS_V3 / "batch_b_report.json").write_text(json.dumps(rep, indent=1) + "\n")
+    print(json.dumps(rep, indent=1))
+
+
 if __name__ == "__main__":
-    {"match": lambda: match(sys.argv[2]), "batch_a": batch_a}[sys.argv[1]]()
+    {"match": lambda: match(sys.argv[2]), "batch_a": batch_a, "batch_b": batch_b}[sys.argv[1]]()

@@ -1,0 +1,806 @@
+{
+ "arm": "e4_frozen_sameattr",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "mem0",
+  "store_source_text": true,
+  "worth_filter": false,
+  "merge_policy": "same_as",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "mem0_update",
+  "relation_decider": "jev",
+  "cardinality_rule": true,
+  "close_agreement": true,
+  "candidate_source": "cosine+graph",
+  "fulfills_rule": "question",
+  "belief": true,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "not_planned_mass",
+  "update_multi_sibling": true,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "compact",
+  "relation_version": 2,
+  "temporal_version": 2,
+  "edge_type_version": 1,
+  "same_attribute_gate": true,
+  "extraction": "llm",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "adv:conv-49",
+  "sessions": [
+   1,
+   25
+  ],
+  "messages": 509,
+  "questions": 40
+ },
+ "accuracy": 0.425,
+ "accuracy_by_category": {
+  "5": 0.425
+ },
+ "stored": 566,
+ "active": 561,
+ "tentative": 555,
+ "disputed": 13,
+ "same_as_edges": 9,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 1059.0,
+ "retrieved_tokens_median": 924.0,
+ "memories_mean": 13.1,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.006640452000000002,
+  "claude": 0.0,
+  "openai": 0.00646035
+ },
+ "cache": {
+  "hits": 101,
+  "misses": 1259
+ },
+ "answers": [
+  {
+   "idx": 156,
+   "question": "What type of car did Sam get after his old Prius broke down?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D1:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not mention Sam getting a new car after his old Prius broke down.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.0004962193548387096,
+   "retrieved_tokens": 1594,
+   "retrieve_ms": 2019.1698329872452,
+   "retrieve_cost": 0.0001723693548387097
+  },
+  {
+   "idx": 157,
+   "question": "How did Sam get into watercolor painting?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam expressed admiration for Evan's skills.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00037091574193548395,
+   "retrieved_tokens": 816,
+   "retrieve_ms": 891.9830840313807,
+   "retrieve_cost": 0.00017096574193548392
+  },
+  {
+   "idx": 158,
+   "question": "What did Sam start doing a few years back as a stress-buster?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D1:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam started painting.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00040206,
+   "retrieved_tokens": 1030,
+   "retrieve_ms": 938.3280419860967,
+   "retrieve_cost": 0.00017031000000000001
+  },
+  {
+   "idx": 159,
+   "question": "Where did Sam take his family for a road trip on 24 May, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not indicate that Sam took his family on a road trip on May 24, 2023. Instead, it was Evan who took his family on a road trip to Jasper around May 20-21, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0005479143870967742,
+   "retrieved_tokens": 1768,
+   "retrieve_ms": 788.5649160016328,
+   "retrieve_cost": 0.00017726438709677423
+  },
+  {
+   "idx": 160,
+   "question": "What did Sam find relaxing about his road trip to Jasper?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam hasn't been to Jasper.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00041821296774193547,
+   "retrieved_tokens": 1114,
+   "retrieve_ms": 1734.576166025363,
+   "retrieve_cost": 0.00017356296774193549
+  },
+  {
+   "idx": 161,
+   "question": "What habit is Evan trying to change in terms of diet?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D3:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Cutting down on sugary snacks.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0005077596774193549,
+   "retrieved_tokens": 1719,
+   "retrieve_ms": 1033.621000009589,
+   "retrieve_cost": 0.00017175967741935486
+  },
+  {
+   "idx": 162,
+   "question": "What frustrating issue did Evan face at the supermarket?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D3:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan did not mention a frustrating issue at the supermarket.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00038704122580645163,
+   "retrieved_tokens": 883,
+   "retrieve_ms": 1178.0093329725787,
+   "retrieve_cost": 0.00017404122580645163
+  },
+  {
+   "idx": 163,
+   "question": "What novel is Sam reading that he finds gripping?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D4:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam is reading 'The Great Gatsby'.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00035504806451612904,
+   "retrieved_tokens": 731,
+   "retrieve_ms": 804.5585000072606,
+   "retrieve_cost": 0.00016724806451612906
+  },
+  {
+   "idx": 164,
+   "question": "What does the smartwatch help Sam with?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D5:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not mention a smartwatch.",
+   "memories": 16,
+   "label": "WRONG",
+   "query_cost": 0.0004455336774193549,
+   "retrieved_tokens": 1309,
+   "retrieve_ms": 605.0256249727681,
+   "retrieve_cost": 0.00017163367741935488
+  },
+  {
+   "idx": 165,
+   "question": "Why did Sam decide to get the bonsai tree?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D5:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not mention a bonsai tree.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.00039548264516129034,
+   "retrieved_tokens": 985,
+   "retrieve_ms": 554.3633329798467,
+   "retrieve_cost": 0.00016808264516129037
+  },
+  {
+   "idx": 166,
+   "question": "What did Sam mention he had been searching for fruitlessly for half an hour?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:13"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan's keys.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003568662580645161,
+   "retrieved_tokens": 738,
+   "retrieve_ms": 1223.667333018966,
+   "retrieve_cost": 0.00016801625806451615
+  },
+  {
+   "idx": 167,
+   "question": "What class is Evan taking to learn how to make healthier meals?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D7:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan is not taking a cooking class.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0004069329677419355,
+   "retrieved_tokens": 1050,
+   "retrieve_ms": 648.7705410108902,
+   "retrieve_cost": 0.0001697829677419355
+  },
+  {
+   "idx": 168,
+   "question": "What dish did Sam make on 18 August, 2023 that turned out bland?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D7:4"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No dish mentioned for that date.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003758471612903226,
+   "retrieved_tokens": 804,
+   "retrieve_ms": 600.0059170182794,
+   "retrieve_cost": 0.00017529716129032258
+  },
+  {
+   "idx": 169,
+   "question": "What food did Evan share a photo of on 19 August, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan shared a landscape painting.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0004004634193548387,
+   "retrieved_tokens": 977,
+   "retrieve_ms": 656.4976249937899,
+   "retrieve_cost": 0.00017426341935483872
+  },
+  {
+   "idx": 170,
+   "question": "What did Evan start sculpting years ago due to being inspired by a friend's gift?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D8:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan started painting.",
+   "memories": 19,
+   "label": "WRONG",
+   "query_cost": 0.00047064735483870967,
+   "retrieved_tokens": 1463,
+   "retrieve_ms": 1015.1510420255363,
+   "retrieve_cost": 0.0001727473548387097
+  },
+  {
+   "idx": 171,
+   "question": "What nature concept do watercolor painting classes emphasize according to Sam?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D8:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Observing nature.",
+   "memories": 9,
+   "label": "WRONG",
+   "query_cost": 0.0003443370967741936,
+   "retrieved_tokens": 658,
+   "retrieve_ms": 717.5259999930859,
+   "retrieve_cost": 0.00016928709677419357
+  },
+  {
+   "idx": 172,
+   "question": "What type of landscapes does Sam love painting the most?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D8:20"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not specify what type of landscapes Sam loves painting the most.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00044223270967741935,
+   "retrieved_tokens": 1273,
+   "retrieve_ms": 1152.1006670081988,
+   "retrieve_cost": 0.00016863270967741936
+  },
+  {
+   "idx": 173,
+   "question": "What sports activity has Sam been doing to stay active while dealing with the knee injury?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D9:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No specific sports activity mentioned.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000375624,
+   "retrieved_tokens": 823,
+   "retrieve_ms": 1071.5039169881493,
+   "retrieve_cost": 0.00017312400000000003
+  },
+  {
+   "idx": 174,
+   "question": "What activity does Sam do to keep himself busy while healing his knee?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D11:6"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam goes on car rides.",
+   "memories": 19,
+   "label": "WRONG",
+   "query_cost": 0.0004922392258064517,
+   "retrieved_tokens": 1602,
+   "retrieve_ms": 871.1419579922222,
+   "retrieve_cost": 0.00017378922580645165
+  },
+  {
+   "idx": 175,
+   "question": "What kind of writing does Evan enjoy as a form of expression?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D11:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan enjoys expressive writing.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003760184516129032,
+   "retrieved_tokens": 862,
+   "retrieve_ms": 774.1727919783443,
+   "retrieve_cost": 0.00016886845161290327
+  },
+  {
+   "idx": 176,
+   "question": "What electronics issue has been frustrating Evan lately?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D11:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "His malfunctioning phone.",
+   "memories": 9,
+   "label": "WRONG",
+   "query_cost": 0.0003711946451612903,
+   "retrieved_tokens": 795,
+   "retrieve_ms": 1386.354084010236,
+   "retrieve_cost": 0.00017589464516129034
+  },
+  {
+   "idx": 177,
+   "question": "What activity did Evan quit one year ago?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D12:2"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan quit going on adventures.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00038550696774193545,
+   "retrieved_tokens": 910,
+   "retrieve_ms": 1248.4427919844165,
+   "retrieve_cost": 0.00017175696774193548
+  },
+  {
+   "idx": 178,
+   "question": "Where did Sam and his mate plan to try skydiving?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:14"
+   ],
+   "last_evidence_session": 25,
+   "answer": "They planned to try kayaking, not skydiving.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00047478387096774194,
+   "retrieved_tokens": 1464,
+   "retrieve_ms": 1187.9113750183024,
+   "retrieve_cost": 0.00017433387096774195
+  },
+  {
+   "idx": 179,
+   "question": "What digestive issue did Evan experience lately?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan did not experience a digestive issue.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0005546736774193549,
+   "retrieved_tokens": 2013,
+   "retrieve_ms": 1006.2721249996684,
+   "retrieve_cost": 0.00017457367741935485
+  },
+  {
+   "idx": 180,
+   "question": "How did Sam start his transformation journey two years ago?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D15:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No relevant memories available.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00045340432258064516,
+   "retrieved_tokens": 1328,
+   "retrieve_ms": 1394.1555420169607,
+   "retrieve_cost": 0.00017755432258064518
+  },
+  {
+   "idx": 181,
+   "question": "What gift did Sam receive from a close friend?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D16:10"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam did not receive a gift; Evan did.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036738909677419356,
+   "retrieved_tokens": 776,
+   "retrieve_ms": 1186.7439999477938,
+   "retrieve_cost": 0.00017163909677419357
+  },
+  {
+   "idx": 182,
+   "question": "How does Sam describe the island he grew up on?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D17:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Sam does not describe the island.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003669698709677419,
+   "retrieved_tokens": 798,
+   "retrieve_ms": 1291.3253330043517,
+   "retrieve_cost": 0.00016941987096774196
+  },
+  {
+   "idx": 183,
+   "question": "What was the main reason for Evan's frustration with his new Prius getting stolen?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan's Prius broke down, not stolen.",
+   "memories": 9,
+   "label": "WRONG",
+   "query_cost": 0.0003770945806451613,
+   "retrieved_tokens": 804,
+   "retrieve_ms": 1395.9771249792539,
+   "retrieve_cost": 0.0001753445806451613
+  },
+  {
+   "idx": 184,
+   "question": "What family event is Sam planning for next summer?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:11"
+   ],
+   "last_evidence_session": 25,
+   "answer": "A big family reunion.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0004612887096774194,
+   "retrieved_tokens": 1402,
+   "retrieve_ms": 1248.890582995955,
+   "retrieve_cost": 0.0001746387096774194
+  },
+  {
+   "idx": 185,
+   "question": "What is the motto of Sam's family?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:7"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not provide information about Sam's family motto.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036180367741935483,
+   "retrieved_tokens": 737,
+   "retrieve_ms": 1290.079209022224,
+   "retrieve_cost": 0.00017100367741935488
+  },
+  {
+   "idx": 186,
+   "question": "Who helped Sam get the painting published in the exhibition?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D20:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan's close friend helped Sam.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00035960864516129036,
+   "retrieved_tokens": 732,
+   "retrieve_ms": 1418.5470839729533,
+   "retrieve_cost": 0.00017135864516129034
+  },
+  {
+   "idx": 187,
+   "question": "How did Sam feel when he painted the piece with the bird flying over it?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D21:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not mention a piece with a bird flying over it or Sam's feelings about it.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003613494193548388,
+   "retrieved_tokens": 685,
+   "retrieve_ms": 1387.658542022109,
+   "retrieve_cost": 0.00017144941935483875
+  },
+  {
+   "idx": 188,
+   "question": "How did Sam describe the process of creating the painting with the bird flying over it?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D21:16"
+   ],
+   "last_evidence_session": 25,
+   "answer": "There is no information about that.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003554578064516129,
+   "retrieved_tokens": 695,
+   "retrieve_ms": 1426.8078340101056,
+   "retrieve_cost": 0.00017155780645161292
+  },
+  {
+   "idx": 189,
+   "question": "What did Evan and his partner keep from their extended family on January 5, 2024?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Their marriage news.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0004213786451612903,
+   "retrieved_tokens": 1069,
+   "retrieve_ms": 1477.1021669730544,
+   "retrieve_cost": 0.00018227864516129035
+  },
+  {
+   "idx": 190,
+   "question": "What was Sam limiting himself to on his new diet?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Soda and candy intake.",
+   "memories": 17,
+   "label": "WRONG",
+   "query_cost": 0.0004679281935483871,
+   "retrieved_tokens": 1464,
+   "retrieve_ms": 1562.3693750239909,
+   "retrieve_cost": 0.0001710781935483871
+  },
+  {
+   "idx": 191,
+   "question": "What dance activity did Evan and his partner try in a recent weekend?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:9"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Evan and his partner tried snowshoeing.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00038793019354838715,
+   "retrieved_tokens": 914,
+   "retrieve_ms": 1427.8686250327155,
+   "retrieve_cost": 0.00017028019354838712
+  },
+  {
+   "idx": 192,
+   "question": "What suggestions did Evan give for high-impact exercises?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:17"
+   ],
+   "last_evidence_session": 25,
+   "answer": "No suggestions for high-impact exercises.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00038372961290322586,
+   "retrieved_tokens": 897,
+   "retrieve_ms": 1625.1015409943648,
+   "retrieve_cost": 0.00017162961290322583
+  },
+  {
+   "idx": 193,
+   "question": "What movie did Evan watch that motivated him to keep up with his routine?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:18"
+   ],
+   "last_evidence_session": 25,
+   "answer": "The memories do not mention any movie that Evan watched.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039324464516129034,
+   "retrieved_tokens": 934,
+   "retrieve_ms": 1640.0861669681035,
+   "retrieve_cost": 0.00017169464516129034
+  },
+  {
+   "idx": 194,
+   "question": "What activity hindered Evan's stress and flexibility?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:19"
+   ],
+   "last_evidence_session": 25,
+   "answer": "Knee injury from basketball.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00039479051612903226,
+   "retrieved_tokens": 964,
+   "retrieve_ms": 1585.2519160252996,
+   "retrieve_cost": 0.00017324051612903227
+  },
+  {
+   "idx": 195,
+   "question": "What did Sam share a photo of that was taken on a camping trip?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D25:8"
+   ],
+   "last_evidence_session": 25,
+   "answer": "An amazing picture taken by Evan.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003719934193548387,
+   "retrieved_tokens": 780,
+   "retrieve_ms": 1541.9537500129081,
+   "retrieve_cost": 0.00017594341935483872
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "reused_store": "heldout_conv-49__k3",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 6108.180708484724,
+ "retrieve_cost_per_query": 0.00017244292258064518,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "same_attribute_report": {
+  "evidence_events": 0,
+  "evidence_applied": 0,
+  "evidence_unconfirmed": 0,
+  "facts_lowered": 0,
+  "facts_lowered_closed": 0,
+  "closes_via_same_attribute": []
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

@@ -1,0 +1,5940 @@
+{
+ "arm": "lean_t0r_llm",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "llm",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "heldout:conv-47",
+  "sessions": [
+   1,
+   31
+  ],
+  "messages": 689,
+  "questions": 150
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 31,
+   "store_size": 689,
+   "questions": 150,
+   "accuracy": 0.7266666666666667,
+   "no_memory": 0,
+   "early_questions": 150,
+   "early_accuracy": 0.7266666666666667
+  }
+ ],
+ "accuracy": 0.7266666666666667,
+ "accuracy_by_category": {
+  "1": 0.7,
+  "2": 0.5294117647058824,
+  "3": 0.5384615384615384,
+  "4": 0.8433734939759037
+ },
+ "stored": 689,
+ "active": 689,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 132.72666666666666,
+ "retrieved_tokens_median": 128.5,
+ "memories_mean": 3.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.0,
+  "claude": 0.0,
+  "openai": 0.013284299999999997
+ },
+ "cache": {
+  "hits": 613,
+  "misses": 137
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "What are John's suspected health problems?",
+   "gold": "Obesity",
+   "category": 3,
+   "evidence": [
+    "D1:27"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Overwhelmed and stressed.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026909612903225805,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 11845.073083997704,
+   "retrieve_cost": 0.00017159612903225807,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 1,
+   "question": "Which recreational activity was James pursuing on March 16, 2022?",
+   "gold": "bowling",
+   "category": 2,
+   "evidence": [
+    "D1:26"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Bowling",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033334916129032255,
+   "retrieved_tokens": 93,
+   "retrieve_ms": 7668.740458961111,
+   "retrieve_cost": 0.00024334916129032256,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 2,
+   "question": "Which places or events have John and James planned to meet at?",
+   "gold": "VR Club, McGee's, baseball game",
+   "category": 1,
+   "evidence": [
+    "D1:36",
+    "D21:15",
+    "D23:5",
+    "D23:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Starbucks or a beer place.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028853051612903226,
+   "retrieved_tokens": 81,
+   "retrieve_ms": 7998.26529197162,
+   "retrieve_cost": 0.00019793051612903225,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 3,
+   "question": "Do both James and John have pets?",
+   "gold": "No",
+   "category": 1,
+   "evidence": [
+    "D1:12",
+    "D2:18"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Only James has pets.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031247535483870973,
+   "retrieved_tokens": 165,
+   "retrieve_ms": 7719.265125051606,
+   "retrieve_cost": 0.0002119753548387097,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 4,
+   "question": "When did John resume playing drums in his adulthood?",
+   "gold": "February 2022",
+   "category": 2,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No evidence of resuming found.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029532251612903224,
+   "retrieved_tokens": 117,
+   "retrieve_ms": 10415.710834029596,
+   "retrieve_cost": 0.00020022251612903226,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 5,
+   "question": "What are John and James' favorite games?",
+   "gold": "John's favorite game is CS:GO, and James's is Apex Legends.",
+   "category": 1,
+   "evidence": [
+    "D3:11",
+    "D4:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Chess and video games.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002987698064516129,
+   "retrieved_tokens": 115,
+   "retrieve_ms": 10340.172166994307,
+   "retrieve_cost": 0.0002054698064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 6,
+   "question": "Does James live in Connecticut?",
+   "gold": "Likely yes",
+   "category": 3,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No information available.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002664747096774193,
+   "retrieved_tokens": 78,
+   "retrieve_ms": 8256.741582998075,
+   "retrieve_cost": 0.00018022470967741933,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 7,
+   "question": "In which state is the shelter from which James adopted the puppy?",
+   "gold": "Connecticut.",
+   "category": 3,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Connecticut",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003253232903225807,
+   "retrieved_tokens": 103,
+   "retrieve_ms": 10072.26233399706,
+   "retrieve_cost": 0.00023442329032258066,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 8,
+   "question": "How many pets does James have?",
+   "gold": "Three dogs.",
+   "category": 1,
+   "evidence": [
+    "D1:12",
+    "D1:14",
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Three dogs.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003184337419354839,
+   "retrieved_tokens": 159,
+   "retrieve_ms": 9716.103832994122,
+   "retrieve_cost": 0.00022033374193548385,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 9,
+   "question": "What are the names of James's dogs?",
+   "gold": "Ned, Daisy, Max",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Daisy, Max, Ned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032597438709677416,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 10311.586415977217,
+   "retrieve_cost": 0.00022727438709677417,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 10,
+   "question": "When did James adopt Ned?",
+   "gold": "first week of April 2022",
+   "category": 2,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "April 5, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002873694193548387,
+   "retrieved_tokens": 161,
+   "retrieve_ms": 7627.501333015971,
+   "retrieve_cost": 0.0001868694193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 11,
+   "question": "How was John feeling on April 10, 2022?",
+   "gold": "seeking solitude",
+   "category": 2,
+   "evidence": [
+    "D6:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Stressed and overwhelmed.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029335083870967745,
+   "retrieved_tokens": 112,
+   "retrieve_ms": 7317.777915974148,
+   "retrieve_cost": 0.00019930083870967744,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 12,
+   "question": "Did James have a girlfriend during April 2022?",
+   "gold": "Presumably not",
+   "category": 3,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No, he did not.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003218268387096774,
+   "retrieved_tokens": 215,
+   "retrieve_ms": 12450.389875040855,
+   "retrieve_cost": 0.0002123268387096774,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 13,
+   "question": "When did James visit Italy?",
+   "gold": "In 2021",
+   "category": 2,
+   "evidence": [
+    "D6:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "In 2021.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002841195483870968,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 9391.550833999645,
+   "retrieve_cost": 0.00019261954838709677,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 14,
+   "question": "When did James buy himself a new adventure book?",
+   "gold": "April 26, 2022",
+   "category": 2,
+   "evidence": [
+    "D8:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "April 26, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003184337419354839,
+   "retrieved_tokens": 144,
+   "retrieve_ms": 7568.205207993742,
+   "retrieve_cost": 0.00021928374193548388,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 15,
+   "question": "When did James start playing Civilization VI?",
+   "gold": "March 2022",
+   "category": 2,
+   "evidence": [
+    "D8:29"
+   ],
+   "last_evidence_session": 31,
+   "answer": "April 29, 2022",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00031397303225806454,
+   "retrieved_tokens": 90,
+   "retrieve_ms": 11257.67783401534,
+   "retrieve_cost": 0.0002235230322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 16,
+   "question": "What is the game with different colored cards that was John talking about with James?",
+   "gold": "UNO",
+   "category": 3,
+   "evidence": [
+    "D8:34"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The game is not named.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003096226451612903,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 8151.152083009947,
+   "retrieve_cost": 0.0002068726451612903,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 17,
+   "question": "What is the board game where you have to find the imposter that John mentions to James?",
+   "gold": "Mafia",
+   "category": 3,
+   "evidence": [
+    "D8:36"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The game is not specified.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003177903870967742,
+   "retrieved_tokens": 153,
+   "retrieve_ms": 11318.890124966856,
+   "retrieve_cost": 0.00021519038709677418,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 18,
+   "question": "Which books has John recommended to James?",
+   "gold": "The Name of the Wind, Stormlight Archive, Kingkiller Chronicles, Expanse",
+   "category": 1,
+   "evidence": [
+    "D8:14",
+    "D14:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "\"The Stormlight Archive\" and \"Kingkiller Chronicle\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002777355483870968,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 7381.51758298045,
+   "retrieve_cost": 0.00018203554838709676,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 19,
+   "question": "Was James feeling lonely before meeting Samantha?",
+   "gold": "Most likely yes, because he mentioned that the only creatures that gave him joy are dogs and he was actively trying to date.",
+   "category": 3,
+   "evidence": [
+    "D9:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Yes, he mentioned ups and downs.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003283418709677419,
+   "retrieved_tokens": 181,
+   "retrieve_ms": 7063.018000044394,
+   "retrieve_cost": 0.00022364187096774192,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 20,
+   "question": "How many charity tournaments has John organized till date?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D10:2",
+    "D29:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Two charity tournaments.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003554831612903226,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 11716.374750016257,
+   "retrieve_cost": 0.0002557331612903226,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 21,
+   "question": "When did John first organize a charity tournament with his friends?",
+   "gold": "May 7, 2022",
+   "category": 2,
+   "evidence": [
+    "D10:2"
+   ],
+   "last_evidence_session": 31,
+   "answer": "October 30, 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003617682580645161,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 6955.5492909858,
+   "retrieve_cost": 0.0002539182580645161,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 22,
+   "question": "Who or which organizations have been the beneficiaries of John's charity tournaments?",
+   "gold": "animal shelter, homeless, children's hospital",
+   "category": 1,
+   "evidence": [
+    "D10:10",
+    "D10:12",
+    "D29:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Children's hospital.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00036406703225806453,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 8145.763584005181,
+   "retrieve_cost": 0.00025831703225806453,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 23,
+   "question": "When will John start his new job?",
+   "gold": "In July, 2022",
+   "category": 2,
+   "evidence": [
+    "D13:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "July 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026612593548387095,
+   "retrieved_tokens": 96,
+   "retrieve_ms": 8480.110750009771,
+   "retrieve_cost": 0.00017657593548387097,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 24,
+   "question": "What kind of games has James tried to develop?",
+   "gold": "football simulator, virtual world inspired by Witcher 3",
+   "category": 1,
+   "evidence": [
+    "D13:7",
+    "D1:4",
+    "D27:2"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Strategy games and computer games.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00033623129032258063,
+   "retrieved_tokens": 175,
+   "retrieve_ms": 12541.258374985773,
+   "retrieve_cost": 0.00023303129032258065,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 25,
+   "question": "Are John and James fans of the same football team?",
+   "gold": "No, James is a Liverpool fan and John is a Manchester City fan.",
+   "category": 3,
+   "evidence": [
+    "D13:12",
+    "D13:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Yes, they both support Liverpool.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026626509677419354,
+   "retrieved_tokens": 88,
+   "retrieve_ms": 6695.379207958467,
+   "retrieve_cost": 0.00017521509677419355,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 26,
+   "question": "Which countries has James visited?",
+   "gold": "Italy, Mexico, Turkey, Canada, Greenland",
+   "category": 1,
+   "evidence": [
+    "D6:12",
+    "D6:14",
+    "D16:9",
+    "D17:22"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Italy, Turkey, Mexico, Greenland.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002920803870967742,
+   "retrieved_tokens": 138,
+   "retrieve_ms": 7010.625042021275,
+   "retrieve_cost": 0.0001944303870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 27,
+   "question": "What kind of classes has James joined?",
+   "gold": "game design course, cooking classes",
+   "category": 1,
+   "evidence": [
+    "D13:6",
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No information about James's classes.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00033019470967741933,
+   "retrieved_tokens": 167,
+   "retrieve_ms": 10054.575958056375,
+   "retrieve_cost": 0.00022819470967741935,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 28,
+   "question": "When did James volunteer at an organization?",
+   "gold": "May 2022",
+   "category": 2,
+   "evidence": [
+    "D15:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "May 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003547589032258065,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 9481.690374959726,
+   "retrieve_cost": 0.00025515890322580644,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 29,
+   "question": "When did James depart for his trip to Canada?",
+   "gold": "July 11, 2022",
+   "category": 2,
+   "evidence": [
+    "D16:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "July 11, 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002805869032258064,
+   "retrieved_tokens": 131,
+   "retrieve_ms": 8867.885249957908,
+   "retrieve_cost": 0.00018278690322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 30,
+   "question": "Which country did James book tickets for in July 2022?",
+   "gold": "Canada",
+   "category": 3,
+   "evidence": [
+    "D16:9",
+    "D16:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Canada",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002957454193548387,
+   "retrieved_tokens": 142,
+   "retrieve_ms": 11784.383958030958,
+   "retrieve_cost": 0.0001995954193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 31,
+   "question": "How many days did James plan to spend on his trip in Canada?",
+   "gold": "19 days",
+   "category": 2,
+   "evidence": [
+    "D16:9",
+    "D16:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "11 days.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029178580645161287,
+   "retrieved_tokens": 142,
+   "retrieve_ms": 11679.736874997616,
+   "retrieve_cost": 0.00019413580645161288,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 32,
+   "question": "Where was James at on July 12, 2022?",
+   "gold": "Toronto, Canada",
+   "category": 2,
+   "evidence": [
+    "D16:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James was on a journey.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002770275483870968,
+   "retrieved_tokens": 86,
+   "retrieve_ms": 9922.794624988455,
+   "retrieve_cost": 0.0001862775483870968,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 33,
+   "question": "Did John and James study together?",
+   "gold": "Yes",
+   "category": 3,
+   "evidence": [
+    "D17:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No, they did not study together.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029342767741935484,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 11408.912916958798,
+   "retrieve_cost": 0.00019382767741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 34,
+   "question": "Which countries did James visit in July 2022?",
+   "gold": "Canada, Greenland",
+   "category": 1,
+   "evidence": [
+    "D16:9",
+    "D17:22"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Nuuk and Canada.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003133861935483871,
+   "retrieved_tokens": 168,
+   "retrieve_ms": 9658.156791992951,
+   "retrieve_cost": 0.0002115361935483871,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 35,
+   "question": "What additional country did James visit during his trip to Canada?",
+   "gold": "Greenland",
+   "category": 3,
+   "evidence": [
+    "D17:22"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Greenland (Nuuk).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028710735483870967,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 7944.663291971665,
+   "retrieve_cost": 0.00019110735483870967,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 36,
+   "question": "Who is Jill?",
+   "gold": "Most likely John's partner.",
+   "category": 3,
+   "evidence": [
+    "D17:24"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John's acquaintance or friend.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028736167741935485,
+   "retrieved_tokens": 74,
+   "retrieve_ms": 8244.809875031933,
+   "retrieve_cost": 0.00020111167741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 37,
+   "question": "When did John spend time with his sister and dogs?",
+   "gold": "July 21, 2022",
+   "category": 2,
+   "evidence": [
+    "D17:28"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John did not spend time with his sister and dogs.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003300785806451613,
+   "retrieved_tokens": 117,
+   "retrieve_ms": 9469.395999971312,
+   "retrieve_cost": 0.0002322785806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 38,
+   "question": "What happened to John's job situation in 2022?",
+   "gold": "quit his IT Job, secured his dream job, aspires to become an eSports competition organizer",
+   "category": 1,
+   "evidence": [
+    "D4:36",
+    "D18:1",
+    "D18:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John got a new job.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030649838709677417,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 7961.700665997341,
+   "retrieve_cost": 0.00020884838709677418,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 39,
+   "question": "When did John start his job in IT?",
+   "gold": "2019",
+   "category": 2,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "July 2022",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00033696541935483867,
+   "retrieved_tokens": 96,
+   "retrieve_ms": 9228.85816701455,
+   "retrieve_cost": 0.0002471154193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 40,
+   "question": "What kind of tricks do James's pets know?",
+   "gold": "swimming, catching frisbees, balancing on a skateboard, sit, stay, paw, and rollover",
+   "category": 1,
+   "evidence": [
+    "D2:17",
+    "D14:17",
+    "D14:23",
+    "D17:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Sit, stay, paw, rollover.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003167593548387097,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 9122.228124993853,
+   "retrieve_cost": 0.00021715935483870968,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 41,
+   "question": "When did James meet Samantha?",
+   "gold": "August 9, 2022",
+   "category": 2,
+   "evidence": [
+    "D19:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 3, 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00030672116129032255,
+   "retrieved_tokens": 173,
+   "retrieve_ms": 7645.333666005172,
+   "retrieve_cost": 0.00020382116129032257,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 42,
+   "question": "When did James take his 3 dogs to the beach?",
+   "gold": "August 9, 2022",
+   "category": 2,
+   "evidence": [
+    "D19:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "August 9, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032510690322580646,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 8903.680916992016,
+   "retrieve_cost": 0.00022670690322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 43,
+   "question": "When did John plan his next meeting with his siblings?",
+   "gold": "In September, 2022",
+   "category": 2,
+   "evidence": [
+    "D20:17"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002874778064516129,
+   "retrieved_tokens": 88,
+   "retrieve_ms": 8793.659957998898,
+   "retrieve_cost": 0.0001982278064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 44,
+   "question": "Why didn't John want to go to Starbucks?",
+   "gold": "Possibly because he likes to drink beer on his days off.",
+   "category": 3,
+   "evidence": [
+    "D21:12",
+    "D21:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "He preferred having a beer instead.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027657212903225807,
+   "retrieved_tokens": 87,
+   "retrieve_ms": 8316.48783403216,
+   "retrieve_cost": 0.00018627212903225807,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 45,
+   "question": "What kind of beer does McGee's bar serve?",
+   "gold": "Stout, lager",
+   "category": 1,
+   "evidence": [
+    "D21:15",
+    "D21:17",
+    "D23:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Stout and lager beer.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002834802580645161,
+   "retrieved_tokens": 112,
+   "retrieve_ms": 12165.899167011958,
+   "retrieve_cost": 0.0001894302580645161,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 46,
+   "question": "When did John and James meet at McGee's bar?",
+   "gold": "August 27, 2022",
+   "category": 2,
+   "evidence": [
+    "D21:18"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 4, 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027499490322580646,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 9261.835500015877,
+   "retrieve_cost": 0.00017914490322580646,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 47,
+   "question": "When did James ask Samantha to be his girlfriend?",
+   "gold": "September 3, 2022",
+   "category": 2,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 3, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003179742580645161,
+   "retrieved_tokens": 155,
+   "retrieve_ms": 7174.022249993868,
+   "retrieve_cost": 0.00021717425806451612,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 48,
+   "question": "When did James, Samantha and John go to the baseball game together?",
+   "gold": "September 11, 2022",
+   "category": 2,
+   "evidence": [
+    "D23:5",
+    "D23:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "They did not go together.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00030286858064516127,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 8563.571667007636,
+   "retrieve_cost": 0.0002070185806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 49,
+   "question": "What gaming equipments did John buy or refurbish?",
+   "gold": "Sennheiser headphones, Logitech mouse, gaming desk",
+   "category": 1,
+   "evidence": [
+    "D23:8",
+    "D23:10",
+    "D20:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Headphones, mouse, gaming desk.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033753019354838706,
+   "retrieved_tokens": 110,
+   "retrieve_ms": 8333.270207978785,
+   "retrieve_cost": 0.00024288019354838707,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 50,
+   "question": "When did James start taking cooking classes?",
+   "gold": "September 2, 2022",
+   "category": 2,
+   "evidence": [
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 2, 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033143535483870967,
+   "retrieved_tokens": 146,
+   "retrieve_ms": 11202.781375031918,
+   "retrieve_cost": 0.00023198535483870967,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 51,
+   "question": "Which new games did John start play during the course of the conversation with James?",
+   "gold": "AC Valhalla, Witcher 3, FIFA 23, Dungeons of the Dragons, futuristic dystopian game",
+   "category": 1,
+   "evidence": [
+    "D5:4",
+    "D19:7",
+    "D30:14",
+    "D24:1",
+    "D24:3",
+    "D8:20"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Board games, strategy, and RPG games.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00032082154838709674,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 7937.404124997556,
+   "retrieve_cost": 0.00022002154838709676,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 52,
+   "question": "When did John start working on his 2D Adventure mobile game?",
+   "gold": "approximately summer of 2022",
+   "category": 2,
+   "evidence": [
+    "D25:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Around June 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003552007741935484,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 7719.052208005451,
+   "retrieve_cost": 0.0002530507741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 53,
+   "question": "How long did it take for James to complete his Witcher-inspired game?",
+   "gold": "six months",
+   "category": 2,
+   "evidence": [
+    "D6:1",
+    "D27:2"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The memories do not specify the duration.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00038238774193548384,
+   "retrieved_tokens": 176,
+   "retrieve_ms": 11164.734709018376,
+   "retrieve_cost": 0.00027633774193548384,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 54,
+   "question": "What kind of programming-related events has John hosted?",
+   "gold": "online programming competition, programming seminar",
+   "category": 1,
+   "evidence": [
+    "D27:1",
+    "D28:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Online competitions for programmers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003704808387096774,
+   "retrieved_tokens": 153,
+   "retrieve_ms": 9967.755416000728,
+   "retrieve_cost": 0.00027118083870967744,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 55,
+   "question": "When did John and his programming friends host an online programming competition?",
+   "gold": "Last week before 13 October 2022.",
+   "category": 2,
+   "evidence": [
+    "D27:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Last week of October 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00037651470967741936,
+   "retrieved_tokens": 176,
+   "retrieve_ms": 9512.290584039874,
+   "retrieve_cost": 0.0002710647096774194,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 56,
+   "question": "Which of James's family members have visited him in the last year?",
+   "gold": "mother, sister",
+   "category": 1,
+   "evidence": [
+    "D17:28",
+    "D28:19"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No specific family members mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029857103225806446,
+   "retrieved_tokens": 137,
+   "retrieve_ms": 11163.817708031274,
+   "retrieve_cost": 0.0001998710322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 57,
+   "question": "When did James' mother and her friend visit him?",
+   "gold": "October 19, 2022",
+   "category": 2,
+   "evidence": [
+    "D28:19"
+   ],
+   "last_evidence_session": 31,
+   "answer": "October 19, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030714174193548384,
+   "retrieved_tokens": 95,
+   "retrieve_ms": 9378.691249992698,
+   "retrieve_cost": 0.00021504174193548385,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 58,
+   "question": "When did James try Cyberpunk 2077 game?",
+   "gold": "October 20, 2022",
+   "category": 2,
+   "evidence": [
+    "D28:27"
+   ],
+   "last_evidence_session": 31,
+   "answer": "October 20, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033632748387096774,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 6291.733708989341,
+   "retrieve_cost": 0.00023822748387096774,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 59,
+   "question": "When did John and his gaming friends organize the charity tournament?",
+   "gold": "On the night of October 30 to 31, 2022",
+   "category": 2,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "October 30, 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003654265161290323,
+   "retrieved_tokens": 189,
+   "retrieve_ms": 7642.333999974653,
+   "retrieve_cost": 0.0002583265161290323,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 60,
+   "question": "What games has John played with his friends at charity tournaments?",
+   "gold": "CS:GO, Fortnite, Overwatch and Apex Legends",
+   "category": 1,
+   "evidence": [
+    "D10:4",
+    "D29:1",
+    "D29:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "CS:GO, Overwatch, Apex Legends, Fortnite.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034224483870967746,
+   "retrieved_tokens": 189,
+   "retrieve_ms": 8740.62304198742,
+   "retrieve_cost": 0.00023274483870967743,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 61,
+   "question": "What was James' big moment with Samantha in October 2023?",
+   "gold": "They decided to live together and rented an apartment not far from McGee's bar.",
+   "category": 2,
+   "evidence": [
+    "D29:8",
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James and Samantha moved in together.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003141714193548387,
+   "retrieved_tokens": 155,
+   "retrieve_ms": 7920.840582984965,
+   "retrieve_cost": 0.0002121714193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 62,
+   "question": "How long did James and Samantha date for before deciding to move in together?",
+   "gold": "nearly three months",
+   "category": 2,
+   "evidence": [
+    "D19:14",
+    "D29:8",
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "About one month.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00033897329032258065,
+   "retrieved_tokens": 168,
+   "retrieve_ms": 8301.087333005853,
+   "retrieve_cost": 0.00023652329032258063,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 63,
+   "question": "When did James, his family and his dogs start on a road trip together?",
+   "gold": "November 4, 2022",
+   "category": 2,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "November 4, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000330234,
+   "retrieved_tokens": 131,
+   "retrieve_ms": 6347.83562499797,
+   "retrieve_cost": 0.000231234,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 64,
+   "question": "How long did John practice chess for before winning the chess tournament?",
+   "gold": "nearly four months",
+   "category": 2,
+   "evidence": [
+    "D17:1",
+    "D30:2",
+    "D30:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The memories do not specify the duration of John's practice.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003217378064516129,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 9432.063000043854,
+   "retrieve_cost": 0.0002228878064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 65,
+   "question": "When did James and his family visit Mark and Josh?",
+   "gold": "November 7, 2022",
+   "category": 2,
+   "evidence": [
+    "D31:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "November 6, 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029617238709677416,
+   "retrieved_tokens": 128,
+   "retrieve_ms": 11217.626500001643,
+   "retrieve_cost": 0.0001985223870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 66,
+   "question": "When did John work with a game developer on a project?",
+   "gold": "November 5-6, 2022",
+   "category": 2,
+   "evidence": [
+    "D31:2"
+   ],
+   "last_evidence_session": 31,
+   "answer": "November 7, 2022",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00034888722580645164,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 9784.742291027214,
+   "retrieve_cost": 0.0002530372258064516,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 67,
+   "question": "What programming languages has James worked with?",
+   "gold": "Python and C++",
+   "category": 4,
+   "evidence": [
+    "D1:8"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Python and C++.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034529535483870965,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 9190.152292023413,
+   "retrieve_cost": 0.00025319535483870963,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 68,
+   "question": "What type of mobile application does James plan to build with John?",
+   "gold": "An app for dog walking and pet care",
+   "category": 4,
+   "evidence": [
+    "D1:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Dog walking and pet care app.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000326334,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 7176.200041954871,
+   "retrieve_cost": 0.00023078400000000002,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 69,
+   "question": "How does James plan to make his dog-sitting app unique?",
+   "gold": "By allowing users to customize their pup's preferences/needs",
+   "category": 4,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "By allowing customization for each owner and pup.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003593022580645161,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 8954.471375036519,
+   "retrieve_cost": 0.0002592522580645161,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 70,
+   "question": "What has John mostly found with the metal detector so far?",
+   "gold": "bottle caps",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Bottle caps.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002693098064516129,
+   "retrieved_tokens": 95,
+   "retrieve_ms": 9847.836166038178,
+   "retrieve_cost": 0.00017930980645161293,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 71,
+   "question": "What did James offer to do for John regarding pets?",
+   "gold": "help find the perfect pet",
+   "category": 4,
+   "evidence": [
+    "D2:19"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Help find the perfect pet.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003116932258064516,
+   "retrieved_tokens": 92,
+   "retrieve_ms": 6838.590374973137,
+   "retrieve_cost": 0.00022064322580645163,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 72,
+   "question": "What instrument is John learning to play as of 27 March, 2022?",
+   "gold": "Drums",
+   "category": 4,
+   "evidence": [
+    "D3:2",
+    "D3:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The memories do not specify the instrument John is learning.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000293898,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 6540.467999991961,
+   "retrieve_cost": 0.00019324800000000003,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 73,
+   "question": "How long has John been playing the drums as of 27 March, 2022?",
+   "gold": "One month",
+   "category": 4,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "One month.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002895954193548387,
+   "retrieved_tokens": 85,
+   "retrieve_ms": 10130.598457995802,
+   "retrieve_cost": 0.0001992954193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 74,
+   "question": "What game did John play in an intense tournament at the gaming convention in March 2022?",
+   "gold": "CS:GO",
+   "category": 4,
+   "evidence": [
+    "D3:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "CS:GO",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003535277419354838,
+   "retrieved_tokens": 152,
+   "retrieve_ms": 9967.081207956653,
+   "retrieve_cost": 0.00025287774193548385,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 75,
+   "question": "What game was James playing in the online gaming tournament in April 2022?",
+   "gold": "Apex Legends",
+   "category": 4,
+   "evidence": [
+    "D4:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The game is not specified.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00034656,
+   "retrieved_tokens": 150,
+   "retrieve_ms": 9845.614542020485,
+   "retrieve_cost": 0.00024531,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 76,
+   "question": "How does James communicate with his gaming team?",
+   "gold": "voice chat",
+   "category": 4,
+   "evidence": [
+    "D4:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Voice chat.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003392330322580645,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 10263.053874950856,
+   "retrieve_cost": 0.0002472830322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 77,
+   "question": "What advice did James receive from the famous players he met at the tournament?",
+   "gold": "never put your ego above team success",
+   "category": 4,
+   "evidence": [
+    "D4:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Communicate correctly with the team.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003122268387096774,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 5363.321041979361,
+   "retrieve_cost": 0.00021607683870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 78,
+   "question": "What did James adopt in April 2022?",
+   "gold": "a pup",
+   "category": 4,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A pup named Ned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032180690322580643,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 9674.101457989309,
+   "retrieve_cost": 0.00022745690322580647,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 79,
+   "question": "What is the name of the pup that was adopted by James?",
+   "gold": "Ned",
+   "category": 4,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Ned",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003237176129032258,
+   "retrieved_tokens": 161,
+   "retrieve_ms": 9577.543291030452,
+   "retrieve_cost": 0.00022411761290322578,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 80,
+   "question": "Why did James embody the appearance of the game character from the woman he saw during a walk?",
+   "gold": "He found her appearance and eyes amazing.",
+   "category": 4,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "He fell in love at first sight.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00035129496774193546,
+   "retrieved_tokens": 215,
+   "retrieve_ms": 10635.044707974885,
+   "retrieve_cost": 0.00023819496774193547,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 81,
+   "question": "What inspired James to create the game character in the virtual world?",
+   "gold": "Appearance of a woman he saw during a walk",
+   "category": 4,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A stranger's appearance during a walk.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00037396567741935485,
+   "retrieved_tokens": 240,
+   "retrieve_ms": 8230.91620800551,
+   "retrieve_cost": 0.00025891567741935485,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 82,
+   "question": "Which country did James visit in 2021?",
+   "gold": "Italy",
+   "category": 4,
+   "evidence": [
+    "D6:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Italy",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028983987096774195,
+   "retrieved_tokens": 138,
+   "retrieve_ms": 11554.07275003381,
+   "retrieve_cost": 0.00019518987096774196,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 83,
+   "question": "What impresses John about Japan?",
+   "gold": "Technologically advanced megacities and tasty street food",
+   "category": 4,
+   "evidence": [
+    "D6:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Technological advancements and street food.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028276412903225804,
+   "retrieved_tokens": 116,
+   "retrieve_ms": 10794.974583026487,
+   "retrieve_cost": 0.00018871412903225806,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 84,
+   "question": "What kind of assignment was giving John a hard time at work?",
+   "gold": "Coding assignment",
+   "category": 4,
+   "evidence": [
+    "D7:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A coding assignment.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031408645161290326,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 8549.900917045306,
+   "retrieve_cost": 0.00021868645161290324,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 85,
+   "question": "What breed is Daisy, one of James' dogs?",
+   "gold": "Labrador",
+   "category": 4,
+   "evidence": [
+    "D9:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Labrador",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031515812903225803,
+   "retrieved_tokens": 128,
+   "retrieve_ms": 6633.371417003218,
+   "retrieve_cost": 0.00022050812903225803,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 86,
+   "question": "What type of pizza is James' favorite?",
+   "gold": "Pepperoni",
+   "category": 4,
+   "evidence": [
+    "D9:18"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Pepperoni pizza.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00025931903225806453,
+   "retrieved_tokens": 85,
+   "retrieve_ms": 4849.557042005472,
+   "retrieve_cost": 0.00017051903225806454,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 87,
+   "question": "What type of pizza is John's favorite?",
+   "gold": "Hawaiian",
+   "category": 4,
+   "evidence": [
+    "D9:19"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Hawaiian pizza.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00025312161290322576,
+   "retrieved_tokens": 92,
+   "retrieve_ms": 10541.7346250033,
+   "retrieve_cost": 0.00016357161290322578,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 88,
+   "question": "What did John organize with his friends on May 8, 2022?",
+   "gold": "A tournament for CS:GO",
+   "category": 4,
+   "evidence": [
+    "D10:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A community event.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00035791838709677416,
+   "retrieved_tokens": 147,
+   "retrieve_ms": 7925.472959002946,
+   "retrieve_cost": 0.0002583183870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 89,
+   "question": "What did John and his friends do with the remaining money after helping the dog shelter?",
+   "gold": "Bought groceries and cooked food for the homeless",
+   "category": 4,
+   "evidence": [
+    "D10:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Bought groceries for the homeless.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003435491612903226,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 10302.601875038818,
+   "retrieve_cost": 0.0002457491612903226,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 90,
+   "question": "What was the main goal of the money raised from the charity tournament organized by John and his friends in May 2022?",
+   "gold": "Raise money for a dog shelter",
+   "category": 4,
+   "evidence": [
+    "D10:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Children's hospital.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003747888387096774,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 7457.34529197216,
+   "retrieve_cost": 0.0002654388387096774,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 91,
+   "question": "What did the system John created help the charitable foundation with?",
+   "gold": "tracking inventory, resources, and donations",
+   "category": 4,
+   "evidence": [
+    "D11:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Streamlining operations and inventory management.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00036164670967741934,
+   "retrieved_tokens": 186,
+   "retrieve_ms": 6035.5627500102855,
+   "retrieve_cost": 0.00025559670967741934,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 92,
+   "question": "What did John create for the charitable foundation that helped generate reports for analysis?",
+   "gold": "computer application on smartphones",
+   "category": 4,
+   "evidence": [
+    "D11:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A software tool.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034015567741935485,
+   "retrieved_tokens": 186,
+   "retrieve_ms": 8078.342624998186,
+   "retrieve_cost": 0.00023500567741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 93,
+   "question": "What did John receive for achieving second place in the tournament?",
+   "gold": "money and a trophy",
+   "category": 4,
+   "evidence": [
+    "D12:5",
+    "D12:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Some money and a trophy.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032493658064516125,
+   "retrieved_tokens": 128,
+   "retrieve_ms": 9123.001916974317,
+   "retrieve_cost": 0.00022818658064516128,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 94,
+   "question": "What project is James working on in his game design course?",
+   "gold": "a new part of the football simulator, collecting player databases",
+   "category": 4,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A computer game based on sketches.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00035182354838709677,
+   "retrieved_tokens": 188,
+   "retrieve_ms": 10059.076667006593,
+   "retrieve_cost": 0.00024547354838709676,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 95,
+   "question": "Who does James support in football matches?",
+   "gold": "Liverpool",
+   "category": 4,
+   "evidence": [
+    "D13:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Liverpool",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002735490967741935,
+   "retrieved_tokens": 103,
+   "retrieve_ms": 6571.153333992697,
+   "retrieve_cost": 0.00018474909677419353,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 96,
+   "question": "Which football club does John support?",
+   "gold": "Manchester City",
+   "category": 4,
+   "evidence": [
+    "D13:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Manchester City",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002702518064516129,
+   "retrieved_tokens": 85,
+   "retrieve_ms": 4331.4788329880685,
+   "retrieve_cost": 0.0001838518064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 97,
+   "question": "What disagreement do James and John have about their football teams?",
+   "gold": "debating on which team will perform better in the championship",
+   "category": 4,
+   "evidence": [
+    "D13:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Championship winner prediction.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002604702580645161,
+   "retrieved_tokens": 119,
+   "retrieve_ms": 9462.95341703808,
+   "retrieve_cost": 0.00016567025806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 98,
+   "question": "What is Max good at doing according to James?",
+   "gold": "catching frisbees in mid-air",
+   "category": 4,
+   "evidence": [
+    "D14:23"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Catching frisbees in mid-air.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003092525806451613,
+   "retrieved_tokens": 92,
+   "retrieve_ms": 6325.056583038531,
+   "retrieve_cost": 0.0002167025806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 99,
+   "question": "What is the main focus of the organization that James volunteered with?",
+   "gold": "providing necessary items to those who are less fortunate",
+   "category": 4,
+   "evidence": [
+    "D15:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Providing necessary items to those in need.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034235593548387095,
+   "retrieved_tokens": 134,
+   "retrieve_ms": 9307.382125000004,
+   "retrieve_cost": 0.00024320593548387095,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 100,
+   "question": "Will there be an interview required to volunteer with the organization James volunteered for?",
+   "gold": "No",
+   "category": 4,
+   "evidence": [
+    "D15:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No, an interview is not necessary.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032767993548387097,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 6507.249541988131,
+   "retrieve_cost": 0.00023137993548387096,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 101,
+   "question": "How did John relax in his free time on 9 July, 2022?",
+   "gold": "Reading",
+   "category": 4,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 31,
+   "answer": "By reading.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003063226451612903,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 8245.448499976192,
+   "retrieve_cost": 0.0002088226451612903,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 102,
+   "question": "What did James enjoy doing on cold winter days?",
+   "gold": "Reading while snuggled under the covers",
+   "category": 4,
+   "evidence": [
+    "D16:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Reading under the covers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000318008129032258,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 9793.995582964271,
+   "retrieve_cost": 0.00022020812903225803,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 103,
+   "question": "What new hobby did James become interested in on 9 July, 2022?",
+   "gold": "Extreme sports",
+   "category": 4,
+   "evidence": [
+    "D16:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Extreme sports",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003343625806451613,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 6741.5171670145355,
+   "retrieve_cost": 0.00023731258064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 104,
+   "question": "Where did James plan to visit after Toronto?",
+   "gold": "Vancouver",
+   "category": 4,
+   "evidence": [
+    "D16:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Vancouver.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003004550322580645,
+   "retrieved_tokens": 134,
+   "retrieve_ms": 4794.432499969844,
+   "retrieve_cost": 0.0002055050322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 105,
+   "question": "When did James plan to return from his trip to Toronto and Vancouver?",
+   "gold": "July 20",
+   "category": 4,
+   "evidence": [
+    "D16:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "July 20, 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002987440645161291,
+   "retrieved_tokens": 129,
+   "retrieve_ms": 4342.514000018127,
+   "retrieve_cost": 0.00020004406451612906,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 106,
+   "question": "What online game did John start playing recently for improving strategy?",
+   "gold": "Chess",
+   "category": 4,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Chess",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003068187096774193,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 4925.27649999829,
+   "retrieve_cost": 0.00021561870967741934,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 107,
+   "question": "What made John leave his IT job?",
+   "gold": "to focus on things that align with his values and passions",
+   "category": 4,
+   "evidence": [
+    "D18:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "He wanted something that made a difference.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034062599999999996,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 5191.786666051485,
+   "retrieve_cost": 0.00023862599999999997,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 108,
+   "question": "Which game tournaments does John plan to organize besides CS:GO?",
+   "gold": "Fortnite competitions",
+   "category": 4,
+   "evidence": [
+    "D18:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Fortnite, strategy, and RPG games.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00035241406451612904,
+   "retrieved_tokens": 180,
+   "retrieve_ms": 5665.092207957059,
+   "retrieve_cost": 0.000245764064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 109,
+   "question": "What happened to James's puppy during the recent visit to the clinic?",
+   "gold": "routine examination and vaccination",
+   "category": 4,
+   "evidence": [
+    "D18:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Routine examination and vaccination.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030381870967741934,
+   "retrieved_tokens": 83,
+   "retrieve_ms": 4017.1011249767616,
+   "retrieve_cost": 0.00021381870967741935,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 110,
+   "question": "What game genre did John start exploring instead of shooters?",
+   "gold": "strategy and RPG games",
+   "category": 4,
+   "evidence": [
+    "D19:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Strategy and RPG games.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031240935483870967,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 9186.90216599498,
+   "retrieve_cost": 0.00021775935483870964,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 111,
+   "question": "Which RPG game is John playing and enjoying on 10 August, 2022?",
+   "gold": "The Witcher 3",
+   "category": 4,
+   "evidence": [
+    "D19:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The Witcher 3",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003178649032258065,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 6695.783874951303,
+   "retrieve_cost": 0.00022096490322580647,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 112,
+   "question": "What aspect of \"The Witcher 3\" does John find immersive?",
+   "gold": "shaping the world with choices",
+   "category": 4,
+   "evidence": [
+    "D19:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The story and choices.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033857477419354837,
+   "retrieved_tokens": 122,
+   "retrieve_ms": 6844.63558299467,
+   "retrieve_cost": 0.0002424247741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 113,
+   "question": "Whose phone number did James receive during the beach outing?",
+   "gold": "Samantha",
+   "category": 4,
+   "evidence": [
+    "D19:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Samantha's phone number.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002819924516129032,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 9060.845125000924,
+   "retrieve_cost": 0.00018944245161290322,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 114,
+   "question": "What is James planning to do after receiving Samantha's phone number?",
+   "gold": "call her",
+   "category": 4,
+   "evidence": [
+    "D19:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Call her tomorrow.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002832344516129032,
+   "retrieved_tokens": 96,
+   "retrieve_ms": 6831.215417012572,
+   "retrieve_cost": 0.00019218445161290322,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 115,
+   "question": "What is John organizing with his siblings?",
+   "gold": "a gaming night",
+   "category": 4,
+   "evidence": [
+    "D20:17"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A gaming night.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003062390322580645,
+   "retrieved_tokens": 101,
+   "retrieve_ms": 8495.995666016825,
+   "retrieve_cost": 0.00021593903225806453,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 116,
+   "question": "What type of beer does John not like?",
+   "gold": "dark beer",
+   "category": 4,
+   "evidence": [
+    "D21:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Dark beer.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026360574193548384,
+   "retrieved_tokens": 77,
+   "retrieve_ms": 8359.236957971007,
+   "retrieve_cost": 0.00017720574193548386,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 117,
+   "question": "What were some difficulties James faced during the development of his game?",
+   "gold": "balancing mechanics and ensuring fairness",
+   "category": 4,
+   "evidence": [
+    "D22:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A bug in the code.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00032285825806451613,
+   "retrieved_tokens": 107,
+   "retrieve_ms": 7138.3759579621255,
+   "retrieve_cost": 0.00022895825806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 118,
+   "question": "What has John been teaching his siblings?",
+   "gold": "coding",
+   "category": 4,
+   "evidence": [
+    "D22:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Coding.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003024063870967742,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 6477.195292012766,
+   "retrieve_cost": 0.0002080563870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 119,
+   "question": "What kind of programs are John's siblings making?",
+   "gold": "basic games and stories",
+   "category": 4,
+   "evidence": [
+    "D22:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Basic games and stories.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003496304516129032,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 4759.397416957654,
+   "retrieve_cost": 0.0002521304516129032,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 120,
+   "question": "Which company's headphones did John choose for gaming?",
+   "gold": "Sennheiser",
+   "category": 4,
+   "evidence": [
+    "D23:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Sennheiser",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003175554193548387,
+   "retrieved_tokens": 139,
+   "retrieve_ms": 6555.512125021778,
+   "retrieve_cost": 0.0002212554193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 121,
+   "question": "What did James and Samantha discover they both enjoy at McGee's bar?",
+   "gold": "Lager beer",
+   "category": 4,
+   "evidence": [
+    "D23:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Lager beer.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029801574193548386,
+   "retrieved_tokens": 126,
+   "retrieve_ms": 8518.382624955848,
+   "retrieve_cost": 0.00020186574193548385,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 122,
+   "question": "How much does James pay per cooking class?",
+   "gold": "$10",
+   "category": 4,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "$10 per class",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002987806451612903,
+   "retrieved_tokens": 146,
+   "retrieve_ms": 8559.567000018433,
+   "retrieve_cost": 0.0002014306451612903,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 123,
+   "question": "What did James learn to make in the cooking class besides omelette and meringue?",
+   "gold": "Dough",
+   "category": 4,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Several simple dishes.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00031752019354838707,
+   "retrieved_tokens": 146,
+   "retrieve_ms": 3688.448667002376,
+   "retrieve_cost": 0.00021747019354838708,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 124,
+   "question": "Why did James sign up for a cooking class?",
+   "gold": "He wanted to learn something new",
+   "category": 4,
+   "evidence": [
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "To learn something new.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034779116129032253,
+   "retrieved_tokens": 146,
+   "retrieve_ms": 6464.43829202326,
+   "retrieve_cost": 0.00024954116129032256,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 125,
+   "question": "What did James prepare for the first time in the cooking class?",
+   "gold": "Omelette",
+   "category": 4,
+   "evidence": [
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A great omelette.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031815406451612906,
+   "retrieved_tokens": 129,
+   "retrieve_ms": 4522.5767500232905,
+   "retrieve_cost": 0.00022155406451612904,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 126,
+   "question": "What is the name of the board game John tried in September 2022?",
+   "gold": "Dungeons of the Dragon",
+   "category": 4,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The name of the board game is not mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003241432258064516,
+   "retrieved_tokens": 161,
+   "retrieve_ms": 9053.544207999948,
+   "retrieve_cost": 0.0002188432258064516,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 127,
+   "question": "Where does James get his ideas from?",
+   "gold": "books, movies, dreams",
+   "category": 4,
+   "evidence": [
+    "D24:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Books, movies, and dreams.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002877398709677419,
+   "retrieved_tokens": 99,
+   "retrieve_ms": 8794.433040951844,
+   "retrieve_cost": 0.00019593987096774192,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 128,
+   "question": "What kind of dream did James have recently?",
+   "gold": "a dream with a medieval castle full of puzzles and traps",
+   "category": 4,
+   "evidence": [
+    "D24:8"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A vivid dream with creative ideas.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003089363225806452,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 8202.091625018511,
+   "retrieve_cost": 0.00021668632258064517,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 129,
+   "question": "What kind of music does John like?",
+   "gold": "electronic and rock music",
+   "category": 4,
+   "evidence": [
+    "D24:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Electronic and rock music.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002685354193548387,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 8495.585749973543,
+   "retrieve_cost": 0.0001761354193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 130,
+   "question": "What instrument did James used to play when he was younger?",
+   "gold": "guitar",
+   "category": 4,
+   "evidence": [
+    "D24:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Guitar",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002873345806451613,
+   "retrieved_tokens": 101,
+   "retrieve_ms": 4077.69687497057,
+   "retrieve_cost": 0.00019703458064516128,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 131,
+   "question": "What did John use to play when he was younger to let off steam?",
+   "gold": "drums",
+   "category": 4,
+   "evidence": [
+    "D24:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Drums.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003068214193548387,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 3524.2686250130646,
+   "retrieve_cost": 0.0002132214193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 132,
+   "question": "What career milestone did John achieve recently in September 2022?",
+   "gold": "making his first mobile game",
+   "category": 4,
+   "evidence": [
+    "D25:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Launching his first mobile game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003304354838709677,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 9148.38566700928,
+   "retrieve_cost": 0.00023593548387096773,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 133,
+   "question": "What type of game is John's upcoming mobile game?",
+   "gold": "2D adventure",
+   "category": 4,
+   "evidence": [
+    "D25:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "2D adventure game",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031771083870967747,
+   "retrieved_tokens": 141,
+   "retrieve_ms": 3331.2115829903632,
+   "retrieve_cost": 0.00022081083870967744,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 134,
+   "question": "What does John do to stay informed and constantly learn about game design?",
+   "gold": "watch tutorials and keep up with developer forums",
+   "category": 4,
+   "evidence": [
+    "D25:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Watches tutorials and developer forums.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033146651612903224,
+   "retrieved_tokens": 117,
+   "retrieve_ms": 8437.777500017546,
+   "retrieve_cost": 0.00023516651612903226,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 135,
+   "question": "What kind of gig was John offered at the game dev non-profit organization?",
+   "gold": "programming mentor for game developers",
+   "category": 4,
+   "evidence": [
+    "D26:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Volunteer gig for game developers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003760728387096774,
+   "retrieved_tokens": 164,
+   "retrieve_ms": 7279.376332997344,
+   "retrieve_cost": 0.00027302283870967744,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 136,
+   "question": "What does John feel about starting the journey as a programming mentor for game developers?",
+   "gold": "excited and inspired",
+   "category": 4,
+   "evidence": [
+    "D26:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "He's really excited.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00038500141935483866,
+   "retrieved_tokens": 188,
+   "retrieve_ms": 7330.525959027,
+   "retrieve_cost": 0.00027925141935483867,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 137,
+   "question": "What kind of games is James excited to play with his new video card?",
+   "gold": "RPGs",
+   "category": 4,
+   "evidence": [
+    "D26:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "RPGs and strategy games.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003216108387096774,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 7277.321292029228,
+   "retrieve_cost": 0.0002241108387096774,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 138,
+   "question": "What inspired James to create his game?",
+   "gold": "Witcher 3",
+   "category": 4,
+   "evidence": [
+    "D27:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Witcher 3's amazing world and story.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003419732903225806,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 7390.032499970403,
+   "retrieve_cost": 0.00023862329032258063,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 139,
+   "question": "What sparked James' passion for gaming when he was a kid?",
+   "gold": "Super Mario and The Legend of Zelda games",
+   "category": 4,
+   "evidence": [
+    "D28:25"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Super Mario and The Legend of Zelda.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003458343870967742,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 5074.839709035587,
+   "retrieve_cost": 0.0002481843870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 140,
+   "question": "What did James lose progress on due to a power outage?",
+   "gold": "a game",
+   "category": 4,
+   "evidence": [
+    "D28:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003107417419354839,
+   "retrieved_tokens": 127,
+   "retrieve_ms": 4900.314875005279,
+   "retrieve_cost": 0.0002159417419354839,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 141,
+   "question": "What games were played at the gaming tournament organized by John on 31 October, 2022?",
+   "gold": "Fortnite, Overwatch, Apex Legends",
+   "category": 4,
+   "evidence": [
+    "D29:1",
+    "D29:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Fortnite, Overwatch, Apex Legends.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00036523180645161294,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 5983.804874995258,
+   "retrieve_cost": 0.00025438180645161293,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 142,
+   "question": "What was the purpose of the gaming tournament organized by John on 31 October, 2022?",
+   "gold": "To raise money for a children's hospital",
+   "category": 4,
+   "evidence": [
+    "D29:1",
+    "D29:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "To raise money for a children's hospital.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00037522393548387097,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 6449.132167035714,
+   "retrieve_cost": 0.000264973935483871,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 143,
+   "question": "What decision did James and Samantha make on 31 October, 2022?",
+   "gold": "To move in together",
+   "category": 4,
+   "evidence": [
+    "D29:8",
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "They decided to move in together.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029923335483870967,
+   "retrieved_tokens": 99,
+   "retrieve_ms": 7354.131958971266,
+   "retrieve_cost": 0.00020503335483870968,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 144,
+   "question": "Where did James and Samantha decide to live together on 31 October, 2022?",
+   "gold": "In an apartment not far from McGee's bar",
+   "category": 4,
+   "evidence": [
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Near McGee's bar.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003093809032258064,
+   "retrieved_tokens": 101,
+   "retrieve_ms": 8268.616374989506,
+   "retrieve_cost": 0.00021488090322580646,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 145,
+   "question": "Why did James and Samantha choose an apartment near McGee's bar?",
+   "gold": "They love spending time together at the bar",
+   "category": 4,
+   "evidence": [
+    "D29:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "They love the bar nearby.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030269012903225807,
+   "retrieved_tokens": 132,
+   "retrieve_ms": 8689.075417001732,
+   "retrieve_cost": 0.00020474012903225807,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 146,
+   "question": "What game is John hooked on playing on 5 November, 2022?",
+   "gold": "FIFA 23",
+   "category": 4,
+   "evidence": [
+    "D30:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "FIFA 23",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003107634193548387,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 6932.876457984094,
+   "retrieve_cost": 0.0002162634193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 147,
+   "question": "What did John suggest James practice before playing FIFA 23 together?",
+   "gold": "Control with a gamepad and timing",
+   "category": 4,
+   "evidence": [
+    "D30:18"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Practice a little first.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000295486064516129,
+   "retrieved_tokens": 105,
+   "retrieve_ms": 5895.805792009924,
+   "retrieve_cost": 0.00020248606451612902,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 148,
+   "question": "What project did John work on with a game developer by 7 November, 2022?",
+   "gold": "An online board game",
+   "category": 4,
+   "evidence": [
+    "D31:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "An online board game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003555427741935484,
+   "retrieved_tokens": 127,
+   "retrieve_ms": 3730.8092499733903,
+   "retrieve_cost": 0.0002574427741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 149,
+   "question": "What is the name of John's cousin's dog?",
+   "gold": "Luna",
+   "category": 4,
+   "evidence": [
+    "D31:22"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Ned",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00030304838709677417,
+   "retrieved_tokens": 110,
+   "retrieve_ms": 4242.153833969496,
+   "retrieve_cost": 0.00021199838709677418,
+   "checkpoint": 31,
+   "store_size": 689
+  }
+ ],
+ "asked": [
+  {
+   "idx": 0,
+   "question": "What are John's suspected health problems?",
+   "gold": "Obesity",
+   "category": 3,
+   "evidence": [
+    "D1:27"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Overwhelmed and stressed.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026909612903225805,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 11845.073083997704,
+   "retrieve_cost": 0.00017159612903225807,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 1,
+   "question": "Which recreational activity was James pursuing on March 16, 2022?",
+   "gold": "bowling",
+   "category": 2,
+   "evidence": [
+    "D1:26"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Bowling",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033334916129032255,
+   "retrieved_tokens": 93,
+   "retrieve_ms": 7668.740458961111,
+   "retrieve_cost": 0.00024334916129032256,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 2,
+   "question": "Which places or events have John and James planned to meet at?",
+   "gold": "VR Club, McGee's, baseball game",
+   "category": 1,
+   "evidence": [
+    "D1:36",
+    "D21:15",
+    "D23:5",
+    "D23:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Starbucks or a beer place.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028853051612903226,
+   "retrieved_tokens": 81,
+   "retrieve_ms": 7998.26529197162,
+   "retrieve_cost": 0.00019793051612903225,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 3,
+   "question": "Do both James and John have pets?",
+   "gold": "No",
+   "category": 1,
+   "evidence": [
+    "D1:12",
+    "D2:18"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Only James has pets.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031247535483870973,
+   "retrieved_tokens": 165,
+   "retrieve_ms": 7719.265125051606,
+   "retrieve_cost": 0.0002119753548387097,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 4,
+   "question": "When did John resume playing drums in his adulthood?",
+   "gold": "February 2022",
+   "category": 2,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No evidence of resuming found.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029532251612903224,
+   "retrieved_tokens": 117,
+   "retrieve_ms": 10415.710834029596,
+   "retrieve_cost": 0.00020022251612903226,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 5,
+   "question": "What are John and James' favorite games?",
+   "gold": "John's favorite game is CS:GO, and James's is Apex Legends.",
+   "category": 1,
+   "evidence": [
+    "D3:11",
+    "D4:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Chess and video games.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002987698064516129,
+   "retrieved_tokens": 115,
+   "retrieve_ms": 10340.172166994307,
+   "retrieve_cost": 0.0002054698064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 6,
+   "question": "Does James live in Connecticut?",
+   "gold": "Likely yes",
+   "category": 3,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No information available.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002664747096774193,
+   "retrieved_tokens": 78,
+   "retrieve_ms": 8256.741582998075,
+   "retrieve_cost": 0.00018022470967741933,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 7,
+   "question": "In which state is the shelter from which James adopted the puppy?",
+   "gold": "Connecticut.",
+   "category": 3,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Connecticut",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003253232903225807,
+   "retrieved_tokens": 103,
+   "retrieve_ms": 10072.26233399706,
+   "retrieve_cost": 0.00023442329032258066,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 8,
+   "question": "How many pets does James have?",
+   "gold": "Three dogs.",
+   "category": 1,
+   "evidence": [
+    "D1:12",
+    "D1:14",
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Three dogs.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003184337419354839,
+   "retrieved_tokens": 159,
+   "retrieve_ms": 9716.103832994122,
+   "retrieve_cost": 0.00022033374193548385,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 9,
+   "question": "What are the names of James's dogs?",
+   "gold": "Ned, Daisy, Max",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Daisy, Max, Ned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032597438709677416,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 10311.586415977217,
+   "retrieve_cost": 0.00022727438709677417,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 10,
+   "question": "When did James adopt Ned?",
+   "gold": "first week of April 2022",
+   "category": 2,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "April 5, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002873694193548387,
+   "retrieved_tokens": 161,
+   "retrieve_ms": 7627.501333015971,
+   "retrieve_cost": 0.0001868694193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 11,
+   "question": "How was John feeling on April 10, 2022?",
+   "gold": "seeking solitude",
+   "category": 2,
+   "evidence": [
+    "D6:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Stressed and overwhelmed.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029335083870967745,
+   "retrieved_tokens": 112,
+   "retrieve_ms": 7317.777915974148,
+   "retrieve_cost": 0.00019930083870967744,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 12,
+   "question": "Did James have a girlfriend during April 2022?",
+   "gold": "Presumably not",
+   "category": 3,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No, he did not.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003218268387096774,
+   "retrieved_tokens": 215,
+   "retrieve_ms": 12450.389875040855,
+   "retrieve_cost": 0.0002123268387096774,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 13,
+   "question": "When did James visit Italy?",
+   "gold": "In 2021",
+   "category": 2,
+   "evidence": [
+    "D6:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "In 2021.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002841195483870968,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 9391.550833999645,
+   "retrieve_cost": 0.00019261954838709677,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 14,
+   "question": "When did James buy himself a new adventure book?",
+   "gold": "April 26, 2022",
+   "category": 2,
+   "evidence": [
+    "D8:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "April 26, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003184337419354839,
+   "retrieved_tokens": 144,
+   "retrieve_ms": 7568.205207993742,
+   "retrieve_cost": 0.00021928374193548388,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 15,
+   "question": "When did James start playing Civilization VI?",
+   "gold": "March 2022",
+   "category": 2,
+   "evidence": [
+    "D8:29"
+   ],
+   "last_evidence_session": 31,
+   "answer": "April 29, 2022",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00031397303225806454,
+   "retrieved_tokens": 90,
+   "retrieve_ms": 11257.67783401534,
+   "retrieve_cost": 0.0002235230322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 16,
+   "question": "What is the game with different colored cards that was John talking about with James?",
+   "gold": "UNO",
+   "category": 3,
+   "evidence": [
+    "D8:34"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The game is not named.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003096226451612903,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 8151.152083009947,
+   "retrieve_cost": 0.0002068726451612903,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 17,
+   "question": "What is the board game where you have to find the imposter that John mentions to James?",
+   "gold": "Mafia",
+   "category": 3,
+   "evidence": [
+    "D8:36"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The game is not specified.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003177903870967742,
+   "retrieved_tokens": 153,
+   "retrieve_ms": 11318.890124966856,
+   "retrieve_cost": 0.00021519038709677418,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 18,
+   "question": "Which books has John recommended to James?",
+   "gold": "The Name of the Wind, Stormlight Archive, Kingkiller Chronicles, Expanse",
+   "category": 1,
+   "evidence": [
+    "D8:14",
+    "D14:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "\"The Stormlight Archive\" and \"Kingkiller Chronicle\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002777355483870968,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 7381.51758298045,
+   "retrieve_cost": 0.00018203554838709676,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 19,
+   "question": "Was James feeling lonely before meeting Samantha?",
+   "gold": "Most likely yes, because he mentioned that the only creatures that gave him joy are dogs and he was actively trying to date.",
+   "category": 3,
+   "evidence": [
+    "D9:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Yes, he mentioned ups and downs.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003283418709677419,
+   "retrieved_tokens": 181,
+   "retrieve_ms": 7063.018000044394,
+   "retrieve_cost": 0.00022364187096774192,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 20,
+   "question": "How many charity tournaments has John organized till date?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D10:2",
+    "D29:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Two charity tournaments.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003554831612903226,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 11716.374750016257,
+   "retrieve_cost": 0.0002557331612903226,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 21,
+   "question": "When did John first organize a charity tournament with his friends?",
+   "gold": "May 7, 2022",
+   "category": 2,
+   "evidence": [
+    "D10:2"
+   ],
+   "last_evidence_session": 31,
+   "answer": "October 30, 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003617682580645161,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 6955.5492909858,
+   "retrieve_cost": 0.0002539182580645161,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 22,
+   "question": "Who or which organizations have been the beneficiaries of John's charity tournaments?",
+   "gold": "animal shelter, homeless, children's hospital",
+   "category": 1,
+   "evidence": [
+    "D10:10",
+    "D10:12",
+    "D29:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Children's hospital.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00036406703225806453,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 8145.763584005181,
+   "retrieve_cost": 0.00025831703225806453,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 23,
+   "question": "When will John start his new job?",
+   "gold": "In July, 2022",
+   "category": 2,
+   "evidence": [
+    "D13:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "July 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026612593548387095,
+   "retrieved_tokens": 96,
+   "retrieve_ms": 8480.110750009771,
+   "retrieve_cost": 0.00017657593548387097,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 24,
+   "question": "What kind of games has James tried to develop?",
+   "gold": "football simulator, virtual world inspired by Witcher 3",
+   "category": 1,
+   "evidence": [
+    "D13:7",
+    "D1:4",
+    "D27:2"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Strategy games and computer games.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00033623129032258063,
+   "retrieved_tokens": 175,
+   "retrieve_ms": 12541.258374985773,
+   "retrieve_cost": 0.00023303129032258065,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 25,
+   "question": "Are John and James fans of the same football team?",
+   "gold": "No, James is a Liverpool fan and John is a Manchester City fan.",
+   "category": 3,
+   "evidence": [
+    "D13:12",
+    "D13:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Yes, they both support Liverpool.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026626509677419354,
+   "retrieved_tokens": 88,
+   "retrieve_ms": 6695.379207958467,
+   "retrieve_cost": 0.00017521509677419355,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 26,
+   "question": "Which countries has James visited?",
+   "gold": "Italy, Mexico, Turkey, Canada, Greenland",
+   "category": 1,
+   "evidence": [
+    "D6:12",
+    "D6:14",
+    "D16:9",
+    "D17:22"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Italy, Turkey, Mexico, Greenland.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002920803870967742,
+   "retrieved_tokens": 138,
+   "retrieve_ms": 7010.625042021275,
+   "retrieve_cost": 0.0001944303870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 27,
+   "question": "What kind of classes has James joined?",
+   "gold": "game design course, cooking classes",
+   "category": 1,
+   "evidence": [
+    "D13:6",
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No information about James's classes.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00033019470967741933,
+   "retrieved_tokens": 167,
+   "retrieve_ms": 10054.575958056375,
+   "retrieve_cost": 0.00022819470967741935,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 28,
+   "question": "When did James volunteer at an organization?",
+   "gold": "May 2022",
+   "category": 2,
+   "evidence": [
+    "D15:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "May 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003547589032258065,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 9481.690374959726,
+   "retrieve_cost": 0.00025515890322580644,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 29,
+   "question": "When did James depart for his trip to Canada?",
+   "gold": "July 11, 2022",
+   "category": 2,
+   "evidence": [
+    "D16:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "July 11, 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002805869032258064,
+   "retrieved_tokens": 131,
+   "retrieve_ms": 8867.885249957908,
+   "retrieve_cost": 0.00018278690322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 30,
+   "question": "Which country did James book tickets for in July 2022?",
+   "gold": "Canada",
+   "category": 3,
+   "evidence": [
+    "D16:9",
+    "D16:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Canada",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002957454193548387,
+   "retrieved_tokens": 142,
+   "retrieve_ms": 11784.383958030958,
+   "retrieve_cost": 0.0001995954193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 31,
+   "question": "How many days did James plan to spend on his trip in Canada?",
+   "gold": "19 days",
+   "category": 2,
+   "evidence": [
+    "D16:9",
+    "D16:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "11 days.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029178580645161287,
+   "retrieved_tokens": 142,
+   "retrieve_ms": 11679.736874997616,
+   "retrieve_cost": 0.00019413580645161288,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 32,
+   "question": "Where was James at on July 12, 2022?",
+   "gold": "Toronto, Canada",
+   "category": 2,
+   "evidence": [
+    "D16:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James was on a journey.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002770275483870968,
+   "retrieved_tokens": 86,
+   "retrieve_ms": 9922.794624988455,
+   "retrieve_cost": 0.0001862775483870968,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 33,
+   "question": "Did John and James study together?",
+   "gold": "Yes",
+   "category": 3,
+   "evidence": [
+    "D17:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No, they did not study together.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029342767741935484,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 11408.912916958798,
+   "retrieve_cost": 0.00019382767741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 34,
+   "question": "Which countries did James visit in July 2022?",
+   "gold": "Canada, Greenland",
+   "category": 1,
+   "evidence": [
+    "D16:9",
+    "D17:22"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Nuuk and Canada.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003133861935483871,
+   "retrieved_tokens": 168,
+   "retrieve_ms": 9658.156791992951,
+   "retrieve_cost": 0.0002115361935483871,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 35,
+   "question": "What additional country did James visit during his trip to Canada?",
+   "gold": "Greenland",
+   "category": 3,
+   "evidence": [
+    "D17:22"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Greenland (Nuuk).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028710735483870967,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 7944.663291971665,
+   "retrieve_cost": 0.00019110735483870967,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 36,
+   "question": "Who is Jill?",
+   "gold": "Most likely John's partner.",
+   "category": 3,
+   "evidence": [
+    "D17:24"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John's acquaintance or friend.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028736167741935485,
+   "retrieved_tokens": 74,
+   "retrieve_ms": 8244.809875031933,
+   "retrieve_cost": 0.00020111167741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 37,
+   "question": "When did John spend time with his sister and dogs?",
+   "gold": "July 21, 2022",
+   "category": 2,
+   "evidence": [
+    "D17:28"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John did not spend time with his sister and dogs.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003300785806451613,
+   "retrieved_tokens": 117,
+   "retrieve_ms": 9469.395999971312,
+   "retrieve_cost": 0.0002322785806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 38,
+   "question": "What happened to John's job situation in 2022?",
+   "gold": "quit his IT Job, secured his dream job, aspires to become an eSports competition organizer",
+   "category": 1,
+   "evidence": [
+    "D4:36",
+    "D18:1",
+    "D18:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John got a new job.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030649838709677417,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 7961.700665997341,
+   "retrieve_cost": 0.00020884838709677418,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 39,
+   "question": "When did John start his job in IT?",
+   "gold": "2019",
+   "category": 2,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "July 2022",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00033696541935483867,
+   "retrieved_tokens": 96,
+   "retrieve_ms": 9228.85816701455,
+   "retrieve_cost": 0.0002471154193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 40,
+   "question": "What kind of tricks do James's pets know?",
+   "gold": "swimming, catching frisbees, balancing on a skateboard, sit, stay, paw, and rollover",
+   "category": 1,
+   "evidence": [
+    "D2:17",
+    "D14:17",
+    "D14:23",
+    "D17:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Sit, stay, paw, rollover.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003167593548387097,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 9122.228124993853,
+   "retrieve_cost": 0.00021715935483870968,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 41,
+   "question": "When did James meet Samantha?",
+   "gold": "August 9, 2022",
+   "category": 2,
+   "evidence": [
+    "D19:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 3, 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00030672116129032255,
+   "retrieved_tokens": 173,
+   "retrieve_ms": 7645.333666005172,
+   "retrieve_cost": 0.00020382116129032257,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 42,
+   "question": "When did James take his 3 dogs to the beach?",
+   "gold": "August 9, 2022",
+   "category": 2,
+   "evidence": [
+    "D19:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "August 9, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032510690322580646,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 8903.680916992016,
+   "retrieve_cost": 0.00022670690322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 43,
+   "question": "When did John plan his next meeting with his siblings?",
+   "gold": "In September, 2022",
+   "category": 2,
+   "evidence": [
+    "D20:17"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002874778064516129,
+   "retrieved_tokens": 88,
+   "retrieve_ms": 8793.659957998898,
+   "retrieve_cost": 0.0001982278064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 44,
+   "question": "Why didn't John want to go to Starbucks?",
+   "gold": "Possibly because he likes to drink beer on his days off.",
+   "category": 3,
+   "evidence": [
+    "D21:12",
+    "D21:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "He preferred having a beer instead.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027657212903225807,
+   "retrieved_tokens": 87,
+   "retrieve_ms": 8316.48783403216,
+   "retrieve_cost": 0.00018627212903225807,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 45,
+   "question": "What kind of beer does McGee's bar serve?",
+   "gold": "Stout, lager",
+   "category": 1,
+   "evidence": [
+    "D21:15",
+    "D21:17",
+    "D23:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Stout and lager beer.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002834802580645161,
+   "retrieved_tokens": 112,
+   "retrieve_ms": 12165.899167011958,
+   "retrieve_cost": 0.0001894302580645161,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 46,
+   "question": "When did John and James meet at McGee's bar?",
+   "gold": "August 27, 2022",
+   "category": 2,
+   "evidence": [
+    "D21:18"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 4, 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027499490322580646,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 9261.835500015877,
+   "retrieve_cost": 0.00017914490322580646,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 47,
+   "question": "When did James ask Samantha to be his girlfriend?",
+   "gold": "September 3, 2022",
+   "category": 2,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 3, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003179742580645161,
+   "retrieved_tokens": 155,
+   "retrieve_ms": 7174.022249993868,
+   "retrieve_cost": 0.00021717425806451612,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 48,
+   "question": "When did James, Samantha and John go to the baseball game together?",
+   "gold": "September 11, 2022",
+   "category": 2,
+   "evidence": [
+    "D23:5",
+    "D23:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "They did not go together.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00030286858064516127,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 8563.571667007636,
+   "retrieve_cost": 0.0002070185806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 49,
+   "question": "What gaming equipments did John buy or refurbish?",
+   "gold": "Sennheiser headphones, Logitech mouse, gaming desk",
+   "category": 1,
+   "evidence": [
+    "D23:8",
+    "D23:10",
+    "D20:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Headphones, mouse, gaming desk.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033753019354838706,
+   "retrieved_tokens": 110,
+   "retrieve_ms": 8333.270207978785,
+   "retrieve_cost": 0.00024288019354838707,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 50,
+   "question": "When did James start taking cooking classes?",
+   "gold": "September 2, 2022",
+   "category": 2,
+   "evidence": [
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "September 2, 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033143535483870967,
+   "retrieved_tokens": 146,
+   "retrieve_ms": 11202.781375031918,
+   "retrieve_cost": 0.00023198535483870967,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 51,
+   "question": "Which new games did John start play during the course of the conversation with James?",
+   "gold": "AC Valhalla, Witcher 3, FIFA 23, Dungeons of the Dragons, futuristic dystopian game",
+   "category": 1,
+   "evidence": [
+    "D5:4",
+    "D19:7",
+    "D30:14",
+    "D24:1",
+    "D24:3",
+    "D8:20"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Board games, strategy, and RPG games.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00032082154838709674,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 7937.404124997556,
+   "retrieve_cost": 0.00022002154838709676,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 52,
+   "question": "When did John start working on his 2D Adventure mobile game?",
+   "gold": "approximately summer of 2022",
+   "category": 2,
+   "evidence": [
+    "D25:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Around June 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003552007741935484,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 7719.052208005451,
+   "retrieve_cost": 0.0002530507741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 53,
+   "question": "How long did it take for James to complete his Witcher-inspired game?",
+   "gold": "six months",
+   "category": 2,
+   "evidence": [
+    "D6:1",
+    "D27:2"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The memories do not specify the duration.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00038238774193548384,
+   "retrieved_tokens": 176,
+   "retrieve_ms": 11164.734709018376,
+   "retrieve_cost": 0.00027633774193548384,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 54,
+   "question": "What kind of programming-related events has John hosted?",
+   "gold": "online programming competition, programming seminar",
+   "category": 1,
+   "evidence": [
+    "D27:1",
+    "D28:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Online competitions for programmers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003704808387096774,
+   "retrieved_tokens": 153,
+   "retrieve_ms": 9967.755416000728,
+   "retrieve_cost": 0.00027118083870967744,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 55,
+   "question": "When did John and his programming friends host an online programming competition?",
+   "gold": "Last week before 13 October 2022.",
+   "category": 2,
+   "evidence": [
+    "D27:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Last week of October 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00037651470967741936,
+   "retrieved_tokens": 176,
+   "retrieve_ms": 9512.290584039874,
+   "retrieve_cost": 0.0002710647096774194,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 56,
+   "question": "Which of James's family members have visited him in the last year?",
+   "gold": "mother, sister",
+   "category": 1,
+   "evidence": [
+    "D17:28",
+    "D28:19"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No specific family members mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029857103225806446,
+   "retrieved_tokens": 137,
+   "retrieve_ms": 11163.817708031274,
+   "retrieve_cost": 0.0001998710322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 57,
+   "question": "When did James' mother and her friend visit him?",
+   "gold": "October 19, 2022",
+   "category": 2,
+   "evidence": [
+    "D28:19"
+   ],
+   "last_evidence_session": 31,
+   "answer": "October 19, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030714174193548384,
+   "retrieved_tokens": 95,
+   "retrieve_ms": 9378.691249992698,
+   "retrieve_cost": 0.00021504174193548385,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 58,
+   "question": "When did James try Cyberpunk 2077 game?",
+   "gold": "October 20, 2022",
+   "category": 2,
+   "evidence": [
+    "D28:27"
+   ],
+   "last_evidence_session": 31,
+   "answer": "October 20, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033632748387096774,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 6291.733708989341,
+   "retrieve_cost": 0.00023822748387096774,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 59,
+   "question": "When did John and his gaming friends organize the charity tournament?",
+   "gold": "On the night of October 30 to 31, 2022",
+   "category": 2,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "October 30, 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003654265161290323,
+   "retrieved_tokens": 189,
+   "retrieve_ms": 7642.333999974653,
+   "retrieve_cost": 0.0002583265161290323,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 60,
+   "question": "What games has John played with his friends at charity tournaments?",
+   "gold": "CS:GO, Fortnite, Overwatch and Apex Legends",
+   "category": 1,
+   "evidence": [
+    "D10:4",
+    "D29:1",
+    "D29:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "CS:GO, Overwatch, Apex Legends, Fortnite.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034224483870967746,
+   "retrieved_tokens": 189,
+   "retrieve_ms": 8740.62304198742,
+   "retrieve_cost": 0.00023274483870967743,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 61,
+   "question": "What was James' big moment with Samantha in October 2023?",
+   "gold": "They decided to live together and rented an apartment not far from McGee's bar.",
+   "category": 2,
+   "evidence": [
+    "D29:8",
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James and Samantha moved in together.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003141714193548387,
+   "retrieved_tokens": 155,
+   "retrieve_ms": 7920.840582984965,
+   "retrieve_cost": 0.0002121714193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 62,
+   "question": "How long did James and Samantha date for before deciding to move in together?",
+   "gold": "nearly three months",
+   "category": 2,
+   "evidence": [
+    "D19:14",
+    "D29:8",
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "About one month.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00033897329032258065,
+   "retrieved_tokens": 168,
+   "retrieve_ms": 8301.087333005853,
+   "retrieve_cost": 0.00023652329032258063,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 63,
+   "question": "When did James, his family and his dogs start on a road trip together?",
+   "gold": "November 4, 2022",
+   "category": 2,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "November 4, 2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000330234,
+   "retrieved_tokens": 131,
+   "retrieve_ms": 6347.83562499797,
+   "retrieve_cost": 0.000231234,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 64,
+   "question": "How long did John practice chess for before winning the chess tournament?",
+   "gold": "nearly four months",
+   "category": 2,
+   "evidence": [
+    "D17:1",
+    "D30:2",
+    "D30:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The memories do not specify the duration of John's practice.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003217378064516129,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 9432.063000043854,
+   "retrieve_cost": 0.0002228878064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 65,
+   "question": "When did James and his family visit Mark and Josh?",
+   "gold": "November 7, 2022",
+   "category": 2,
+   "evidence": [
+    "D31:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "November 6, 2022.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029617238709677416,
+   "retrieved_tokens": 128,
+   "retrieve_ms": 11217.626500001643,
+   "retrieve_cost": 0.0001985223870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 66,
+   "question": "When did John work with a game developer on a project?",
+   "gold": "November 5-6, 2022",
+   "category": 2,
+   "evidence": [
+    "D31:2"
+   ],
+   "last_evidence_session": 31,
+   "answer": "November 7, 2022",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00034888722580645164,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 9784.742291027214,
+   "retrieve_cost": 0.0002530372258064516,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 67,
+   "question": "What programming languages has James worked with?",
+   "gold": "Python and C++",
+   "category": 4,
+   "evidence": [
+    "D1:8"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Python and C++.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034529535483870965,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 9190.152292023413,
+   "retrieve_cost": 0.00025319535483870963,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 68,
+   "question": "What type of mobile application does James plan to build with John?",
+   "gold": "An app for dog walking and pet care",
+   "category": 4,
+   "evidence": [
+    "D1:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Dog walking and pet care app.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000326334,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 7176.200041954871,
+   "retrieve_cost": 0.00023078400000000002,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 69,
+   "question": "How does James plan to make his dog-sitting app unique?",
+   "gold": "By allowing users to customize their pup's preferences/needs",
+   "category": 4,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "By allowing customization for each owner and pup.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003593022580645161,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 8954.471375036519,
+   "retrieve_cost": 0.0002592522580645161,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 70,
+   "question": "What has John mostly found with the metal detector so far?",
+   "gold": "bottle caps",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Bottle caps.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002693098064516129,
+   "retrieved_tokens": 95,
+   "retrieve_ms": 9847.836166038178,
+   "retrieve_cost": 0.00017930980645161293,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 71,
+   "question": "What did James offer to do for John regarding pets?",
+   "gold": "help find the perfect pet",
+   "category": 4,
+   "evidence": [
+    "D2:19"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Help find the perfect pet.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003116932258064516,
+   "retrieved_tokens": 92,
+   "retrieve_ms": 6838.590374973137,
+   "retrieve_cost": 0.00022064322580645163,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 72,
+   "question": "What instrument is John learning to play as of 27 March, 2022?",
+   "gold": "Drums",
+   "category": 4,
+   "evidence": [
+    "D3:2",
+    "D3:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The memories do not specify the instrument John is learning.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000293898,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 6540.467999991961,
+   "retrieve_cost": 0.00019324800000000003,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 73,
+   "question": "How long has John been playing the drums as of 27 March, 2022?",
+   "gold": "One month",
+   "category": 4,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "One month.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002895954193548387,
+   "retrieved_tokens": 85,
+   "retrieve_ms": 10130.598457995802,
+   "retrieve_cost": 0.0001992954193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 74,
+   "question": "What game did John play in an intense tournament at the gaming convention in March 2022?",
+   "gold": "CS:GO",
+   "category": 4,
+   "evidence": [
+    "D3:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "CS:GO",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003535277419354838,
+   "retrieved_tokens": 152,
+   "retrieve_ms": 9967.081207956653,
+   "retrieve_cost": 0.00025287774193548385,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 75,
+   "question": "What game was James playing in the online gaming tournament in April 2022?",
+   "gold": "Apex Legends",
+   "category": 4,
+   "evidence": [
+    "D4:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The game is not specified.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00034656,
+   "retrieved_tokens": 150,
+   "retrieve_ms": 9845.614542020485,
+   "retrieve_cost": 0.00024531,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 76,
+   "question": "How does James communicate with his gaming team?",
+   "gold": "voice chat",
+   "category": 4,
+   "evidence": [
+    "D4:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Voice chat.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003392330322580645,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 10263.053874950856,
+   "retrieve_cost": 0.0002472830322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 77,
+   "question": "What advice did James receive from the famous players he met at the tournament?",
+   "gold": "never put your ego above team success",
+   "category": 4,
+   "evidence": [
+    "D4:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Communicate correctly with the team.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003122268387096774,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 5363.321041979361,
+   "retrieve_cost": 0.00021607683870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 78,
+   "question": "What did James adopt in April 2022?",
+   "gold": "a pup",
+   "category": 4,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A pup named Ned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032180690322580643,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 9674.101457989309,
+   "retrieve_cost": 0.00022745690322580647,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 79,
+   "question": "What is the name of the pup that was adopted by James?",
+   "gold": "Ned",
+   "category": 4,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Ned",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003237176129032258,
+   "retrieved_tokens": 161,
+   "retrieve_ms": 9577.543291030452,
+   "retrieve_cost": 0.00022411761290322578,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 80,
+   "question": "Why did James embody the appearance of the game character from the woman he saw during a walk?",
+   "gold": "He found her appearance and eyes amazing.",
+   "category": 4,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "He fell in love at first sight.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00035129496774193546,
+   "retrieved_tokens": 215,
+   "retrieve_ms": 10635.044707974885,
+   "retrieve_cost": 0.00023819496774193547,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 81,
+   "question": "What inspired James to create the game character in the virtual world?",
+   "gold": "Appearance of a woman he saw during a walk",
+   "category": 4,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A stranger's appearance during a walk.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00037396567741935485,
+   "retrieved_tokens": 240,
+   "retrieve_ms": 8230.91620800551,
+   "retrieve_cost": 0.00025891567741935485,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 82,
+   "question": "Which country did James visit in 2021?",
+   "gold": "Italy",
+   "category": 4,
+   "evidence": [
+    "D6:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Italy",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028983987096774195,
+   "retrieved_tokens": 138,
+   "retrieve_ms": 11554.07275003381,
+   "retrieve_cost": 0.00019518987096774196,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 83,
+   "question": "What impresses John about Japan?",
+   "gold": "Technologically advanced megacities and tasty street food",
+   "category": 4,
+   "evidence": [
+    "D6:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Technological advancements and street food.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028276412903225804,
+   "retrieved_tokens": 116,
+   "retrieve_ms": 10794.974583026487,
+   "retrieve_cost": 0.00018871412903225806,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 84,
+   "question": "What kind of assignment was giving John a hard time at work?",
+   "gold": "Coding assignment",
+   "category": 4,
+   "evidence": [
+    "D7:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A coding assignment.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031408645161290326,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 8549.900917045306,
+   "retrieve_cost": 0.00021868645161290324,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 85,
+   "question": "What breed is Daisy, one of James' dogs?",
+   "gold": "Labrador",
+   "category": 4,
+   "evidence": [
+    "D9:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Labrador",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031515812903225803,
+   "retrieved_tokens": 128,
+   "retrieve_ms": 6633.371417003218,
+   "retrieve_cost": 0.00022050812903225803,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 86,
+   "question": "What type of pizza is James' favorite?",
+   "gold": "Pepperoni",
+   "category": 4,
+   "evidence": [
+    "D9:18"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Pepperoni pizza.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00025931903225806453,
+   "retrieved_tokens": 85,
+   "retrieve_ms": 4849.557042005472,
+   "retrieve_cost": 0.00017051903225806454,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 87,
+   "question": "What type of pizza is John's favorite?",
+   "gold": "Hawaiian",
+   "category": 4,
+   "evidence": [
+    "D9:19"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Hawaiian pizza.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00025312161290322576,
+   "retrieved_tokens": 92,
+   "retrieve_ms": 10541.7346250033,
+   "retrieve_cost": 0.00016357161290322578,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 88,
+   "question": "What did John organize with his friends on May 8, 2022?",
+   "gold": "A tournament for CS:GO",
+   "category": 4,
+   "evidence": [
+    "D10:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A community event.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00035791838709677416,
+   "retrieved_tokens": 147,
+   "retrieve_ms": 7925.472959002946,
+   "retrieve_cost": 0.0002583183870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 89,
+   "question": "What did John and his friends do with the remaining money after helping the dog shelter?",
+   "gold": "Bought groceries and cooked food for the homeless",
+   "category": 4,
+   "evidence": [
+    "D10:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Bought groceries for the homeless.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003435491612903226,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 10302.601875038818,
+   "retrieve_cost": 0.0002457491612903226,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 90,
+   "question": "What was the main goal of the money raised from the charity tournament organized by John and his friends in May 2022?",
+   "gold": "Raise money for a dog shelter",
+   "category": 4,
+   "evidence": [
+    "D10:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Children's hospital.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003747888387096774,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 7457.34529197216,
+   "retrieve_cost": 0.0002654388387096774,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 91,
+   "question": "What did the system John created help the charitable foundation with?",
+   "gold": "tracking inventory, resources, and donations",
+   "category": 4,
+   "evidence": [
+    "D11:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Streamlining operations and inventory management.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00036164670967741934,
+   "retrieved_tokens": 186,
+   "retrieve_ms": 6035.5627500102855,
+   "retrieve_cost": 0.00025559670967741934,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 92,
+   "question": "What did John create for the charitable foundation that helped generate reports for analysis?",
+   "gold": "computer application on smartphones",
+   "category": 4,
+   "evidence": [
+    "D11:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A software tool.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034015567741935485,
+   "retrieved_tokens": 186,
+   "retrieve_ms": 8078.342624998186,
+   "retrieve_cost": 0.00023500567741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 93,
+   "question": "What did John receive for achieving second place in the tournament?",
+   "gold": "money and a trophy",
+   "category": 4,
+   "evidence": [
+    "D12:5",
+    "D12:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Some money and a trophy.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032493658064516125,
+   "retrieved_tokens": 128,
+   "retrieve_ms": 9123.001916974317,
+   "retrieve_cost": 0.00022818658064516128,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 94,
+   "question": "What project is James working on in his game design course?",
+   "gold": "a new part of the football simulator, collecting player databases",
+   "category": 4,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A computer game based on sketches.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00035182354838709677,
+   "retrieved_tokens": 188,
+   "retrieve_ms": 10059.076667006593,
+   "retrieve_cost": 0.00024547354838709676,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 95,
+   "question": "Who does James support in football matches?",
+   "gold": "Liverpool",
+   "category": 4,
+   "evidence": [
+    "D13:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Liverpool",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002735490967741935,
+   "retrieved_tokens": 103,
+   "retrieve_ms": 6571.153333992697,
+   "retrieve_cost": 0.00018474909677419353,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 96,
+   "question": "Which football club does John support?",
+   "gold": "Manchester City",
+   "category": 4,
+   "evidence": [
+    "D13:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Manchester City",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002702518064516129,
+   "retrieved_tokens": 85,
+   "retrieve_ms": 4331.4788329880685,
+   "retrieve_cost": 0.0001838518064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 97,
+   "question": "What disagreement do James and John have about their football teams?",
+   "gold": "debating on which team will perform better in the championship",
+   "category": 4,
+   "evidence": [
+    "D13:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Championship winner prediction.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002604702580645161,
+   "retrieved_tokens": 119,
+   "retrieve_ms": 9462.95341703808,
+   "retrieve_cost": 0.00016567025806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 98,
+   "question": "What is Max good at doing according to James?",
+   "gold": "catching frisbees in mid-air",
+   "category": 4,
+   "evidence": [
+    "D14:23"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Catching frisbees in mid-air.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003092525806451613,
+   "retrieved_tokens": 92,
+   "retrieve_ms": 6325.056583038531,
+   "retrieve_cost": 0.0002167025806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 99,
+   "question": "What is the main focus of the organization that James volunteered with?",
+   "gold": "providing necessary items to those who are less fortunate",
+   "category": 4,
+   "evidence": [
+    "D15:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Providing necessary items to those in need.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034235593548387095,
+   "retrieved_tokens": 134,
+   "retrieve_ms": 9307.382125000004,
+   "retrieve_cost": 0.00024320593548387095,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 100,
+   "question": "Will there be an interview required to volunteer with the organization James volunteered for?",
+   "gold": "No",
+   "category": 4,
+   "evidence": [
+    "D15:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No, an interview is not necessary.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00032767993548387097,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 6507.249541988131,
+   "retrieve_cost": 0.00023137993548387096,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 101,
+   "question": "How did John relax in his free time on 9 July, 2022?",
+   "gold": "Reading",
+   "category": 4,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 31,
+   "answer": "By reading.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003063226451612903,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 8245.448499976192,
+   "retrieve_cost": 0.0002088226451612903,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 102,
+   "question": "What did James enjoy doing on cold winter days?",
+   "gold": "Reading while snuggled under the covers",
+   "category": 4,
+   "evidence": [
+    "D16:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Reading under the covers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000318008129032258,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 9793.995582964271,
+   "retrieve_cost": 0.00022020812903225803,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 103,
+   "question": "What new hobby did James become interested in on 9 July, 2022?",
+   "gold": "Extreme sports",
+   "category": 4,
+   "evidence": [
+    "D16:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Extreme sports",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003343625806451613,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 6741.5171670145355,
+   "retrieve_cost": 0.00023731258064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 104,
+   "question": "Where did James plan to visit after Toronto?",
+   "gold": "Vancouver",
+   "category": 4,
+   "evidence": [
+    "D16:11"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Vancouver.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003004550322580645,
+   "retrieved_tokens": 134,
+   "retrieve_ms": 4794.432499969844,
+   "retrieve_cost": 0.0002055050322580645,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 105,
+   "question": "When did James plan to return from his trip to Toronto and Vancouver?",
+   "gold": "July 20",
+   "category": 4,
+   "evidence": [
+    "D16:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "July 20, 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002987440645161291,
+   "retrieved_tokens": 129,
+   "retrieve_ms": 4342.514000018127,
+   "retrieve_cost": 0.00020004406451612906,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 106,
+   "question": "What online game did John start playing recently for improving strategy?",
+   "gold": "Chess",
+   "category": 4,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Chess",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003068187096774193,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 4925.27649999829,
+   "retrieve_cost": 0.00021561870967741934,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 107,
+   "question": "What made John leave his IT job?",
+   "gold": "to focus on things that align with his values and passions",
+   "category": 4,
+   "evidence": [
+    "D18:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "He wanted something that made a difference.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034062599999999996,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 5191.786666051485,
+   "retrieve_cost": 0.00023862599999999997,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 108,
+   "question": "Which game tournaments does John plan to organize besides CS:GO?",
+   "gold": "Fortnite competitions",
+   "category": 4,
+   "evidence": [
+    "D18:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Fortnite, strategy, and RPG games.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00035241406451612904,
+   "retrieved_tokens": 180,
+   "retrieve_ms": 5665.092207957059,
+   "retrieve_cost": 0.000245764064516129,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 109,
+   "question": "What happened to James's puppy during the recent visit to the clinic?",
+   "gold": "routine examination and vaccination",
+   "category": 4,
+   "evidence": [
+    "D18:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Routine examination and vaccination.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030381870967741934,
+   "retrieved_tokens": 83,
+   "retrieve_ms": 4017.1011249767616,
+   "retrieve_cost": 0.00021381870967741935,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 110,
+   "question": "What game genre did John start exploring instead of shooters?",
+   "gold": "strategy and RPG games",
+   "category": 4,
+   "evidence": [
+    "D19:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Strategy and RPG games.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031240935483870967,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 9186.90216599498,
+   "retrieve_cost": 0.00021775935483870964,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 111,
+   "question": "Which RPG game is John playing and enjoying on 10 August, 2022?",
+   "gold": "The Witcher 3",
+   "category": 4,
+   "evidence": [
+    "D19:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The Witcher 3",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003178649032258065,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 6695.783874951303,
+   "retrieve_cost": 0.00022096490322580647,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 112,
+   "question": "What aspect of \"The Witcher 3\" does John find immersive?",
+   "gold": "shaping the world with choices",
+   "category": 4,
+   "evidence": [
+    "D19:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The story and choices.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033857477419354837,
+   "retrieved_tokens": 122,
+   "retrieve_ms": 6844.63558299467,
+   "retrieve_cost": 0.0002424247741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 113,
+   "question": "Whose phone number did James receive during the beach outing?",
+   "gold": "Samantha",
+   "category": 4,
+   "evidence": [
+    "D19:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Samantha's phone number.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002819924516129032,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 9060.845125000924,
+   "retrieve_cost": 0.00018944245161290322,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 114,
+   "question": "What is James planning to do after receiving Samantha's phone number?",
+   "gold": "call her",
+   "category": 4,
+   "evidence": [
+    "D19:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Call her tomorrow.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002832344516129032,
+   "retrieved_tokens": 96,
+   "retrieve_ms": 6831.215417012572,
+   "retrieve_cost": 0.00019218445161290322,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 115,
+   "question": "What is John organizing with his siblings?",
+   "gold": "a gaming night",
+   "category": 4,
+   "evidence": [
+    "D20:17"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A gaming night.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003062390322580645,
+   "retrieved_tokens": 101,
+   "retrieve_ms": 8495.995666016825,
+   "retrieve_cost": 0.00021593903225806453,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 116,
+   "question": "What type of beer does John not like?",
+   "gold": "dark beer",
+   "category": 4,
+   "evidence": [
+    "D21:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Dark beer.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026360574193548384,
+   "retrieved_tokens": 77,
+   "retrieve_ms": 8359.236957971007,
+   "retrieve_cost": 0.00017720574193548386,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 117,
+   "question": "What were some difficulties James faced during the development of his game?",
+   "gold": "balancing mechanics and ensuring fairness",
+   "category": 4,
+   "evidence": [
+    "D22:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A bug in the code.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00032285825806451613,
+   "retrieved_tokens": 107,
+   "retrieve_ms": 7138.3759579621255,
+   "retrieve_cost": 0.00022895825806451613,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 118,
+   "question": "What has John been teaching his siblings?",
+   "gold": "coding",
+   "category": 4,
+   "evidence": [
+    "D22:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Coding.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003024063870967742,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 6477.195292012766,
+   "retrieve_cost": 0.0002080563870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 119,
+   "question": "What kind of programs are John's siblings making?",
+   "gold": "basic games and stories",
+   "category": 4,
+   "evidence": [
+    "D22:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Basic games and stories.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003496304516129032,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 4759.397416957654,
+   "retrieve_cost": 0.0002521304516129032,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 120,
+   "question": "Which company's headphones did John choose for gaming?",
+   "gold": "Sennheiser",
+   "category": 4,
+   "evidence": [
+    "D23:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Sennheiser",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003175554193548387,
+   "retrieved_tokens": 139,
+   "retrieve_ms": 6555.512125021778,
+   "retrieve_cost": 0.0002212554193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 121,
+   "question": "What did James and Samantha discover they both enjoy at McGee's bar?",
+   "gold": "Lager beer",
+   "category": 4,
+   "evidence": [
+    "D23:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Lager beer.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029801574193548386,
+   "retrieved_tokens": 126,
+   "retrieve_ms": 8518.382624955848,
+   "retrieve_cost": 0.00020186574193548385,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 122,
+   "question": "How much does James pay per cooking class?",
+   "gold": "$10",
+   "category": 4,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "$10 per class",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002987806451612903,
+   "retrieved_tokens": 146,
+   "retrieve_ms": 8559.567000018433,
+   "retrieve_cost": 0.0002014306451612903,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 123,
+   "question": "What did James learn to make in the cooking class besides omelette and meringue?",
+   "gold": "Dough",
+   "category": 4,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Several simple dishes.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00031752019354838707,
+   "retrieved_tokens": 146,
+   "retrieve_ms": 3688.448667002376,
+   "retrieve_cost": 0.00021747019354838708,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 124,
+   "question": "Why did James sign up for a cooking class?",
+   "gold": "He wanted to learn something new",
+   "category": 4,
+   "evidence": [
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "To learn something new.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00034779116129032253,
+   "retrieved_tokens": 146,
+   "retrieve_ms": 6464.43829202326,
+   "retrieve_cost": 0.00024954116129032256,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 125,
+   "question": "What did James prepare for the first time in the cooking class?",
+   "gold": "Omelette",
+   "category": 4,
+   "evidence": [
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A great omelette.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031815406451612906,
+   "retrieved_tokens": 129,
+   "retrieve_ms": 4522.5767500232905,
+   "retrieve_cost": 0.00022155406451612904,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 126,
+   "question": "What is the name of the board game John tried in September 2022?",
+   "gold": "Dungeons of the Dragon",
+   "category": 4,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The name of the board game is not mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003241432258064516,
+   "retrieved_tokens": 161,
+   "retrieve_ms": 9053.544207999948,
+   "retrieve_cost": 0.0002188432258064516,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 127,
+   "question": "Where does James get his ideas from?",
+   "gold": "books, movies, dreams",
+   "category": 4,
+   "evidence": [
+    "D24:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Books, movies, and dreams.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002877398709677419,
+   "retrieved_tokens": 99,
+   "retrieve_ms": 8794.433040951844,
+   "retrieve_cost": 0.00019593987096774192,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 128,
+   "question": "What kind of dream did James have recently?",
+   "gold": "a dream with a medieval castle full of puzzles and traps",
+   "category": 4,
+   "evidence": [
+    "D24:8"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A vivid dream with creative ideas.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003089363225806452,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 8202.091625018511,
+   "retrieve_cost": 0.00021668632258064517,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 129,
+   "question": "What kind of music does John like?",
+   "gold": "electronic and rock music",
+   "category": 4,
+   "evidence": [
+    "D24:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Electronic and rock music.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002685354193548387,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 8495.585749973543,
+   "retrieve_cost": 0.0001761354193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 130,
+   "question": "What instrument did James used to play when he was younger?",
+   "gold": "guitar",
+   "category": 4,
+   "evidence": [
+    "D24:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Guitar",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002873345806451613,
+   "retrieved_tokens": 101,
+   "retrieve_ms": 4077.69687497057,
+   "retrieve_cost": 0.00019703458064516128,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 131,
+   "question": "What did John use to play when he was younger to let off steam?",
+   "gold": "drums",
+   "category": 4,
+   "evidence": [
+    "D24:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Drums.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003068214193548387,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 3524.2686250130646,
+   "retrieve_cost": 0.0002132214193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 132,
+   "question": "What career milestone did John achieve recently in September 2022?",
+   "gold": "making his first mobile game",
+   "category": 4,
+   "evidence": [
+    "D25:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Launching his first mobile game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003304354838709677,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 9148.38566700928,
+   "retrieve_cost": 0.00023593548387096773,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 133,
+   "question": "What type of game is John's upcoming mobile game?",
+   "gold": "2D adventure",
+   "category": 4,
+   "evidence": [
+    "D25:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "2D adventure game",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031771083870967747,
+   "retrieved_tokens": 141,
+   "retrieve_ms": 3331.2115829903632,
+   "retrieve_cost": 0.00022081083870967744,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 134,
+   "question": "What does John do to stay informed and constantly learn about game design?",
+   "gold": "watch tutorials and keep up with developer forums",
+   "category": 4,
+   "evidence": [
+    "D25:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Watches tutorials and developer forums.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00033146651612903224,
+   "retrieved_tokens": 117,
+   "retrieve_ms": 8437.777500017546,
+   "retrieve_cost": 0.00023516651612903226,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 135,
+   "question": "What kind of gig was John offered at the game dev non-profit organization?",
+   "gold": "programming mentor for game developers",
+   "category": 4,
+   "evidence": [
+    "D26:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Volunteer gig for game developers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003760728387096774,
+   "retrieved_tokens": 164,
+   "retrieve_ms": 7279.376332997344,
+   "retrieve_cost": 0.00027302283870967744,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 136,
+   "question": "What does John feel about starting the journey as a programming mentor for game developers?",
+   "gold": "excited and inspired",
+   "category": 4,
+   "evidence": [
+    "D26:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "He's really excited.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00038500141935483866,
+   "retrieved_tokens": 188,
+   "retrieve_ms": 7330.525959027,
+   "retrieve_cost": 0.00027925141935483867,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 137,
+   "question": "What kind of games is James excited to play with his new video card?",
+   "gold": "RPGs",
+   "category": 4,
+   "evidence": [
+    "D26:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "RPGs and strategy games.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003216108387096774,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 7277.321292029228,
+   "retrieve_cost": 0.0002241108387096774,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 138,
+   "question": "What inspired James to create his game?",
+   "gold": "Witcher 3",
+   "category": 4,
+   "evidence": [
+    "D27:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Witcher 3's amazing world and story.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003419732903225806,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 7390.032499970403,
+   "retrieve_cost": 0.00023862329032258063,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 139,
+   "question": "What sparked James' passion for gaming when he was a kid?",
+   "gold": "Super Mario and The Legend of Zelda games",
+   "category": 4,
+   "evidence": [
+    "D28:25"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Super Mario and The Legend of Zelda.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003458343870967742,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 5074.839709035587,
+   "retrieve_cost": 0.0002481843870967742,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 140,
+   "question": "What did James lose progress on due to a power outage?",
+   "gold": "a game",
+   "category": 4,
+   "evidence": [
+    "D28:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003107417419354839,
+   "retrieved_tokens": 127,
+   "retrieve_ms": 4900.314875005279,
+   "retrieve_cost": 0.0002159417419354839,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 141,
+   "question": "What games were played at the gaming tournament organized by John on 31 October, 2022?",
+   "gold": "Fortnite, Overwatch, Apex Legends",
+   "category": 4,
+   "evidence": [
+    "D29:1",
+    "D29:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Fortnite, Overwatch, Apex Legends.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00036523180645161294,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 5983.804874995258,
+   "retrieve_cost": 0.00025438180645161293,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 142,
+   "question": "What was the purpose of the gaming tournament organized by John on 31 October, 2022?",
+   "gold": "To raise money for a children's hospital",
+   "category": 4,
+   "evidence": [
+    "D29:1",
+    "D29:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "To raise money for a children's hospital.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00037522393548387097,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 6449.132167035714,
+   "retrieve_cost": 0.000264973935483871,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 143,
+   "question": "What decision did James and Samantha make on 31 October, 2022?",
+   "gold": "To move in together",
+   "category": 4,
+   "evidence": [
+    "D29:8",
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "They decided to move in together.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029923335483870967,
+   "retrieved_tokens": 99,
+   "retrieve_ms": 7354.131958971266,
+   "retrieve_cost": 0.00020503335483870968,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 144,
+   "question": "Where did James and Samantha decide to live together on 31 October, 2022?",
+   "gold": "In an apartment not far from McGee's bar",
+   "category": 4,
+   "evidence": [
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Near McGee's bar.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003093809032258064,
+   "retrieved_tokens": 101,
+   "retrieve_ms": 8268.616374989506,
+   "retrieve_cost": 0.00021488090322580646,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 145,
+   "question": "Why did James and Samantha choose an apartment near McGee's bar?",
+   "gold": "They love spending time together at the bar",
+   "category": 4,
+   "evidence": [
+    "D29:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "They love the bar nearby.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030269012903225807,
+   "retrieved_tokens": 132,
+   "retrieve_ms": 8689.075417001732,
+   "retrieve_cost": 0.00020474012903225807,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 146,
+   "question": "What game is John hooked on playing on 5 November, 2022?",
+   "gold": "FIFA 23",
+   "category": 4,
+   "evidence": [
+    "D30:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "FIFA 23",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003107634193548387,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 6932.876457984094,
+   "retrieve_cost": 0.0002162634193548387,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 147,
+   "question": "What did John suggest James practice before playing FIFA 23 together?",
+   "gold": "Control with a gamepad and timing",
+   "category": 4,
+   "evidence": [
+    "D30:18"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Practice a little first.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000295486064516129,
+   "retrieved_tokens": 105,
+   "retrieve_ms": 5895.805792009924,
+   "retrieve_cost": 0.00020248606451612902,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 148,
+   "question": "What project did John work on with a game developer by 7 November, 2022?",
+   "gold": "An online board game",
+   "category": 4,
+   "evidence": [
+    "D31:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "An online board game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003555427741935484,
+   "retrieved_tokens": 127,
+   "retrieve_ms": 3730.8092499733903,
+   "retrieve_cost": 0.0002574427741935484,
+   "checkpoint": 31,
+   "store_size": 689
+  },
+  {
+   "idx": 149,
+   "question": "What is the name of John's cousin's dog?",
+   "gold": "Luna",
+   "category": 4,
+   "evidence": [
+    "D31:22"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Ned",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00030304838709677417,
+   "retrieved_tokens": 110,
+   "retrieve_ms": 4242.153833969496,
+   "retrieve_cost": 0.00021199838709677418,
+   "checkpoint": 31,
+   "store_size": 689
+  }
+ ],
+ "options": {
+  "top_k": 3,
+  "no_dates": false,
+  "no_answer": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 8262.67897899379,
+ "retrieve_cost_per_query": 0.00021967476,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {}
+}

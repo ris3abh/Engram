@@ -1330,10 +1330,10 @@ async def run_arm(
     if stack == "openai":
         import openai
 
-        client = openai.AsyncOpenAI(max_retries=5, timeout=120)
+        client = openai.AsyncOpenAI(max_retries=int(os.environ.get("BENCH_OPENAI_RETRIES", "5")), timeout=120)
     else:
         client = anthropic.AsyncAnthropic(max_retries=5, timeout=120)
-    sem = asyncio.Semaphore(6)
+    sem = asyncio.Semaphore(int(os.environ.get("BENCH_CONCURRENCY", "6")))  # answer/judge calls in flight
     speakers = " and ".join(sl["speakers"])
 
     async def tokens(text: str) -> int:

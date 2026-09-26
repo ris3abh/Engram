@@ -2,8 +2,8 @@
 
 Pre-registered on 2026-09-26, before any run on the data below. Timestamped on Zenodo as
 [10.5281/zenodo.22970745](https://doi.org/10.5281/zenodo.22970745) (the plan as of commit b3c5dc5); amended version
-[10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848) (as of commit efae0b6). The v2 study stays paused (docs/V2_PLAN.md,
-Deviations 2026-09-26). This plan is the source of truth for v3. Sections 1 to 11 are guarded by
+[10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848) (as of commit efae0b6). The v2 study stays paused
+(docs/V2_PLAN.md, Deviations 2026-09-26). This plan is the source of truth for v3. Sections 1 to 11 are guarded by
 `tests/test_v3_plan.py`: a change to any of them needs a dated entry under section 12 naming it ("§N"), and the
 section is then re-registered in that test, as in v2.
 
@@ -256,6 +256,29 @@ re-registered in `tests/test_v3_plan.py`.
 - 2026-09-26, external timestamp: the amended plan and docs/V3_OUTCOMES.md, as of commit efae0b6, are deposited on
   Zenodo as 10.5281/zenodo.22977848 (a new version of 10.5281/zenodo.22970745). Tag `v3-amended` marks the commit that
   records this.
+- 2026-09-26, Batch B execution (§3, §11), recorded after Batch B finished and before its report:
+  1. **mem0's extraction went through OpenRouter.** mem0 2.1.0 sends its OpenAI LLM calls to OpenRouter whenever
+     `OPENROUTER_API_KEY` is set (`mem0/llms/openai.py:42`). The key was added to `.env` for the second answer model
+     at 08:32, and Batch B's mem0 runs started at about 08:34. All five conversations' mem0 extraction was therefore
+     served as gpt-4o-mini through OpenRouter, not the OpenAI API.
+     - conv-44 and conv-47 stopped when the OpenRouter credit ran out. After a top-up they were finished through
+       OpenRouter as well, by the author's decision, so all five are served alike; their completed turns replayed
+       from the call cache.
+     - mem0's embeddings, and every answer and judgment, went to OpenAI.
+     - About $4.4 of OpenRouter credit went on mem0. It is recorded in the ledger as OpenAI spend, since it is
+       computed from token usage, and it falls outside the $2 OpenRouter cap, which was set for the second answer
+       model.
+     - Only S3 involves mem0.
+  2. **Rate limits.** The first Batch B launch hit OpenAI's 4M tokens-per-minute limit, with full context and two
+     extraction systems running together. The runs were relaunched with more SDK retries (`ENGRAM_LLM_ATTEMPTS`,
+     `BENCH_OPENAI_RETRIES`: 12, and 20 for two full-context re-runs) and Jev throttled to 3.5 requests/s per engram
+     process (`ENGRAM_JEV_MAX_RPS`). Full context on conv-48 and conv-50 was re-run with 2 questions in flight
+     (`BENCH_CONCURRENCY`) after failing at 6. Calls that had already completed replayed from the cache.
+  3. **Code the jobs ran with:** the code of commit b8dd35f, plus these environment-controlled settings, whose
+     defaults are unchanged. They are committed with the Batch B results.
+  4. **T0R-LLM:** as in v2 Stage 4, it also asks Jev its one query_relation question per query. That is a no-op on
+     turn units, whose predicate "said" is no edge type; its Jev cost is included in its read cost.
+
 
 ## AI assistance
 

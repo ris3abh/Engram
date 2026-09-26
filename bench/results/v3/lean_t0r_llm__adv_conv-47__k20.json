@@ -1,0 +1,802 @@
+{
+ "arm": "lean_t0r_llm",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "llm",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "adv:conv-47",
+  "sessions": [
+   1,
+   31
+  ],
+  "messages": 689,
+  "questions": 40
+ },
+ "accuracy": 0.45,
+ "accuracy_by_category": {
+  "5": 0.45
+ },
+ "stored": 689,
+ "active": 689,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 436.925,
+ "retrieved_tokens_median": 426.0,
+ "memories_mean": 10.725,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.0,
+  "claude": 0.0,
+  "openai": 0.014101949999999999
+ },
+ "cache": {
+  "hits": 103,
+  "misses": 97
+ },
+ "answers": [
+  {
+   "idx": 150,
+   "question": "What did John adopt in April 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John did not adopt anything.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032787793548387094,
+   "retrieved_tokens": 327,
+   "retrieve_ms": 2413.765457982663,
+   "retrieve_cost": 0.00020187793548387097
+  },
+  {
+   "idx": 151,
+   "question": "What is the name of the kitten that was adopted by James?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James did not adopt a kitten.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034216993548387095,
+   "retrieved_tokens": 383,
+   "retrieve_ms": 1506.5351669909433,
+   "retrieve_cost": 0.00020626993548387095
+  },
+  {
+   "idx": 152,
+   "question": "What inspired John to create the game character in the virtual world?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No specific inspiration mentioned.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0004174548387096774,
+   "retrieved_tokens": 567,
+   "retrieve_ms": 1271.3152910000645,
+   "retrieve_cost": 0.0002551548387096774
+  },
+  {
+   "idx": 153,
+   "question": "Which country did John visit in 2021?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Italy",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003244654838709677,
+   "retrieved_tokens": 394,
+   "retrieve_ms": 2349.444166000467,
+   "retrieve_cost": 0.00019141548387096774
+  },
+  {
+   "idx": 154,
+   "question": "What kind of assignment was giving James a hard time at work?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D7:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Coding assignment.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.000356812064516129,
+   "retrieved_tokens": 417,
+   "retrieve_ms": 1984.5217500114813,
+   "retrieve_cost": 0.00021821206451612903
+  },
+  {
+   "idx": 155,
+   "question": "What did James and his friends do with the remaining money after helping the dog shelter?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D10:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Bought groceries for the homeless.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003855559354838709,
+   "retrieved_tokens": 412,
+   "retrieve_ms": 1387.1743330382742,
+   "retrieve_cost": 0.00024470593548387093
+  },
+  {
+   "idx": 156,
+   "question": "What was the main goal of the money raised from the political campaign organized by John and his friends in May 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D10:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Raise money for a dog shelter.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0004109154193548387,
+   "retrieved_tokens": 540,
+   "retrieve_ms": 2166.1301249987446,
+   "retrieve_cost": 0.0002478654193548387
+  },
+  {
+   "idx": 157,
+   "question": "What did the system John created help the illegal organization with?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D11:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The system helped streamline operations.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00041436948387096775,
+   "retrieved_tokens": 587,
+   "retrieve_ms": 2682.048666989431,
+   "retrieve_cost": 0.00024876948387096774
+  },
+  {
+   "idx": 158,
+   "question": "What did James create for the charitable foundation that helped generate reports for analysis?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D11:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James did not create anything; John did.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00038319348387096775,
+   "retrieved_tokens": 484,
+   "retrieve_ms": 2227.469542005565,
+   "retrieve_cost": 0.00023034348387096775
+  },
+  {
+   "idx": 159,
+   "question": "Who does James support in cricket matches?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The memories do not mention cricket.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00029457445161290324,
+   "retrieved_tokens": 327,
+   "retrieve_ms": 1725.3753329860047,
+   "retrieve_cost": 0.00016857445161290322
+  },
+  {
+   "idx": 160,
+   "question": "What is Max good at doing according to John?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D14:23"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Playing fetch.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00030749516129032254,
+   "retrieved_tokens": 303,
+   "retrieve_ms": 1114.011625002604,
+   "retrieve_cost": 0.00018689516129032256
+  },
+  {
+   "idx": 161,
+   "question": "Will there be a background check required to volunteer with the organization James volunteered for?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D15:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No information about a background check.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037348374193548384,
+   "retrieved_tokens": 494,
+   "retrieve_ms": 1222.0749580301344,
+   "retrieve_cost": 0.00022003374193548387
+  },
+  {
+   "idx": 162,
+   "question": "How did James relax in his free time on 9 July, 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Surfing.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00036261232258064514,
+   "retrieved_tokens": 390,
+   "retrieve_ms": 1989.1887920093723,
+   "retrieve_cost": 0.00022686232258064515
+  },
+  {
+   "idx": 163,
+   "question": "What new hobby did John become interested in on 9 July, 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D16:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No new hobby mentioned.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000343261935483871,
+   "retrieved_tokens": 358,
+   "retrieve_ms": 1832.6553330407478,
+   "retrieve_cost": 0.00021111193548387097
+  },
+  {
+   "idx": 164,
+   "question": "When did John plan to return from his trip to Toronto and Vancouver?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D16:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "July 20, 2022.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00032726670967741936,
+   "retrieved_tokens": 406,
+   "retrieve_ms": 1607.1792080183513,
+   "retrieve_cost": 0.00018701670967741937
+  },
+  {
+   "idx": 165,
+   "question": "What made James leave his IT job?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John left for a meaningful opportunity.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003987166451612903,
+   "retrieved_tokens": 546,
+   "retrieve_ms": 2197.7335829869844,
+   "retrieve_cost": 0.00023986664516129034
+  },
+  {
+   "idx": 166,
+   "question": "Which game tournaments does James plan to organize besides CS:GO?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:9"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Fortnite and other genres.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003959787096774193,
+   "retrieved_tokens": 534,
+   "retrieve_ms": 1703.4646249958314,
+   "retrieve_cost": 0.00023802870967741933
+  },
+  {
+   "idx": 167,
+   "question": "What happened to James's kitten during the recent visit to the clinic?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:16"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No mention of a kitten.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003219063870967742,
+   "retrieved_tokens": 252,
+   "retrieve_ms": 1829.8015839536674,
+   "retrieve_cost": 0.00020595638709677418
+  },
+  {
+   "idx": 168,
+   "question": "What aspect of \"The Witcher 3\" does John find boring?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:7"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The game is a little laggy.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003799409032258065,
+   "retrieved_tokens": 435,
+   "retrieve_ms": 1310.5805829982273,
+   "retrieve_cost": 0.00023504090322580646
+  },
+  {
+   "idx": 169,
+   "question": "What is John planning to do after receiving Samantha's phone number?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John is not mentioned as having received Samantha's phone number.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032798012903225804,
+   "retrieved_tokens": 408,
+   "retrieve_ms": 1889.965749986004,
+   "retrieve_cost": 0.00018533012903225807
+  },
+  {
+   "idx": 170,
+   "question": "What has James been teaching his siblings?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James has been teaching coding.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003406035483870968,
+   "retrieved_tokens": 422,
+   "retrieve_ms": 1512.6530419802293,
+   "retrieve_cost": 0.00020095354838709677
+  },
+  {
+   "idx": 171,
+   "question": "How much does James pay per dance class?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "$10 per class",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032754270967741937,
+   "retrieved_tokens": 373,
+   "retrieve_ms": 1207.7932080137543,
+   "retrieve_cost": 0.00019614270967741935
+  },
+  {
+   "idx": 172,
+   "question": "What did James learn to make in the chemistry class besides omelette and meringue?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No other dishes mentioned.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035671625806451613,
+   "retrieved_tokens": 363,
+   "retrieve_ms": 1713.9102919609286,
+   "retrieve_cost": 0.00022351625806451615
+  },
+  {
+   "idx": 173,
+   "question": "Why did James sign up for a ballet class?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "There is no mention of James signing up for a ballet class.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00038826367741935484,
+   "retrieved_tokens": 523,
+   "retrieve_ms": 1928.3784999861382,
+   "retrieve_cost": 0.00022866367741935484
+  },
+  {
+   "idx": 174,
+   "question": "What did John prepare for the first time in the cooking class?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "John did not prepare anything; James did.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003336696774193548,
+   "retrieved_tokens": 392,
+   "retrieve_ms": 1440.0792500237003,
+   "retrieve_cost": 0.00019521967741935483
+  },
+  {
+   "idx": 175,
+   "question": "What is the name of the board game James tried in September 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "The name of the board game is not mentioned.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003607350967741935,
+   "retrieved_tokens": 397,
+   "retrieve_ms": 1654.5144169940613,
+   "retrieve_cost": 0.00022003509677419355
+  },
+  {
+   "idx": 176,
+   "question": "Where does John get his ideas from?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Books, movies, dreams, tutorials.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00034507645161290326,
+   "retrieved_tokens": 444,
+   "retrieve_ms": 1941.8283330160193,
+   "retrieve_cost": 0.00020092645161290322
+  },
+  {
+   "idx": 177,
+   "question": "What did James use to play when he was younger to let off steam?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:15"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Games on his gaming system.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003353196774193548,
+   "retrieved_tokens": 389,
+   "retrieve_ms": 2275.577416003216,
+   "retrieve_cost": 0.00019851967741935482
+  },
+  {
+   "idx": 178,
+   "question": "What does James do to stay informed and constantly learn about game design?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D25:13"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Watches tutorials and reads magazines.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00038411516129032255,
+   "retrieved_tokens": 468,
+   "retrieve_ms": 1300.6900830077939,
+   "retrieve_cost": 0.00023516516129032259
+  },
+  {
+   "idx": 179,
+   "question": "What kind of gig was James offered at the game dev non-profit organization?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D26:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James was not offered a gig; John was.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00041358735483870967,
+   "retrieved_tokens": 482,
+   "retrieve_ms": 1363.5485409758985,
+   "retrieve_cost": 0.00026043735483870966
+  },
+  {
+   "idx": 180,
+   "question": "What does James feel about starting the journey as a programming mentor for game developers?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D26:5"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James thinks it's awesome.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0004233590322580645,
+   "retrieved_tokens": 557,
+   "retrieve_ms": 2210.420791991055,
+   "retrieve_cost": 0.0002616590322580645
+  },
+  {
+   "idx": 181,
+   "question": "What inspired James to create his painting?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D27:6"
+   ],
+   "last_evidence_session": 31,
+   "answer": "No specific inspiration mentioned.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003542214193548387,
+   "retrieved_tokens": 430,
+   "retrieve_ms": 2425.578124995809,
+   "retrieve_cost": 0.00021397141935483872
+  },
+  {
+   "idx": 182,
+   "question": "What games were played at the gaming tournament organized by James on 31 October, 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D29:1",
+    "D29:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Fortnite and a few other games.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00038428548387096776,
+   "retrieved_tokens": 441,
+   "retrieve_ms": 879.5791669981554,
+   "retrieve_cost": 0.00023698548387096776
+  },
+  {
+   "idx": 183,
+   "question": "What was the purpose of the gaming tournament organized by James on 31 October, 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D29:1",
+    "D29:3"
+   ],
+   "last_evidence_session": 31,
+   "answer": "To raise funds for a children's hospital.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00040918045161290325,
+   "retrieved_tokens": 491,
+   "retrieve_ms": 2366.918541956693,
+   "retrieve_cost": 0.00025438045161290323
+  },
+  {
+   "idx": 184,
+   "question": "What decision did John and Samantha make on 31 October, 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D29:8",
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "James and Samantha decided to move in together.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003626105806451613,
+   "retrieved_tokens": 455,
+   "retrieve_ms": 1456.1460000113584,
+   "retrieve_cost": 0.0002138105806451613
+  },
+  {
+   "idx": 185,
+   "question": "Where did John and Samantha decide to live together on 31 October, 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D29:10"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Near McGee's bar.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00035735245161290323,
+   "retrieved_tokens": 449,
+   "retrieve_ms": 1044.3780840141699,
+   "retrieve_cost": 0.00021065245161290324
+  },
+  {
+   "idx": 186,
+   "question": "Why did John and Samantha choose an apartment near McGee's bar?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D29:12"
+   ],
+   "last_evidence_session": 31,
+   "answer": "They love spending time there.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033524554838709677,
+   "retrieved_tokens": 337,
+   "retrieve_ms": 1260.1722499821335,
+   "retrieve_cost": 0.00020654554838709675
+  },
+  {
+   "idx": 187,
+   "question": "What game is James hooked on playing on 5 November, 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D30:14"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Cyberpunk 2077",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00035443645161290324,
+   "retrieved_tokens": 389,
+   "retrieve_ms": 910.8438330003992,
+   "retrieve_cost": 0.00021793645161290322
+  },
+  {
+   "idx": 188,
+   "question": "What project did James work on with a game developer by 7 November, 2022?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D31:4"
+   ],
+   "last_evidence_session": 31,
+   "answer": "A virtual world inspired by Witcher 3.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00041665741935483874,
+   "retrieved_tokens": 576,
+   "retrieve_ms": 2099.130208021961,
+   "retrieve_cost": 0.00024820741935483874
+  },
+  {
+   "idx": 189,
+   "question": "What is the name of James's cousin's dog?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D31:22"
+   ],
+   "last_evidence_session": 31,
+   "answer": "Not mentioned in the memories.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003757134193548387,
+   "retrieved_tokens": 535,
+   "retrieve_ms": 1908.9421250391752,
+   "retrieve_cost": 0.0002182134193548387
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "reused_store": "heldout_conv-47__k3",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 1917.1148749883287,
+ "retrieve_cost_per_query": 0.00021978183870967742,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

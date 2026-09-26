@@ -39,3 +39,17 @@ def test_v3_ledger_caps_the_whole_study(tmp_path, monkeypatch):
     with pytest.raises(SpendStop, match="study cap"), RunBudget("A", "jevmem", "b", ledger) as b:
         b.charge("jev", 0.6)
     assert LEDGER_CAPS[V3_LEDGER] == {"openai": 23.0, "jev": 6.5}
+
+
+def test_holm_and_noninferiority_arithmetic():
+    from bench.v3_report import holm, noninferiority
+
+    h = holm({"a": 0.01, "b": 0.04, "c": 0.03})
+    assert h["a"]["rejected"] and not h["c"]["rejected"] and not h["b"]["rejected"]  # 0.01<=.05/3; 0.03>.05/2
+    assert h["a"]["holm_adjusted_p"] == pytest.approx(0.03) and h["b"]["holm_adjusted_p"] == pytest.approx(0.06)
+    rows = lambda labels: [  # noqa: E731
+        {"conv": f"c{i % 5}", "idx": i, "label": "CORRECT" if y else "WRONG"} for i, y in enumerate(labels)
+    ]
+    a, b = rows([1] * 90 + [0] * 10), rows([1] * 85 + [0] * 15)
+    r = noninferiority(a, b)
+    assert r["d_bar"] == pytest.approx(0.05) and r["non_inferior"] and r["only_a"] == 5 and r["only_b"] == 0
