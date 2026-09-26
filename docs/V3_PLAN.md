@@ -13,9 +13,9 @@ that were never used for tuning or evaluation.
 ## 1. Primary hypothesis
 
 - **H1 (non-inferiority).** On the four scored LoCoMo categories of conv-44, conv-47, conv-48, conv-49 and conv-50
-  (778 questions), T0R at k=3 is non-inferior to engram v2 at its token-matched k (section 5), with a margin of
-  5 percentage points. The margin is half the rerank's measured effect on conv-26 (T3 against T2 at matched tokens:
-  82.9% against 73.0%, about 10 points).
+  (778 questions), T0R at its token-matched k is non-inferior to engram v2 at k=3, engram v2's natural setting
+  (section 5), with a margin of 5 percentage points. The margin is half the rerank's measured effect on conv-26 (T3
+  against T2 at matched tokens: 82.9% against 73.0%, about 10 points).
 - **Test.** Per question, d = 1 if only T0R is correct, -1 if only engram v2 is correct, 0 otherwise. With mean d̄ and
   standard error s/√n (s the sample standard deviation of d, n = 778), the one-sided 95% lower bound is
   d̄ - 1.645 s/√n. T0R is non-inferior if the bound is above -0.05. Judge: gpt-4o-mini (section 3).
@@ -24,11 +24,19 @@ that were never used for tuning or evaluation.
 
 ## 2. Power
 
-conv-26 gives a discordance rate of about 13% for T0R against engram v2 (20 of 152 questions). With n = 778 that is
-s/√n ≈ 0.013, so the lower bound sits about 2.1 points below d̄. H1 passes when d̄ > -2.9 points. The probability of
-passing is about 0.99 if the true difference is 0, 0.93 at -1 point, and 0.59 at -2.6 points (T0R at k=3 against
-engram v2 at k=3 on conv-26). The secondary McNemar tests can detect differences of about 5 points or more at this
-discordance rate.
+On conv-26, T0R at its matched k (k=6, 277 tokens) scored 83.6% against engram v2's 84.9% at k=3 (265 tokens): a
+difference of -1.3 points, with 9 against 11 discordant questions (a discordance rate of 13.2%). At that rate, with
+n = 778, s = 0.362 and s/√n = 0.0130, so the lower bound sits 2.1 points below d̄. H1 passes when d̄ > -2.9 points.
+
+| true difference | probability H1 passes |
+|---|---|
+| 0 | 0.99 |
+| -1 point | 0.92 |
+| -1.3 points (the conv-26 difference) | 0.89 |
+| -2 points | 0.75 |
+| -2.6 points | 0.58 |
+
+The secondary McNemar tests can detect differences of about 5 points or more at this discordance rate.
 
 ## 3. Stack
 
@@ -63,17 +71,18 @@ full context reuses T0R's line rendering.
 - **LoCoMo (primary data):** conv-44, conv-47, conv-48, conv-49, conv-50 (3,122 turns; 778 questions in the four
   scored categories; 209 adversarial). None of them has been run by any system in v1, v2 or the lean work.
   Adversarial answers are reported separately, for every system except Jev-Mem and full context.
-- **k:** every system at k=3 and k=20, and at its token-matched k. Exceptions: Jev-Mem runs at its matched k and at its
-  default k=40, with no k=20; full context has no k.
-- **Token matching (against T0R at k=3):** for each system, a retrieval-only sweep over k = 1 to 30 on the 778 scored
-  questions counts retrieved tokens. The chosen k is the one whose pooled mean is closest to T0R's pooled mean at k=3,
-  ties going to the larger k. The sweep, T0R's target and the chosen k are saved before any answer at that k.
-  - **Jev-Mem exception:** each of its k values is a separate Jev-driven query, so its sweep covers k = 1 to 6 on a
-    fixed sample of 50 scored questions, 10 per conversation (`random.Random(0)` over each conversation's question
-    list).
+- **k:** every system at k=3 and k=20. Exceptions: Jev-Mem runs at k=3 and at its default k=40, with no k=20; full
+  context has no k. T0R is also answered at each matched k below.
+- **Token matching (every comparison between systems):** the comparator runs at k=3, and T0R is matched to it.
+  - **Sweep:** a retrieval-only sweep of T0R over k = 1 to 30 on the comparison's questions counts retrieved tokens.
+  - **Choice:** T0R's matched k is the one whose pooled mean is closest to the comparator's pooled mean at k=3, ties
+    going to the larger k.
+  - **Order:** T0R's sweep, each comparator's k=3 token mean and each chosen k are saved before T0R answers at that k.
+  - **Scope:** one matched k per comparator: engram v2 (about k=6 on conv-26), L0, T0R-LLM, mem0, Jev-Mem, and on
+    LongMemEval, mem0 and L0.
 - **Exploratory:** L0 and T0R on conv-30, conv-41, conv-42 and conv-43 (2,341 turns; 610 scored and 190 adversarial
-  questions) at k=3, k=20 and matched k, pooled. These conversations were held out in v1, so this result is
-  exploratory.
+  questions) at k=3 and k=20, and T0R at its k matched to L0 at k=3, pooled. These conversations were held out in
+  v1, so this result is exploratory.
 - **LongMemEval_S cleaned:** `xiaowu0162/longmemeval-cleaned` at revision
   `98d7416c24c778c2fee6e6f3006e7a073259d48f`.
   - **Sample:** 30 knowledge-update, 20 multi-session and 20 temporal-reasoning questions, abstention questions
@@ -81,8 +90,10 @@ full context reuses T0R's line rendering.
     (`7701bd29…`) are in `bench/slices/v3_longmemeval_ids.json`.
   - **Ingestion:** as in v2: user turns only, sessions in date order, and `(Current date: <question_date>)` in the
     question slot.
-  - **Systems:** T0R, L0 and full context on all 70 questions; mem0 on the 30 knowledge-update questions. k=3 and
-    k=20, with no token matching.
+  - **Systems:** T0R, L0 and full context on all 70 questions; mem0 on the 30 knowledge-update questions. All at k=3
+    and k=20.
+  - **Token matching:** T0R is matched by the same rule to mem0 at k=3 (on the 30 knowledge-update questions) and to
+    L0 at k=3 (on all 70), from retrieval-only sweeps saved before answering.
   - **Reuse:** mem0's ingestion of the v2 knowledge-update haystacks replays from the call cache where present (same
     system, prompts and inputs).
 - **Concurrency:** up to 15 questions at a time per system, with backoff on rate limits.
@@ -92,19 +103,21 @@ full context reuses T0R's line rendering.
 - **Primary:** H1 (section 1), alone at one-sided 0.05.
 - **Secondary (Holm, family-wise 0.05; McNemar tests are exact and two-sided; a superiority claim also needs the
   difference in the stated direction):**
-  - **S1:** T0R (k=3) against L0 at its matched k, for superiority.
-  - **S2:** T0R (k=3) against Jev-Mem at its matched k, for superiority.
-  - **S3:** T0R (k=3) against mem0 at its matched k, for superiority.
-  - **S4:** T0R (k=3) against T0R-LLM at its matched k, for non-inferiority with a 5-point margin. The test is as in H1;
-    the p-value for Holm is the one-sided p of z = (d̄ + 0.05)/(s/√n).
-  - **S5:** LongMemEval, T0R against mem0 at k=3 on the 30 knowledge-update questions, McNemar.
-  - **S6:** LongMemEval, T0R against L0 at k=3 on all 70 questions, McNemar.
+  In every test the comparator runs at k=3 and T0R at its k matched to that comparator (section 5).
+  - **S1:** T0R against L0, for superiority.
+  - **S2:** T0R against Jev-Mem, for superiority.
+  - **S3:** T0R against mem0, for superiority.
+  - **S4:** T0R against T0R-LLM, for non-inferiority with a 5-point margin. The test is as in H1; the p-value for Holm
+    is the one-sided p of z = (d̄ + 0.05)/(s/√n).
+  - **S5:** LongMemEval, T0R against mem0 on the 30 knowledge-update questions, McNemar.
+  - **S6:** LongMemEval, T0R against L0 on all 70 questions, McNemar.
 - **Fallback:** if S5 is dropped under the budget rule (section 11), the Holm family is S1 to S4 and S6.
 
 ## 7. Predictions and descriptive results
 
-- **Predictions** (stated now and checked by direction, not tested): T0R scores below engram v2 on multi-hop
-  (category 1) and open-domain (category 3) questions. On conv-26 the figures were 75 against 81 and 77 against 92.
+- **Predictions** (stated now and checked by direction, not tested): in the primary comparison, T0R scores below
+  engram v2 on multi-hop (category 1) and open-domain (category 3) questions. On conv-26 the figures were 75 against
+  81 and 77 against 92.
 - **Descriptive results, for every system:**
   - accuracy at each k, by category;
   - write cost per 1,000 turns, by part (LLM, Jev, embeddings);
@@ -120,20 +133,19 @@ full context reuses T0R's line rendering.
 
 ## 8. Human check
 
-The user grades every discordant question of the primary comparison (T0R at k=3 against engram v2 at its matched k).
+The user grades every discordant question of the primary comparison (T0R at its matched k against engram v2 at k=3).
 Grading is blind: the system names are hidden, the order of the two answers is random per question, and the gold
 answer is shown. Reported: agreement with the judge, and H1's lower bound recomputed with the human grades. H1 is
 decided by the judge.
 
 ## 9. Run order
 
-- **Batch A:** L0, T0R and Jev-Mem on LoCoMo. Within Jev-Mem: writes, then the sweep, then the matched k, then k=40
-  last.
+- **Batch A:** L0, T0R and Jev-Mem on LoCoMo. Within Jev-Mem: writes, then k=3, then k=40 last.
 - **Batch B:** T0R-LLM, full context, mem0 and engram v2 on LoCoMo; then the primary test.
 - **Batch C:** LongMemEval.
 - The exploratory LoCoMo runs follow Batch A.
 - The order changes no test.
-- Nothing is answered at a matched k before that system's sweep is saved.
+- T0R answers at a matched k only after T0R's sweep and the comparator's k=3 token mean are saved.
 
 ## 10. Estimated cost
 
@@ -148,16 +160,16 @@ Measured dev rates:
 
 | system (data) | OpenAI (USD) | Jev (USD) |
 |---|---|---|
-| L0 (LoCoMo) | 0.45 | 0.00 |
-| T0R (LoCoMo) | 0.45 | 0.19 |
-| T0R-LLM (LoCoMo) | 0.66 | 0.00 |
+| L0 (LoCoMo) | 0.35 | 0.00 |
+| T0R (LoCoMo; k=3, k=20 and up to five matched k) | 0.94 | 0.19 |
+| T0R-LLM (LoCoMo) | 0.56 | 0.00 |
 | full context (LoCoMo, scored only) | 2.80 | 0.00 |
-| mem0 (LoCoMo) | 4.59 | 0.00 |
-| Jev-Mem (LoCoMo; writes, sweep, matched k, k=40) | 0.40 | 3.51 |
-| engram v2 (LoCoMo) | 4.60 | 2.18 |
-| L0 and T0R (exploratory conversations) | 0.72 | 0.15 |
-| LongMemEval (T0R, L0, full context, mem0) | 3.20 | 0.01 |
-| **total** | **17.87** | **6.05** |
+| mem0 (LoCoMo) | 4.49 | 0.00 |
+| Jev-Mem (LoCoMo; writes, k=3, k=40) | 0.40 | 3.15 |
+| engram v2 (LoCoMo) | 4.50 | 2.18 |
+| L0 and T0R (exploratory conversations) | 0.66 | 0.15 |
+| LongMemEval (T0R, L0, full context, mem0) | 3.22 | 0.01 |
+| **total** | **17.92** | **5.68** |
 
 ## 11. Budget, spend and stopping rules
 

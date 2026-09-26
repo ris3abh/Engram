@@ -13,20 +13,20 @@ import pytest
 
 PLAN = Path(__file__).parents[1] / "docs" / "V3_PLAN.md"
 REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviations entries naming it)
-    "1": ("1. Primary hypothesis", "5f234f908c321a7447973bc572beec1f7f14493efffe14029f0b6e4079166c0a", 0),
-    "2": ("2. Power", "0891c226b6aff0b9b2e781667a4edeff36753060c24eb81c1f2d478e353caccc", 0),
+    "1": ("1. Primary hypothesis", "7e4bda8aa487886dedff5c9a0af8e5c7464b237b39b06093f005c105e8dc0d2b", 0),
+    "2": ("2. Power", "dd141ec497e32d00f812137c92e7c503f90d256df45d5be766f5759db4ca46f4", 0),
     "3": ("3. Stack", "61d9d2b8c1e6992098f525780d8dd6219a23d25ff847ff2fbf54eeb399e2c1d5", 0),
     "4": ("4. Systems", "7559a97bd50e6223c7d5960c3d96327dee977a702f9db37e408e601acb9373ba", 0),
-    "5": ("5. Data and k", "e56256b923b99b8f761907c3e90ff205b36156e8319caf589a09a526d490148c", 0),
-    "6": ("6. Hypothesis family", "adf5927f2fc151169ac02952566037de49816e10d959282e139f6e1ab50438c3", 0),
+    "5": ("5. Data and k", "b774a97be47b755f69a9381668c7f1cdb0a3c9e3cabdf0b623e145d6118339c9", 0),
+    "6": ("6. Hypothesis family", "acce7ea2064588d90ea4f16da7c81ada590f41b792358e62b9430e066a375595", 0),
     "7": (
         "7. Predictions and descriptive results",
-        "f5fe6e08fca4df7f8a579a861a71ac85cc9c56fde310a70605aa8b0c5519b3cb",
+        "05a123c10a108d7b8b98ef782a75e7d1ab9c7b9177f06eb7a6182acd5c318f29",
         0,
     ),
-    "8": ("8. Human check", "3e8a2dcb12a4257d851ae500b068d4133b994fd540d3002bc277cf15284695c1", 0),
-    "9": ("9. Run order", "4790ded0a50aef6e99eb250f9e490628f49a3df4e5143fcaf4948ac0ee910d55", 0),
-    "10": ("10. Estimated cost", "537e6342b08033d017531830387bef12d8b910cf619aa9c54ce5f6b98dc96790", 0),
+    "8": ("8. Human check", "28c31a476ca42338bf22e25a099a24be24d55f7f484e6668804391587f3395d3", 0),
+    "9": ("9. Run order", "9457eda20c760009ca37a364e9bb5ce6ce96ab2bc449101e81432203236a198e", 0),
+    "10": ("10. Estimated cost", "37c3acdbdab19318744a347a13d0f6e9451f446ead59cb13c08333b23bc177e1", 0),
     "11": (
         "11. Budget, spend and stopping rules",
         "08c61e0b93555164f1be3b52a300751c0971f53f786e5a2e992cd3bbabe33f8e",
