@@ -302,6 +302,18 @@ re-registered in `tests/test_v3_plan.py`.
     - The metering wrapper rejects any response that carries a router's `provider` field.
     - Tests: `tests/test_v3_arms.py`.
 
+- 2026-09-27, human check layout (§8), record only, no analysis change: the audit sheet placed each system's answer on
+  its own row and shuffled all 284 rows together (`random.Random(0)`), rather than randomising the order of the two
+  answers within each question. System names and judge labels were hidden as registered, and the gold answer was shown.
+- 2026-09-27, human check grading standard (§8), record only, no analysis change: the sheet asked for CORRECT or WRONG,
+  while the progress notes listed CORRECT/WRONG/UNCLEAR. The author's grades include partial and hedged labels. Since
+  §8 fixed no rule for these, two mappings are reported: strict (only CORRECT counts) and lenient (partial and
+  hedged-correct grades also count). H1 remains decided by the judge.
+- 2026-09-27, paper title (presentation change, no analysis change): the title selected by the registered outcome rule
+  in docs/V3_OUTCOMES.md ("Selection, Not Extraction: One Rerank Call Matches LLM-Extracted Memory at a Fraction of
+  the Write Cost") is replaced by "When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory Under
+  Context Budgets". The replaced title presents a published idea (SmartSearch; Fidelity Before Structure) as new, and
+  its "matches" overstates a non-inferiority result, most of all after the human audit.
 
 ## AI assistance
 
