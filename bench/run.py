@@ -303,6 +303,21 @@ ARMS: dict[str, dict] = {
             )
         )
     },
+    # Lean turn ladder (2026-09-26): the same steps on whole turns (sentences lost to turns). T0 is lean_l0. T3 reads
+    # T2's store (same write path, nothing written) with the v2 system's read path: Jev rerank over a 30-unit cosine
+    # shortlist, the cosine floor, history and expansion.
+    "lean_t1": {"system": "engram", "flags": Flags(**LEAN_BASE, lean_dates=True)},
+    "lean_t2": {"system": "engram", "flags": Flags(**LEAN_BASE, lean_dates=True, lean_worth_gate=True)},
+    "lean_t3": {
+        "system": "engram",
+        "store_from": "lean_t2",
+        "flags": Flags(
+            **{**LEAN_BASE, "retrieval_rerank": True, "retrieval_history": True},
+            retrieval_floor=config.RETRIEVAL_FLOOR,
+            lean_dates=True,
+            lean_worth_gate=True,
+        ),
+    },
     "mem0": {"system": "mem0"},
     # v2 baseline (V2_PLAN section 4): Graphiti on the OpenAI stack's shared models; see GraphitiArm.
     "graphiti": {"system": "graphiti"},
@@ -1186,7 +1201,7 @@ async def run_arm(
         arm_dir.mkdir(parents=True)
     cache = CallCache(CACHE, budget=budget)
     frozen_store = spec.get("store_from")  # Stage 4 reranker arms: read a copy of another arm's store, write nothing
-    if frozen_store:
+    if frozen_store and not reuse_from:  # a reused directory already holds its copy
         shutil.copy(arms_dir / frozen_store / (slice_name.replace(":", "_") + suffix) / "engram.db", arm_dir)
     if spec["system"] == "engram":
         system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"), stack)

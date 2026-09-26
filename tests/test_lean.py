@@ -25,6 +25,8 @@ def test_relative_dates_resolve_against_the_day_said():
         "next month": "next month (June 2023)",
         "in 3 days": "in 3 days (2023-05-11)",
         "on 7 May 2023": "on 7 May 2023",  # absolute dates are left alone
+        "feels like just yesterday I put this on": "feels like just yesterday I put this on",  # idiom
+        "seems like only last year": "seems like only last year",
     }
     for text, expected in cases.items():
         assert resolve_dates(text, SAID)[0] == expected, text

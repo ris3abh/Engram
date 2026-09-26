@@ -128,11 +128,19 @@ def _resolve(match: re.Match, said: datetime) -> str | None:
     return (said + timedelta(days=ahead)).strftime(day)
 
 
+# A figure of speech, not a date: "feels like just yesterday", "seems like only last year", "as if it were yesterday".
+_IDIOM_BEFORE = re.compile(r"\b(?:like|as if|as though)(?: it (?:was|were))?(?: just| only)?\s+$", re.IGNORECASE)
+
+
 def resolve_dates(text: str, said: datetime) -> tuple[str, list[dict]]:
-    """Write the absolute date after each relative phrase: "yesterday" -> "yesterday (2023-05-07)"."""
+    """Write the absolute date after each relative phrase: "yesterday" -> "yesterday (2023-05-07)". Phrases used as
+    a figure of speech are left as they are and reported with resolved=None."""
     found: list[dict] = []
 
     def annotate(m: re.Match) -> str:
+        if _IDIOM_BEFORE.search(text[: m.start()]):
+            found.append({"phrase": m.group(0), "resolved": None})
+            return m.group(0)
         value = _resolve(m, said)
         if value is None:
             return m.group(0)
@@ -162,7 +170,8 @@ class LeanWriter(WritePipeline):
         for piece in pieces:
             body, resolved = resolve_dates(piece, message.created_at) if f.lean_dates else (piece, [])
             units.append({"source": piece, "text": f"{speaker}: {body}", "dates": resolved})
-            self.stats["dates_resolved"] += len(resolved)
+            self.stats["dates_resolved"] += sum(r["resolved"] is not None for r in resolved)
+            self.stats["dates_idiom_skipped"] += sum(r["resolved"] is None for r in resolved)
         split = time.perf_counter()
 
         decisions = [None] * len(units)
@@ -186,7 +195,7 @@ class LeanWriter(WritePipeline):
                 id=new_id(),
                 text=u["text"],
                 subject=speaker,
-                predicate="related_to",
+                predicate="said",  # no edge type, so the v2 read path's relation pull never selects units
                 object="unspecified",
                 kind="event",
                 durability="long_term",
