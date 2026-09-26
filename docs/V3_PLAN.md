@@ -1,7 +1,8 @@
 # V3 plan: selection over extraction
 
 Pre-registered on 2026-09-26, before any run on the data below. Timestamped on Zenodo as
-[10.5281/zenodo.22970745](https://doi.org/10.5281/zenodo.22970745) (the plan as of commit b3c5dc5). The v2 study stays paused (docs/V2_PLAN.md,
+[10.5281/zenodo.22970745](https://doi.org/10.5281/zenodo.22970745) (the plan as of commit b3c5dc5); amended version
+[10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848) (as of commit efae0b6). The v2 study stays paused (docs/V2_PLAN.md,
 Deviations 2026-09-26). This plan is the source of truth for v3. Sections 1 to 11 are guarded by
 `tests/test_v3_plan.py`: a change to any of them needs a dated entry under section 12 naming it ("§N"), and the
 section is then re-registered in that test, as in v2.
@@ -252,6 +253,9 @@ re-registered in `tests/test_v3_plan.py`.
   above 0: descriptive, not tested superiority) is kept. (2) "LongMemEval holds" now means that S7 significantly
   favours T0R after Holm correction and S5 does not significantly favour mem0 after Holm correction. If S7 is not
   significant, the paper states that the selection effect was not shown on long histories.
+- 2026-09-26, external timestamp: the amended plan and docs/V3_OUTCOMES.md, as of commit efae0b6, are deposited on
+  Zenodo as 10.5281/zenodo.22977848 (a new version of 10.5281/zenodo.22970745). Tag `v3-amended` marks the commit that
+  records this.
 
 ## AI assistance
 
