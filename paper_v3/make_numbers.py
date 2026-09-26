@@ -298,7 +298,7 @@ def main() -> None:
         "fc.vs.t0r.k3",
         fresh["full context all turns"]["accuracy"] - fresh["T0R k3"]["accuracy"],
         f"{rel(B)}#fresh (full context - T0R k3)",
-        "pts",
+        "p1",
     )
 
     # --- adversarial (abstention), exploratory descriptive
@@ -616,15 +616,75 @@ def main() -> None:
                 "usd5",
             )
 
+    # --- per-conversation accuracy (Appendix A)
+    pc_arms = {
+        "t0r.k3": ("lean_t0r", "__k3"),
+        "t0r.k6": ("lean_t0r", "__k6"),
+        "t0r.k20": ("lean_t0r", "__k20"),
+        "l0.k3": ("lean_l0", "__k3"),
+        "l0.k20": ("lean_l0", "__k20"),
+        "t0rllm.k3": ("lean_t0r_llm", "__k3"),
+        "engram.k3": ("e4_frozen_sameattr", "__k3"),
+        "engram.k20": ("e4_frozen_sameattr", "__k20"),
+        "mem0.k3": ("mem0", "__k3"),
+        "mem0.k20": ("mem0", "__k20"),
+        "jevmem.k3": ("jevmem", "__k3"),
+        "jevmem.k40": ("jevmem", "__k40"),
+        "fc": ("full_context", ""),
+    }
+    for short, (arm, suffix) in pc_arms.items():
+        for conv in FRESH:
+            f = V3 / f"{arm}__heldout_{conv}{suffix}.json"
+            ans = load(f)["answers"]
+            N(
+                f"pc.{short}.{conv}",
+                statistics.fmean(a["label"] == "CORRECT" for a in ans),
+                f"{rel(f)}#answers (share CORRECT)",
+                "p1",
+            )
+    for conv in FRESH:
+        f = V3 / f"lean_t0r__heldout_{conv}__k3.json"
+        N(f"pc.n.{conv}", len(load(f)["answers"]), f"{rel(f)}#answers (count)", "int")
+
     # --- registered design constants quoted in the text (source: the plan)
     for key, v, fmt in (
         ("plan.margin", 5, "raw"),
         ("plan.shortlist", 30, "raw"),
         ("plan.floor", 10, "raw"),
+        ("plan.threshold", 0.5, "raw"),
+        ("plan.boot", 10000, "int"),
+        ("plan.llama.in", 0.10, "usd2"),
+        ("plan.llama.out", 0.32, "usd2"),
         ("plan.power.0", 0.99, "raw"),
         ("plan.power.conv26", 0.89, "raw"),
     ):
         N(key, v, "docs/V3_PLAN.md §1, §2, §4", fmt)
+
+    # --- design and pricing constants quoted in the text (source: the code or plan that fixes them)
+    from engram import config
+    from engram.llm.openai import PRICES
+
+    N(
+        "price.mini.in",
+        PRICES["gpt-4o-mini"][0],
+        "src/engram/llm/openai.py#PRICES/gpt-4o-mini/0 (USD per million)",
+        "usd2",
+    )
+    N(
+        "price.mini.out",
+        PRICES["gpt-4o-mini"][1],
+        "src/engram/llm/openai.py#PRICES/gpt-4o-mini/1 (USD per million)",
+        "usd2",
+    )
+    N(
+        "price.jev",
+        config.JEV_PRICE_PER_INPUT_TOKEN * 1e6,
+        "src/engram/config.py#JEV_PRICE_PER_INPUT_TOKEN (per million)",
+        "usd3",
+    )
+    N("wide.shortlist", 150, "bench/run.py#ARMS/lean_t0r_wide/flags/retrieval_shortlist", "raw")
+    N("plan.latency_sample", 40, "docs/V3_PLAN.md §7 (fixed sample of 40 questions); bench/v3_latency.py", "raw")
+    J("expl.k", A, ("token_match", "L0 (exploratory)", "t0r_k"), "raw")
 
     # --- numbers quoted from cited work (prose only; source = bibliography key via docs/V3_LITERATURE.md)
     for key, v, fmt, cite in (
@@ -632,6 +692,10 @@ def main() -> None:
         ("ext.smartsearch.lme", 88.4, "d1", "derehag2026smartsearch"),
         ("ext.smartsearch.tokens", 3141, "int", "derehag2026smartsearch"),
         ("ext.smartsearch.fc", 77.1, "d1", "derehag2026smartsearch"),
+        ("ext.smartsearch.locomo_evermem", 93.5, "d1", "derehag2026smartsearch"),
+        ("ext.smartsearch.recall", 98.6, "d1", "derehag2026smartsearch"),
+        ("ext.smartsearch.ce", 7.9, "d1", "derehag2026smartsearch"),
+        ("ext.fidelity.cap", 5000, "int", "an2026fidelity"),
         ("ext.smartsearch.candidates", 431, "int", "derehag2026smartsearch"),
         ("ext.smartsearch.passages", 62, "int", "derehag2026smartsearch"),
         ("ext.smartsearch.norank", 22.5, "d1", "derehag2026smartsearch"),
@@ -642,9 +706,15 @@ def main() -> None:
         ("ext.fidelity.pool", 30, "int", "an2026fidelity"),
         ("ext.fidelity.kept", 15, "int", "an2026fidelity"),
         ("ext.jevmem.score", 0.777, "raw", "jiang2026jevmem"),
-        ("ext.letta.locomo", 74.0, "d1", "letta2024filesystem"),
+        ("ext.letta.locomo", 74.0, "d1", "letta2025filesystem"),
+        ("ext.fidelity.kappa", 0.897, "raw", "an2026fidelity"),
+        ("ext.fidelity.kappa_n", 100, "int", "an2026fidelity"),
+        ("ext.fidelity.locomo_q", 699, "int", "an2026fidelity"),
+        ("ext.fidelity.lme_q", 500, "int", "an2026fidelity"),
+        ("ext.smartsearch.questions", 1540, "int", "derehag2026smartsearch"),
+        ("ext.smartsearch.budget_words", 2000, "int", "derehag2026smartsearch"),
     ):
-        N(key, v, f"cite:{cite} (as quoted in docs/V3_LITERATURE.md)", fmt)
+        N(key, v, f"cite:{cite} (checked against the paper's text; paper_v3/bib_verification.md)", fmt)
 
     out = Path(__file__).parent / "numbers.json"
     out.write_text(json.dumps(NUM, indent=1, ensure_ascii=False) + "\n")

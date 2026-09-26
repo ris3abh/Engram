@@ -18,6 +18,12 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 ALLOWED = [
+    r"\[[a-z][\w-]*\d{4}[\w-]*(?:; ?[a-z][\w-]*\d{4}[\w-]*)*\]",  # rendered citations [key; key], first
+    r"Figures? \d+ and \d+",  # before the general reference pattern
+    r"categories 1–[345]",  # a cited paper's protocol scope
+    r"bge-reranker-v2-m3",
+    r"^\s*\d+\. ",  # numbered-list markers
+    r"(?<![\w@])[a-z]+\d{4}[a-z]+\b",  # bare citation keys (\citet)
     r"<!--.*?-->",  # comments left after sourced numbers are removed
     r"\bk ?= ?\d+\b",
     r"\bk ?[≤<>] ?\d+\b",
@@ -40,8 +46,8 @@ ALLOWED = [
     r"LongMemEval(_S|-S)?",
     r"\b(Table|Figure|Tables|Figures|Appendix|Section|§) ?[A-I]?\d*(\.\d+)?",
     r"§\d+(\.\d+)?",
-    r"\b(19|20)\d\d[a-z]?\b",  # years in citations and dates
-    r"\d{4}-\d{2}-\d{2}",  # dates (registration, deviations)
+    r"\d{4}-\d{2}-\d{2}",  # dates (registration, deviations), before bare years
+    r"\b(19|20)\d\d[a-z]?\b",  # years
     r"10\.5281/zenodo\.\d+",
     r"arXiv:? ?\d{4}\.\d{4,5}",
     r"\b[0-9a-f]{7,40}\b",  # commit hashes
@@ -59,6 +65,13 @@ ALLOWED = [
     r"!\[[^\]]*\]\([^)]*\)",  # figure includes
     r"\(#[\w:-]+\)|\{#[\w:-]+\}",  # anchors
     r"\bone|two|three|four|five|six|seven|nine\b",
+    r"\b[1-5] (multi-hop|temporal|open-domain|single-hop|adversarial)\b",  # the category mapping
+    r"temperature 0\b",
+    r"1\.645|1\.96|family-wise 0\.05",  # statistical constants of the registered tests
+    r"per 1,000 (turns|messages)|\$/1k",
+    r"\bp[59]0\b",
+    r"Hit@1",
+    r"ris3abh",
 ]
 
 
