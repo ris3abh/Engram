@@ -16,13 +16,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 LEDGER = Path(__file__).parents[1] / "bench" / "results" / "v2" / "spend.jsonl"
-RUN_CAPS = {"openai": 40.0, "jev": 10.0, "anthropic": 15.0}
+RUN_CAPS = {"openai": 40.0, "jev": 10.0, "anthropic": 15.0, "openrouter": 2.0}
 NON_OPENAI_CAP = 55.0
 # Caps on a stage's total over every run in the ledger, this one included (the lean-extraction task, 2026-09-26).
 STAGE_CAPS = {"lean": {"openai": 2.0, "jev": 1.0}}
 # A study with its own ledger and caps on that ledger's whole total (docs/V3_PLAN.md section 11).
 V3_LEDGER = LEDGER.parent.parent / "v3" / "spend.jsonl"
-LEDGER_CAPS = {V3_LEDGER: {"openai": 23.0, "jev": 6.5}}
+# OpenRouter joined 2026-09-26 (docs/V3_PLAN.md §12): a cap that only lived in the plan text did not stop mem0.
+LEDGER_CAPS = {V3_LEDGER: {"openai": 32.0, "jev": 6.5, "openrouter": 2.0}}
 PROVIDERS = tuple(RUN_CAPS)
 
 

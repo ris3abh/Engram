@@ -38,7 +38,7 @@ def test_v3_ledger_caps_the_whole_study(tmp_path, monkeypatch):
         b.charge("jev", 6.0)
     with pytest.raises(SpendStop, match="study cap"), RunBudget("A", "jevmem", "b", ledger) as b:
         b.charge("jev", 0.6)
-    assert LEDGER_CAPS[V3_LEDGER] == {"openai": 23.0, "jev": 6.5}
+    assert LEDGER_CAPS[V3_LEDGER] == {"openai": 32.0, "jev": 6.5, "openrouter": 2.0}
 
 
 def test_holm_and_noninferiority_arithmetic():
@@ -53,3 +53,22 @@ def test_holm_and_noninferiority_arithmetic():
     a, b = rows([1] * 90 + [0] * 10), rows([1] * 85 + [0] * 15)
     r = noninferiority(a, b)
     assert r["d_bar"] == pytest.approx(0.05) and r["non_inferior"] and r["only_a"] == 5 and r["only_b"] == 0
+
+
+def test_openrouter_is_a_capped_provider(tmp_path, monkeypatch):
+    ledger = tmp_path / "spend.jsonl"
+    monkeypatch.setitem(LEDGER_CAPS, ledger, LEDGER_CAPS[V3_LEDGER])
+    with pytest.raises(SpendStop, match="openrouter"), RunBudget("2nd", "llama", "a", ledger) as b:
+        b.charge("openrouter", 2.01)
+
+
+def test_mem0_refuses_openrouter(tmp_path, monkeypatch):
+    from engram.cache import Budget, CallCache
+
+    monkeypatch.setenv("OPENROUTER_API_KEY", "not-a-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "not-a-key")
+    arm = R.Mem0Arm(tmp_path, CallCache(tmp_path / "c.sqlite", budget=Budget(run_limit=0.01)), stack="openai")
+    assert arm.memory.llm.client.base_url.host == "api.openai.com"
+    import os
+
+    assert "OPENROUTER_API_KEY" not in os.environ

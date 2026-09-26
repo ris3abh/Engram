@@ -79,3 +79,35 @@ that long histories are where selection alone breaks down.
   Fraction of the Write Cost"
 - **H1 is inconclusive or inferior:** "Where Agent Memory Accuracy Comes From: Selection Does Most of the Work"
 - **H1 passes but LongMemEval does not hold:** the first title, narrowed to conversations of LoCoMo scale.
+
+## Filled-in results (recorded 2026-09-26 after Batch B; no interpretation changed)
+
+**H1, Pass** (gpt-4o-mini answers and judge; the category clause is split because the two categories went different
+ways, which the author accepted):
+
+Pass. At matched context (265 tokens; engram v2 251), raw turns with a single rerank call were non-inferior to
+LLM-extraction memory: difference −0.5 points, one-sided 95% lower bound −3.0, above the registered −5 margin. Whatever
+accuracy extraction adds at this budget is under 3.0 points, at 3,061× the write cost. The rerank closes 94% of the gap
+between similarity search and extraction. By category, T0R did not trail on multi-hop (74.3 vs 72.1, n=140) and
+trailed on open-domain (56.0 vs 60.0, n=50), contrary to what we registered for multi-hop and as we registered for
+open-domain.
+
+Supporting figures: two-sided 95% CI [−3.5, +2.5]; conversation bootstrap 5th percentile −2.3 points; 69 against 73
+discordant questions of 778. G: T0R 77.0%, engram v2 77.5%, L0 at its matched k (6) 68.6%. Held-out write cost per
+1,000 turns: engram v2 $1.865, T0R $0.00061.
+
+**Context budget.** Every claim above is at a tight context budget: about 130 to 265 retrieved tokens per question
+(T0R 139 at k=3 and 265 at k=6, engram v2 251 at k=3, L0 130, mem0 129, T0R-LLM 143). At generous budgets, on the same
+778 questions, several systems score above T0R's ceiling.
+
+| system and setting | accuracy | tokens per question |
+|---|---|---|
+| engram v2, k=20 | 82.4% | 1,238 |
+| Jev-Mem, k=40 | 80.3% | 1,987 |
+| mem0, k=20 | 78.7% | 839 |
+| full context | 78.3% | 23,631 |
+| T0R, k=20 (its ceiling, about 77–78% at any k) | 77.6% | 496 |
+
+T0R's ceiling comes from its read path: the rerank scores a 30-turn cosine shortlist, and only turns above 0.5 (plus
+the cosine floor) are kept, so larger k adds few tokens.
+

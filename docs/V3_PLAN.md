@@ -279,6 +279,29 @@ re-registered in `tests/test_v3_plan.py`.
   4. **T0R-LLM:** as in v2 Stage 4, it also asks Jev its one query_relation question per query. That is a no-op on
      turn units, whose predicate "said" is no edge type; its Jev cost is included in its read cost.
 
+- 2026-09-26, mem0 via OpenRouter, resolved (§3, §11), before the second answer model or any later run:
+  - **Model:** OpenRouter reported `openai/gpt-4o-mini` in all 3,122 responses, one per turn. That is gpt-4o-mini
+    2024-07-18 in OpenRouter's catalogue, the registered model.
+  - **Provider:** split. 1,599 calls were served by OpenAI and 1,523 by Azure (the `provider` field of each response).
+    The model and version match the registration, but the serving is not identical to the OpenAI API. System
+    fingerprints cannot settle it: direct OpenAI calls rotate through several, and one, fp_0c03eba41c, appears in
+    both routes. S3 is reported with this caveat.
+  - **Billed:** $2.4168 by OpenRouter (the sum of each response's usage.cost, equal to the key's total usage):
+    Azure $1.152, OpenAI $1.265. The ledger had charged $4.118 as OpenAI spend at list price, which misses
+    OpenRouter's prompt-caching discount. A correction row moves $4.118 out of OpenAI and records $2.4168 as OpenRouter
+    spend outside the $2 cap, which applies to the second answer model.
+  - **Balance** before the second answer model: $9.72 on the account ($100 credited, $90.28 used account-wide).
+  - **Why the cap did not stop it:**
+    - The $2 OpenRouter cap existed only in the plan text: the ledger had no OpenRouter provider.
+    - mem0 switched base URL on an environment variable without any error.
+    - The metering wrapper priced whatever mem0's client returned as OpenAI spend.
+  - **Guard fixes, before any further run:**
+    - OpenRouter is a ledger provider with a hard $2 cap on the v3 ledger (`bench/v2_spend.py`).
+    - mem0 on the OpenAI stack removes `OPENROUTER_API_KEY` from its process environment and refuses any LLM endpoint
+      other than api.openai.com.
+    - The metering wrapper rejects any response that carries a router's `provider` field.
+    - Tests: `tests/test_v3_arms.py`.
+
 
 ## AI assistance
 

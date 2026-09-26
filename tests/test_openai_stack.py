@@ -80,7 +80,7 @@ def test_v2_budget_charges_the_v2_ledger_and_stops_at_the_run_cap(tmp_path):
         budget = R.V2Budget(run_budget)
         budget.add("claude", 1.0)
         budget.add("openai", 2.0)
-        assert run_budget.spent == {"openai": 2.0, "jev": 0.0, "anthropic": 1.0}
+        assert run_budget.spent == {"openai": 2.0, "jev": 0.0, "anthropic": 1.0, "openrouter": 0.0}
         budget.add("jev", 11.0)  # past the $10 Jev run cap
     row = json.loads(ledger.read_text())
     assert row["spend"]["jev"] == 11.0 and row["stage"] == "1"

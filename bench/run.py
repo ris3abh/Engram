@@ -784,6 +784,10 @@ class Mem0Arm:
                 },
             }
             dims = 384
+        if stack == "openai":
+            # mem0 2.1.0 silently sends its LLM calls to OpenRouter whenever OPENROUTER_API_KEY is set
+            # (mem0/llms/openai.py:42, and again per call); the registered stack is the OpenAI API (V3_PLAN §12).
+            os.environ.pop("OPENROUTER_API_KEY", None)
         self.memory = Memory.from_config(
             {
                 "llm": llm,
@@ -843,6 +847,9 @@ class Mem0Arm:
         from engram.embed import OpenAIEmbedder, fit_embedding_input
         from engram.llm.openai import cost
 
+        host = self.memory.llm.client.base_url.host
+        if host != "api.openai.com":
+            raise RuntimeError(f"mem0's LLM client points at {host}, not api.openai.com (V3_PLAN §12)")
         chat = self.memory.llm.client.chat.completions
         original_chat = chat.create
 
@@ -854,6 +861,8 @@ class Mem0Arm:
                 return openai.types.chat.ChatCompletion.model_validate(hit["response"])
             started = time.perf_counter()
             response = original_chat(*args, **kwargs)
+            if getattr(response, "provider", None) or (response.model_extra or {}).get("provider"):
+                raise RuntimeError("mem0's chat call was served through a router, not the OpenAI API (V3_PLAN §12)")
             u = response.usage
             record = {
                 "response": response.model_dump(),
