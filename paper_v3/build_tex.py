@@ -610,7 +610,7 @@ PREAMBLE = r"""\documentclass[11pt]{article}
 
 
 # ACL author block.
-AUTHOR = r"""\author{Rishabh Sharma\thanks{Preprint. Pre-registered plan:
+AUTHOR = r"""\author{Rishabh Sharma\thanks{Preprint, \href{https://doi.org/10.5281/zenodo.22985242}{doi:10.5281/zenodo.22985242}. Pre-registered plan:
   \href{https://doi.org/10.5281/zenodo.22970745}{10.5281/zenodo.22970745}; amendment and pre-written outcome
   paragraphs: \href{https://doi.org/10.5281/zenodo.22977848}{10.5281/zenodo.22977848}.} \\
   Independent Researcher \\

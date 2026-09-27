@@ -1,8 +1,10 @@
 # engram
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22985242.svg)](https://doi.org/10.5281/zenodo.22985242)
+
 **Current paper:** *When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed
-Decision Model* (Rishabh Sharma, 2026). PDF: `paper_v3/when-does-selection-replace-extraction.pdf`. DOI: to be
-added on release.
+Decision Model* (Rishabh Sharma, 2026). DOI: [10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242) (tag
+`paper-v3-preprint`). PDF: `paper_v3/when-does-selection-replace-extraction.pdf`.
 
 Does conversational memory need LLM-extracted facts, or is it enough to select the right raw turns? Published results
 disagree. This study tests the question under a pre-registered plan, on LoCoMo conversations never used for
@@ -47,6 +49,10 @@ and question ids. `tests/test_paper_v3_thresholds.py` checks that the constants 
 The runs themselves are recorded in `docs/V3_PLAN.md` and `docs/V3_PROGRESS.md`; re-running them calls the APIs
 (OpenAI, TypeSafe, OpenRouter) with a spend guard in `bench/run.py`.
 
+Secret scanners (gitleaks, trufflehog, GitHub push protection) flag a few strings in the LongMemEval result files,
+such as a GitHub token; they come verbatim from the public LongMemEval dataset, pasted there by its users, and are not
+our credentials.
+
 **A warning for anyone benchmarking mem0.** mem0 2.1.0 silently sends its OpenAI calls to OpenRouter whenever
 `OPENROUTER_API_KEY` is set in the environment. It happened in this study (paper, Appendix G); `bench/run.py` now
 removes the key from mem0's process.
@@ -72,7 +78,8 @@ before any held-out run, for the v3 design; no paper. engram v2 at `v2-frozen` i
 **v3: the current paper.** Plan `docs/V3_PLAN.md`, deposited before any run
 ([10.5281/zenodo.22970745](https://doi.org/10.5281/zenodo.22970745), tag `v3-frozen`), and its amendment, deposited
 before any primary-test result ([10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848), tag
-`v3-amended`). Paper in `paper_v3/`; release tag `paper-v3-preprint`.
+`v3-amended`). Paper in `paper_v3/`, DOI [10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242); release tag
+`paper-v3-preprint`.
 
 ## Repository map
 
@@ -92,7 +99,20 @@ demo/                the page served by `engram serve`
 
 ## Citation
 
-See `CITATION.cff`. The v1 preprint:
+See `CITATION.cff`. This paper:
+
+```bibtex
+@misc{sharma2026selection,
+  author    = {Sharma, Rishabh},
+  title     = {When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision Model},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.22985242},
+  url       = {https://doi.org/10.5281/zenodo.22985242}
+}
+```
+
+The v1 preprint:
 
 ```bibtex
 @misc{sharma2026typed,

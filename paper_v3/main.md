@@ -639,7 +639,8 @@ human audit.
 Code, plans, per-question answers and judge labels, and the human-audit grades with their key are at
 github.com/ris3abh/Engram: tags `v3-frozen`, `v3-amended` and the paper tag; results in `bench/results/v3/`
 (per-question files, reports, ledgers, `human_audit/`) and `bench/results/v3_posthoc/`. The plan and its amendment
-are deposited at 10.5281/zenodo.22970745 and 10.5281/zenodo.22977848; the earlier engram preprint is
+are deposited at 10.5281/zenodo.22970745 and 10.5281/zenodo.22977848; this paper is 10.5281/zenodo.22985242 (tag
+`paper-v3-preprint`); the earlier engram preprint is
 10.5281/zenodo.22941757 [sharma2026typed].
 
 ## References
