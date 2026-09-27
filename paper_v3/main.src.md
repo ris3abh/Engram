@@ -1,6 +1,6 @@
 # When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision Model
 
-*Author: Rishabh Sharma, independent researcher.*
+*Authors: Rishabh Sharma and Rishika Lall, independent researchers.*
 
 ## Abstract
 
@@ -315,7 +315,7 @@ S6 against Turns + cosine on the LongMemEval sample; S7 against Turns + cosine o
 probability of passing H1 at {{plan.power.conv26}} if the development difference held.
 
 **Checks.** H1 and S1 were re-answered by Llama 3.3 70B Instruct via OpenRouter from the same contexts and judged
-by the same judge; a result is called model-robust only if it holds under both answer models. The author graded
+by the same judge; a result is called model-robust only if it holds under both answer models. The first author graded
 every question on which the judge found exactly one of H1's two answers correct, blind to system and judge label
 (§5.4, Appendix C). The prespecified judge decides the test, and the human audit is a sensitivity analysis, as in
 LazyMem [@yu2026lazymem]. Shortlist recall measures where the LoCoMo evidence turns fall (§5.6, Appendix D).
@@ -461,7 +461,7 @@ therefore model-robust by the registered rule. Of {{sm.answers}} rebuilt context
 their recorded token counts exactly; the four come from near-tie reorderings. OpenRouter served Llama through
 {{sm.n_providers}} providers whose numeric precision may differ.
 
-The author graded, blind, both answers to each of H1's {{h1.discordant}} judge-discordant questions
+The first author graded, blind, both answers to each of H1's {{h1.discordant}} judge-discordant questions
 ({{audit.rows}} rows; one question was left ungraded). Agreement with the judge was {{audit.strict.agree}} under the
 strict mapping and {{audit.lenient.agree}} under the lenient one (Appendix C). Many judge-discordant pairs were not
 discordant to the human grader: under the strict mapping both answers were correct for
@@ -643,7 +643,7 @@ the post-hoc Turns + Jev (wide), is below that figure.
   primary conversations give {{data.fresh.questions}} questions; categories are small.
 - **LongMemEval scope.** engram v2 was not run on LongMemEval, so no claim about extraction on long histories follows
   from this study.
-- **Human grading.** The grader is the system's author; the mapping of partial grades was not pre-specified (two are
+- **Human grading.** The grader, the first author, built the systems evaluated; the mapping of partial grades was not pre-specified (two are
   reported); one question was ungraded; and only judge-discordant questions were re-graded, so judge errors on
   questions where the judge agreed across systems remain.
 - **Adversarial content.** Turns + Jev passes raw, user-written turns to Jev's relevance question, so text injected
@@ -676,8 +676,8 @@ styles should therefore report judge–human agreement by system.
 
 ## AI Assistance
 
-The code, run orchestration and drafting of this paper were done with Claude Code (Anthropic) under the author's
-direction. The author made every methodological decision, approved each stage of the registered plan and did the
+The code, run orchestration and drafting of this paper were done with Claude Code (Anthropic) under the first author's
+direction. The first author made every methodological decision, approved each stage of the registered plan and did the
 human audit.
 
 ## Artifacts
@@ -727,7 +727,7 @@ later change is a dated entry in its Deviations section, one row each below; pre
 | Date | Change | Reason | Effect on results |
 |---|---|---|---|
 | 2026-09-26 | Amendment, deposited after Batch A (S1 and S2 known) and before any H1 result: shortlist recall; LongMemEval on all {{data.lme.all}} questions with user and assistant turns, with the new test S7; the second answer model; the outcome paragraphs and the rule for "LongMemEval holds"; budget caps | Extend the study before the primary test was run | S7 joins the Holm family; new robustness checks; H1, its margin and the other tests unchanged |
-| 2026-09-26 | Outcome paragraphs revised before upload | The author's own wording | None; made before any H1 result |
+| 2026-09-26 | Outcome paragraphs revised before upload | The first author's own wording | None; made before any H1 result |
 | 2026-09-26 | mem0's extraction calls went through OpenRouter, about half served by Azure, instead of the OpenAI API; the ledger was corrected and guards added before any later run | A mem0 library default routes calls to OpenRouter when its key is set (Appendix G) | S3 is reported with a caveat; no other test involves mem0 |
 | 2026-09-26 | Runs repeated after OpenAI rate limits, with more retries and a Jev throttle; completed calls replayed from the call cache | Rate limits | None: replayed calls are identical |
 | 2026-09-26 | Turns + LLM also asks Jev's query-relation question once per query | Shared read-path code | None: the question is a no-op on turns |
@@ -743,7 +743,7 @@ the cache.
 **Protocol.** The sheet held every question on which the judge found exactly one of H1's two answers correct
 ({{h1.discordant}} questions), each answer as its own row ({{audit.rows}} rows), shuffled with seed 0, with the
 question and gold answer shown and no system name or judge label. The sheet asked for CORRECT or WRONG; the plan's
-notes had listed CORRECT, WRONG or UNCLEAR. The author's grades included partial and hedged labels, and one question
+notes had listed CORRECT, WRONG or UNCLEAR. The first author's grades included partial and hedged labels, and one question
 was left ungraded. Two mappings are reported: strict (only grades starting with CORRECT count as correct) and lenient
 (partial and hedged-correct grades also count); any grade containing WRONG counts as wrong under both. H1 is
 decided by the judge.

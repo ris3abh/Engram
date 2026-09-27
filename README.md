@@ -3,7 +3,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22985242.svg)](https://doi.org/10.5281/zenodo.22985242)
 
 **Current paper:** *When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed
-Decision Model* (Rishabh Sharma, 2026). DOI: [10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242)
+Decision Model* (Rishabh Sharma and Rishika Lall, 2026). DOI: [10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242)
 (release tag `paper-v3-preprint-r2`). PDF: `paper_v3/when-does-selection-replace-extraction.pdf`.
 
 Does conversational memory need LLM-extracted facts, or is it enough to select the right raw turns? Published results
@@ -104,7 +104,7 @@ See `CITATION.cff`. This paper:
 
 ```bibtex
 @misc{sharma2026selection,
-  author    = {Sharma, Rishabh},
+  author    = {Sharma, Rishabh and Lall, Rishika},
   title     = {When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision Model},
   year      = {2026},
   publisher = {Zenodo},

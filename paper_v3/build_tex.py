@@ -615,7 +615,9 @@ AUTHOR = r"""\author{Rishabh Sharma\thanks{Preprint,
   \href{https://doi.org/10.5281/zenodo.22970745}{10.5281/zenodo.22970745}; amendment and pre-written outcome
   paragraphs: \href{https://doi.org/10.5281/zenodo.22977848}{10.5281/zenodo.22977848}.} \\
   Independent Researcher \\
-  \texttt{rishabh.sharma1103@gmail.com}}"""
+  \texttt{rishabh.sharma1103@gmail.com} \And
+  Rishika Lall \\
+  Independent Researcher}"""
 
 
 def main() -> None:
