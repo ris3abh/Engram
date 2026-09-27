@@ -24,7 +24,7 @@ REGISTERED = {  # section: (heading, SHA-256 of the section text, dated Deviatio
         "05a123c10a108d7b8b98ef782a75e7d1ab9c7b9177f06eb7a6182acd5c318f29",
         0,
     ),
-    "8": ("8. Human check", "28c31a476ca42338bf22e25a099a24be24d55f7f484e6668804391587f3395d3", 0),
+    "8": ("8. Human check", "28c31a476ca42338bf22e25a099a24be24d55f7f484e6668804391587f3395d3", 2),
     "9": ("9. Run order", "9457eda20c760009ca37a364e9bb5ce6ce96ab2bc449101e81432203236a198e", 0),
     "10": ("10. Estimated cost", "37c3acdbdab19318744a347a13d0f6e9451f446ead59cb13c08333b23bc177e1", 1),
     "11": (

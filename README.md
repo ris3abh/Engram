@@ -1,97 +1,98 @@
 # engram
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22941757.svg)](https://doi.org/10.5281/zenodo.22941757)
+**Current paper:** *When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed
+Decision Model* (Rishabh Sharma, 2026). PDF: `paper_v3/when-does-selection-replace-extraction.pdf`. DOI: to be
+added on release.
 
-Paper (all versions): [10.5281/zenodo.22941757](https://doi.org/10.5281/zenodo.22941757)
-- v1.1: [10.5281/zenodo.22948964](https://doi.org/10.5281/zenodo.22948964)
-- v1: [10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758)
+Does conversational memory need LLM-extracted facts, or is it enough to select the right raw turns? Published results
+disagree. This study tests the question under a pre-registered plan, on LoCoMo conversations never used for
+development and on LongMemEval. Raw turns selected by one request to Jev, TypeSafe's typed decision model
+("Turns + Jev"), are compared with engram v2, an LLM-extraction memory we built earlier, at matched context. Within
+the study, the context budget decides the answer: when the answer model reads few items, selection matters and raw
+turns hold their own; when it reads many, extraction is more accurate.
 
-Pre-registered v2 analysis plan, `docs/V2_PLAN.md` (all versions):
-[10.5281/zenodo.22948854](https://doi.org/10.5281/zenodo.22948854)
+**Headline results** (all from `paper_v3/numbers.json`, which records the result file behind every number):
 
-Dataset: [huggingface.co/datasets/ris3abh-11/engram-eval](https://huggingface.co/datasets/ris3abh-11/engram-eval)
+| Result | Value |
+|---|---|
+| H1 (registered): Turns + Jev at k=6 (265 tokens per question) vs engram v2 at k=3 (251), 778 held-out LoCoMo questions | 77.0% vs 77.5%; difference −0.5 points, one-sided 95% bound −3.0 against a −5-point margin: **non-inferior** |
+| H1 under blind human grading of the discordant questions | difference −1.7 to −2.6 points; still non-inferior (worst bound −4.7) |
+| H1 with a second answer model (Llama 3.3 70B) | still non-inferior (bound −2.9) |
+| Write cost | raw turns are 3,061× cheaper to write than engram v2 |
+| Rerank gain over cosine similarity at k=3 (3 of 30 candidates read) | +17.4 points on LoCoMo, +9.1 on LongMemEval |
+| Same at k=20 (generous budget) | +1.5 and +1.1; engram v2 at k=20 is the most accurate system measured (82.4%) |
+| Jev against a gpt-4o-mini listwise reranker at matched context (S4) | non-inferior (bound −2.0) at about a third of the latency |
+| Reranking and abstention | reranking lowers correct abstention (54.1% vs 63.6% at k=3) |
 
-engram is a long-term memory graph for LLM agents in which an LLM extracts facts from each message and every later
-decision (is this fact new, a duplicate, an update, worth keeping, sensitive; is this stored fact relevant to the
-question) is a typed question answered by a hosted decision model, TypeSafe's Jev. Stored facts are edges with
-validity windows and a belief that they still hold; closes are gated and reversible, and every decision is logged
-with its probabilities. The accompanying paper, *Typed Decisions in Agent Memory: Where They Help, Where They Don't,
-and What It Costs* (`paper/typed-decisions-in-agent-memory.pdf`), measures the decision layer against mem0 2.1.0 on
-LoCoMo with the same extraction model, prompt construction and implementation.
+The paper labels every result as registered, exploratory or post-hoc; the cross-paper reading of the budget result
+is an interpretation, not a tested claim.
 
-**Status: research code.** It reproduces the paper; it is not a maintained library, and its thresholds are tuned
+**Status: research code.** It reproduces the papers; it is not a maintained library, and its thresholds are tuned
 against one decision-model version (`jev-1.13.0`).
 
-## Headline numbers
+## Reproduce this paper
 
-From the paper (`paper/numbers.json`; extraction claude-haiku-4-5, answers and judge claude-sonnet-4-6).
-
-| result | engram | comparator |
-|---|---|---|
-| Decision-layer cost, dev slice, per 1,000 messages | $0.125 | $8.782 (claude-sonnet-4-6 with mem0's update prompt, one call per fact): 70.0× |
-| Median decision latency, dev slice | 278 ms | 7,675 ms: 27.6× |
-| Dev accuracy (35 questions) | 31/35 | 31/35 |
-| Held-out LoCoMo, 610 questions, matched context (engram k=3 vs mem0 k=6) | 73.3% | 64.6%: +8.7 points (95% CI +5.2 to +12.1) |
-| Same, engram with Jev reranking off | 59.8% | the reranker accounts for the whole lead (−13.4 points) |
-| Held-out, k=20 | 79.0% | 78.2%: +0.8 points (95% CI −2.3 to +3.9), indistinguishable |
-| No-close trap items closed (update set 1) | 0/8 | 1 wrong plan_fulfilled close, 1 close matching no labeled pair |
-
-Closing stale facts did not change answers on these LoCoMo-derived evaluations with this extraction, rendering and
-answer setup.
-
-## Quickstart
-
-Requires [uv](https://docs.astral.sh/uv/) and Python 3.12.
+Requires [uv](https://docs.astral.sh/uv/), Python 3.12, and Docker (or a local `pdflatex` with `pdfcrop`).
 
 ```bash
-uv sync --extra bench          # the library plus mem0 2.1.0 for the baseline
-make reproduce-dev             # replays the paper's Table 1 from the shipped cache: $0, no API keys needed
+make reproduce-v3
 ```
 
-`make reproduce-dev` re-runs the three dev-slice arms with the experiment code and prints each cell next to the
-paper's. For live runs, copy `.env.example` to `.env` and set `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY`:
+This rebuilds `paper_v3/numbers.json`, every table and figure, and the PDF from the committed result files in
+`bench/results/v3/` and `bench/results/v3_posthoc/`, then runs `paper_v3/check.py`, which fails on any number in the
+paper that does not trace to a result file. It makes no model or API calls (the API keys are removed from its
+environment). It downloads LoCoMo and LongMemEval at pinned revisions, because the numbers count their categories
+and question ids. `tests/test_paper_v3_thresholds.py` checks that the constants the paper states equal the code's.
 
-```bash
-uv run --env-file .env --extra bench python -m bench.run --arm e2_jev --slice dev   # one dev-slice arm, live
-uv run --env-file .env engram ingest sample.txt && uv run --env-file .env engram ask "Where do I live?"
-uv run --env-file .env engram serve                                                 # demo page and JSON API
-```
+The runs themselves are recorded in `docs/V3_PLAN.md` and `docs/V3_PROGRESS.md`; re-running them calls the APIs
+(OpenAI, TypeSafe, OpenRouter) with a spend guard in `bench/run.py`.
 
-## Reproduce the paper
+**A warning for anyone benchmarking mem0.** mem0 2.1.0 silently sends its OpenAI calls to OpenRouter whenever
+`OPENROUTER_API_KEY` is set in the environment. It happened in this study (paper, Appendix G); `bench/run.py` now
+removes the key from mem0's process.
 
-Every table and figure has a command in the paper's Appendix D (`paper/main.src.md`, section "Reproduction"). With
-the full call cache (`bench/.cache/calls.sqlite`, not shipped: 97 MB) every command replays at no API cost; without
-it they call the APIs, with a spend guard in `bench/run.py`. The paper itself is rebuilt from the result files in
-`bench/results/`:
+## Project history
 
-```bash
-make -C paper paper            # numbers -> figures -> paper/main.tex -> paper/typed-decisions-in-agent-memory.pdf
-make -C paper arxiv            # the arXiv bundle, compiled on its own
-```
+The work ran in three phases. Each has its own tag, pre-registration and paper.
 
-`paper/check.py` checks that every number in the paper carries its source file; `tests/test_paper_thresholds.py`
-checks that the thresholds the paper states equal `src/engram/config.py`.
+**v1: the preprint.** *Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs*
+(`paper/typed-decisions-in-agent-memory.pdf`). engram, an LLM-extraction memory in which a typed decision model makes
+every later decision about the facts, measured against mem0 2.1.0 on LoCoMo. DOI (all versions)
+[10.5281/zenodo.22941757](https://doi.org/10.5281/zenodo.22941757); v1
+[10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758), v1.1
+[10.5281/zenodo.22948964](https://doi.org/10.5281/zenodo.22948964). Tags `v1-preprint`, `v1.1-preprint`,
+`v1-article`. `make reproduce-dev` replays its Table 1 from the shipped call cache at no cost; `make -C paper paper`
+rebuilds it. Where the v3 paper revises a v1 claim, the v3 paper is the current statement.
 
-LoCoMo is not redistributed in full: `bench/locomo_subset.py` downloads it (pinned commit) into `bench/data/`. The
-dev and stress slices in `bench/slices/` are excerpts of LoCoMo conversation conv-26 and remain under LoCoMo's license
-(CC BY-NC 4.0).
+**v2: paused.** A pre-registered confirmatory study of engram v2 (session-dated extraction and a same-attribute
+gate), plan `docs/V2_PLAN.md`: DOI (all versions) [10.5281/zenodo.22948854](https://doi.org/10.5281/zenodo.22948854),
+at the `v2-frozen` tag [10.5281/zenodo.22953496](https://doi.org/10.5281/zenodo.22953496). Paused on 2026-09-26
+before any held-out run, for the v3 design; no paper. engram v2 at `v2-frozen` is the comparator of the v3 paper.
+
+**v3: the current paper.** Plan `docs/V3_PLAN.md`, deposited before any run
+([10.5281/zenodo.22970745](https://doi.org/10.5281/zenodo.22970745), tag `v3-frozen`), and its amendment, deposited
+before any primary-test result ([10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848), tag
+`v3-amended`). Paper in `paper_v3/`; release tag `paper-v3-preprint`.
 
 ## Repository map
 
 ```
-src/engram/        the library: store, write pipeline, retrieval, decision backends (Jev, Laya, LLM), CLI, server
-bench/             experiments: bench/run.py (every arm), reports, update sets, contradiction pairs
-bench/results/     result files the paper builds from
-bench/cache/       dev_calls.sqlite, the call-cache subset for make reproduce-dev
-bench/archive/     historical one-off scripts; the paper does not depend on them
-paper/             paper source (main.src.md), build scripts, figures, PDF, arXiv bundle
-docs/              DECISIONS.md (question versions), BENCHMARK.md, FINDINGS.md, PLAN.md
-tests/             unit tests, including the paper-threshold check
-hf_dataset/        the released dataset (on the Hub as ris3abh-11/engram-eval, CC BY-NC 4.0)
-demo/              the page served by `engram serve`
+src/engram/          the library: store, write pipeline, retrieval, decision backends (Jev, LLM), CLI, server
+bench/               experiments: bench/run.py (every arm), reports, the v3 scripts (bench/v3_*.py)
+bench/results/v3/    v3 result files, ledgers and the human audit (human_audit/); v3_posthoc/ holds the post-hoc run
+bench/results/       v1 and v2 result files
+paper_v3/            v3 paper: main.src.md, make_numbers.py, check.py, figures.py and diagram.py, build scripts, PDF
+paper/               v1 paper and its build
+docs/                V3_PLAN.md, V3_OUTCOMES.md, V3_PROGRESS.md, V3_LITERATURE.md; V2_PLAN.md; v1 notes
+tests/               unit tests, the plan guards (test_v2_plan.py, test_v3_plan.py) and the paper-threshold checks
+hf_dataset/          the released dataset (ris3abh-11/engram-eval on the Hugging Face Hub)
+hf_space/            the project page
+demo/                the page served by `engram serve`
 ```
 
 ## Citation
+
+See `CITATION.cff`. The v1 preprint:
 
 ```bibtex
 @misc{sharma2026typed,
@@ -100,14 +101,15 @@ demo/              the page served by `engram serve`
   year      = {2026},
   publisher = {Zenodo},
   doi       = {10.5281/zenodo.22948964},
-  url       = {https://doi.org/10.5281/zenodo.22948964},
   note      = {Version 1.1. Version 1: doi:10.5281/zenodo.22941758}
 }
 ```
 
-## License
+## Licences
 
-MIT (`LICENSE`), with two exceptions. The LoCoMo excerpts in `bench/slices/` and the prompts recorded in
-`bench/cache/dev_calls.sqlite` are under LoCoMo's CC BY-NC 4.0 license
-([snap-research/locomo](https://github.com/snap-research/locomo)). mem0's prompts in `src/engram/llm/prompts_mem0.py`
-are Apache 2.0 (© mem0.ai).
+- Code: MIT (`LICENSE`).
+- LoCoMo-derived data (the excerpts in `bench/slices/`, the prompts recorded in `bench/cache/dev_calls.sqlite`, and
+  the LoCoMo turns and questions inside result files): CC BY-NC 4.0, LoCoMo's licence
+  ([snap-research/locomo](https://github.com/snap-research/locomo)). LoCoMo itself is downloaded, not redistributed.
+- LongMemEval-derived data: MIT, LongMemEval's licence (xiaowu0162/longmemeval-cleaned).
+- mem0's prompts in `src/engram/llm/prompts_mem0.py`: Apache 2.0 (© mem0.ai).
