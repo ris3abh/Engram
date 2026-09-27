@@ -3,8 +3,8 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22985242.svg)](https://doi.org/10.5281/zenodo.22985242)
 
 **Current paper:** *When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed
-Decision Model* (Rishabh Sharma, 2026). DOI: [10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242) (tag
-`paper-v3-preprint`). PDF: `paper_v3/when-does-selection-replace-extraction.pdf`.
+Decision Model* (Rishabh Sharma, 2026). DOI: [10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242)
+(release tag `paper-v3-preprint-r2`). PDF: `paper_v3/when-does-selection-replace-extraction.pdf`.
 
 Does conversational memory need LLM-extracted facts, or is it enough to select the right raw turns? Published results
 disagree. This study tests the question under a pre-registered plan, on LoCoMo conversations never used for
@@ -79,7 +79,8 @@ before any held-out run, for the v3 design; no paper. engram v2 at `v2-frozen` i
 ([10.5281/zenodo.22970745](https://doi.org/10.5281/zenodo.22970745), tag `v3-frozen`), and its amendment, deposited
 before any primary-test result ([10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848), tag
 `v3-amended`). Paper in `paper_v3/`, DOI [10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242); release tag
-`paper-v3-preprint`.
+`paper-v3-preprint-r2`. The earlier tags `paper-v3-preprint` and `paper-v3-preprint-r1` hold the same study and
+results; r1 and r2 revise only the text and references.
 
 ## Repository map
 

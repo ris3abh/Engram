@@ -11,11 +11,11 @@ held-out LoCoMo conversations and LongMemEval. At a tight budget on LoCoMo, raw 
 Jev, a typed decision model, are non-inferior to an LLM-extraction memory (one-sided 95% bound {{h1.lb}} points
 against a −{{plan.margin}}-point margin). Blind human grading narrows the margin but does not change the result. Raw
 turns cost {{cost.write.ratio}}× less to write, and the result holds with a second answer model. Within this study,
-reranking's value depends on the budget. It adds {{rerank.locomo.k3.u}} points on LoCoMo and {{rerank.lme.k3.u}} on
+reranking's gain shrinks as the budget grows. It adds {{rerank.locomo.k3.u}} points on LoCoMo and {{rerank.lme.k3.u}} on
 LongMemEval when three of {{plan.shortlist}} candidates are kept. At generous budgets it adds {{rerank.locomo.k20.u}}
 and {{rerank.lme.k20.u}}, and extraction systems are more accurate. This suggests why published results
 disagree. At matched context, Jev selects as accurately as an LLM reranker (non-inferiority bound {{s4.lb}}) at
-a third of the latency, and more accurately than a multi-call Jev graph traversal. Reranking lowers correct
+a third of the latency, and more accurately than a multi-call graph traversal. Reranking lowers correct
 abstention. Plans, code and graded answers are released.
 
 ## 1. Introduction
@@ -50,22 +50,28 @@ controlled comparison of extraction and raw turns, in the spirit of Fidelity Bef
 
 Our contributions:
 
-1. **Within this study, reranking's value depends on the budget.** Over similarity search, reranking raw turns adds
-   {{rerank.locomo.k3.u}} points on LoCoMo and {{rerank.lme.k3.u}} on LongMemEval when three of {{plan.shortlist}}
-   candidates are kept. At k=20 it adds {{rerank.locomo.k20.u}} and {{rerank.lme.k20.u}}, and extraction systems are
-   more accurate. This suggests an explanation for the published disagreement, which we offer as an interpretation
-   (§5.3, §6).
+1. **Within this study, reranking's gain over similarity search shrinks as the budget grows**: from
+   {{rerank.locomo.k3}} to {{rerank.locomo.k20}} points on LoCoMo and from {{rerank.lme.k3}} to {{rerank.lme.k20}} on
+   LongMemEval, as the answer model reads three and then twenty of {{plan.shortlist}} candidates. This suggests an
+   explanation for why SmartSearch finds ranking decisive and Fidelity Before Structure finds it marginal, which we
+   offer as an interpretation (§5.3, §6). @kang2026retain give complementary evidence that memory design choices
+   depend on the budget.
 2. **To our knowledge, the first pre-registered non-inferiority test in conversational-memory evaluation**, on
    held-out conversations, with a second answer model and blind human grading. It bounds what extraction adds at a
    tight budget. Under the worst grading we applied, extraction adds at most {{h1.lenient.worst}} points. Human
-   grading puts the difference at {{h1.strict.d}} to {{h1.lenient.d}} points (§5.1, §5.4).
+   grading puts the difference at {{h1.strict.d}} to {{h1.lenient.d}} points (§5.1, §5.4). LazyMem
+   [@yu2026lazymem] also prespecifies its automatic metric and uses a human audit as a sensitivity analysis; our study
+   registers a plan, a primary test and a non-inferiority margin before any held-out run.
 3. **To our knowledge, the first answer-level, matched-context evaluation of a typed decision model as the
    selector.** At matched context, Jev is non-inferior to a gpt-4o-mini listwise reranker (S4, lower bound
    {{s4.lb}}) at about a third of the latency. It is also more accurate than Jev-Mem's multi-call Jev graph traversal
-   at matched context (S2) (§5.2, §5.7).
-4. **Diagnostics.** The selection ceiling decomposes into shortlist misses ({{rec.all_nine.miss}} of questions) and
-   rerank drops ({{rec.all_nine.lost}}), with temporal evidence dropped most at the rerank; and the LLM judge's
-   leniency interacts with answer length, so judge–human agreement differs by system (§5.4, §5.6, §6).
+   at matched context (S2) (§5.2, §5.7). This is consistent with MemReranker [@li2026memreranker], where a small
+   reranker matches gpt-4o-mini on key retrieval metrics.
+4. **Diagnostics.** A per-category decomposition of where the selection ceiling comes from: shortlist misses
+   ({{rec.all_nine.miss}} of questions) and rerank drops ({{rec.all_nine.lost}}), with temporal evidence dropped most
+   at the rerank (§5.6). And a finding about evaluation: the LLM judge's leniency interacts with answer length, so
+   judge–human agreement differs by system (§5.4, §6). Judge leniency itself is documented elsewhere
+   [@ren2026memlens; @penfield2026locomo]; the interaction with answer length is what we add.
 
 What is not new: raw turns plus a reranker is a known pattern [@derehag2026smartsearch; @nanomemory2026], and engram
 v2 is a version of our earlier system [@sharma2026typed]. The contribution is the test, the within-study budget
@@ -655,17 +661,17 @@ the post-hoc Turns + Jev (wide), is below that figure.
 
 ## 7. Conclusion
 
-Within this study, the value of selecting raw turns depends on the context budget. Reranking added
+Within this study, reranking's gain over similarity search shrinks as the context budget grows. Reranking added
 {{rerank.locomo.k3.u}} points on LoCoMo and {{rerank.lme.k3.u}} on LongMemEval when three of {{plan.shortlist}}
 candidates were kept. At k=20 it added {{rerank.locomo.k20.u}} and {{rerank.lme.k20.u}}, and extraction systems were
 more accurate. This suggests an explanation for the published disagreement, which remains an interpretation across
-papers. A pre-registered non-inferiority test on held-out conversations bounds what extraction adds at a tight budget
+papers; @kang2026retain find a complementary budget dependence for consolidation. A pre-registered non-inferiority test on held-out conversations bounds what extraction adds at a tight budget
 to at most {{h1.lenient.worst}} points. That test holds with a second answer model and under blind human grading, at
 {{cost.write.ratio}}× lower write cost. A typed decision model is an effective selector. At matched context, Jev was
 non-inferior to an LLM reranker (bound {{s4.lb}}) at about a third of the latency. It was also more accurate than a
 multi-call Jev graph traversal at matched context. The diagnostics locate where selection stops: in shortlist misses
 ({{rec.all_nine.miss}}) and rerank drops ({{rec.all_nine.lost}}), most for temporal evidence. They also show that an
-LLM judge's leniency interacts with answer length. Memory benchmarks that compare systems with different answer
+LLM judge's leniency, documented elsewhere, interacts with answer length. Memory benchmarks that compare systems with different answer
 styles should therefore report judge–human agreement by system.
 
 ## AI Assistance
@@ -679,8 +685,8 @@ human audit.
 Code, plans, per-question answers and judge labels, and the human-audit grades with their key are at
 github.com/ris3abh/Engram: tags `v3-frozen`, `v3-amended` and the paper tag; results in `bench/results/v3/`
 (per-question files, reports, ledgers, `human_audit/`) and `bench/results/v3_posthoc/`. The plan and its amendment
-are deposited at 10.5281/zenodo.22970745 and 10.5281/zenodo.22977848; this paper is 10.5281/zenodo.22985242 (tag
-`paper-v3-preprint`); the earlier engram preprint is
+are deposited at 10.5281/zenodo.22970745 and 10.5281/zenodo.22977848; this paper is 10.5281/zenodo.22985242 (release tag
+`paper-v3-preprint-r2`); the earlier engram preprint is
 10.5281/zenodo.22941757 [@sharma2026typed].
 
 ## References
