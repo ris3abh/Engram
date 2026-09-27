@@ -1,0 +1,146 @@
+{
+ "label": "POST-HOC EXPLORATORY (T0R-wide; docs/V3_PLAN.md \u00a712)",
+ "t0r_wide_k": 47,
+ "comparison": {
+  "T0R-wide k=47 (POST-HOC EXPLORATORY (T0R-wide; docs/V3_PLAN.md \u00a712))": {
+   "questions": 778,
+   "accuracy": 0.8149100257069408,
+   "by_category": {
+    "multi-hop": 0.7857142857142857,
+    "temporal": 0.7636363636363637,
+    "open-domain": 0.64,
+    "single-hop": 0.8652482269503546
+   },
+   "tokens_mean": 2000.1182519280205,
+   "read_cost_per_query": 0.0008891918443486195
+  },
+  "Jev-Mem k=40": {
+   "questions": 778,
+   "accuracy": 0.8033419023136247,
+   "by_category": {
+    "multi-hop": 0.7642857142857142,
+    "temporal": 0.7393939393939394,
+    "open-domain": 0.54,
+    "single-hop": 0.8723404255319149
+   },
+   "tokens_mean": 1987.2467866323907,
+   "read_cost_per_query": 0.0017405373856041158
+  },
+  "engram v2 k=20": {
+   "questions": 778,
+   "accuracy": 0.8239074550128535,
+   "by_category": {
+    "multi-hop": 0.7785714285714286,
+    "temporal": 0.8,
+    "open-domain": 0.64,
+    "single-hop": 0.8699763593380615
+   },
+   "tokens_mean": 1237.9344473007711,
+   "read_cost_per_query": 0.00017543851554855294
+  },
+  "mem0 k=20": {
+   "questions": 778,
+   "accuracy": 0.7866323907455013,
+   "by_category": {
+    "multi-hop": 0.7428571428571429,
+    "temporal": 0.7636363636363637,
+    "open-domain": 0.54,
+    "single-hop": 0.8392434988179669
+   },
+   "tokens_mean": 839.0796915167095,
+   "read_cost_per_query": 0.0
+  },
+  "full context": {
+   "questions": 778,
+   "accuracy": 0.7827763496143959,
+   "by_category": {
+    "multi-hop": 0.7857142857142857,
+    "temporal": 0.5696969696969697,
+    "open-domain": 0.64,
+    "single-hop": 0.8817966903073287
+   },
+   "tokens_mean": 23631.012853470438,
+   "read_cost_per_query": 0.0
+  },
+  "T0R k=20 (registered read path, for reference)": {
+   "questions": 778,
+   "accuracy": 0.7763496143958869,
+   "by_category": {
+    "multi-hop": 0.75,
+    "temporal": 0.7272727272727273,
+    "open-domain": 0.58,
+    "single-hop": 0.8274231678486997
+   },
+   "tokens_mean": 495.7840616966581,
+   "read_cost_per_query": 0.0001986548174807198
+  }
+ },
+ "read_latency_live": {
+  "T0R-wide k=47": {
+   "queries": 40,
+   "p50_ms": 719.8213960218709,
+   "p90_ms": 776.2767079984769
+  },
+  "Jev-Mem (k=3, live at run time; its k=40 reads: see batch_a_report.json)": {
+   "queries": 42,
+   "p50_ms": 1329.2992085043807,
+   "p90_ms": 1622.229625005275
+  },
+  "engram v2": {
+   "queries": 40,
+   "p50_ms": 275.70299949729815,
+   "p90_ms": 318.793790997006
+  },
+  "mem0": {
+   "queries": 40,
+   "p50_ms": 485.98604201106355,
+   "p90_ms": 717.7895829663612
+  },
+  "T0R": {
+   "queries": 40,
+   "p50_ms": 273.1432504951954,
+   "p90_ms": 358.69191598612815
+  }
+ },
+ "shortlist_recall": {
+  "shortlist": "150-turn cosine shortlist; kept = the top 47 by Jev's score",
+  "all": {
+   "questions": 778,
+   "shortlist_recall_all": 0.9188144329896907,
+   "shortlist_recall_any": 0.979381443298969,
+   "top_k_drops_all_shortlisted_evidence": 0.009210526315789473
+  },
+  "by_category": {
+   "multi-hop": {
+    "questions": 140,
+    "shortlist_recall_all": 0.7857142857142857,
+    "shortlist_recall_any": 1.0,
+    "top_k_drops_all_shortlisted_evidence": 0.0
+   },
+   "temporal": {
+    "questions": 165,
+    "shortlist_recall_all": 0.9454545454545454,
+    "shortlist_recall_any": 0.9696969696969697,
+    "top_k_drops_all_shortlisted_evidence": 0.0125
+   },
+   "open-domain": {
+    "questions": 50,
+    "shortlist_recall_all": 0.6666666666666666,
+    "shortlist_recall_any": 0.8333333333333334,
+    "top_k_drops_all_shortlisted_evidence": 0.05
+   },
+   "single-hop": {
+    "questions": 423,
+    "shortlist_recall_all": 0.9810874704491725,
+    "shortlist_recall_any": 0.9929078014184397,
+    "top_k_drops_all_shortlisted_evidence": 0.007142857142857143
+   }
+  }
+ },
+ "ledger": {
+  "openai": 0.3067384,
+  "jev": 0.57686013,
+  "anthropic": 0.0,
+  "openrouter": 0.0
+ }
+}

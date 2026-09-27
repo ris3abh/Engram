@@ -1,0 +1,330 @@
+# V3 plan: selection over extraction
+
+Pre-registered on 2026-09-26, before any run on the data below. Timestamped on Zenodo as
+[10.5281/zenodo.22970745](https://doi.org/10.5281/zenodo.22970745) (the plan as of commit b3c5dc5); amended version
+[10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848) (as of commit efae0b6). The v2 study stays paused
+(docs/V2_PLAN.md, Deviations 2026-09-26). This plan is the source of truth for v3. Sections 1 to 11 are guarded by
+`tests/test_v3_plan.py`: a change to any of them needs a dated entry under section 12 naming it ("§N"), and the
+section is then re-registered in that test, as in v2.
+
+**Question.** On conv-26 (dev), storing raw conversation turns and letting one Jev request select among a 30-turn
+cosine shortlist (T0R) matched engram v2, which extracts facts with an LLM and types them with Jev, at about 1/2,800 of
+its write cost (bench/results/v2/lean_report.json; commit 44d4397). v3 tests whether that holds on conversations
+that were never used for tuning or evaluation.
+
+## 1. Primary hypothesis
+
+- **H1 (non-inferiority).** On the four scored LoCoMo categories of conv-44, conv-47, conv-48, conv-49 and conv-50
+  (778 questions), T0R at its token-matched k is non-inferior to engram v2 at k=3, engram v2's natural setting
+  (section 5), with a margin of 5 percentage points. The margin is half the rerank's measured effect on conv-26 (T3
+  against T2 at matched tokens: 82.9% against 73.0%, about 10 points).
+- **Test.** Per question, d = 1 if only T0R is correct, -1 if only engram v2 is correct, 0 otherwise. With mean d̄ and
+  standard error s/√n (s the sample standard deviation of d, n = 778), the one-sided 95% lower bound is
+  d̄ - 1.645 s/√n. T0R is non-inferior if the bound is above -0.05. Judge: gpt-4o-mini (section 3).
+- **Also reported, not tested:** the conversation bootstrap (10,000 resamples of the five conversations with
+  replacement, seed 0; the 5th percentile of d̄), and the same bound with the human grades (section 8).
+
+## 2. Power
+
+On conv-26, T0R at its matched k (k=6, 277 tokens) scored 83.6% against engram v2's 84.9% at k=3 (265 tokens): a
+difference of -1.3 points, with 9 against 11 discordant questions (a discordance rate of 13.2%). At that rate, with
+n = 778, s = 0.362 and s/√n = 0.0130, so the lower bound sits 2.1 points below d̄. H1 passes when d̄ > -2.9 points.
+
+| true difference | probability H1 passes |
+|---|---|
+| 0 | 0.99 |
+| -1 point | 0.92 |
+| -1.3 points (the conv-26 difference) | 0.89 |
+| -2 points | 0.75 |
+| -2.6 points | 0.58 |
+
+The secondary McNemar tests can detect differences of about 5 points or more at this discordance rate.
+
+## 3. Stack
+
+- **Answers and judge:** gpt-4o-mini at temperature 0, with the shared answer prompt (mem0's LoCoMo ANSWER_PROMPT
+  adapted to one memory list) and mem0's LoCoMo judge prompt (ACCURACY_PROMPT), binary CORRECT/WRONG, as in v2
+  (`bench/run.py`, `STACKS["openai"]`).
+- **Embeddings:** text-embedding-3-small. **Tokens:** tiktoken o200k_base over the rendered memory block, as
+  `bench/run.py` counts them.
+- **Jev:** jev-1.13.0, pinned. **Extraction** (mem0, engram v2): gpt-4o-mini, with the session date as the
+  observation date.
+
+## 4. Systems
+
+T0R, L0, mem0, Jev-Mem and engram v2 are frozen as they are at this plan's commit. T0R-LLM and full context are
+specified here and implemented before Batch A, with offline tests only. No system is tuned on the data below.
+
+| system | definition | code |
+|---|---|---|
+| **T0R** | Raw turns stored as "[date] speaker: text" (no extraction, no dates written into the text, no worth gate). Read: one Jev request scores a 30-turn cosine shortlist (relevant_to_query, kept above 0.5), plus v2's cosine floor of 10, history and expansion; the answer model sees the first k lines. | arm `lean_t0r` (store built by `lean_l0`) |
+| **L0** | The same store, cosine order only, no Jev. | arm `lean_l0` |
+| **T0R-LLM** | T0R's store and 30-turn shortlist, scored by gpt-4o-mini listwise reranking (the v2 Stage 4 prompt) instead of Jev. | arm `lean_t0r_llm` (`retrieval_reranker="llm"`) |
+| **Full context** | Every turn of the conversation (LongMemEval: every user turn of the haystack), rendered as T0R renders lines, in the same answer prompt. | arm `full_context` |
+| **mem0** | mem0 2.1.0 OSS, default add() path, with the session date as its observation date. | arm `mem0` (OpenAI stack) |
+| **Jev-Mem** | Jev-Mem at commit 81574eb, default profile `config/jev_mem.json` with only `jev_model` pinned, text-embedding-3-small, run through its own API; its lines are answered and judged here. | `bench/jevmem_run.py`, arm `jevmem_*` |
+| **engram v2** | The v2 system at tag `v2-frozen` (arm `e4_frozen_sameattr`, with hygiene). | arm `e4_frozen_sameattr` |
+
+T0R-LLM and full context introduce no new parameter. T0R-LLM reuses v2's listwise prompt and T0R's shortlist;
+full context reuses T0R's line rendering.
+
+## 5. Data and k
+
+- **LoCoMo (primary data):** conv-44, conv-47, conv-48, conv-49, conv-50 (3,122 turns; 778 questions in the four
+  scored categories; 209 adversarial). None of them has been run by any system in v1, v2 or the lean work.
+  Adversarial answers are reported separately, for every system except Jev-Mem and full context.
+- **k:** every system at k=3 and k=20. Exceptions: Jev-Mem runs at k=3 and at its default k=40, with no k=20; full
+  context has no k. T0R is also answered at each matched k below.
+- **Token matching (every comparison between systems):** the comparator runs at k=3, and T0R is matched to it.
+  - **Sweep:** a retrieval-only sweep of T0R over k = 1 to 30 on the comparison's questions counts retrieved tokens.
+  - **Choice:** T0R's matched k is the one whose pooled mean is closest to the comparator's pooled mean at k=3, ties
+    going to the larger k.
+  - **Order:** T0R's sweep, each comparator's k=3 token mean and each chosen k are saved before T0R answers at that k.
+  - **Scope:** one matched k per comparator: engram v2 (about k=6 on conv-26), L0, T0R-LLM, mem0, Jev-Mem, and on
+    LongMemEval, mem0 and L0.
+- **Exploratory:** L0 and T0R on conv-30, conv-41, conv-42 and conv-43 (2,341 turns; 610 scored and 190 adversarial
+  questions) at k=3 and k=20, and T0R at its k matched to L0 at k=3, pooled. These conversations were held out in
+  v1, so this result is exploratory.
+- **LongMemEval_S cleaned:** `xiaowu0162/longmemeval-cleaned` at revision
+  `98d7416c24c778c2fee6e6f3006e7a073259d48f`.
+  - **Sample:** 30 knowledge-update, 20 multi-session and 20 temporal-reasoning questions, abstention questions
+    excluded, drawn per type with `random.Random(0)` over the sorted ids. The ids and their hash
+    (`7701bd29…`) are in `bench/slices/v3_longmemeval_ids.json`.
+  - **Ingestion:** as in v2: user turns only, sessions in date order, and `(Current date: <question_date>)` in the
+    question slot.
+  - **Systems:** T0R, L0 and full context on all 70 questions; mem0 on the 30 knowledge-update questions. All at k=3
+    and k=20.
+  - **Token matching:** T0R is matched by the same rule to mem0 at k=3 (on the 30 knowledge-update questions) and to
+    L0 at k=3 (on all 70), from retrieval-only sweeps saved before answering.
+  - **Reuse:** mem0's ingestion of the v2 knowledge-update haystacks replays from the call cache where present (same
+    system, prompts and inputs).
+- **Concurrency:** up to 15 questions at a time per system, with backoff on rate limits.
+
+## 6. Hypothesis family
+
+- **Primary:** H1 (section 1), alone at one-sided 0.05.
+- **Secondary (Holm, family-wise 0.05; McNemar tests are exact and two-sided; a superiority claim also needs the
+  difference in the stated direction):**
+  In every test the comparator runs at k=3 and T0R at its k matched to that comparator (section 5).
+  - **S1:** T0R against L0, for superiority.
+  - **S2:** T0R against Jev-Mem, for superiority.
+  - **S3:** T0R against mem0, for superiority.
+  - **S4:** T0R against T0R-LLM, for non-inferiority with a 5-point margin. The test is as in H1; the p-value for Holm
+    is the one-sided p of z = (d̄ + 0.05)/(s/√n).
+  - **S5:** LongMemEval, T0R against mem0 on the 30 knowledge-update questions, McNemar.
+  - **S6:** LongMemEval, T0R against L0 on all 70 questions, McNemar.
+- **Fallback:** if S5 is dropped under the budget rule (section 11), the Holm family is S1 to S4 and S6.
+
+## 7. Predictions and descriptive results
+
+- **Predictions** (stated now and checked by direction, not tested): in the primary comparison, T0R scores below
+  engram v2 on multi-hop (category 1) and open-domain (category 3) questions. On conv-26 the figures were 75 against
+  81 and 77 against 92.
+- **Descriptive results, for every system:**
+  - accuracy at each k, by category;
+  - write cost per 1,000 turns, by part (LLM, Jev, embeddings);
+  - read cost per query;
+  - write latency p50;
+  - read latency p50 and p90, measured one query at a time on a fixed sample of 40 questions;
+  - Jev calls per query;
+  - tokens per question;
+  - units stored.
+
+  Full context is also reported with its cost per question.
+- **Jev-Mem at k=40:** reported descriptively.
+
+## 8. Human check
+
+The user grades every discordant question of the primary comparison (T0R at its matched k against engram v2 at k=3).
+Grading is blind: the system names are hidden, the order of the two answers is random per question, and the gold
+answer is shown. Reported: agreement with the judge, and H1's lower bound recomputed with the human grades. H1 is
+decided by the judge.
+
+## 9. Run order
+
+- **Batch A:** L0, T0R and Jev-Mem on LoCoMo. Within Jev-Mem: writes, then k=3, then k=40 last.
+- **Batch B:** T0R-LLM, full context, mem0 and engram v2 on LoCoMo; then the primary test.
+- **Batch C:** LongMemEval.
+- The exploratory LoCoMo runs follow Batch A.
+- The order changes no test.
+- T0R answers at a matched k only after T0R's sweep and the comparator's k=3 token mean are saved.
+
+## 10. Estimated cost
+
+Measured dev rates:
+- **Answer and judge:** one pair costs $0.00008 plus $1.6e-7 per retrieved token (fitted from the lean ledger rows).
+- **Writes, per 1,000 turns:** engram v2 $1.328 LLM and $0.601 Jev, plus $0.04 Jev for hygiene; mem0 $1.326 LLM;
+  Jev-Mem $0.212 Jev.
+- **Reads, per query:** T0R $0.00019 of Jev; engram v2 $0.00018 of Jev; T0R-LLM $0.00021 of OpenAI; Jev-Mem $0.0013
+  at small k and $0.0019 at k=40.
+- **Full context:** about 23,000 tokens per LoCoMo question and 13,300 per LongMemEval question.
+- **mem0 on LongMemEval:** $0.33 per uncached haystack; 9 of the 30 are not in the cache.
+
+| system (data) | OpenAI (USD) | Jev (USD) |
+|---|---|---|
+| L0 (LoCoMo) | 0.35 | 0.00 |
+| T0R (LoCoMo; k=3, k=20 and up to five matched k) | 0.94 | 0.19 |
+| T0R-LLM (LoCoMo) | 0.56 | 0.00 |
+| full context (LoCoMo, scored only) | 2.80 | 0.00 |
+| mem0 (LoCoMo) | 4.49 | 0.00 |
+| Jev-Mem (LoCoMo; writes, k=3, k=40) | 0.40 | 3.15 |
+| engram v2 (LoCoMo) | 4.50 | 2.18 |
+| L0 and T0R (exploratory conversations) | 0.66 | 0.15 |
+| LongMemEval (T0R, L0, full context, mem0) | 3.22 | 0.01 |
+| **total** | **17.92** | **5.68** |
+
+## 11. Budget, spend and stopping rules
+
+- **Caps for the whole study:** $23 OpenAI and $6.50 Jev, in a new ledger `bench/results/v3/spend.jsonl`. No Anthropic
+  spend is planned. A charge that would take either total over its cap stops the run and is reported. No run starts
+  once a cap is reached.
+- **Before Batch C:** the remaining OpenAI spend is projected from measured v3 rates.
+  - If the projection exceeds $23, mem0 on LongMemEval is dropped, together with S5 (section 6). Nothing else changes.
+  - If the Jev projection at any point exceeds $6.50, Jev-Mem's k=40 pass, which is descriptive, is dropped first.
+- **Account and disk guards:** a Jev account error (HTTP 401, 402 or 403) stops an engram-family run, as in v2. No run
+  starts with under 5 GB of free disk.
+
+## 12. Deviations
+
+Dated entries only. A change to a guarded section (1 to 11) names it ("§N") and gives the reason; the section is then
+re-registered in `tests/test_v3_plan.py`.
+
+- 2026-09-26, external timestamp: this plan as of commit b3c5dc5 is deposited on Zenodo as 10.5281/zenodo.22970745.
+  Tag `v3-frozen` marks the code that runs it: the frozen systems, and T0R-LLM and full context as specified (arms
+  `lean_t0r_llm` and `full_context`, offline tests in `tests/test_v3_arms.py`), before any v3 run.
+- 2026-09-26, amendment (§3, §5, §6, §10, §11), registered before H1, S3 or S4 is computed or any Batch B accuracy is
+  seen; Batch B's runs continue while it is written. The amendment is timestamped together with docs/V3_OUTCOMES.md
+  (how each H1 outcome will be reported). Sections 1 to 11 keep their text; this entry amends them.
+  1. **Shortlist recall (exploratory, no API spend).** For L0 and T0R on all nine held-out conversations, per
+     category:
+     - the share of questions whose LoCoMo evidence turns appear in the 30-turn cosine shortlist, all of them and at
+       least one;
+     - among questions with an evidence turn in the shortlist, the share where no such turn is among those the Jev
+       rerank keeps.
+     L0 and T0R share the shortlist. The shortlists and the rerank's kept turns are rebuilt from the frozen stores
+     through the call cache.
+  2. **LongMemEval expansion (§5, §6).** T0R, L0 and full context run on all 500 LongMemEval_S questions (same file
+     and revision as §5).
+     - **Ingestion:** both user and assistant turns, so single-session-assistant questions are answerable. Speakers
+       are "User" and "Assistant", sessions in date order, and the question date is in the question slot as in v2.
+     - **Size:** 494 turns and about 107,500 tokens per haystack. Every haystack fits gpt-4o-mini's 128k window, so
+       full context sees the whole haystack.
+     - **Settings:** k=3 and k=20, and T0R at its k matched to L0 at k=3 (§5's rule, pooled over the 470
+       non-abstention questions, from T0R's retrieval-only sweep saved before answering).
+     - **Reporting:** the 30 abstention questions are reported separately. Results are also given by question type.
+       Full context is reported descriptively against T0R, with its cost per question.
+     - **Registered sample unchanged:** mem0 and engram v2 stay on the 70-question sample, and S5 and S6 stay as
+       registered on it, user turns only.
+     - **New test S7**, in the Holm family: T0R (matched) against L0 at k=3 on the 470 non-abstention questions,
+       exact McNemar.
+     - **Captions:** every caption states which turns each system ingested.
+  3. **Second answer model (robustness, §3, §6).** H1's two arms (T0R at its matched k, engram v2 at k=3) and S1's two
+     arms (T0R at its matched k, L0 at k=3) are answered again by Llama 3.3 70B Instruct.
+     - **Model:** `meta-llama/llama-3.3-70b-instruct` via OpenRouter, $0.10 per million input tokens and $0.32 per
+       million output tokens on 2026-09-26, temperature 0, the same answer prompt, OpenRouter's default provider
+       routing, with the serving provider recorded per call.
+     - **Contexts:** the memory blocks are those the gpt-4o-mini answers saw, rebuilt from the frozen stores through
+       the call cache and checked against each question's recorded retrieved-token count.
+     - **Judge:** the same gpt-4o-mini judge.
+     - **Reporting:** H1 and S1 are reported under both answer models. A result is called model-robust only if it
+       holds under both. The gpt-4o-mini results remain the registered tests.
+  4. **Budget (§10, §11).** The OpenAI cap rises from $23 to $32; Jev stays at $6.50; OpenRouter is capped at $2. All
+     three are in the v3 ledger.
+     - **Updated projection:** spent so far $3.74 OpenAI and $3.31 Jev, not counting engram v2's and mem0's running
+       Batch B jobs, which ledger their spend when they finish.
+
+       | item | OpenAI | Jev | OpenRouter |
+       |---|---|---|---|
+       | spent (ledgered) | 3.74 | 3.31 | 0 |
+       | rest of Batch B as estimated (engram v2 4.50, mem0 4.49, full context 2.80, T0R answers 0.35, live latency 0.02) | 12.16 | 2.19 | 0 |
+       | Batch C as registered | 3.22 | 0.01 | 0 |
+       | LongMemEval expansion (embeddings of 38.7M unique tokens 0.77; full context, 500 × about 107,500 tokens, 8.20; L0 and T0R answers 1.05) | 10.02 | 0.25 | 0 |
+       | second answer model (about 3,100 answers; judge on OpenAI) | 0.19 | 0 | 0.25 |
+       | **total** | **29.33** | **5.76** | **0.25** |
+
+     - **Headroom:** 8% on OpenAI.
+     - **Re-projection:** before Batch C and again before the expansion, spend is re-projected from measured v3 rates.
+       If OpenAI would pass $32, these are dropped in order until it fits: full context on the expansion
+       (descriptive); then mem0 on LongMemEval together with S5 (§11's existing rule).
+  5. **Keys branch:** on hold, not run.
+- 2026-09-26, docs/V3_OUTCOMES.md revised before upload, before any H1-relevant result was seen (no H1, S3 or S4
+  computed, no Batch B accuracy seen; Batch B still running). (1) The three H1 paragraphs are replaced by the author's
+  wording (Pass, Inconclusive, Inferior), kept verbatim with capital-letter placeholders; the fourth sentence (whole CI
+  above 0: descriptive, not tested superiority) is kept. (2) "LongMemEval holds" now means that S7 significantly
+  favours T0R after Holm correction and S5 does not significantly favour mem0 after Holm correction. If S7 is not
+  significant, the paper states that the selection effect was not shown on long histories.
+- 2026-09-26, external timestamp: the amended plan and docs/V3_OUTCOMES.md, as of commit efae0b6, are deposited on
+  Zenodo as 10.5281/zenodo.22977848 (a new version of 10.5281/zenodo.22970745). Tag `v3-amended` marks the commit that
+  records this.
+- 2026-09-26, Batch B execution (§3, §11), recorded after Batch B finished and before its report:
+  1. **mem0's extraction went through OpenRouter.** mem0 2.1.0 sends its OpenAI LLM calls to OpenRouter whenever
+     `OPENROUTER_API_KEY` is set (`mem0/llms/openai.py:42`). The key was added to `.env` for the second answer model
+     at 08:32, and Batch B's mem0 runs started at about 08:34. All five conversations' mem0 extraction was therefore
+     served as gpt-4o-mini through OpenRouter, not the OpenAI API.
+     - conv-44 and conv-47 stopped when the OpenRouter credit ran out. After a top-up they were finished through
+       OpenRouter as well, by the author's decision, so all five are served alike; their completed turns replayed
+       from the call cache.
+     - mem0's embeddings, and every answer and judgment, went to OpenAI.
+     - About $4.4 of OpenRouter credit went on mem0. It is recorded in the ledger as OpenAI spend, since it is
+       computed from token usage, and it falls outside the $2 OpenRouter cap, which was set for the second answer
+       model.
+     - Only S3 involves mem0.
+  2. **Rate limits.** The first Batch B launch hit OpenAI's 4M tokens-per-minute limit, with full context and two
+     extraction systems running together. The runs were relaunched with more SDK retries (`ENGRAM_LLM_ATTEMPTS`,
+     `BENCH_OPENAI_RETRIES`: 12, and 20 for two full-context re-runs) and Jev throttled to 3.5 requests/s per engram
+     process (`ENGRAM_JEV_MAX_RPS`). Full context on conv-48 and conv-50 was re-run with 2 questions in flight
+     (`BENCH_CONCURRENCY`) after failing at 6. Calls that had already completed replayed from the cache.
+  3. **Code the jobs ran with:** the code of commit b8dd35f, plus these environment-controlled settings, whose
+     defaults are unchanged. They are committed with the Batch B results.
+  4. **T0R-LLM:** as in v2 Stage 4, it also asks Jev its one query_relation question per query. That is a no-op on
+     turn units, whose predicate "said" is no edge type; its Jev cost is included in its read cost.
+
+- 2026-09-26, mem0 via OpenRouter, resolved (§3, §11), before the second answer model or any later run:
+  - **Model:** OpenRouter reported `openai/gpt-4o-mini` in all 3,122 responses, one per turn. That is gpt-4o-mini
+    2024-07-18 in OpenRouter's catalogue, the registered model.
+  - **Provider:** split. 1,599 calls were served by OpenAI and 1,523 by Azure (the `provider` field of each response).
+    The model and version match the registration, but the serving is not identical to the OpenAI API. System
+    fingerprints cannot settle it: direct OpenAI calls rotate through several, and one, fp_0c03eba41c, appears in
+    both routes. S3 is reported with this caveat.
+  - **Billed:** $2.4168 by OpenRouter (the sum of each response's usage.cost, equal to the key's total usage):
+    Azure $1.152, OpenAI $1.265. The ledger had charged $4.118 as OpenAI spend at list price, which misses
+    OpenRouter's prompt-caching discount. A correction row moves $4.118 out of OpenAI and records $2.4168 as OpenRouter
+    spend outside the $2 cap, which applies to the second answer model.
+  - **Balance** before the second answer model: $9.72 on the account ($100 credited, $90.28 used account-wide).
+  - **Why the cap did not stop it:**
+    - The $2 OpenRouter cap existed only in the plan text: the ledger had no OpenRouter provider.
+    - mem0 switched base URL on an environment variable without any error.
+    - The metering wrapper priced whatever mem0's client returned as OpenAI spend.
+  - **Guard fixes, before any further run:**
+    - OpenRouter is a ledger provider with a hard $2 cap on the v3 ledger (`bench/v2_spend.py`).
+    - mem0 on the OpenAI stack removes `OPENROUTER_API_KEY` from its process environment and refuses any LLM endpoint
+      other than api.openai.com.
+    - The metering wrapper rejects any response that carries a router's `provider` field.
+    - Tests: `tests/test_v3_arms.py`.
+
+- 2026-09-27, human check layout (§8), record only, no analysis change: the audit sheet placed each system's answer on
+  its own row and shuffled all 284 rows together (`random.Random(0)`), rather than randomising the order of the two
+  answers within each question. System names and judge labels were hidden as registered, and the gold answer was shown.
+- 2026-09-27, human check grading standard (§8), record only, no analysis change: the sheet asked for CORRECT or WRONG,
+  while the progress notes listed CORRECT/WRONG/UNCLEAR. The author's grades include partial and hedged labels. Since
+  §8 fixed no rule for these, two mappings are reported: strict (only CORRECT counts) and lenient (partial and
+  hedged-correct grades also count). H1 remains decided by the judge.
+- 2026-09-27, paper title (presentation change, no analysis change): the title selected by the registered outcome rule
+  in docs/V3_OUTCOMES.md ("Selection, Not Extraction: One Rerank Call Matches LLM-Extracted Memory at a Fraction of
+  the Write Cost") is replaced by "When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a
+  Typed Decision Model". The replaced title presents a published idea (SmartSearch; Fidelity Before Structure) as new,
+  and its "matches" overstates a non-inferiority result, most of all after the human audit.
+- 2026-09-26, token counting (record only, no analysis change): one LongMemEval haystack contains the literal text
+  `<|endoftext|>` ("Skipped 1 messages<|endoftext|>"), which tiktoken refuses by default, so counting the full-context
+  tokens for that question crashed. Counting now passes `disallowed_special=()` (`bench/run.py`), so text that spells a
+  special token is counted as ordinary text; that question was re-run, and every other count is unchanged (commit
+  23acbb0).
+- 2026-09-26, system names in the paper (presentation change, no analysis change): the paper calls T0R, L0, T0R-LLM
+  and T0R-wide "Turns + Jev", "Turns + cosine", "Turns + LLM" and "Turns + Jev (wide)", and defines the mapping once.
+  The systems, the tests and the test ids (H1, S1-S7) are unchanged; the registered outcome paragraph is quoted with
+  the plan's names.
+
+## AI assistance
+
+The plan, code and analysis were drafted with Claude (Anthropic) under the author's direction. The author decides every
+design choice, approves each stage, and grades the human check.

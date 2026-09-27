@@ -1,0 +1,299 @@
+{
+ "token_match": {
+  "L0": {
+   "comparator_k3": 130.18766066838046,
+   "t0r_k": 3
+  },
+  "Jev-Mem": {
+   "comparator_k3": 161.73907455012852,
+   "t0r_k": 4
+  },
+  "L0 (exploratory)": {
+   "comparator_k3": 128.08852459016393,
+   "t0r_k": 3
+  }
+ },
+ "fresh": {
+  "L0 k3": {
+   "questions": 778,
+   "accuracy": 0.5989717223650386,
+   "by_category": {
+    "multi-hop": 0.5428571428571428,
+    "temporal": 0.5515151515151515,
+    "open-domain": 0.42,
+    "single-hop": 0.6572104018912529
+   },
+   "tokens_mean": 130.18766066838046,
+   "read_cost_per_query": 0.0
+  },
+  "L0 k20": {
+   "questions": 778,
+   "accuracy": 0.7609254498714653,
+   "by_category": {
+    "multi-hop": 0.6857142857142857,
+    "temporal": 0.6848484848484848,
+    "open-domain": 0.58,
+    "single-hop": 0.8368794326241135
+   },
+   "tokens_mean": 825.9498714652956,
+   "read_cost_per_query": 0.0
+  },
+  "T0R k3": {
+   "questions": 778,
+   "accuracy": 0.7724935732647815,
+   "by_category": {
+    "multi-hop": 0.7571428571428571,
+    "temporal": 0.6909090909090909,
+    "open-domain": 0.58,
+    "single-hop": 0.8321513002364066
+   },
+   "tokens_mean": 138.64910025706942,
+   "read_cost_per_query": 0.0001986548174807198
+  },
+  "T0R k20": {
+   "questions": 778,
+   "accuracy": 0.7763496143958869,
+   "by_category": {
+    "multi-hop": 0.75,
+    "temporal": 0.7272727272727273,
+    "open-domain": 0.58,
+    "single-hop": 0.8274231678486997
+   },
+   "tokens_mean": 495.7840616966581,
+   "read_cost_per_query": 0.0001986548174807198
+  },
+  "T0R k4": {
+   "questions": 778,
+   "accuracy": 0.7699228791773779,
+   "by_category": {
+    "multi-hop": 0.7571428571428571,
+    "temporal": 0.696969696969697,
+    "open-domain": 0.58,
+    "single-hop": 0.8250591016548463
+   },
+   "tokens_mean": 181.3740359897172,
+   "read_cost_per_query": 0.0001986548174807198
+  },
+  "Jev-Mem k3": {
+   "questions": 778,
+   "accuracy": 0.705655526992288,
+   "by_category": {
+    "multi-hop": 0.5785714285714286,
+    "temporal": 0.6424242424242425,
+    "open-domain": 0.5,
+    "single-hop": 0.7966903073286052
+   },
+   "tokens_mean": 161.73907455012852,
+   "read_cost_per_query": 0.001199002827763497
+  },
+  "Jev-Mem k40": {
+   "questions": 778,
+   "accuracy": 0.8033419023136247,
+   "by_category": {
+    "multi-hop": 0.7642857142857142,
+    "temporal": 0.7393939393939394,
+    "open-domain": 0.54,
+    "single-hop": 0.8723404255319149
+   },
+   "tokens_mean": 1987.2467866323907,
+   "read_cost_per_query": 0.0017405373856041158
+  }
+ },
+ "fresh_adversarial": {
+  "L0 k3": {
+   "questions": 209,
+   "abstained": 0.6363636363636364
+  },
+  "L0 k20": {
+   "questions": 209,
+   "abstained": 0.4784688995215311
+  },
+  "T0R k3": {
+   "questions": 209,
+   "abstained": 0.5406698564593302
+  },
+  "T0R k20": {
+   "questions": 209,
+   "abstained": 0.49282296650717705
+  }
+ },
+ "write": {
+  "L0 / T0R (one store)": {
+   "turns": 3122,
+   "write_cost_per_1k": {
+    "embeddings": 0.0006093401665598974,
+    "escalations": 0.0,
+    "extraction": 0.0,
+    "jev": 0.0,
+    "llm_decisions": 0.0
+   },
+   "write_latency_p50_ms_by_conv": [
+    191.37087499257177,
+    191.43504201201722,
+    190.87387499166653,
+    194.66120802098885,
+    192.51377100590616
+   ],
+   "units_stored": 3122
+  },
+  "Jev-Mem": {
+   "turns": 3122,
+   "write_cost_per_1k": {
+    "jev": 0.21061857847533633,
+    "embeddings": 0.00112542600896861
+   },
+   "write_latency_p50_ms_by_conv": [
+    539.5349580212496,
+    543.7369159772061,
+    541.790458955802,
+    549.0186249953695,
+    537.139604013646
+   ],
+   "units_stored": 3122,
+   "llm_fallback_calls": 0,
+   "embedding_retries": 11
+  }
+ },
+ "jevmem_reads": {
+  "k3": {
+   "queries": 778,
+   "jev_calls_mean": 5.259640102827763,
+   "jev_calls_max": 14,
+   "jev_usd_per_query": 0.0012158606452442166,
+   "latency_p50_ms": 1396.9291459943634,
+   "latency_p90_ms": 1705.7941250386648
+  },
+  "k40": {
+   "queries": 778,
+   "jev_calls_mean": 3.01413881748072,
+   "jev_calls_max": 11,
+   "jev_usd_per_query": 0.001764150886889463,
+   "latency_p50_ms": 1073.256166971987,
+   "latency_p90_ms": 1388.8830420328304
+  }
+ },
+ "read_latency_sequential": {
+  "lean_l0": {
+   "queries": 40,
+   "p50_ms": 11.75802102079615,
+   "p90_ms": 13.322041952051222,
+   "mean_ms": 11.492830247152597,
+   "cost_per_query": 0.0,
+   "sample": "random.Random(0).sample of the 778 scored (conversation, question) pairs, 40"
+  },
+  "lean_t0r": {
+   "queries": 40,
+   "p50_ms": 355.1754165091552,
+   "p90_ms": 517.4228750402108,
+   "mean_ms": 458.29959372931626,
+   "cost_per_query": 0.00019593000000000003,
+   "sample": "random.Random(0).sample of the 778 scored (conversation, question) pairs, 40"
+  }
+ },
+ "S1": {
+  "comparison": "T0R k=3 vs L0 k=3",
+  "questions": 778,
+  "acc_a": 0.7724935732647815,
+  "acc_b": 0.5989717223650386,
+  "only_a": 152,
+  "only_b": 17,
+  "p_two_sided": 2.7493616558929532e-28
+ },
+ "S2": {
+  "comparison": "T0R k=4 vs Jev-Mem k=3",
+  "questions": 778,
+  "acc_a": 0.7699228791773779,
+  "acc_b": 0.705655526992288,
+  "only_a": 98,
+  "only_b": 48,
+  "p_two_sided": 4.26634580070168e-05
+ },
+ "exploratory": {
+  "L0 k3": {
+   "questions": 610,
+   "accuracy": 0.6065573770491803,
+   "by_category": {
+    "multi-hop": 0.44545454545454544,
+    "temporal": 0.6554621848739496,
+    "open-domain": 0.2727272727272727,
+    "single-hop": 0.6724137931034483
+   },
+   "tokens_mean": 128.08852459016393,
+   "read_cost_per_query": 0.0
+  },
+  "L0 k20": {
+   "questions": 610,
+   "accuracy": 0.7622950819672131,
+   "by_category": {
+    "multi-hop": 0.6636363636363637,
+    "temporal": 0.7563025210084033,
+    "open-domain": 0.3939393939393939,
+    "single-hop": 0.8304597701149425
+   },
+   "tokens_mean": 838.4131147540984,
+   "read_cost_per_query": 0.0
+  },
+  "T0R k3": {
+   "questions": 610,
+   "accuracy": 0.7721311475409836,
+   "by_category": {
+    "multi-hop": 0.7,
+    "temporal": 0.773109243697479,
+    "open-domain": 0.3939393939393939,
+    "single-hop": 0.8304597701149425
+   },
+   "tokens_mean": 135.84918032786885,
+   "read_cost_per_query": 0.000183376164463247
+  },
+  "T0R k20": {
+   "questions": 610,
+   "accuracy": 0.7655737704918033,
+   "by_category": {
+    "multi-hop": 0.6545454545454545,
+    "temporal": 0.7899159663865546,
+    "open-domain": 0.36363636363636365,
+    "single-hop": 0.8304597701149425
+   },
+   "tokens_mean": 494.6377049180328,
+   "read_cost_per_query": 0.000183376164463247
+  },
+  "T0R k3 (matched to L0 k3)": {
+   "questions": 610,
+   "accuracy": 0.7721311475409836,
+   "by_category": {
+    "multi-hop": 0.7,
+    "temporal": 0.773109243697479,
+    "open-domain": 0.3939393939393939,
+    "single-hop": 0.8304597701149425
+   },
+   "tokens_mean": 135.84918032786885,
+   "read_cost_per_query": 0.000183376164463247
+  },
+  "T0R vs L0 (matched)": {
+   "questions": 610,
+   "acc_a": 0.7721311475409836,
+   "acc_b": 0.6065573770491803,
+   "only_a": 116,
+   "only_b": 15,
+   "p_two_sided": 1.606466971282502e-20
+  },
+  "adversarial": {
+   "L0 k3": {
+    "questions": 190,
+    "abstained": 0.6526315789473685
+   },
+   "L0 k20": {
+    "questions": 190,
+    "abstained": 0.531578947368421
+   },
+   "T0R k3": {
+    "questions": 190,
+    "abstained": 0.5421052631578948
+   },
+   "T0R k20": {
+    "questions": 190,
+    "abstained": 0.5368421052631579
+   }
+  }
+ }
+}

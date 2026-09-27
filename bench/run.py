@@ -18,6 +18,15 @@ Each run rebuilds the arm's store from scratch in bench/.cache/arms/<arm>/, so r
 
 Spend guard: a run stops at $3 of real (uncached) spend, and phase 2 stops at $12 cumulative. Every run is
 appended to bench/results/phase2_spend.jsonl. Results go to bench/results/<arm>.json.
+
+Stacks (--stack, default anthropic): `anthropic` is v1's stack (claude-haiku-4-5 extraction, claude-sonnet-4-6
+answers, judge and LLM decisions, local MiniLM embeddings) and is unchanged, so v1 reproduces. `openai` is v2's primary
+stack (docs/V2_PLAN.md, section 3): gpt-4o-mini for extraction, answers, judge and LLM decisions (temperature 0 for
+answers and judge), text-embedding-3-small for every system, retrieved tokens counted with tiktoken o200k_base.
+OpenAI-stack runs keep their own stores (bench/.cache/arms/openai/), write results to bench/results/v2/ (never over a
+v1 file), and charge bench/v2_spend.py (ledger bench/results/v2/spend.jsonl, per-run and phase caps); --stage names
+the plan stage for the ledger. Analysis-side matching of stored facts to labels (stale rate, update report) uses
+MiniLM on both stacks.
 """
 
 import argparse
@@ -29,6 +38,7 @@ import shutil
 import statistics
 import time
 from collections import Counter
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -67,6 +77,10 @@ SLICES = {
 ARMS_DIR = ROOT / "bench" / ".cache" / "arms"
 CACHE = ROOT / "bench" / ".cache" / "calls.sqlite"
 RESULTS = ROOT / "bench" / "results"
+RESULTS_V2 = RESULTS / "v2"  # OpenAI-stack results (phase 3); v1 files are never overwritten
+RESULTS_V3 = RESULTS / "v3"  # docs/V3_PLAN.md
+RESULTS_V3_POSTHOC = RESULTS / "v3_posthoc"  # post-hoc exploratory (T0R-wide), its own ledger
+ADVERSARIAL_GOLD = "Not mentioned in the conversation"  # LoCoMo category 5 gold for the judge (as bench/heldout_extra)
 LEDGER = RESULTS / "phase2_spend.jsonl"
 ANSWER_MODEL = "claude-sonnet-4-6"
 # per-run stop $20; phase cap $12 -> $20 -> $30 -> $45 -> $90 -> $95 -> $105 (user; the last raise, 2026-09-24, for
@@ -74,6 +88,21 @@ ANSWER_MODEL = "claude-sonnet-4-6"
 RUN_LIMIT, PHASE_LIMIT = 20.0, 105.0
 FULL_CONV26 = {"engram": 0.546, "mem0": 0.809}  # full-conversation accuracy from step 8, for the E0 check
 PINNED_DATE = "2026-09-23"  # mem0's and engram's "Current Date", pinned so cached runs are reproducible
+STACKS = {
+    "anthropic": {"extract": EXTRACT_MODEL, "answer": ANSWER_MODEL, "judge": JUDGE_MODEL},
+    "openai": {
+        "extract": "gpt-4o-mini",
+        "answer": "gpt-4o-mini",
+        "judge": "gpt-4o-mini",
+        "decide": "gpt-4o-mini",  # escalations and the LLM decider arms
+        "embed": "text-embedding-3-small",
+        "tokenizer": "o200k_base",
+        # V2_PLAN deviation 2026-09-25: extraction gets each message's session date as its observation date, for
+        # engram (extract_observation_date="session") and mem0 (the v1 mem0_dated mechanism), so relative dates
+        # resolve to the conversation's time; Graphiti gets session dates as reference time. v1 ran mem0 as shipped.
+        "observation_date": "session",
+    },
+}
 
 E1_FLAGS = dict(
     extract_prompt="v2",
@@ -98,6 +127,8 @@ E4_V2 = dict(
 
 E4_FROZEN = {**E4_V2, "temporal_gate": "not_planned_mass", "temporal_version": 2, "render": "compact"}
 
+LEAN_BASE = {"extraction": "lean", "retrieval_rerank": False, "retrieval_history": False, "render": "lean"}
+V2_SYSTEM = "e4_frozen_sameattr"  # the engram arm every v2 held-out and LongMemEval run uses (tag v2-frozen)
 ARMS: dict[str, dict] = {
     "e0_baseline": {"system": "engram", "flags": Flags()},
     "e1_recall": {"system": "engram", "flags": Flags(**E1_FLAGS)},
@@ -201,6 +232,59 @@ ARMS: dict[str, dict] = {
         "hygiene": True,
         "flags": Flags(**{**E4_V2, "retrieval_rerank": False}),
     },
+    # v2 Stage 2 close attempt (one round, V2_PLAN Deviations 2026-09-25): the frozen arm with edge_type v2.
+    "e4_frozen_edge2": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_FROZEN, "edge_type_version": 2}),
+    },
+    # V2 Stage 4 frozen-extraction ablation (S7, S8; V2_PLAN section 6.3): the v2 system records one extraction trace
+    # per slice (fx_jev), and gpt-4o-mini decides relations on the same trace, one call per fact (fx_llm, mem0's update
+    # prompt) or one call per message (fx_batched). Only the relation decider differs.
+    "fx_jev": {
+        "system": "engram",
+        "hygiene": True,
+        "extraction_trace": "record",
+        "flags": Flags(**{**E4_FROZEN, "same_attribute_gate": True}),
+    },
+    **{
+        f"fx_{name}": {
+            "system": "engram",
+            "hygiene": True,
+            "extraction_trace": "replay",
+            "flags": Flags(**{**E4_FROZEN, "same_attribute_gate": True, "relation_decider": decider}),
+        }
+        for name, decider in (("llm", "llm_per_fact"), ("batched", "llm_batched"))
+    },
+    # V2 Stage 4 reranker arms (V2_PLAN section 4): the v2 system's frozen store (copied, nothing written), only the
+    # shortlist's scorer differs. Run on the slice and k the source store was built with (conv26, --top-k 3).
+    **{
+        f"rr_{name}": {
+            "system": "engram",
+            "store_from": "e4_frozen_sameattr",
+            "flags": Flags(**{**E4_FROZEN, "same_attribute_gate": True, **extra}),
+        }
+        for name, extra in (
+            ("jev", {}),
+            ("none", {"retrieval_rerank": False}),
+            ("cross", {"retrieval_reranker": "cross_encoder"}),
+            ("llm", {"retrieval_reranker": "llm"}),
+        )
+    },
+    # THE V2 SYSTEM (V2_PLAN Deviations 2026-09-25, second close round, kept): the frozen arm with same_attribute_gate.
+    # E4_FROZEN itself stays v1's frozen configuration, so v1's runs reproduce.
+    "e4_frozen_sameattr": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_FROZEN, "same_attribute_gate": True}),
+    },
+    # v2 Stage 2: the frozen arm with Jev's reranking off (read path only; ingestion identical, so its writes replay
+    # from the cache). E4_V2 above predates the frozen flags, so it is not this arm.
+    "e4_frozen_norerank": {
+        "system": "engram",
+        "hygiene": True,
+        "flags": Flags(**{**E4_FROZEN, "retrieval_rerank": False}),
+    },
     # mem0 with the session date passed as its Observation Date (mem0 2.1.0's OSS add() cannot pass one, so the
     # default arm resolves "yesterday" against the current date). Not mem0's default config; reported alongside.
     "mem0_dated": {"system": "mem0", "dated": True},
@@ -209,7 +293,73 @@ ARMS: dict[str, dict] = {
         "system": "engram",
         "flags": Flags(**E2_FLAGS, extract_last_k=20, extract_recent=20, extract_observation_date="session"),
     },
+    # Lean arms (2026-09-26, dev only, conv-26): conversation units instead of LLM extraction (pipeline/lean.py).
+    # L0 raw turns; L1 spaCy sentences with relative dates resolved in code; L2 + Jev worth_sentence gate. L0-L2
+    # retrieve by cosine alone (no Jev on the read path); each step adds one component to the one before.
+    **{
+        f"lean_l{i}": {"system": "engram", "flags": Flags(**LEAN_BASE, **extra)}
+        for i, extra in enumerate(
+            (
+                {},
+                {"lean_units": "sentence", "lean_dates": True},
+                {"lean_units": "sentence", "lean_dates": True, "lean_worth_gate": True},
+            )
+        )
+    },
+    # Lean turn ladder (2026-09-26): the same steps on whole turns (sentences lost to turns). T0 is lean_l0. T3 reads
+    # T2's store (same write path, nothing written) with the v2 system's read path: Jev rerank over a 30-unit cosine
+    # shortlist, the cosine floor, history and expansion.
+    "lean_t1": {"system": "engram", "flags": Flags(**LEAN_BASE, lean_dates=True)},
+    "lean_t2": {"system": "engram", "flags": Flags(**LEAN_BASE, lean_dates=True, lean_worth_gate=True)},
+    "lean_t3": {
+        "system": "engram",
+        "store_from": "lean_t2",
+        "flags": Flags(
+            **{**LEAN_BASE, "retrieval_rerank": True, "retrieval_history": True},
+            retrieval_floor=config.RETRIEVAL_FLOOR,
+            lean_dates=True,
+            lean_worth_gate=True,
+        ),
+    },
+    # T0R: raw turns (L0's store, no dates, no worth gate) with T3's read path.
+    "lean_t0r": {
+        "system": "engram",
+        "store_from": "lean_l0",
+        "flags": Flags(
+            **{**LEAN_BASE, "retrieval_rerank": True, "retrieval_history": True},
+            retrieval_floor=config.RETRIEVAL_FLOOR,
+        ),
+    },
+    # Jev-Mem on conv-26 (lean comparison): its retrieved lines, answered and judged with the shared prompt and judge.
+    "jevmem_conv26": {"system": "jevmem_lines", "run_dir": "bench/.cache/jevmem_conv26"},
+    # V3 (docs/V3_PLAN.md section 4). Jev-Mem per LoCoMo conversation (bench/jevmem_run.py --conv <id>).
+    "jevmem": {"system": "jevmem_lines", "run_dir": "bench/.cache/jevmem_v3/{conv}"},
+    # T0R-LLM: T0R's store and read path with gpt-4o-mini listwise reranking of the 30-turn shortlist instead of Jev.
+    "lean_t0r_llm": {
+        "system": "engram",
+        "store_from": "lean_l0",
+        "flags": Flags(
+            **{**LEAN_BASE, "retrieval_rerank": True, "retrieval_history": True},
+            retrieval_floor=config.RETRIEVAL_FLOOR,
+            retrieval_reranker="llm",
+        ),
+    },
+    # POST-HOC EXPLORATORY (docs/V3_PLAN.md §12, approved after Batch C; own ledger): T0R-wide. T0R's raw-turn store
+    # (L0's k=3 store) with a 150-turn cosine shortlist, Jev relevance on every shortlisted turn (30 per request),
+    # and the top k by Jev's score with no 0.5 cut, floor, pull, history or expansion.
+    "lean_t0r_wide": {
+        "system": "engram",
+        "store_from": "lean_l0",
+        "store_suffix": "__k3",
+        "flags": Flags(**{**LEAN_BASE, "retrieval_rerank": True}, retrieval_shortlist=150, rerank_keep="ranked"),
+    },
+    # Full context: every turn in the answer prompt.
+    "full_context": {"system": "full_context"},
     "mem0": {"system": "mem0"},
+    # v2 baseline (V2_PLAN section 4): Graphiti on the OpenAI stack's shared models; see GraphitiArm.
+    "graphiti": {"system": "graphiti"},
+    # exploratory (V2_PLAN Deviations 2026-09-25): Graphiti with its shipped default models (gpt-5.5, gpt-4.1-nano).
+    "graphiti_shipped": {"system": "graphiti", "models": "shipped"},
 }
 
 
@@ -262,9 +412,42 @@ def load_heldout(conv_id: str) -> dict:
     }
 
 
+def load_adversarial(conv_id: str) -> dict:
+    """LoCoMo category 5 of one conversation, gold an abstention, over the same turns as load_heldout."""
+    sl = load_heldout(conv_id)
+    conv = next(
+        c for c in json.loads((ROOT / "bench" / "data" / "locomo10.json").read_text()) if c["sample_id"] == conv_id
+    )
+    sl["questions"] = [
+        {
+            "idx": i,
+            "question": q["question"],
+            "gold": ADVERSARIAL_GOLD,
+            "category": 5,
+            "evidence": q.get("evidence", []),
+            "last_evidence_session": sl["checkpoints"][0],
+        }
+        for i, q in enumerate(conv["qa"])
+        if q.get("category") == 5
+    ]
+    return sl
+
+
 def load_slice(name: str) -> dict:
     if name.startswith("heldout:"):
         return load_heldout(name.split(":", 1)[1])
+    if name.startswith("adv:"):  # a conversation's adversarial questions, answered from its scored run's store
+        return load_adversarial(name.split(":", 1)[1])
+    if name == "conv26":  # the whole tuning conversation (v2 Stage 2), loaded like a held-out one
+        return load_heldout("conv-26")
+    if name.startswith("lme:"):  # one LongMemEval question and its haystack (V2_PLAN section 10)
+        from .longmemeval import load_question
+
+        return load_question(name.split(":", 1)[1])
+    if name.startswith("lmefull:"):  # user and assistant turns (docs/V3_PLAN.md §12, the LongMemEval expansion)
+        from .longmemeval import load_question
+
+        return load_question(name.split(":", 1)[1], roles=("user", "assistant"))
     path, checkpoints = SLICES[name]
     s = json.loads(path.read_text())
     if name in ("dev_updates", "dev_updates2"):
@@ -366,12 +549,21 @@ def make_backend(name: str, log, cache: CallCache):
 
 
 class EngramArm:
-    def __init__(self, arm_dir: Path, flags: Flags, cache: CallCache, backend: str = "jev", shadow: str | None = None):
+    def __init__(
+        self,
+        arm_dir: Path,
+        flags: Flags,
+        cache: CallCache,
+        backend: str = "jev",
+        shadow: str | None = None,
+        stack: str = "anthropic",
+    ):
         from engram.decide.log import DecisionLog
-        from engram.embed import SentenceEmbedder
+        from engram.embed import OpenAIEmbedder, SentenceEmbedder
         from engram.engine import Engram
         from engram.llm.anthropic import AnthropicLLM
         from engram.llm.base import UsageLog
+        from engram.llm.openai import OpenAILLM
         from engram.store import Store
 
         log = DecisionLog(arm_dir / "decisions.jsonl")
@@ -381,20 +573,68 @@ class EngramArm:
             from engram.decide.shadow import ShadowBackend
 
             decider = ShadowBackend(decider, make_backend(shadow, None, cache), arm_dir / "shadow.jsonl")
-        self.engine = Engram(
-            Store(arm_dir / "engram.db"),
-            decider,
-            AnthropicLLM(
+        if stack == "openai":
+            s = STACKS["openai"]
+            flags = replace(flags, extract_observation_date=s["observation_date"])
+            llm = OpenAILLM(
+                model=s["decide"],
+                extract_model=s["extract"],
+                usage_log=usage,
+                cache=cache,
+                extract_prompt=flags.extract_prompt,
+            )
+            embedder = OpenAIEmbedder(s["embed"], cache=cache)
+        else:
+            llm = AnthropicLLM(
                 extract_model=EXTRACT_MODEL, usage_log=usage, cache=cache, extract_prompt=flags.extract_prompt
-            ),
-            SentenceEmbedder(),
-            log,
-            usage,
-            flags,
-        )
+            )
+            embedder = SentenceEmbedder()
+        self.engine = Engram(Store(arm_dir / "engram.db"), decider, llm, embedder, log, usage, flags)
+        self.embedder = embedder
+        self.trace: dict | None = None  # Stage 4 frozen-extraction ablation: {message id: {"memories", "usage"}}
+
+    def use_extraction_trace(self, path: Path, mode: str) -> None:
+        """record: save every extraction's output and usage to `path`; replay: return them for the same message
+        ids instead of calling the extraction LLM, so every decider sees one identical extraction trace."""
+        from engram.llm.base import LLMUsage
+
+        llm = self.engine.llm
+        self.trace_path = path
+        if mode == "record":
+            self.trace, original = {}, llm.extract_mem0
+
+            async def record(user_prompt: str, message_id: str):
+                memories, usage = await original(user_prompt, message_id)
+                self.trace[message_id] = {"memories": memories, "usage": {**usage.__dict__, "cached": False}}
+                return memories, usage
+
+            llm.extract_mem0 = record
+        else:
+            trace = json.loads(path.read_text())
+
+            async def replay(user_prompt: str, message_id: str):
+                entry = trace[message_id]
+                usage = LLMUsage(**{**entry["usage"], "cached": True})
+                if llm.usage_log:
+                    llm.usage_log.write(usage)
+                return entry["memories"], usage
+
+            llm.extract_mem0 = replay
+
+    def save_trace(self) -> None:
+        if self.trace is not None:
+            self.trace_path.parent.mkdir(parents=True, exist_ok=True)
+            self.trace_path.write_text(json.dumps(self.trace, indent=1))
 
     async def write(self, m: dict) -> dict:
+        embedded = getattr(self.embedder, "cost_usd", 0.0)
         r = await self.engine.ingest(m["text"], speaker=m["speaker"], created_at=m["at"], message_id=m["id"])
+        embed_cost = getattr(self.embedder, "cost_usd", 0.0) - embedded
+        # The pipeline stores a fact as tentative when Jev fails, which is right for a transient error. An account
+        # error (no credits, bad key) would fail every later decision the same way, so the run stops instead.
+        for d in r.decisions:
+            if d.backend == "fallback" and (d.error or "").startswith(("HTTP 401", "HTTP 402", "HTTP 403")):
+                raise RuntimeError(f"Jev account error on message {m['id']}, run stopped: {d.error}")
         closed = []
         for o in r.outcomes:
             if o.closed_target and o.target_id:
@@ -407,11 +647,31 @@ class EngramArm:
                         "by_source": m["id"],
                     }
                 )
+        facts = {
+            f.id: f
+            for f in (self.engine.store.get_fact(o.target_id, with_decisions=False) for o in r.outcomes if o.target_id)
+            if f
+        }
         return {
+            "outcomes": [
+                {
+                    "text": o.text,
+                    "action": o.action,
+                    "target": facts[o.target_id].text if o.target_id in facts else None,
+                }
+                for o in r.outcomes
+            ],
             "closed": closed,
             "latency_ms": r.latency_ms,
             "decision_ms": r.decide_ms,
-            "cost": r.extract_cost + r.decision_cost,
+            "cost": r.extract_cost + r.decision_cost + embed_cost,
+            "cost_parts": {
+                "extraction": r.extract_cost,
+                "jev": r.jev_cost,
+                "escalations": sum(u.cost_usd for u in r.llm_usage if u.purpose == "escalate"),
+                "llm_decisions": sum(u.cost_usd for u in r.llm_usage if u.purpose == "decide"),
+                "embeddings": embed_cost,
+            },
             "decision_cost": r.decision_cost,
             "extracted": len(r.outcomes),
             "actions": [o.action for o in r.outcomes],
@@ -432,7 +692,9 @@ class EngramArm:
             # currently valid facts (otherwise closes could not matter at all).
             lines = [x.fact.text for x in facts if x.fact.is_valid]
         else:
-            if self.engine.flags.render == "compact":
+            if self.engine.flags.render == "lean":  # the unit as stored, under the date it was said
+                lines = [f"[{x.said_at:%Y-%m-%d}] {x.fact.text}" for x in facts]
+            elif self.engine.flags.render == "compact":
                 from engram.pipeline.answer import render_fact_compact
 
                 lines = [render_fact_compact(x)[2:] for x in facts]
@@ -470,27 +732,83 @@ class EngramArm:
         }
 
 
+class JevMemLines:
+    """Jev-Mem's retrieved lines for each (question, k), read by bench/jevmem_run.py in Jev-Mem's own environment, so
+    the shared answer prompt and judge are applied here exactly as for every other system. Writes nothing."""
+
+    def __init__(self, run_dir: Path):
+        self.run = json.loads((run_dir / "run.json").read_text())
+        self.reads = {}
+        for line in (run_dir / "reads.jsonl").read_text().splitlines():
+            row = json.loads(line)
+            self.reads[(row["question"], row["k"])] = row
+
+    async def memories(
+        self, question: str, top_k: int | None = None, no_dates: bool = False
+    ) -> tuple[list[str], float]:
+        row = self.reads[(question, top_k)]
+        return row["lines"], row["jev_usd"]
+
+    def fact_records(self) -> list[tuple[str, str | None, bool]]:
+        return []
+
+    def stored(self) -> dict:
+        return {"stored": self.run["turns"], "active": self.run["turns"], "tentative": 0}
+
+
+class FullContext:
+    """Every turn of the slice (LongMemEval: every user turn of the haystack) as the memory block, rendered as the lean
+    arms render a line ("[date] speaker: text"). k is ignored. Writes nothing (docs/V3_PLAN.md section 4)."""
+
+    def __init__(self, sl: dict):
+        self.lines = [f"[{m['at']:%Y-%m-%d}] {m['speaker']}: {m['text']}" for m in sl["messages"]]
+
+    async def memories(
+        self, question: str, top_k: int | None = None, no_dates: bool = False
+    ) -> tuple[list[str], float]:
+        return self.lines, 0.0
+
+    def fact_records(self) -> list[tuple[str, str | None, bool]]:
+        return []
+
+    def stored(self) -> dict:
+        return {"stored": len(self.lines), "active": len(self.lines), "tentative": 0}
+
+
 class Mem0Arm:
     """mem0 default Memory (ADD-only), Haiku 4.5, local MiniLM on CPU, telemetry off. LLM calls go through the cache."""
 
-    def __init__(self, arm_dir: Path, cache: CallCache, dated: bool = False):
+    def __init__(self, arm_dir: Path, cache: CallCache, dated: bool = False, stack: str = "anthropic"):
         from mem0 import Memory
 
         self.user_id = "conv-26"
+        if stack == "openai":  # mem0's default provider: its OpenAI LLM and embedder, on the shared models
+            s = STACKS["openai"]
+            dated = dated or s["observation_date"] == "session"
+            llm = {"provider": "openai", "config": {"model": s["extract"]}}
+            embedder, dims = {"provider": "openai", "config": {"model": s["embed"]}}, 1536
+        else:
+            llm = {"provider": "anthropic", "config": {"model": EXTRACT_MODEL}}
+            embedder = {
+                "provider": "huggingface",
+                "config": {
+                    "model": "sentence-transformers/all-MiniLM-L6-v2",
+                    "embedding_dims": 384,
+                    "model_kwargs": {"device": "cpu"},
+                },
+            }
+            dims = 384
+        if stack == "openai":
+            # mem0 2.1.0 silently sends its LLM calls to OpenRouter whenever OPENROUTER_API_KEY is set
+            # (mem0/llms/openai.py:42, and again per call); the registered stack is the OpenAI API (V3_PLAN §12).
+            os.environ.pop("OPENROUTER_API_KEY", None)
         self.memory = Memory.from_config(
             {
-                "llm": {"provider": "anthropic", "config": {"model": EXTRACT_MODEL}},
-                "embedder": {
-                    "provider": "huggingface",
-                    "config": {
-                        "model": "sentence-transformers/all-MiniLM-L6-v2",
-                        "embedding_dims": 384,
-                        "model_kwargs": {"device": "cpu"},
-                    },
-                },
+                "llm": llm,
+                "embedder": embedder,
                 "vector_store": {
                     "provider": "qdrant",
-                    "config": {"path": str(arm_dir / "qdrant"), "on_disk": True, "embedding_model_dims": 384},
+                    "config": {"path": str(arm_dir / "qdrant"), "on_disk": True, "embedding_model_dims": dims},
                 },
                 "history_db_path": str(arm_dir / "history.db"),
             }
@@ -505,6 +823,9 @@ class Mem0Arm:
         mem0_prompts._resolve_dates = lambda current_date=None, observation_date=None: resolve(
             current_date or PINNED_DATE, observation_date or (self.observation if dated else None)
         )
+        if stack == "openai":
+            self._cache_openai(cache)
+            return
         client = self.memory.llm.client
         original = client.messages.create
 
@@ -532,6 +853,69 @@ class Mem0Arm:
 
         client.messages.create = create
 
+    def _cache_openai(self, cache: CallCache) -> None:
+        """Route mem0's OpenAI chat and embedding calls through the call cache, charging misses as openai spend."""
+        import openai.types
+        import openai.types.chat
+
+        from engram.embed import OpenAIEmbedder, fit_embedding_input
+        from engram.llm.openai import cost
+
+        host = self.memory.llm.client.base_url.host
+        if host != "api.openai.com":
+            raise RuntimeError(f"mem0's LLM client points at {host}, not api.openai.com (V3_PLAN §12)")
+        chat = self.memory.llm.client.chat.completions
+        original_chat = chat.create
+
+        def create(*args, **kwargs):
+            key = call_key("mem0-openai", kwargs)
+            if hit := cache.get(key):
+                cache.replay_sync(hit["latency_ms"])
+                self.calls.append({**hit, "cached": True})
+                return openai.types.chat.ChatCompletion.model_validate(hit["response"])
+            started = time.perf_counter()
+            response = original_chat(*args, **kwargs)
+            if getattr(response, "provider", None) or (response.model_extra or {}).get("provider"):
+                raise RuntimeError("mem0's chat call was served through a router, not the OpenAI API (V3_PLAN §12)")
+            u = response.usage
+            record = {
+                "response": response.model_dump(),
+                "latency_ms": (time.perf_counter() - started) * 1000,
+                "cost": cost(kwargs["model"], u.prompt_tokens, u.completion_tokens),
+                "kind": "llm",
+            }
+            cache.put(key, record)
+            cache.spend("openai", record["cost"])
+            self.calls.append(record)
+            return response
+
+        chat.create = create
+        emb = self.memory.embedding_model.client.embeddings
+        original_emb = emb.create
+
+        def embed(*args, **kwargs):
+            # a text over the embedding model's input limit is embedded from its first 8,000 tokens (as engram's)
+            kwargs["input"] = [fit_embedding_input(t) for t in kwargs["input"]]
+            key = call_key("mem0-openai-embed", kwargs)
+            if hit := cache.get(key):
+                cache.replay_sync(hit["latency_ms"])
+                self.calls.append({**hit, "cached": True})
+                return openai.types.CreateEmbeddingResponse.model_validate(hit["response"])
+            started = time.perf_counter()
+            response = original_emb(*args, **kwargs)
+            record = {
+                "response": response.model_dump(),
+                "latency_ms": (time.perf_counter() - started) * 1000,
+                "cost": response.usage.prompt_tokens * OpenAIEmbedder.PRICE_PER_TOKEN[kwargs["model"]],
+                "kind": "embed",
+            }
+            cache.put(key, record)
+            cache.spend("openai", record["cost"])
+            self.calls.append(record)
+            return response
+
+        emb.create = embed
+
     async def write(self, m: dict) -> dict:
         self.calls.clear()
         self.observation = f"{m['at']:%Y-%m-%d}"
@@ -550,6 +934,10 @@ class Mem0Arm:
             "latency_ms": (time.perf_counter() - started) * 1000,
             "decision_ms": None,
             "cost": sum(c["cost"] for c in self.calls),
+            "cost_parts": {
+                "extraction": sum(c["cost"] for c in self.calls if c.get("kind") != "embed"),
+                "embeddings": sum(c["cost"] for c in self.calls if c.get("kind") == "embed"),
+            },
             "decision_cost": None,
             "extracted": len(events),
             "actions": [e.get("event", "ADD") for e in events],
@@ -585,6 +973,261 @@ class Mem0Arm:
         return {"stored": len(items), "active": len(items), "tentative": 0}
 
 
+class GraphitiArm:
+    """Graphiti (graphiti-core 0.30.2, V2_PLAN section 4) on the OpenAI stack's shared models: one episode per message
+    (`speaker: text`) with its session date as reference time, hybrid search (RRF, no reranker call), and the top-k
+    facts rendered into the shared answer prompt. Neo4j 5 runs in Docker on localhost:
+
+        docker run -d --name engram-neo4j -p 127.0.0.1:7687:7687 -e NEO4J_AUTH=neo4j/engram-local-bench neo4j:5.26
+
+    Every OpenAI call Graphiti makes (structured Responses calls, chat completions, embeddings) goes through the call
+    cache and is costed at list price; a hit replays its original latency. Each run gets its own graph partition
+    (group_id), cleared at the start."""
+
+    NEO4J_URI = os.environ.get("NEO4J_URI", "bolt://127.0.0.1:7687")
+    NEO4J_AUTH = ("neo4j", os.environ.get("NEO4J_PASSWORD", "engram-local-bench"))  # a local, throwaway container
+    TIMEOUT_S = 600  # per episode write or search
+
+    def __init__(self, arm_dir: Path, cache: CallCache, group_id: str, models: str = "shared", keep: bool = False):
+        import openai
+        from graphiti_core import Graphiti
+        from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
+        from graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
+        from graphiti_core.llm_client.config import LLMConfig
+        from graphiti_core.llm_client.openai_client import OpenAIClient
+
+        s = STACKS["openai"]
+        # Retries are logged apart from wall time: HTTP attempts that got an error status (the SDK retries them) and
+        # calls that still failed after the SDK's retries (Graphiti may retry those itself), with the time each took.
+        self.retries = {
+            "http_attempts": 0,
+            "http_errors": 0,
+            "http_error_ms": 0.0,
+            "call_errors": 0,
+            "call_error_ms": 0.0,
+        }
+        sent: dict[int, float] = {}
+
+        async def on_request(request):
+            sent[id(request)] = time.perf_counter()
+
+        async def on_response(response):
+            self.retries["http_attempts"] += 1
+            started = sent.pop(id(response.request), None)
+            if response.status_code >= 400:
+                self.retries["http_errors"] += 1
+                if started is not None:
+                    self.retries["http_error_ms"] += (time.perf_counter() - started) * 1000
+
+        client = openai.AsyncOpenAI(
+            max_retries=5,
+            timeout=120,
+            http_client=openai.DefaultAsyncHttpxClient(
+                event_hooks={"request": [on_request], "response": [on_response]}
+            ),
+        )
+        self.calls: list[dict] = []
+        self._meter(client, cache)
+        # models="shared": the shared stack's gpt-4o-mini for both of Graphiti's models (S1, S2, S11).
+        # models="shipped": Graphiti 0.30.2's defaults (gpt-5.5 and gpt-4.1-nano; exploratory, Deviations 2026-09-25).
+        llm_config = LLMConfig(model=s["extract"], small_model=s["extract"]) if models == "shared" else LLMConfig()
+        self.graphiti = Graphiti(
+            self.NEO4J_URI,
+            *self.NEO4J_AUTH,
+            llm_client=OpenAIClient(config=llm_config, client=client),
+            embedder=OpenAIEmbedder(config=OpenAIEmbedderConfig(embedding_model=s["embed"]), client=client),
+            cross_encoder=OpenAIRerankerClient(config=llm_config, client=client),  # built, not called by RRF search
+        )
+        self.group_id = re.sub(r"[^A-Za-z0-9_-]", "_", group_id)
+        self.keep = keep  # reuse the graph an earlier pass built under this group id
+        self._ready = False
+        self._records: list[dict] = []
+        self.episode_names: list[str] = []
+
+    def _meter(self, client, cache: CallCache) -> None:
+        from types import SimpleNamespace
+
+        import openai.types
+        import openai.types.chat
+
+        from engram.embed import OpenAIEmbedder
+        from engram.llm.openai import cost
+
+        def wrap(target, name: str, kind: str, encode, decode, price):
+            original = getattr(target, name)
+
+            async def call(*args, **kwargs):
+                key = call_key("graphiti-openai", kind, kwargs)
+                if hit := cache.get(key):
+                    await cache.replay(hit["latency_ms"])
+                    self.calls.append({**hit, "cached": True})
+                    return decode(hit["response"])
+                started = time.perf_counter()
+                try:
+                    response = await original(*args, **kwargs)
+                except Exception:
+                    self.retries["call_errors"] += 1
+                    self.retries["call_error_ms"] += (time.perf_counter() - started) * 1000
+                    raise
+                record = {
+                    "response": encode(response),
+                    "latency_ms": (time.perf_counter() - started) * 1000,
+                    "cost": price(kwargs, response),
+                    "kind": kind,
+                }
+                cache.put(key, record)
+                cache.spend("openai", record["cost"])
+                self.calls.append(record)
+                return response
+
+            setattr(target, name, call)
+
+        wrap(  # Graphiti reads output_text, usage.input_tokens/output_tokens and refusal from a Responses call
+            client.responses,
+            "parse",
+            "llm",
+            lambda r: {
+                "output_text": r.output_text,
+                "input_tokens": r.usage.input_tokens,
+                "output_tokens": r.usage.output_tokens,
+            },
+            lambda d: SimpleNamespace(
+                output_text=d["output_text"],
+                usage=SimpleNamespace(input_tokens=d["input_tokens"], output_tokens=d["output_tokens"]),
+                refusal=None,
+            ),
+            lambda kw, r: cost(
+                kw["model"],
+                r.usage.input_tokens,
+                r.usage.output_tokens,
+                getattr(getattr(r.usage, "input_tokens_details", None), "cached_tokens", 0) or 0,
+            ),
+        )
+        wrap(
+            client.chat.completions,
+            "create",
+            "llm",
+            lambda r: r.model_dump(),
+            openai.types.chat.ChatCompletion.model_validate,
+            lambda kw, r: cost(
+                kw["model"],
+                r.usage.prompt_tokens,
+                r.usage.completion_tokens,
+                getattr(getattr(r.usage, "prompt_tokens_details", None), "cached_tokens", 0) or 0,
+            ),
+        )
+        wrap(
+            client.embeddings,
+            "create",
+            "embed",
+            lambda r: r.model_dump(),
+            openai.types.CreateEmbeddingResponse.model_validate,
+            lambda kw, r: r.usage.prompt_tokens * OpenAIEmbedder.PRICE_PER_TOKEN[kw["model"]],
+        )
+
+    async def _setup(self) -> None:
+        if not self._ready:
+            from graphiti_core.utils.maintenance.graph_data_operations import clear_data
+
+            await self.graphiti.build_indices_and_constraints()
+            if not self.keep:
+                await clear_data(self.graphiti.driver, group_ids=[self.group_id])
+            self._ready = True
+
+    async def write(self, m: dict) -> dict:
+        from graphiti_core.nodes import EpisodeType
+
+        await self._setup()
+        self.calls.clear()
+        started = time.perf_counter()
+        result = await asyncio.wait_for(  # a stalled Neo4j fails the run instead of hanging it
+            self.graphiti.add_episode(
+                name=m["id"],
+                episode_body=f"{m['speaker']}: {m['text']}",
+                source_description="conversation message",
+                reference_time=m["at"],
+                source=EpisodeType.message,
+                group_id=self.group_id,
+            ),
+            self.TIMEOUT_S,
+        )
+        closes = sum(1 for e in result.edges if e.invalid_at is not None or e.expired_at is not None)
+        return {
+            "latency_ms": (time.perf_counter() - started) * 1000,
+            "decision_ms": None,
+            "cost": sum(c["cost"] for c in self.calls),
+            "cost_parts": {
+                "extraction": sum(c["cost"] for c in self.calls if c.get("kind") != "embed"),
+                "embeddings": sum(c["cost"] for c in self.calls if c.get("kind") == "embed"),
+            },
+            "decision_cost": None,
+            "extracted": len(result.edges),
+            "actions": ["edge"] * len(result.edges),
+            "closes": closes,
+            "escalations": 0,
+            "llm_calls": sum(1 for c in self.calls if c.get("kind") != "embed"),
+        }
+
+    async def memories(
+        self, question: str, top_k: int | None = None, no_dates: bool = False
+    ) -> tuple[list[str], float]:
+        await self._setup()
+        edges = await asyncio.wait_for(
+            self.graphiti.search(question, group_ids=[self.group_id], num_results=top_k or 20), self.TIMEOUT_S
+        )
+        if no_dates:
+            return [e.fact for e in edges], 0.0
+        lines = []
+        for e in edges:
+            since = f"{e.valid_at:%Y-%m-%d}" if e.valid_at else ""
+            until = f" (until {e.invalid_at:%Y-%m-%d})" if e.invalid_at else ""
+            lines.append(f"{since}: {e.fact}{until}")
+        return lines, 0.0  # the query embedding is costed through the cache; read cost is reported per run
+
+    async def _edges(self) -> list[dict]:
+        records, _, _ = await self.graphiti.driver.execute_query(
+            "MATCH (:Entity)-[e:RELATES_TO]->(:Entity) WHERE e.group_id = $g "
+            "RETURN e.fact AS fact, e.episodes AS episodes, e.invalid_at AS invalid_at, e.expired_at AS expired_at",
+            g=self.group_id,
+        )
+        names, _, _ = await self.graphiti.driver.execute_query(
+            "MATCH (n:Episodic) WHERE n.group_id = $g RETURN n.uuid AS uuid, n.name AS name", g=self.group_id
+        )
+        episode = {r["uuid"]: r["name"] for r in names}
+        self.episode_names = sorted(episode.values())
+        return [
+            {
+                "text": r["fact"],
+                "source": episode.get((r["episodes"] or [None])[0]),
+                "active": r["invalid_at"] is None and r["expired_at"] is None,
+            }
+            for r in records
+        ]
+
+    async def refresh(self) -> None:
+        """Snapshot the graph's edges; run_arm awaits this before the sync store accessors below."""
+        self._records = await self._edges()
+
+    def fact_records(self) -> list[tuple[str, str | None, bool]]:
+        return [(r["text"], r["source"], r["active"]) for r in self._records]
+
+    def close_records(self) -> list[dict]:
+        return [
+            {"text": r["text"], "source": r["source"], "active": r["active"], "reason": None, "closer_source": None}
+            for r in self._records
+        ]
+
+    def stored(self) -> dict:
+        return {
+            "stored": len(self._records),
+            "active": sum(r["active"] for r in self._records),
+            "invalidated": sum(not r["active"] for r in self._records),
+        }
+
+    async def close(self) -> None:
+        await self.graphiti.close()
+
+
 # ---------------------------------------------------------------- answer and grade (cached)
 
 
@@ -603,6 +1246,36 @@ async def claude(client, cache: CallCache, purpose: str, sem: asyncio.Semaphore,
     cache.put(key, out)
     cache.spend("claude", out["cost"])
     return out, out["cost"]
+
+
+async def gpt(client, cache: CallCache, purpose: str, sem: asyncio.Semaphore, **request) -> tuple[dict, float]:
+    """The OpenAI-stack answer and judge calls, cached like claude(); temperature 0 is part of the request."""
+    from engram.llm.openai import cost
+
+    key = call_key("bench-openai", purpose, request)
+    if hit := cache.get(key):
+        return hit, 0.0
+    async with sem:
+        if purpose == "judge":
+            r = await client.chat.completions.parse(**request, response_format=Judgement)
+            parsed = r.choices[0].message.parsed
+            out = {"label": parsed.label if parsed else "WRONG"}
+        else:
+            r = await client.chat.completions.create(**request)
+            out = {"text": (r.choices[0].message.content or "").strip()}
+    out["cost"] = cost(request["model"], r.usage.prompt_tokens, r.usage.completion_tokens)
+    cache.put(key, out)
+    cache.spend("openai", out["cost"])
+    return out, out["cost"]
+
+
+def count_tokens_tiktoken(text: str, encoding: str = STACKS["openai"]["tokenizer"]) -> int:
+    """Tokens the OpenAI-stack answer model reads for a memory block (local tokenizer, no API call)."""
+    import tiktoken
+
+    # disallowed_special=(): text that spells a special token ("<|endoftext|>" occurs in one LongMemEval haystack) is
+    # counted as ordinary text; every other count is unchanged
+    return len(tiktoken.get_encoding(encoding).encode(text, disallowed_special=()))
 
 
 async def count_tokens(client, cache: CallCache, text: str) -> int:
@@ -626,39 +1299,97 @@ async def run_arm(
     no_dates: bool = False,
     extra_top_ks: list[int] | None = None,
     no_answer: bool = False,
+    stack: str = "anthropic",
+    sweep: list[int] | None = None,
+    reuse_from: str | None = None,
+    results_dir: Path | None = None,
 ) -> dict:
+    """`sweep`: after the final answers, retrieval-only token counts per question at each k (LongMemEval token
+    matching, V2_PLAN section 10). `reuse_from`: read the store another pass of this arm built on this slice (its
+    suffix, e.g. "__k20") and write nothing, so a second k answers on the same ingestion."""
     spec = ARMS[name]
     sl = load_slice(slice_name)
     suffix = (f"__k{top_k}" if top_k else "") + ("__nodates" if no_dates else "") + ("__noanswer" if no_answer else "")
-    arm_dir = ARMS_DIR / name / (slice_name.replace(":", "_") + suffix)  # each option set gets its own store
-    shutil.rmtree(arm_dir, ignore_errors=True)
-    arm_dir.mkdir(parents=True)
-    cache = CallCache(CACHE, budget=budget)
-    if spec["system"] == "engram":
-        system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"))
+    arms_dir, results = (ARMS_DIR / "openai", RESULTS_V2) if stack == "openai" else (ARMS_DIR, RESULTS)
+    results = results_dir or results
+    # A store per option set. reuse_from is a suffix of this slice ("__k20") or another slice's directory
+    # ("heldout_conv-44__k3", for its adversarial questions).
+    stored_as = (
+        reuse_from
+        if reuse_from and not reuse_from.startswith("__")
+        else slice_name.replace(":", "_") + (reuse_from or suffix)
+    )
+    arm_dir = arms_dir / name / stored_as
+    if reuse_from:
+        if not arm_dir.exists():
+            raise FileNotFoundError(f"--reuse-from: no store at {arm_dir}")
     else:
-        system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False))
+        shutil.rmtree(arm_dir, ignore_errors=True)
+        arm_dir.mkdir(parents=True)
+    cache = CallCache(CACHE, budget=budget)
+    frozen_store = spec.get("store_from")  # Stage 4 reranker arms: read a copy of another arm's store, write nothing
+    if frozen_store and not reuse_from:  # a reused directory already holds its copy
+        source_suffix = spec.get("store_suffix", suffix)  # the frozen store's own option suffix, when fixed
+        shutil.copy(arms_dir / frozen_store / (slice_name.replace(":", "_") + source_suffix) / "engram.db", arm_dir)
+    if spec["system"] == "engram":
+        system = EngramArm(arm_dir, spec["flags"], cache, spec.get("backend", "jev"), spec.get("shadow"), stack)
+        if spec.get("extraction_trace"):  # Stage 4 frozen-extraction ablation
+            trace = arms_dir / "fx_trace" / f"{slice_name.replace(':', '_')}.json"
+            system.use_extraction_trace(trace, spec["extraction_trace"])
+    elif spec["system"] == "graphiti":
+        if stack != "openai":
+            raise ValueError("Graphiti runs on the OpenAI stack only (V2_PLAN section 4)")
+        system = GraphitiArm(
+            arm_dir,
+            cache,
+            group_id=f"{name}__{slice_name}{reuse_from or suffix}",
+            models=spec.get("models", "shared"),
+            keep=bool(reuse_from),
+        )
+    elif spec["system"] == "jevmem_lines":
+        system = JevMemLines(ROOT / spec["run_dir"].format(conv=slice_name.split(":", 1)[-1]))
+    elif spec["system"] == "full_context":
+        system = FullContext(sl)
+    else:
+        system = Mem0Arm(arm_dir, cache, dated=spec.get("dated", False), stack=stack)
 
-    client = anthropic.AsyncAnthropic(max_retries=5, timeout=120)
-    sem = asyncio.Semaphore(6)
+    if stack == "openai":
+        import openai
+
+        client = openai.AsyncOpenAI(max_retries=int(os.environ.get("BENCH_OPENAI_RETRIES", "5")), timeout=120)
+    else:
+        client = anthropic.AsyncAnthropic(max_retries=5, timeout=120)
+    sem = asyncio.Semaphore(int(os.environ.get("BENCH_CONCURRENCY", "6")))  # answer/judge calls in flight
     speakers = " and ".join(sl["speakers"])
-    empty_block = await count_tokens(client, cache, json.dumps([], indent=4))
 
-    async def one(q: dict, k: int | None = top_k) -> dict:
-        lines, retrieve_cost = await system.memories(q["question"], top_k=k, no_dates=no_dates)
-        block = json.dumps(lines, indent=4)
-        retrieved_tokens = await count_tokens(client, cache, block) - empty_block
-        if no_answer:  # retrieval only: no answer or judge calls; accuracy fields are meaningless
-            return {
-                **q,
-                "answer": None,
-                "memories": len(lines),
-                "lines": lines,
-                "label": None,
-                "query_cost": retrieve_cost,
-                "retrieved_tokens": retrieved_tokens,
-            }
-        prompt = ANSWER_PROMPT.format(speakers=speakers, memories=block, question=q["question"])
+    async def tokens(text: str) -> int:
+        return count_tokens_tiktoken(text) if stack == "openai" else await count_tokens(client, cache, text)
+
+    async def answer_and_judge(prompt: str, question: str, gold: str) -> tuple[dict, dict]:
+        if stack == "openai":
+            s = STACKS["openai"]
+            ans, _ = await gpt(
+                client,
+                cache,
+                "answer",
+                sem,
+                model=s["answer"],
+                max_tokens=1024,
+                temperature=0.0,
+                messages=[{"role": "system", "content": prompt}, {"role": "user", "content": question}],
+            )
+            judge_prompt = ACCURACY_PROMPT.format(question=question, gold_answer=gold, generated_answer=ans["text"])
+            grade, _ = await gpt(
+                client,
+                cache,
+                "judge",
+                sem,
+                model=s["judge"],
+                max_tokens=1024,
+                temperature=0.0,
+                messages=[{"role": "user", "content": judge_prompt}],
+            )
+            return ans, grade
         ans, _ = await claude(
             client,
             cache,
@@ -668,8 +1399,9 @@ async def run_arm(
             max_tokens=1024,
             extra_body={"temperature": 0.0},
             system=prompt,
-            messages=[{"role": "user", "content": q["question"]}],
+            messages=[{"role": "user", "content": question}],
         )
+        judge_prompt = ACCURACY_PROMPT.format(question=question, gold_answer=gold, generated_answer=ans["text"])
         grade, _ = await claude(
             client,
             cache,
@@ -678,15 +1410,37 @@ async def run_arm(
             model=JUDGE_MODEL,
             max_tokens=1024,
             extra_body={"temperature": 0.0},
-            messages=[
-                {
-                    "role": "user",
-                    "content": ACCURACY_PROMPT.format(
-                        question=q["question"], gold_answer=q["gold"], generated_answer=ans["text"]
-                    ),
-                }
-            ],
+            messages=[{"role": "user", "content": judge_prompt}],
         )
+        return ans, grade
+
+    empty_block = await tokens(json.dumps([], indent=4))
+
+    async def one(q: dict, k: int | None = top_k) -> dict:
+        read_started = time.perf_counter()
+        lines, retrieve_cost = await system.memories(q["question"], top_k=k, no_dates=no_dates)
+        read = (
+            {"retrieve_ms": (time.perf_counter() - read_started) * 1000, "retrieve_cost": retrieve_cost}
+            if stack != "anthropic"
+            else {}
+        )
+        block = json.dumps(lines, indent=4)
+        retrieved_tokens = await tokens(block) - empty_block
+        if no_answer:  # retrieval only: no answer or judge calls; accuracy fields are meaningless
+            return {
+                **q,
+                "answer": None,
+                "memories": len(lines),
+                "lines": lines,
+                "label": None,
+                "query_cost": retrieve_cost,
+                "retrieved_tokens": retrieved_tokens,
+                **read,
+            }
+        # LongMemEval (V2_PLAN section 10): the question slot carries the question's date; retrieval and judge do not
+        slot = f"(Current date: {q['question_date']}) {q['question']}" if q.get("question_date") else q["question"]
+        prompt = ANSWER_PROMPT.format(speakers=speakers, memories=block, question=slot)
+        ans, grade = await answer_and_judge(prompt, q["question"], q["gold"])
         return {
             **q,
             "answer": ans["text"],
@@ -694,6 +1448,7 @@ async def run_arm(
             "label": grade["label"],
             "query_cost": retrieve_cost + ans["cost"],
             "retrieved_tokens": retrieved_tokens,
+            **read,
         }
 
     writes, asked = [], []
@@ -701,8 +1456,13 @@ async def run_arm(
     from engram.embed import SentenceEmbedder
 
     last_of_session = {m["session"]: m["id"] for m in sl["messages"]}
+    outcome_log: list[tuple[str, list[dict]]] = []
+    read_only = bool(frozen_store or reuse_from) or spec["system"] in ("jevmem_lines", "full_context")
     for n, m in enumerate(sl["messages"], 1):
-        writes.append(await system.write(m))
+        if not read_only:
+            writes.append(await system.write(m))
+            if "outcomes" in writes[-1]:
+                outcome_log.append((m["id"], writes[-1]["outcomes"]))
         if n % 20 == 0:
             print(
                 f"[{name}/{slice_name}] {n}/{len(sl['messages'])} messages, real spend ${budget.run_total:.3f}",
@@ -710,7 +1470,7 @@ async def run_arm(
             )
         if m["session"] in sl["checkpoints"] and m["id"] == last_of_session[m["session"]]:
             cp = m["session"]
-            if cp == max(sl["checkpoints"]) and spec.get("hygiene"):
+            if cp == max(sl["checkpoints"]) and spec.get("hygiene") and not read_only:
                 from engram.pipeline.hygiene import hygiene_pass
 
                 before_hygiene = update_report(sl, [], system, SentenceEmbedder()) if sl.get("update_items") else None
@@ -720,6 +1480,8 @@ async def run_arm(
                     f"{hygiene.drops} drops, ${hygiene.cost_usd:.4f}, {hygiene.wall_s:.1f} s",
                     flush=True,
                 )
+            if hasattr(system, "refresh"):  # Graphiti: snapshot the graph before the sync store accessors
+                await system.refresh()
             size = system.stored()["stored"]
             due = [q for q in sl["questions"] if q["last_evidence_session"] <= cp]
             got = await asyncio.gather(*(one(q) for q in due))
@@ -757,14 +1519,14 @@ async def run_arm(
         for cp in sl["checkpoints"]
     ]
     actions = Counter(a for w in writes for a in w["actions"])
-    n_msgs = len(writes)
+    n_msgs = len(sl["messages"]) if read_only else len(writes)
     # Only messages that produced facts have a decision layer to time; the rest decide nothing in ~0 ms.
     decision_ms = [w["decision_ms"] for w in writes if w["decision_ms"] is not None and w["extracted"]]
     decision_cost = [w["decision_cost"] for w in writes if w["decision_cost"] is not None]
     result = {
         "arm": name,
         "system": spec["system"],
-        "flags": spec["flags"].describe() if "flags" in spec else None,
+        "flags": system.engine.flags.describe() if spec["system"] == "engram" else None,  # as run (stack-adjusted)
         "slice": {"name": slice_name, "sessions": sl["sessions"], "messages": n_msgs, "questions": len(answers)},
         "store_size_buckets": buckets,
         "accuracy": statistics.fmean(a["label"] == "CORRECT" for a in answers),
@@ -783,8 +1545,8 @@ async def run_arm(
         "llm_decisions": sum(w.get("llm_decisions", 0) for w in writes),
         "actions": dict(actions),
         "decision_cost_per_1k": 1000 * statistics.fmean(decision_cost) if decision_cost else None,
-        "cost_per_1k": 1000 * statistics.fmean(w["cost"] for w in writes),
-        "write_latency_p50_ms": statistics.median(w["latency_ms"] for w in writes),
+        "cost_per_1k": 1000 * statistics.fmean(w["cost"] for w in writes) if writes else None,
+        "write_latency_p50_ms": statistics.median(w["latency_ms"] for w in writes) if writes else None,
         "decision_latency_p50_ms": statistics.median(decision_ms) if decision_ms else None,
         "no_memory_questions": sum(a["memories"] == 0 for a in answers),
         "retrieved_tokens_mean": statistics.fmean(a["retrieved_tokens"] for a in answers) if answers else None,
@@ -798,8 +1560,44 @@ async def run_arm(
         "asked": asked,
     }
     result["options"] = {"top_k": top_k, "no_dates": no_dates, "no_answer": no_answer}
+    if frozen_store:
+        result["store_from"] = frozen_store
+    if spec["system"] == "graphiti":  # the question's graph holds its own turns and nothing else
+        ids = {m["id"] for m in sl["messages"]}
+        result["graph_group"] = {
+            "group_id": system.group_id,
+            "episodes": len(system.episode_names),
+            "foreign_episodes": sum(n not in ids for n in system.episode_names),
+            "missing_turns": len(ids - set(system.episode_names)),
+        }
+        result["retries"] = system.retries
+    if reuse_from:
+        result["reused_store"] = reuse_from
+    if sweep:  # retrieval only, no answers: o200k tokens of the memory block at each k, per final question
+
+        async def swept(q: dict) -> dict:
+            out = {}
+            if spec["system"] in ("engram", "full_context"):  # retrieval does not depend on k: slice one list
+                every, _ = await system.memories(q["question"], top_k=None, no_dates=no_dates)
+                for k in sweep:
+                    out[k] = await tokens(json.dumps(every[:k], indent=4)) - empty_block
+                return out
+            for k in sweep:
+                lines, _ = await system.memories(q["question"], top_k=k, no_dates=no_dates)
+                out[k] = await tokens(json.dumps(lines, indent=4)) - empty_block
+            return out
+
+        result["sweep_tokens"] = {a["idx"]: await swept(a) for a in answers}
+    if spec["system"] == "engram" and stack != "anthropic":
+        result["write_outcomes"] = [{"message": m_id, **o} for m_id, w in outcome_log for o in w]
+        system.save_trace()
+    if stack != "anthropic" and answers:
+        result["retrieve_ms_p50"] = statistics.median(a["retrieve_ms"] for a in answers)
+        result["retrieve_cost_per_query"] = statistics.fmean(a["retrieve_cost"] for a in answers)
     if spec["system"] == "engram":
         result["backend"] = decider_report(system.engine.backend)
+        if system.engine.flags.same_attribute_gate:
+            result["same_attribute_report"] = same_attribute_report(system)
     if hygiene is not None:
         from dataclasses import asdict as _asdict
 
@@ -821,9 +1619,15 @@ async def run_arm(
             }
             for e in system.engine.writer.belief_trace
         ]
-    RESULTS.mkdir(parents=True, exist_ok=True)
+    if stack != "anthropic":  # v1 result files keep their exact v1 shape
+        result["stack"] = {"name": stack, **STACKS[stack]}
+        parts = sorted({p for w in writes for p in w["cost_parts"]})
+        result["write_cost_per_1k_parts"] = {
+            p: 1000 * statistics.fmean(w["cost_parts"].get(p, 0.0) for w in writes) for p in parts
+        }
+    results.mkdir(parents=True, exist_ok=True)
     out_name = slice_name.replace(":", "_")
-    (RESULTS / f"{name}__{out_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))
+    (results / f"{name}__{out_name}{suffix}.json").write_text(json.dumps(result, indent=1, default=str))
     # Extra k values reuse this run's ingestion: answer the final questions again with a different cap.
     for k in extra_top_ks or []:
         final_qs = [q for q in sl["questions"] if q["last_evidence_session"] <= final]
@@ -844,11 +1648,43 @@ async def run_arm(
             "store_size_buckets": [],
         }
         ksuffix = f"__k{k}" + ("__nodates" if no_dates else "") + ("__noanswer" if no_answer else "")
-        (RESULTS / f"{name}__{out_name}{ksuffix}.json").write_text(json.dumps(rk, indent=1, default=str))
+        (results / f"{name}__{out_name}{ksuffix}.json").write_text(json.dumps(rk, indent=1, default=str))
         print(f"[{name}/{slice_name}] k={k}: accuracy {rk['accuracy']:.1%} (Q={len(ans_k)})", flush=True)
     if spec["system"] == "engram" and hasattr(system.engine.backend, "drain"):
         await system.engine.backend.drain()
+    if spec["system"] == "graphiti":
+        await system.close()
     return result
+
+
+def same_attribute_report(system) -> dict:
+    """Exploratory (V2_PLAN Deviations 2026-09-25): evidence that passed the cardinality gate only through the
+    same_attribute Noul (belief-trace events marked via=same_attribute), the facts whose belief it lowered, how many of
+    those facts are closed at the end of the run, and every close that happened on such an event."""
+    trace = [e for e in system.engine.writer.belief_trace if e.get("via") == "same_attribute"]
+    applied = [e for e in trace if e["event"] == "applied"]
+    facts = {f.id: f for f in system.engine.store.list_facts()}
+    lowered = sorted({e["fact"] for e in applied if e["after"] < e["before"]})
+    closes = []
+    for e in applied:
+        if e.get("closed") and (old := facts.get(e["fact"])):
+            new = facts.get(old.closed_by)
+            closes.append(
+                {
+                    "closed_fact": old.text,
+                    "closed_fact_message": old.source_message_id,
+                    "closing_fact": new.text if new else None,
+                    "closing_message": e["message"],
+                }
+            )
+    return {
+        "evidence_events": len(trace),
+        "evidence_applied": len(applied),
+        "evidence_unconfirmed": sum(e["event"] == "unconfirmed" for e in trace),
+        "facts_lowered": len(lowered),
+        "facts_lowered_closed": sum(1 for f in lowered if f in facts and not facts[f].is_valid),
+        "closes_via_same_attribute": closes,
+    }
 
 
 def decider_report(backend) -> dict:
@@ -1135,6 +1971,60 @@ def table(results: list[dict]) -> str:
     return "\n".join(lines)
 
 
+class V2Budget(Budget):
+    """A Budget whose every charge also goes to a bench.v2_spend.RunBudget (OpenAI stack): its per-run caps, the
+    phase-wide non-OpenAI cap, and the ledger bench/results/v2/spend.jsonl. The Budget itself sets no limits."""
+
+    PROVIDER = {"claude": "anthropic", "jev": "jev", "openai": "openai"}
+
+    def __init__(self, run_budget, max_jev: float | None = None):
+        super().__init__()
+        self.spent["openai"] = 0.0
+        self.run_budget = run_budget
+        self.max_jev = max_jev  # --max-jev: a tighter Jev cap for this run than the plan's per-run cap
+
+    def add(self, kind: str, usd: float) -> None:
+        super().add(kind, usd)
+        self.run_budget.charge(self.PROVIDER[kind], usd)
+        if self.max_jev is not None and self.spent.get("jev", 0.0) > self.max_jev:
+            from .v2_spend import SpendStop
+
+            raise SpendStop(f"Jev spend ${self.spent['jev']:.4f} passed this run's --max-jev ${self.max_jev:.2f}")
+
+
+async def run_v2(args, extra: list[int]) -> dict:
+    """An OpenAI-stack run under bench/v2_spend.py's guard; the ledger row is written even if the run stops."""
+    from .v2_spend import LEDGER, POSTHOC_LEDGER, V3_LEDGER, RunBudget, ledger_totals
+
+    ledger = {"v3": V3_LEDGER, "v3posthoc": POSTHOC_LEDGER}.get(args.study, LEDGER)
+    run_id = f"{args.arm}:{args.slice}:k{args.top_k}" + (f":from{args.reuse_from}" if args.reuse_from else "")
+    with RunBudget(stage=args.stage, system=args.arm, run_id=run_id, ledger=ledger) as run_budget:
+        budget = V2Budget(run_budget, args.max_jev)
+        result = await run_arm(
+            args.arm,
+            args.slice,
+            budget,
+            top_k=args.top_k,
+            no_dates=args.no_dates,
+            extra_top_ks=extra,
+            no_answer=args.no_answer,
+            stack="openai",
+            sweep=args.sweep,
+            reuse_from=args.reuse_from,
+            results_dir={"v3": RESULTS_V3, "v3posthoc": RESULTS_V3_POSTHOC}.get(args.study),
+        )
+    print(table([result]))
+    totals = ledger_totals(ledger)
+    print(
+        "real spend this run: "
+        + ", ".join(f"{p} ${v:.4f}" for p, v in run_budget.spent.items())
+        + "; phase 3 so far: "
+        + ", ".join(f"{p} ${v:.4f}" for p, v in totals.items())
+        + f"; cache hits {result['cache']['hits']}, misses {result['cache']['misses']}"
+    )
+    return result
+
+
 async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--arm", choices=list(ARMS))
@@ -1146,11 +2036,33 @@ async def main() -> None:
     parser.add_argument("--top-k", type=int, default=None, help="answer from only the top k memories")
     parser.add_argument("--no-dates", action="store_true", help="answer from memory text only")
     parser.add_argument("--no-answer", action="store_true", help="retrieval only: record memories, skip answer/judge")
+    parser.add_argument(
+        "--sweep",
+        type=lambda v: list(range(int(v.split("-")[0]), int(v.split("-")[1]) + 1)),
+        help="with --stack openai: retrieval-only token counts per question at each k in this range, e.g. 3-10",
+    )
+    parser.add_argument(
+        "--study", choices=["v2", "v3", "v3posthoc"], default="v2", help="with --stack openai: results dir and ledger"
+    )
+    parser.add_argument(
+        "--reuse-from", help="with --stack openai: answer from the store this arm's run with that suffix built (__k20)"
+    )
     parser.add_argument("--suffix", default="", help="with --report: result-file suffix, e.g. __k3 or __nodates")
+    parser.add_argument("--stack", choices=list(STACKS), default="anthropic", help="model stack (default: v1's)")
+    parser.add_argument("--stage", help="with --stack openai: the V2_PLAN stage this run belongs to, for the ledger")
+    parser.add_argument(
+        "--max-jev", type=float, help="with --stack openai: stop this run once its Jev spend passes this"
+    )
     args = parser.parse_args()
     if args.report is not None:
         sl = args.slice.replace(":", "_")
-        print(table([json.loads((RESULTS / f"{a}__{sl}{args.suffix}.json").read_text()) for a in args.report]))
+        base = RESULTS_V2 if args.stack == "openai" else RESULTS
+        print(table([json.loads((base / f"{a}__{sl}{args.suffix}.json").read_text()) for a in args.report]))
+        return
+    if args.stack == "openai":
+        if not args.stage:
+            parser.error("--stack openai needs --stage (the V2_PLAN stage, recorded in the spend ledger)")
+        await run_v2(args, [int(k) for k in args.also_top_k.split(",") if k])
         return
     budget = Budget(run_limit=RUN_LIMIT, total_limit=PHASE_LIMIT, prior_total=prior_spend())
     started = time.time()

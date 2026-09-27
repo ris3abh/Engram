@@ -1,0 +1,902 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "adv:conv-50",
+  "sessions": [
+   1,
+   30
+  ],
+  "messages": 568,
+  "questions": 46
+ },
+ "accuracy": 0.5652173913043478,
+ "accuracy_by_category": {
+  "5": 0.5652173913043478
+ },
+ "stored": 568,
+ "active": 568,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 489.4347826086956,
+ "retrieved_tokens_median": 475.0,
+ "memories_mean": 11.043478260869565,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.009332358,
+  "claude": 0.0,
+  "openai": 0.004600199999999999
+ },
+ "cache": {
+  "hits": 91,
+  "misses": 1473
+ },
+ "answers": [
+  {
+   "idx": 158,
+   "question": "Which DJ was Dave's favorite at the music festival in April 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D2:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No specific DJ mentioned.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034609800000000003,
+   "retrieved_tokens": 409,
+   "retrieve_ms": 2016.5190839907154,
+   "retrieve_cost": 0.00020659800000000003
+  },
+  {
+   "idx": 159,
+   "question": "What advice did Calvin receive from the chef at the music festival?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D3:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information about chef's advice.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033924,
+   "retrieved_tokens": 403,
+   "retrieve_ms": 1904.8698749975301,
+   "retrieve_cost": 0.00020034000000000002
+  },
+  {
+   "idx": 160,
+   "question": "What is Calvin's new business venture as of 1 May, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D4:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Transforming a Japanese mansion.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00036658800000000005,
+   "retrieved_tokens": 569,
+   "retrieve_ms": 1736.2219999777153,
+   "retrieve_cost": 0.00020218800000000004
+  },
+  {
+   "idx": 161,
+   "question": "What type of cars does Calvin work on at his shop?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D4:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not specify the type of cars Calvin works on.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000370542,
+   "retrieved_tokens": 525,
+   "retrieve_ms": 668.4068339527585,
+   "retrieve_cost": 0.00021004200000000002
+  },
+  {
+   "idx": 162,
+   "question": "What did Dave receive as a gift from another artist?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D4:26"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information about a gift for Dave.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000360822,
+   "retrieved_tokens": 541,
+   "retrieve_ms": 1322.0253339968622,
+   "retrieve_cost": 0.00020122200000000003
+  },
+  {
+   "idx": 163,
+   "question": "What was the necklace Dave received meant to remind him of?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D4:26"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Hard work and dedication.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00036484200000000004,
+   "retrieved_tokens": 582,
+   "retrieve_ms": 1369.7164590121247,
+   "retrieve_cost": 0.00020059200000000003
+  },
+  {
+   "idx": 164,
+   "question": "What did Calvin open in May 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No specific event mentioned.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033507000000000003,
+   "retrieved_tokens": 392,
+   "retrieve_ms": 1327.0209170295857,
+   "retrieve_cost": 0.00019992000000000002
+  },
+  {
+   "idx": 165,
+   "question": "What gives Calvin a sense of achievement and purpose?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D7:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Creating music and fixing cars.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00041145000000000005,
+   "retrieved_tokens": 886,
+   "retrieve_ms": 977.7780830045231,
+   "retrieve_cost": 0.00020160000000000002
+  },
+  {
+   "idx": 166,
+   "question": "What sports activity is Dave planning to try after the tour with Frank Ocean?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D9:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Skiing",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00038523,
+   "retrieved_tokens": 653,
+   "retrieve_ms": 1230.1162920193747,
+   "retrieve_cost": 0.00021063000000000003
+  },
+  {
+   "idx": 167,
+   "question": "How does Calvin describe his process of adding acoustic elements to his songs?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D11:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No mention of acoustic elements.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000354948,
+   "retrieved_tokens": 475,
+   "retrieve_ms": 751.3213329948485,
+   "retrieve_cost": 0.00020554800000000003
+  },
+  {
+   "idx": 168,
+   "question": "What clothing brand does Calvin own that he is proud of?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D12:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not mention a specific clothing brand owned by Calvin.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000337554,
+   "retrieved_tokens": 386,
+   "retrieve_ms": 1177.181249950081,
+   "retrieve_cost": 0.00019790400000000002
+  },
+  {
+   "idx": 169,
+   "question": "What workshop did Calvin get picked for on 11 August, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin was not picked for a workshop.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000335322,
+   "retrieved_tokens": 392,
+   "retrieve_ms": 626.7479999805801,
+   "retrieve_cost": 0.00019597200000000001
+  },
+  {
+   "idx": 170,
+   "question": "What kind of modifications has Calvin been working on in the car mod workshop?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not specify modifications Calvin is working on.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000371328,
+   "retrieved_tokens": 544,
+   "retrieve_ms": 817.1570000122301,
+   "retrieve_cost": 0.00020827800000000003
+  },
+  {
+   "idx": 171,
+   "question": "What type of car did Calvin work on during the workshop?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not mention Calvin working on any car during the workshop.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000366714,
+   "retrieved_tokens": 491,
+   "retrieve_ms": 777.781667013187,
+   "retrieve_cost": 0.00021071400000000003
+  },
+  {
+   "idx": 172,
+   "question": "What did Dave and his friends record in August 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D15:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A podcast.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00036258000000000004,
+   "retrieved_tokens": 541,
+   "retrieve_ms": 632.3666250100359,
+   "retrieve_cost": 0.00020538000000000002
+  },
+  {
+   "idx": 173,
+   "question": "Where did Dave start shooting a video for his new album?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Not specified in memories.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033078000000000003,
+   "retrieved_tokens": 351,
+   "retrieve_ms": 647.4462909973226,
+   "retrieve_cost": 0.00020118000000000002
+  },
+  {
+   "idx": 174,
+   "question": "What design is featured on Dave's guitar?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D16:14"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The logo for his rock band.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.000323652,
+   "retrieved_tokens": 381,
+   "retrieve_ms": 667.59812500095,
+   "retrieve_cost": 0.00018925200000000002
+  },
+  {
+   "idx": 175,
+   "question": "Why did Dave get his guitar customized with a shiny finish?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D16:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "It gives it a unique look.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.000334074,
+   "retrieved_tokens": 433,
+   "retrieve_ms": 714.7289999993518,
+   "retrieve_cost": 0.00019097400000000003
+  },
+  {
+   "idx": 176,
+   "question": "What color glow did Dave customize his guitar with?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D16:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Purple glow.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031081200000000005,
+   "retrieved_tokens": 308,
+   "retrieve_ms": 1009.8255419870839,
+   "retrieve_cost": 0.00018946200000000002
+  },
+  {
+   "idx": 177,
+   "question": "Where did Calvin come back from with insights on car modification on 1st September 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin did not come back from anywhere; it was Dave who returned from San Francisco.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00037353000000000006,
+   "retrieved_tokens": 512,
+   "retrieve_ms": 790.5325000174344,
+   "retrieve_cost": 0.00020958000000000004
+  },
+  {
+   "idx": 178,
+   "question": "What emotion does Calvin mention feeling when he sees the relief of someone whose car he fixed?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D17:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin mentions feeling proud.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00035866800000000003,
+   "retrieved_tokens": 475,
+   "retrieve_ms": 1267.125791986473,
+   "retrieve_cost": 0.00020806800000000003
+  },
+  {
+   "idx": 179,
+   "question": "What did Dave book a flight ticket for on 1st September 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D17:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Dave booked a trip to a mountainous region.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034083000000000003,
+   "retrieved_tokens": 413,
+   "retrieve_ms": 1060.0505829788744,
+   "retrieve_cost": 0.00019803000000000003
+  },
+  {
+   "idx": 180,
+   "question": "Which horror movie did Dave mention as one of his favorites?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No horror movie mentioned.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031356600000000004,
+   "retrieved_tokens": 325,
+   "retrieve_ms": 1004.3738330132328,
+   "retrieve_cost": 0.00018786600000000002
+  },
+  {
+   "idx": 181,
+   "question": "Which song from the childhood of Dave brings back memories of a road trip with his dad?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D20:6",
+    "D20:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No specific song mentioned.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000372336,
+   "retrieved_tokens": 548,
+   "retrieve_ms": 1125.9663329692557,
+   "retrieve_cost": 0.00021138600000000004
+  },
+  {
+   "idx": 182,
+   "question": "What car did Calvin work on in the junkyard?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D21:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin did not work on a car.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035415,
+   "retrieved_tokens": 441,
+   "retrieve_ms": 1011.3309999578632,
+   "retrieve_cost": 0.00020895000000000004
+  },
+  {
+   "idx": 183,
+   "question": "What does Dave find satisfying about destroying old cars?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D21:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not mention Dave finding satisfaction in destroying old cars.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00038710800000000005,
+   "retrieved_tokens": 612,
+   "retrieve_ms": 768.5797919984907,
+   "retrieve_cost": 0.00021415800000000002
+  },
+  {
+   "idx": 184,
+   "question": "What does working on boats represent for Dave?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not mention boats.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.000400938,
+   "retrieved_tokens": 740,
+   "retrieve_ms": 881.6894170013256,
+   "retrieve_cost": 0.00021268800000000002
+  },
+  {
+   "idx": 185,
+   "question": "What does Dave aim to do with his passion for cooking?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not mention cooking.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.000374742,
+   "retrieved_tokens": 605,
+   "retrieve_ms": 908.5070000146516,
+   "retrieve_cost": 0.00020584200000000003
+  },
+  {
+   "idx": 186,
+   "question": "What did Calvin recently get that is a \"masterpiece on canvas\"?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:16"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Custom artwork from a Japanese artist.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.000339048,
+   "retrieved_tokens": 428,
+   "retrieve_ms": 836.0765830148011,
+   "retrieve_cost": 0.00019609800000000002
+  },
+  {
+   "idx": 187,
+   "question": "Who headlined the music festival that Calvin attended in October?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The Fireworks.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00035367000000000005,
+   "retrieved_tokens": 467,
+   "retrieve_ms": 1274.819708953146,
+   "retrieve_cost": 0.00020727000000000004
+  },
+  {
+   "idx": 188,
+   "question": "Which part of Tokyo is described as Tokyo's Times Square by Dave?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Shibuya Crossing",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000350238,
+   "retrieved_tokens": 488,
+   "retrieve_ms": 1210.036750009749,
+   "retrieve_cost": 0.000200088
+  },
+  {
+   "idx": 189,
+   "question": "What specific location in Tokyo does Calvin mention being excited to avoid?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin does not mention avoiding any location.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034926600000000004,
+   "retrieved_tokens": 454,
+   "retrieve_ms": 1286.158082948532,
+   "retrieve_cost": 0.00020151600000000003
+  },
+  {
+   "idx": 190,
+   "question": "When did Calvin sell the car he restored last year?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D25:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "In 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000342006,
+   "retrieved_tokens": 392,
+   "retrieve_ms": 1413.8449580059387,
+   "retrieve_cost": 0.00020655600000000002
+  },
+  {
+   "idx": 191,
+   "question": "When did Calvin first get interested in motorcycles?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D26:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information available.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035563200000000004,
+   "retrieved_tokens": 490,
+   "retrieve_ms": 1294.446291984059,
+   "retrieve_cost": 0.00020668200000000002
+  },
+  {
+   "idx": 192,
+   "question": "What realization did the nightclub experience bring to Dave?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D26:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Connection between artist and crowd.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000345846,
+   "retrieved_tokens": 438,
+   "retrieve_ms": 1343.891165975947,
+   "retrieve_cost": 0.00020319600000000002
+  },
+  {
+   "idx": 193,
+   "question": "What did Dave do recently at his Japanese house?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Dave threw a small party.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00034617000000000003,
+   "retrieved_tokens": 469,
+   "retrieve_ms": 1310.0608339882456,
+   "retrieve_cost": 0.00019887000000000003
+  },
+  {
+   "idx": 194,
+   "question": "What did Calvin recently start a blog about?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D28:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin did not start a blog; Dave did.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003531,
+   "retrieved_tokens": 479,
+   "retrieve_ms": 1191.7995839612558,
+   "retrieve_cost": 0.00020160000000000002
+  },
+  {
+   "idx": 195,
+   "question": "What type of videos does Dave usually watch on his television?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D28:31"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not specify what type of videos Dave usually watches on his television.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000328794,
+   "retrieved_tokens": 331,
+   "retrieve_ms": 1620.6560000427999,
+   "retrieve_cost": 0.00019559400000000003
+  },
+  {
+   "idx": 196,
+   "question": "What type of art has Dave been getting into lately?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D28:40"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Photography",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.00037164,
+   "retrieved_tokens": 612,
+   "retrieve_ms": 1504.2422499973327,
+   "retrieve_cost": 0.00020559000000000002
+  },
+  {
+   "idx": 197,
+   "question": "What type of content does Dave post on his blog that inspired others to start their own cooking projects?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D28:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Dave posts about car mods.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000362346,
+   "retrieved_tokens": 493,
+   "retrieve_ms": 1518.1003750185482,
+   "retrieve_cost": 0.00020844600000000002
+  },
+  {
+   "idx": 198,
+   "question": "What kind of impact does Dave's blog on vegan recipes have on people?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D28:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No mention of vegan recipes.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034867200000000007,
+   "retrieved_tokens": 467,
+   "retrieve_ms": 1379.5456249499694,
+   "retrieve_cost": 0.00020017200000000003
+  },
+  {
+   "idx": 199,
+   "question": "Who did Dave invite to see him perform in Boston on 13 November, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin's old high school buddy.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00037465200000000006,
+   "retrieved_tokens": 557,
+   "retrieve_ms": 1638.3231250219978,
+   "retrieve_cost": 0.00021025200000000002
+  },
+  {
+   "idx": 200,
+   "question": "What new item did Calvin buy recently?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D30:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A new car.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00033324600000000004,
+   "retrieved_tokens": 408,
+   "retrieve_ms": 1313.336041988805,
+   "retrieve_cost": 0.00019689600000000003
+  },
+  {
+   "idx": 201,
+   "question": "What type of photos does Calvin like to capture with his new camera?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D30:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin likes to capture nature photos.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.00036366,
+   "retrieved_tokens": 592,
+   "retrieve_ms": 1525.136541982647,
+   "retrieve_cost": 0.00019551000000000003
+  },
+  {
+   "idx": 202,
+   "question": "What did Dave discuss with the cool artist he met at the gala?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D30:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not indicate that Dave met a cool artist at the gala.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.000393558,
+   "retrieved_tokens": 646,
+   "retrieve_ms": 1414.4392920425162,
+   "retrieve_cost": 0.00021310800000000002
+  },
+  {
+   "idx": 203,
+   "question": "Where did Calvin take a stunning photo of a waterfall?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D30:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not mention a waterfall.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033450000000000005,
+   "retrieved_tokens": 370,
+   "retrieve_ms": 1585.2972499560565,
+   "retrieve_cost": 0.00020055000000000002
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "reused_store": "heldout_conv-50__k3",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 2522.1073954890016,
+ "retrieve_cost_per_query": 0.00020287734782608696,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

@@ -1,0 +1,2869 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "heldout:conv-50",
+  "sessions": [
+   1,
+   30
+  ],
+  "messages": 568,
+  "questions": 158
+ },
+ "accuracy": 0.7658227848101266,
+ "accuracy_by_category": {
+  "1": 0.6875,
+  "2": 0.8125,
+  "3": 0.5714285714285714,
+  "4": 0.7931034482758621
+ },
+ "stored": 568,
+ "active": 568,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 584.5822784810126,
+ "retrieved_tokens_median": 526.0,
+ "memories_mean": 12.341772151898734,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.032445210000000016,
+  "claude": 0.0,
+  "openai": 0.01887404999999999
+ },
+ "cache": {
+  "hits": 281,
+  "misses": 5091
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "When did Calvin first travel to Tokyo?",
+   "gold": "between 26 March and 20 April 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin first traveled to Tokyo on April 20, 2023.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035977800000000005,
+   "retrieved_tokens": 479,
+   "retrieve_ms": 7160.925415984821,
+   "retrieve_cost": 0.00020617800000000003
+  },
+  {
+   "idx": 1,
+   "question": "What items did Calvin buy in March 2023?",
+   "gold": "mansion in Japan, luxury car Ferrari 488 GTB",
+   "category": 1,
+   "evidence": [
+    "D1:3",
+    "D2:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A new car and a mansion.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000355788,
+   "retrieved_tokens": 477,
+   "retrieve_ms": 5821.795709023718,
+   "retrieve_cost": 0.00020638800000000003
+  },
+  {
+   "idx": 2,
+   "question": "When did Dave see Aerosmith perform live?",
+   "gold": "on the weekend before March 26, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "March 26, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034528200000000003,
+   "retrieved_tokens": 412,
+   "retrieve_ms": 5869.0395840094425,
+   "retrieve_cost": 0.00020563200000000003
+  },
+  {
+   "idx": 3,
+   "question": "Which bands has Dave enjoyed listening to?",
+   "gold": "Aerosmith, The Fireworks",
+   "category": 1,
+   "evidence": [
+    "D2:10",
+    "D23:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Aerosmith and classic rock bands.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033663000000000003,
+   "retrieved_tokens": 386,
+   "retrieve_ms": 6050.945708004292,
+   "retrieve_cost": 0.00020118000000000002
+  },
+  {
+   "idx": 4,
+   "question": "Which country do Calvin and Dave want to meet in?",
+   "gold": "United States",
+   "category": 3,
+   "evidence": [
+    "D3:9",
+    "D3:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Japan",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00033795000000000006,
+   "retrieved_tokens": 463,
+   "retrieve_ms": 5758.3609580178745,
+   "retrieve_cost": 0.00019425000000000003
+  },
+  {
+   "idx": 5,
+   "question": "What are Dave's dreams?",
+   "gold": "open a car maintenance shop, work on classic cars, build a custom car from scratch",
+   "category": 1,
+   "evidence": [
+    "D4:5",
+    "D4:5",
+    "D5:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Open a shop, work on classic cars.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.000371682,
+   "retrieved_tokens": 646,
+   "retrieve_ms": 5881.581040972378,
+   "retrieve_cost": 0.00019723200000000004
+  },
+  {
+   "idx": 6,
+   "question": "Which types of cars does Dave like the most?",
+   "gold": "classic vintage cars",
+   "category": 1,
+   "evidence": [
+    "D4:5",
+    "D1:2",
+    "D3:12",
+    "D4:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Classic cars.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00039697800000000003,
+   "retrieved_tokens": 722,
+   "retrieve_ms": 6089.214334031567,
+   "retrieve_cost": 0.00021352800000000002
+  },
+  {
+   "idx": 7,
+   "question": "Does Dave's shop employ a lot of people?",
+   "gold": "Yes",
+   "category": 3,
+   "evidence": [
+    "D4:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No, there's no mention of employees.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034497,
+   "retrieved_tokens": 432,
+   "retrieve_ms": 5980.639374989551,
+   "retrieve_cost": 0.00020202000000000002
+  },
+  {
+   "idx": 8,
+   "question": "When did Dave start his car maintenance shop?",
+   "gold": "May 1, 2023",
+   "category": 2,
+   "evidence": [
+    "D4:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "May 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000368304,
+   "retrieved_tokens": 535,
+   "retrieve_ms": 6030.994792003185,
+   "retrieve_cost": 0.00021260400000000003
+  },
+  {
+   "idx": 9,
+   "question": "When did a mishap occur with Calvin's musical gear and favorite mic?",
+   "gold": "On a week before 16 May, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Last week from May 16, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000358878,
+   "retrieved_tokens": 468,
+   "retrieve_ms": 5905.059209035244,
+   "retrieve_cost": 0.00020722800000000003
+  },
+  {
+   "idx": 10,
+   "question": "When did Calvin's place get flooded in Tokyo?",
+   "gold": "On a week before 16 May, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Last week, May 9-15, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000361194,
+   "retrieved_tokens": 493,
+   "retrieve_ms": 5929.350207967218,
+   "retrieve_cost": 0.00020609400000000004
+  },
+  {
+   "idx": 11,
+   "question": "What mishaps has Calvin run into?",
+   "gold": "flooding of his mansion, car accident",
+   "category": 1,
+   "evidence": [
+    "D6:1",
+    "D9:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Flooded place and car accident.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034863600000000004,
+   "retrieved_tokens": 465,
+   "retrieve_ms": 5858.782749972306,
+   "retrieve_cost": 0.00020193600000000003
+  },
+  {
+   "idx": 12,
+   "question": "When was Calvin's concert in Tokyo?",
+   "gold": "last week of May 2023",
+   "category": 2,
+   "evidence": [
+    "D6:11",
+    "D7:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Last week of May 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035253600000000003,
+   "retrieved_tokens": 459,
+   "retrieve_ms": 6061.22937501641,
+   "retrieve_cost": 0.00020613600000000002
+  },
+  {
+   "idx": 13,
+   "question": "Would Calvin enjoy performing at the Hollywood Bowl?",
+   "gold": "Yes; because he enjoys the rush of performing onstage to large crowds",
+   "category": 3,
+   "evidence": [
+    "D7:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, he loves performing live.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.000402582,
+   "retrieved_tokens": 798,
+   "retrieve_ms": 6166.200875013601,
+   "retrieve_cost": 0.00020563200000000003
+  },
+  {
+   "idx": 14,
+   "question": "When did Calvin meet with the creative team for his new album?",
+   "gold": "8 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "June 8, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000354054,
+   "retrieved_tokens": 420,
+   "retrieve_ms": 6189.24637499731,
+   "retrieve_cost": 0.00021260400000000003
+  },
+  {
+   "idx": 15,
+   "question": "Why does Dave regularly visit parks?",
+   "gold": "because it relaxes and calms him",
+   "category": 1,
+   "evidence": [
+    "D8:4",
+    "D1:16"
+   ],
+   "last_evidence_session": 30,
+   "answer": "To relax and recharge.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.000381408,
+   "retrieved_tokens": 647,
+   "retrieve_ms": 6072.238833003212,
+   "retrieve_cost": 0.00020890800000000003
+  },
+  {
+   "idx": 16,
+   "question": "When did Dave take a trip to mountainous regions?",
+   "gold": "July 2023",
+   "category": 2,
+   "evidence": [
+    "D8:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "July 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000345012,
+   "retrieved_tokens": 483,
+   "retrieve_ms": 6219.696167041548,
+   "retrieve_cost": 0.000196812
+  },
+  {
+   "idx": 17,
+   "question": "When did Calvin have a car incident?",
+   "gold": "on the Friday before 21 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D9:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "June 16, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034770000000000005,
+   "retrieved_tokens": 415,
+   "retrieve_ms": 6174.123666016385,
+   "retrieve_cost": 0.00020790000000000004
+  },
+  {
+   "idx": 18,
+   "question": "How many times has Calvin had to deal with insurance paperwork?",
+   "gold": "two times",
+   "category": 1,
+   "evidence": [
+    "D6:5",
+    "D9:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Once.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00033973200000000003,
+   "retrieved_tokens": 442,
+   "retrieve_ms": 6230.81383400131,
+   "retrieve_cost": 0.00019828200000000004
+  },
+  {
+   "idx": 19,
+   "question": "Which places or events has Calvin visited in Tokyo?",
+   "gold": "music festival, car museum, Shibuya crossing, Shinjuku",
+   "category": 1,
+   "evidence": [
+    "D3:1",
+    "D12:7",
+    "D24:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Shibuya Crossing, concert, festival.",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.00040445400000000005,
+   "retrieved_tokens": 810,
+   "retrieve_ms": 6349.359999992885,
+   "retrieve_cost": 0.00020420400000000004
+  },
+  {
+   "idx": 20,
+   "question": "Who inspired Dave's passion for car engineering?",
+   "gold": "His Dad",
+   "category": 1,
+   "evidence": [
+    "D12:2",
+    "D12:4",
+    "D26:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "His dad.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00041778600000000007,
+   "retrieved_tokens": 849,
+   "retrieve_ms": 6242.203165951651,
+   "retrieve_cost": 0.00021558600000000003
+  },
+  {
+   "idx": 21,
+   "question": "Does Calvin wish to become more popular?",
+   "gold": "Yes; he want's to grow his fanbase",
+   "category": 3,
+   "evidence": [
+    "D12:11",
+    "D27:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, he wants to expand his fanbase.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000347112,
+   "retrieved_tokens": 491,
+   "retrieve_ms": 6355.649667035323,
+   "retrieve_cost": 0.00019471200000000002
+  },
+  {
+   "idx": 22,
+   "question": "Does Calvin want to expand his brand?",
+   "gold": "yes",
+   "category": 1,
+   "evidence": [
+    "D12:11",
+    "D18:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, he does.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00034531800000000006,
+   "retrieved_tokens": 501,
+   "retrieve_ms": 6230.205790954642,
+   "retrieve_cost": 0.00019441800000000002
+  },
+  {
+   "idx": 23,
+   "question": "What is Dave's main passion?",
+   "gold": "auto engineering",
+   "category": 1,
+   "evidence": [
+    "D13:3",
+    "D5:5",
+    "D4:5",
+    "D3:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Fixing and restoring cars.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00045273000000000004,
+   "retrieved_tokens": 1114,
+   "retrieve_ms": 6359.180625004228,
+   "retrieve_cost": 0.00020958000000000004
+  },
+  {
+   "idx": 24,
+   "question": "Can Dave work with engines?",
+   "gold": "yes",
+   "category": 1,
+   "evidence": [
+    "D13:7",
+    "D22:5",
+    "D20:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, he can.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00046918800000000005,
+   "retrieved_tokens": 1181,
+   "retrieve_ms": 6418.4151670197025,
+   "retrieve_cost": 0.00021688800000000004
+  },
+  {
+   "idx": 25,
+   "question": "When did Dave host a card-playing night with his friends?",
+   "gold": "on the Friday before 22 August, 2023",
+   "category": 2,
+   "evidence": [
+    "D15:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "August 18, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035936400000000004,
+   "retrieved_tokens": 529,
+   "retrieve_ms": 6550.703415996395,
+   "retrieve_cost": 0.00020126400000000002
+  },
+  {
+   "idx": 26,
+   "question": "When did Calvin record a podcast with his friends?",
+   "gold": "21 August, 2023",
+   "category": 2,
+   "evidence": [
+    "D15:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "August 21, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034945800000000003,
+   "retrieved_tokens": 423,
+   "retrieve_ms": 6428.657667012885,
+   "retrieve_cost": 0.00020785800000000003
+  },
+  {
+   "idx": 27,
+   "question": "Which city was Calvin visiting in August 2023?",
+   "gold": "Miami",
+   "category": 2,
+   "evidence": [
+    "D16:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin was in Boston.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00035398800000000007,
+   "retrieved_tokens": 490,
+   "retrieve_ms": 6501.488749985583,
+   "retrieve_cost": 0.00020323800000000004
+  },
+  {
+   "idx": 28,
+   "question": "What does Calvin do to relax?",
+   "gold": "take long drives in his car, embrace nature, fixing cars",
+   "category": 1,
+   "evidence": [
+    "D5:8",
+    "D5:10",
+    "D7:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Fixing cars and embracing nature.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00038902800000000003,
+   "retrieved_tokens": 694,
+   "retrieve_ms": 6456.816416990478,
+   "retrieve_cost": 0.00020827800000000003
+  },
+  {
+   "idx": 29,
+   "question": "What are Dave's hobbies other than fixing cars?",
+   "gold": "take a walk, go hiking, listen to favorite albums, live concerts, photography",
+   "category": 1,
+   "evidence": [
+    "D5:9",
+    "D5:11",
+    "D8:8",
+    "D27:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Photography and blogging.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.000396936,
+   "retrieved_tokens": 704,
+   "retrieve_ms": 6548.928250034805,
+   "retrieve_cost": 0.00021558600000000003
+  },
+  {
+   "idx": 30,
+   "question": "What kind of music does Dave listen to?",
+   "gold": "classic rock, Japanese music",
+   "category": 1,
+   "evidence": [
+    "D2:10",
+    "D28:40",
+    "D10:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Classic rock.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00034725,
+   "retrieved_tokens": 500,
+   "retrieve_ms": 6583.27233302407,
+   "retrieve_cost": 0.00019740000000000003
+  },
+  {
+   "idx": 31,
+   "question": "Where was Dave in the last two weeks of August 2023?",
+   "gold": "San Francisco",
+   "category": 2,
+   "evidence": [
+    "D14:1",
+    "D17:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No specific location mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032643,
+   "retrieved_tokens": 339,
+   "retrieve_ms": 6642.765458964277,
+   "retrieve_cost": 0.00019803000000000003
+  },
+  {
+   "idx": 32,
+   "question": "Where did Dave return from with new knowledge of different techniques of car restoration?",
+   "gold": "San Francisco",
+   "category": 1,
+   "evidence": [
+    "D17:1",
+    "D14:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "San Francisco",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037750800000000003,
+   "retrieved_tokens": 575,
+   "retrieve_ms": 6593.78720796667,
+   "retrieve_cost": 0.00021520800000000002
+  },
+  {
+   "idx": 33,
+   "question": "What was Dave doing in San Francisco?",
+   "gold": "attending a car modification workshop",
+   "category": 1,
+   "evidence": [
+    "D17:1",
+    "D14:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Car workshop and restoration.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000365442,
+   "retrieved_tokens": 531,
+   "retrieve_ms": 6650.949458009563,
+   "retrieve_cost": 0.00021004200000000002
+  },
+  {
+   "idx": 34,
+   "question": "When did Dave return from San Francisco?",
+   "gold": "September 1, 2023",
+   "category": 2,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "September 1, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033438600000000005,
+   "retrieved_tokens": 380,
+   "retrieve_ms": 6671.469082997646,
+   "retrieve_cost": 0.00019983600000000003
+  },
+  {
+   "idx": 35,
+   "question": "When did Calvin book flight tickets to Boston?",
+   "gold": "last week of August 2023",
+   "category": 2,
+   "evidence": [
+    "D17:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Last week, on August 26, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000347958,
+   "retrieved_tokens": 441,
+   "retrieve_ms": 6692.081041983329,
+   "retrieve_cost": 0.00020155800000000004
+  },
+  {
+   "idx": 36,
+   "question": "When was Calvin's album released?",
+   "gold": "September 11, 2023",
+   "category": 2,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "September 11, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000351258,
+   "retrieved_tokens": 476,
+   "retrieve_ms": 6709.553624968976,
+   "retrieve_cost": 0.00020260800000000004
+  },
+  {
+   "idx": 37,
+   "question": "Does Calvin love music tours?",
+   "gold": "yes",
+   "category": 3,
+   "evidence": [
+    "D18:7",
+    "D16:2",
+    "D7:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, he loves music tours.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00039329999999999996,
+   "retrieved_tokens": 741,
+   "retrieve_ms": 6781.877500005066,
+   "retrieve_cost": 0.00020580000000000002
+  },
+  {
+   "idx": 38,
+   "question": "When did Dave have a great jam session with his band?",
+   "gold": "September 14, 2023",
+   "category": 2,
+   "evidence": [
+    "D19:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "September 14, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000349698,
+   "retrieved_tokens": 454,
+   "retrieve_ms": 6805.331000010483,
+   "retrieve_cost": 0.00020344800000000003
+  },
+  {
+   "idx": 39,
+   "question": "Would Dave prefer working on a Dodge Charger or a Subaru Forester?",
+   "gold": "Dodge Charger",
+   "category": 3,
+   "evidence": [],
+   "last_evidence_session": 30,
+   "answer": "Dodge Charger.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000377532,
+   "retrieved_tokens": 591,
+   "retrieve_ms": 6833.997959038243,
+   "retrieve_cost": 0.00021193200000000002
+  },
+  {
+   "idx": 40,
+   "question": "What was the artists Calvin used to listen to when he was a kid?",
+   "gold": "Tupac and Dr. Dre",
+   "category": 1,
+   "evidence": [
+    "D20:8",
+    "D20:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Tupac and Dr. Dre.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000330708,
+   "retrieved_tokens": 344,
+   "retrieve_ms": 6859.499957994558,
+   "retrieve_cost": 0.00019945800000000001
+  },
+  {
+   "idx": 41,
+   "question": "Which of their family member do Calvin and Dave have nostalgic memories about?",
+   "gold": "Dad",
+   "category": 1,
+   "evidence": [
+    "D12:2",
+    "D20:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Their dads.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035707200000000005,
+   "retrieved_tokens": 558,
+   "retrieve_ms": 6889.789208013099,
+   "retrieve_cost": 0.00019702200000000004
+  },
+  {
+   "idx": 42,
+   "question": "Based on the conversation, did Calvin and Dave have a meeting in Boston between August and November 2023? Answer in yes or no.",
+   "gold": "No",
+   "category": 3,
+   "evidence": [],
+   "last_evidence_session": 30,
+   "answer": "Yes.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.000350376,
+   "retrieved_tokens": 444,
+   "retrieve_ms": 6916.300040960778,
+   "retrieve_cost": 0.00020382600000000002
+  },
+  {
+   "idx": 43,
+   "question": "Which city was Calvin at on October 3, 2023?",
+   "gold": "Boston",
+   "category": 2,
+   "evidence": [
+    "D21:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin was in Tokyo.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032844000000000005,
+   "retrieved_tokens": 361,
+   "retrieve_ms": 6936.477291979827,
+   "retrieve_cost": 0.00019614000000000003
+  },
+  {
+   "idx": 44,
+   "question": "When did Calvin met with local artists in Boston?",
+   "gold": "October 3, 2023",
+   "category": 2,
+   "evidence": [
+    "D21:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "October 3, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000360402,
+   "retrieved_tokens": 459,
+   "retrieve_ms": 6962.06600003643,
+   "retrieve_cost": 0.00021340200000000004
+  },
+  {
+   "idx": 45,
+   "question": "What shared activities do Dave and Calvin have?",
+   "gold": "Working on cars",
+   "category": 1,
+   "evidence": [
+    "D21:3",
+    "D21:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Music jam sessions and collaborations.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.000347622,
+   "retrieved_tokens": 493,
+   "retrieve_ms": 6991.064000001643,
+   "retrieve_cost": 0.00019702200000000004
+  },
+  {
+   "idx": 46,
+   "question": "What is Dave's favorite activity?",
+   "gold": "Restoring cars",
+   "category": 1,
+   "evidence": [
+    "D21:4",
+    "D22:7",
+    "D19:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Working on cars.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00043737,
+   "retrieved_tokens": 1035,
+   "retrieve_ms": 7031.304250005633,
+   "retrieve_cost": 0.00020727000000000004
+  },
+  {
+   "idx": 47,
+   "question": "How many car shows has Dave attended?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D3:12",
+    "D22:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Three car shows.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000386712,
+   "retrieved_tokens": 632,
+   "retrieve_ms": 7055.62529200688,
+   "retrieve_cost": 0.00021676200000000004
+  },
+  {
+   "idx": 48,
+   "question": "What was Dave doing in the first weekend of October 2023?",
+   "gold": "attending a car show",
+   "category": 2,
+   "evidence": [
+    "D22:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No specific activity mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034764,
+   "retrieved_tokens": 458,
+   "retrieve_ms": 7127.008832991123,
+   "retrieve_cost": 0.00020139000000000002
+  },
+  {
+   "idx": 49,
+   "question": "When Dave was a child, what did he and his father do in the garage?",
+   "gold": "tinkering with car engines, restoration and refurbishing cars",
+   "category": 1,
+   "evidence": [
+    "D12:2",
+    "D12:4",
+    "D22:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Worked on cars together.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000393672,
+   "retrieved_tokens": 641,
+   "retrieve_ms": 7170.074708003085,
+   "retrieve_cost": 0.00021907200000000003
+  },
+  {
+   "idx": 50,
+   "question": "When did Calvin buy his second Ferrari?",
+   "gold": "first week of October 2023",
+   "category": 2,
+   "evidence": [
+    "D23:16"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Last week, on October 8, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036416400000000005,
+   "retrieved_tokens": 525,
+   "retrieve_ms": 7132.746583025437,
+   "retrieve_cost": 0.00020546400000000004
+  },
+  {
+   "idx": 51,
+   "question": "When did Calvin and Frank Ocean start collaborating?",
+   "gold": "August 2022",
+   "category": 2,
+   "evidence": [
+    "D24:5",
+    "D15:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "August 2022",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037093200000000003,
+   "retrieved_tokens": 571,
+   "retrieve_ms": 7180.369000008795,
+   "retrieve_cost": 0.00020983200000000002
+  },
+  {
+   "idx": 52,
+   "question": "When did Calvin plan on travelling to Tokyo the second time?",
+   "gold": "November 2023",
+   "category": 2,
+   "evidence": [
+    "D24:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "November 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000347958,
+   "retrieved_tokens": 421,
+   "retrieve_ms": 7202.795457968023,
+   "retrieve_cost": 0.00020785800000000003
+  },
+  {
+   "idx": 53,
+   "question": "Who supports Calvin in tough times?",
+   "gold": "friends and team",
+   "category": 1,
+   "evidence": [
+    "D25:6",
+    "D29:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "His friends and team.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00037858200000000003,
+   "retrieved_tokens": 734,
+   "retrieve_ms": 7241.866416996345,
+   "retrieve_cost": 0.00019303200000000002
+  },
+  {
+   "idx": 54,
+   "question": "What does help Calvin stay connected to the creative process?",
+   "gold": "Calvin stays connected to the creative process by always staying up-to-date on world events and watching documentaries about artists.",
+   "category": 1,
+   "evidence": [
+    "D25:8",
+    "D28:31"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A notebook helps Calvin stay connected.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00042394800000000005,
+   "retrieved_tokens": 930,
+   "retrieve_ms": 7286.232125014067,
+   "retrieve_cost": 0.00020659800000000003
+  },
+  {
+   "idx": 55,
+   "question": "When did Calvin visit some of the sights in Boston with a former high school friend?",
+   "gold": "October 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D26:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "October 24, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035586000000000005,
+   "retrieved_tokens": 429,
+   "retrieve_ms": 7380.690666032024,
+   "retrieve_cost": 0.00021126000000000003
+  },
+  {
+   "idx": 56,
+   "question": "Which cities did Dave travel to in 2023?",
+   "gold": "San Francsico, Detroit",
+   "category": 1,
+   "evidence": [
+    "D14:1",
+    "D26:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Boston and Detroit.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00036693,
+   "retrieved_tokens": 570,
+   "retrieve_ms": 7339.3561670091,
+   "retrieve_cost": 0.00020538000000000002
+  },
+  {
+   "idx": 57,
+   "question": "Which hobby did Dave pick up in October 2023?",
+   "gold": "photography",
+   "category": 2,
+   "evidence": [
+    "D27:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Photography",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.000400878,
+   "retrieved_tokens": 766,
+   "retrieve_ms": 7463.783707993571,
+   "retrieve_cost": 0.00021142800000000002
+  },
+  {
+   "idx": 58,
+   "question": "Which events in Dave's life inspired him to take up auto engineering?",
+   "gold": "attending a car show with Dad, working on an old car in a neighbor's garage when he was young, spent a summer restoring an old car with Dad",
+   "category": 1,
+   "evidence": [
+    "D26:6",
+    "D25:12",
+    "D12:2",
+    "D12:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Finding an old car at ten.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.00043559400000000003,
+   "retrieved_tokens": 907,
+   "retrieve_ms": 7283.974124991801,
+   "retrieve_cost": 0.00022079400000000004
+  },
+  {
+   "idx": 59,
+   "question": "How many Ferraris does Calvin own?",
+   "gold": "two",
+   "category": 1,
+   "evidence": [
+    "D2:1",
+    "D23:16"
+   ],
+   "last_evidence_session": 30,
+   "answer": "One Ferrari.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00035187600000000004,
+   "retrieved_tokens": 476,
+   "retrieve_ms": 7404.096457990818,
+   "retrieve_cost": 0.00020592600000000002
+  },
+  {
+   "idx": 60,
+   "question": "What gifts has Calvin received from his artist friends?",
+   "gold": "gold chain, custom-made guitar with an octopus on it",
+   "category": 1,
+   "evidence": [
+    "D4:24",
+    "D4:26",
+    "D16:14"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A guitar and a custom piece.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.000361896,
+   "retrieved_tokens": 527,
+   "retrieve_ms": 7526.955624984112,
+   "retrieve_cost": 0.00020529600000000002
+  },
+  {
+   "idx": 61,
+   "question": "How long did Dave's work on the Ford Mustang take?",
+   "gold": "nearly two months",
+   "category": 2,
+   "evidence": [
+    "D14:11",
+    "D20:1",
+    "D21:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Not specified in the memories.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.000382722,
+   "retrieved_tokens": 616,
+   "retrieve_ms": 7547.339542012196,
+   "retrieve_cost": 0.00021277200000000002
+  },
+  {
+   "idx": 62,
+   "question": "How long was the car modification workshop in San Francisco?",
+   "gold": "two weeks",
+   "category": 2,
+   "evidence": [
+    "D14:1",
+    "D17:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Duration not specified in memories.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00036714600000000005,
+   "retrieved_tokens": 494,
+   "retrieve_ms": 7342.346083023585,
+   "retrieve_cost": 0.00021579600000000003
+  },
+  {
+   "idx": 63,
+   "question": "What style of guitars does Calvin own?",
+   "gold": "custom-made yellow guitar with an octopus on it, shiny purple guitar",
+   "category": 1,
+   "evidence": [
+    "D16:13",
+    "D16:4",
+    "D16:18",
+    "D16:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Unique and customized style.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000317802,
+   "retrieved_tokens": 338,
+   "retrieve_ms": 7431.449666968547,
+   "retrieve_cost": 0.00019135200000000002
+  },
+  {
+   "idx": 64,
+   "question": "What activities has Dave participated in with his friends?",
+   "gold": "weekly visits to local parks, countryside roadtrip, celebration of the opening of his car maintenance shop, card-playing nights",
+   "category": 1,
+   "evidence": [
+    "D10:3",
+    "D11:1",
+    "D6:8",
+    "D15:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Road trip, card night, park walks.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.000388146,
+   "retrieved_tokens": 673,
+   "retrieve_ms": 7458.5141250281595,
+   "retrieve_cost": 0.00020844600000000002
+  },
+  {
+   "idx": 65,
+   "question": "When did Dave take a photo of a Boston clock tower?",
+   "gold": "September 2023",
+   "category": 2,
+   "evidence": [
+    "D27:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "September 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000347784,
+   "retrieved_tokens": 479,
+   "retrieve_ms": 7572.906041983515,
+   "retrieve_cost": 0.00019958400000000002
+  },
+  {
+   "idx": 66,
+   "question": "Do all of Dave's car restoration projects go smoothly?",
+   "gold": "No",
+   "category": 1,
+   "evidence": [
+    "D27:10",
+    "D13:7",
+    "D25:17",
+    "D20:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No, some have challenges.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.000398646,
+   "retrieved_tokens": 739,
+   "retrieve_ms": 7533.944958006032,
+   "retrieve_cost": 0.00021054600000000004
+  },
+  {
+   "idx": 67,
+   "question": "Where was Calvin located in the last week of October 2023?",
+   "gold": "Tokyo",
+   "category": 2,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin was in Tokyo.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032488199999999997,
+   "retrieved_tokens": 351,
+   "retrieve_ms": 7575.747833005153,
+   "retrieve_cost": 0.00019408200000000002
+  },
+  {
+   "idx": 68,
+   "question": "When did Dave find the car he repaired and started sharing in his blog?",
+   "gold": "last week of October 2023",
+   "category": 2,
+   "evidence": [
+    "D28:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Last week, around October 26, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00039594,
+   "retrieved_tokens": 610,
+   "retrieve_ms": 7591.754332999699,
+   "retrieve_cost": 0.00022239000000000002
+  },
+  {
+   "idx": 69,
+   "question": "When did Dave buy a vintage camera?",
+   "gold": "November 2023",
+   "category": 2,
+   "evidence": [
+    "D30:05"
+   ],
+   "last_evidence_session": 30,
+   "answer": "November 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033202800000000005,
+   "retrieved_tokens": 376,
+   "retrieve_ms": 7610.782750009093,
+   "retrieve_cost": 0.000199878
+  },
+  {
+   "idx": 70,
+   "question": "When did Calvin attend a gala in Boston?",
+   "gold": "November 16, 2023",
+   "category": 2,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "November 16, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036442200000000004,
+   "retrieved_tokens": 499,
+   "retrieve_ms": 7644.307584036142,
+   "retrieve_cost": 0.00021172200000000002
+  },
+  {
+   "idx": 71,
+   "question": "How long did Calvin plan to stay in Japan?",
+   "gold": "A few months",
+   "category": 4,
+   "evidence": [
+    "D1:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A few months.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034242600000000006,
+   "retrieved_tokens": 426,
+   "retrieve_ms": 7672.926916042343,
+   "retrieve_cost": 0.00020277600000000003
+  },
+  {
+   "idx": 72,
+   "question": "Which band was Dave's favorite at the music festival in April 2023?",
+   "gold": "Aerosmith",
+   "category": 4,
+   "evidence": [
+    "D2:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Aerosmith",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000348276,
+   "retrieved_tokens": 422,
+   "retrieve_ms": 7693.294083001092,
+   "retrieve_cost": 0.00020802600000000002
+  },
+  {
+   "idx": 73,
+   "question": "Where did Calvin attend a music festival in April 2023?",
+   "gold": "Tokyo",
+   "category": 4,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Tokyo",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00037801200000000005,
+   "retrieved_tokens": 625,
+   "retrieve_ms": 7760.754208022263,
+   "retrieve_cost": 0.00020941200000000002
+  },
+  {
+   "idx": 74,
+   "question": "What advice did Calvin receive from the producer at the music festival?",
+   "gold": "to stay true to himself and sound unique",
+   "category": 4,
+   "evidence": [
+    "D3:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Stay true to myself and sound unique.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033664200000000006,
+   "retrieved_tokens": 394,
+   "retrieve_ms": 7881.994833005592,
+   "retrieve_cost": 0.00019849200000000004
+  },
+  {
+   "idx": 75,
+   "question": "What is Dave's new business venture as of 1 May, 2023?",
+   "gold": "Car maintenance shop",
+   "category": 4,
+   "evidence": [
+    "D4:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Car maintenance shop.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00037188600000000004,
+   "retrieved_tokens": 635,
+   "retrieve_ms": 7700.677208020352,
+   "retrieve_cost": 0.00019878600000000003
+  },
+  {
+   "idx": 76,
+   "question": "What type of cars does Dave work on at his shop?",
+   "gold": "all kinds of cars, from regular maintenance to full restorations of classic cars",
+   "category": 4,
+   "evidence": [
+    "D4:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Classic cars.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00039156,
+   "retrieved_tokens": 676,
+   "retrieve_ms": 7768.664875009563,
+   "retrieve_cost": 0.00021441000000000003
+  },
+  {
+   "idx": 77,
+   "question": "What did Calvin receive as a gift from another artist?",
+   "gold": "a gold necklace with a diamond pendant",
+   "category": 4,
+   "evidence": [
+    "D4:26"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A guitar.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00034714200000000005,
+   "retrieved_tokens": 502,
+   "retrieve_ms": 7823.834499984514,
+   "retrieve_cost": 0.000196392
+  },
+  {
+   "idx": 78,
+   "question": "What was the necklace Calvin received meant to remind him of?",
+   "gold": "why he keeps hustling as a musician",
+   "category": 4,
+   "evidence": [
+    "D4:26"
+   ],
+   "last_evidence_session": 30,
+   "answer": "His hard work as a musician.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035838600000000003,
+   "retrieved_tokens": 515,
+   "retrieve_ms": 7875.572334043682,
+   "retrieve_cost": 0.00020298600000000002
+  },
+  {
+   "idx": 79,
+   "question": "What does Dave do when he feels his creativity is frozen?",
+   "gold": "immerse himself in something he loves",
+   "category": 4,
+   "evidence": [
+    "D5:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Immerses in concerts or favorite albums.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034801200000000003,
+   "retrieved_tokens": 430,
+   "retrieve_ms": 7772.348915983457,
+   "retrieve_cost": 0.00020416200000000003
+  },
+  {
+   "idx": 80,
+   "question": "How does Calvin plan to jumpstart his inspiration?",
+   "gold": "explore other things and have some fun",
+   "category": 4,
+   "evidence": [
+    "D5:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "By collaborating with musicians.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.00037372200000000005,
+   "retrieved_tokens": 648,
+   "retrieve_ms": 7896.779583010357,
+   "retrieve_cost": 0.00020017200000000003
+  },
+  {
+   "idx": 81,
+   "question": "What did Calvin manage to save during the flood incident?",
+   "gold": "music gear and favorite microphone",
+   "category": 4,
+   "evidence": [
+    "D6:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "His music gear and favorite microphone.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000333288,
+   "retrieved_tokens": 411,
+   "retrieve_ms": 7916.765625006519,
+   "retrieve_cost": 0.00019378800000000002
+  },
+  {
+   "idx": 82,
+   "question": "What did Dave open in May 2023?",
+   "gold": "a car shop",
+   "category": 4,
+   "evidence": [
+    "D6:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Car maintenance shop.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035875200000000005,
+   "retrieved_tokens": 541,
+   "retrieve_ms": 7940.845958015416,
+   "retrieve_cost": 0.00020185200000000003
+  },
+  {
+   "idx": 83,
+   "question": "What gives Dave a sense of achievement and purpose?",
+   "gold": "Fixing up things",
+   "category": 4,
+   "evidence": [
+    "D7:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Fixing and transforming things.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00042179399999999997,
+   "retrieved_tokens": 953,
+   "retrieve_ms": 7995.599999965634,
+   "retrieve_cost": 0.00020189400000000002
+  },
+  {
+   "idx": 84,
+   "question": "What fuels Calvin's soul?",
+   "gold": "Performing live",
+   "category": 4,
+   "evidence": [
+    "D7:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Performing live fuels Calvin's soul.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00039773400000000006,
+   "retrieved_tokens": 815,
+   "retrieve_ms": 8072.131417051423,
+   "retrieve_cost": 0.00019853400000000002
+  },
+  {
+   "idx": 85,
+   "question": "What is Dave doing to relax on weekends?",
+   "gold": "exploring parks",
+   "category": 4,
+   "evidence": [
+    "D8:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Exploring parks and taking walks.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.000458136,
+   "retrieved_tokens": 1130,
+   "retrieve_ms": 8117.693834006786,
+   "retrieve_cost": 0.00021138600000000004
+  },
+  {
+   "idx": 86,
+   "question": "What sports activity is Calvin planning to try after the tour with Frank Ocean?",
+   "gold": "Skiing",
+   "category": 4,
+   "evidence": [
+    "D9:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calvin hasn't mentioned a specific sports activity.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00038785200000000005,
+   "retrieved_tokens": 635,
+   "retrieve_ms": 7995.5231249914505,
+   "retrieve_cost": 0.00021235200000000002
+  },
+  {
+   "idx": 87,
+   "question": "What was Calvin excited to do after getting his car fixed on 7 July, 2023?",
+   "gold": "get back on the road",
+   "category": 4,
+   "evidence": [
+    "D10:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Cruising around in his car.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000371124,
+   "retrieved_tokens": 545,
+   "retrieve_ms": 8134.174708975479,
+   "retrieve_cost": 0.00020882400000000003
+  },
+  {
+   "idx": 88,
+   "question": "What did Calvin and his friends arrange for in the park?",
+   "gold": "regular walks together",
+   "category": 4,
+   "evidence": [
+    "D10:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Regular walks with friends.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000336432,
+   "retrieved_tokens": 408,
+   "retrieve_ms": 8176.458542002365,
+   "retrieve_cost": 0.00019828200000000004
+  },
+  {
+   "idx": 89,
+   "question": "What kind of music has Calvin been creating lately?",
+   "gold": "experimenting with different genres",
+   "category": 4,
+   "evidence": [
+    "D11:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Different genres with electronic elements.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035686800000000004,
+   "retrieved_tokens": 507,
+   "retrieve_ms": 8145.193208009005,
+   "retrieve_cost": 0.00020386800000000003
+  },
+  {
+   "idx": 90,
+   "question": "How does Calvin describe his process of adding electronic elements to his songs?",
+   "gold": "gives them a fresh vibe",
+   "category": 4,
+   "evidence": [
+    "D11:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Exciting process of self-discovery.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000355638,
+   "retrieved_tokens": 466,
+   "retrieve_ms": 9460.108541999944,
+   "retrieve_cost": 0.00020638800000000003
+  },
+  {
+   "idx": 91,
+   "question": "What car brand does Calvin own that he is proud of?",
+   "gold": "Ferrari",
+   "category": 4,
+   "evidence": [
+    "D12:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Ferrari",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000355698,
+   "retrieved_tokens": 500,
+   "retrieve_ms": 8220.295040984638,
+   "retrieve_cost": 0.00020554800000000003
+  },
+  {
+   "idx": 92,
+   "question": "What is Calvin's biggest current goal?",
+   "gold": "expand his brand worldwide and grow his fanbase",
+   "category": 4,
+   "evidence": [
+    "D12:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Expand brand worldwide and grow fanbase.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000344544,
+   "retrieved_tokens": 476,
+   "retrieve_ms": 8316.63633295102,
+   "retrieve_cost": 0.00019559400000000003
+  },
+  {
+   "idx": 93,
+   "question": "What is Dave's advice to Calvin regarding his dreams?",
+   "gold": "to never forget his dreams",
+   "category": 4,
+   "evidence": [
+    "D12:14"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Keep pursuing your passion.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000331674,
+   "retrieved_tokens": 427,
+   "retrieve_ms": 8769.955999974627,
+   "retrieve_cost": 0.00019097400000000003
+  },
+  {
+   "idx": 94,
+   "question": "What workshop did Dave get picked for on 11 August, 2023?",
+   "gold": "Car mod workshop",
+   "category": 4,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Car mod workshop.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034672200000000005,
+   "retrieved_tokens": 453,
+   "retrieve_ms": 8526.495333004277,
+   "retrieve_cost": 0.00020122200000000003
+  },
+  {
+   "idx": 95,
+   "question": "What kind of modifications has Dave been working on in the car mod workshop?",
+   "gold": "engine swaps, suspension modifications, and body modifications",
+   "category": 4,
+   "evidence": [
+    "D13:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Engine swaps and body modifications.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.000419172,
+   "retrieved_tokens": 853,
+   "retrieve_ms": 8870.863042015117,
+   "retrieve_cost": 0.00021277200000000002
+  },
+  {
+   "idx": 96,
+   "question": "What type of car did Dave work on during the workshop?",
+   "gold": "classic muscle car",
+   "category": 4,
+   "evidence": [
+    "D13:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Ford Mustang",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037321800000000003,
+   "retrieved_tokens": 551,
+   "retrieve_ms": 8133.056207967456,
+   "retrieve_cost": 0.00021541800000000002
+  },
+  {
+   "idx": 97,
+   "question": "What does Dave say is important for making his custom cars unique?",
+   "gold": "attention to small details",
+   "category": 4,
+   "evidence": [
+    "D13:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Paying attention to details.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.000375954,
+   "retrieved_tokens": 598,
+   "retrieve_ms": 8195.893500000238,
+   "retrieve_cost": 0.00020840400000000003
+  },
+  {
+   "idx": 98,
+   "question": "How did the audience in Tokyo react when Calvin sang one of his songs?",
+   "gold": "Everyone was so into it and sang along",
+   "category": 4,
+   "evidence": [
+    "D14:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The audience was very into it.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034485,
+   "retrieved_tokens": 414,
+   "retrieve_ms": 8279.589292011224,
+   "retrieve_cost": 0.00020370000000000002
+  },
+  {
+   "idx": 99,
+   "question": "How did Calvin meet Frank Ocean?",
+   "gold": "At a music festival in Tokyo",
+   "category": 4,
+   "evidence": [
+    "D15:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "At a music festival in Tokyo.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00038421600000000005,
+   "retrieved_tokens": 623,
+   "retrieve_ms": 8559.722625010181,
+   "retrieve_cost": 0.00021411600000000004
+  },
+  {
+   "idx": 100,
+   "question": "Where did Calvin and Frank Ocean record a song together?",
+   "gold": "In the studio at Calvin's mansion",
+   "category": 4,
+   "evidence": [
+    "D15:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "At Calvin's mansion.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000374994,
+   "retrieved_tokens": 587,
+   "retrieve_ms": 8195.532832993194,
+   "retrieve_cost": 0.00021029400000000003
+  },
+  {
+   "idx": 101,
+   "question": "What did Calvin and his friends record in August 2023?",
+   "gold": "a podcast discussing the rap industry",
+   "category": 4,
+   "evidence": [
+    "D15:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A podcast.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00036266400000000006,
+   "retrieved_tokens": 541,
+   "retrieve_ms": 8317.300708964467,
+   "retrieve_cost": 0.00020546400000000004
+  },
+  {
+   "idx": 102,
+   "question": "Where did Calvin start shooting a video for his new album?",
+   "gold": "Miami",
+   "category": 4,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "In Miami.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000361146,
+   "retrieved_tokens": 506,
+   "retrieve_ms": 8375.996834016405,
+   "retrieve_cost": 0.00020949600000000001
+  },
+  {
+   "idx": 103,
+   "question": "What design is featured on Calvin's guitar?",
+   "gold": "octopus",
+   "category": 4,
+   "evidence": [
+    "D16:14"
+   ],
+   "last_evidence_session": 30,
+   "answer": "An octopus.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00033036000000000003,
+   "retrieved_tokens": 417,
+   "retrieve_ms": 8336.470625014044,
+   "retrieve_cost": 0.00019236000000000004
+  },
+  {
+   "idx": 104,
+   "question": "Why did Calvin get his guitar customized with a shiny finish?",
+   "gold": "unique look",
+   "category": 4,
+   "evidence": [
+    "D16:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "It gives it a unique look.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000314622,
+   "retrieved_tokens": 305,
+   "retrieve_ms": 8459.569375030696,
+   "retrieve_cost": 0.00019072200000000002
+  },
+  {
+   "idx": 105,
+   "question": "What color glow did Calvin customize his guitar with?",
+   "gold": "purple",
+   "category": 4,
+   "evidence": [
+    "D16:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Purple glow.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000314706,
+   "retrieved_tokens": 325,
+   "retrieve_ms": 8248.33299999591,
+   "retrieve_cost": 0.00019080600000000002
+  },
+  {
+   "idx": 106,
+   "question": "Where did Dave come back from with insights on car modification on 1st September 2023?",
+   "gold": "San Francisco",
+   "category": 4,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "San Francisco",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00040417800000000005,
+   "retrieved_tokens": 691,
+   "retrieve_ms": 8372.172708041035,
+   "retrieve_cost": 0.00022297800000000003
+  },
+  {
+   "idx": 107,
+   "question": "What emotion does Dave mention feeling when he sees the relief of someone whose car he fixed?",
+   "gold": "Proud",
+   "category": 4,
+   "evidence": [
+    "D17:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Pride",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000354294,
+   "retrieved_tokens": 440,
+   "retrieve_ms": 8570.51254203543,
+   "retrieve_cost": 0.00021134400000000003
+  },
+  {
+   "idx": 108,
+   "question": "What did Calvin book a flight ticket for on 1st September 2023?",
+   "gold": "Boston",
+   "category": 4,
+   "evidence": [
+    "D17:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Trip to Boston.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034144200000000007,
+   "retrieved_tokens": 427,
+   "retrieve_ms": 8590.989499993157,
+   "retrieve_cost": 0.00019954200000000004
+  },
+  {
+   "idx": 109,
+   "question": "What is Calvin excited about after the tour?",
+   "gold": "exploring and growing his brand",
+   "category": 4,
+   "evidence": [
+    "D18:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Exploring and growing his brand.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000405276,
+   "retrieved_tokens": 856,
+   "retrieve_ms": 8521.787917008623,
+   "retrieve_cost": 0.00019962600000000003
+  },
+  {
+   "idx": 110,
+   "question": "What plans do Calvin and Dave have for when Calvin visits Boston?",
+   "gold": "Check out Dave's garage and maybe get some ideas for future projects",
+   "category": 4,
+   "evidence": [
+    "D18:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Explore the city and try food.",
+   "memories": 16,
+   "label": "WRONG",
+   "query_cost": 0.00041568599999999996,
+   "retrieved_tokens": 867,
+   "retrieve_ms": 8652.998124947771,
+   "retrieve_cost": 0.00020718600000000002
+  },
+  {
+   "idx": 111,
+   "question": "Which Disney movie did Dave mention as one of his favorites?",
+   "gold": "Ratatouille",
+   "category": 4,
+   "evidence": [
+    "D19:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The specific Disney movie is not mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032552400000000005,
+   "retrieved_tokens": 372,
+   "retrieve_ms": 8745.906583033502,
+   "retrieve_cost": 0.00019097400000000003
+  },
+  {
+   "idx": 112,
+   "question": "How does Dave feel about the reactions of people when they see the finished restoration project?",
+   "gold": "satisfying and worth the hard work",
+   "category": 4,
+   "evidence": [
+    "D19:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Satisfying and rewarding.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035940600000000005,
+   "retrieved_tokens": 492,
+   "retrieve_ms": 8413.470415980555,
+   "retrieve_cost": 0.00020655600000000002
+  },
+  {
+   "idx": 113,
+   "question": "What activity did Calvin enjoy during his summer drives?",
+   "gold": "feeling the wind blowing through his hair",
+   "category": 4,
+   "evidence": [
+    "D20:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Reflecting on life.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00037107000000000004,
+   "retrieved_tokens": 597,
+   "retrieve_ms": 8658.964875037782,
+   "retrieve_cost": 0.00020517000000000002
+  },
+  {
+   "idx": 114,
+   "question": "Which song from the childhood of Calvin brings back memories of a road trip with his dad?",
+   "gold": "\"California Love\"",
+   "category": 4,
+   "evidence": [
+    "D20:6",
+    "D20:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The song is not specified.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000362562,
+   "retrieved_tokens": 513,
+   "retrieve_ms": 8745.395124948118,
+   "retrieve_cost": 0.00020626200000000003
+  },
+  {
+   "idx": 115,
+   "question": "What project did Calvin work on to chill out?",
+   "gold": "A shiny orange car",
+   "category": 4,
+   "evidence": [
+    "D21:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Transforming a Japanese mansion.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.000369366,
+   "retrieved_tokens": 571,
+   "retrieve_ms": 8836.667666037101,
+   "retrieve_cost": 0.00020676600000000002
+  },
+  {
+   "idx": 116,
+   "question": "What car did Dave work on in the junkyard?",
+   "gold": "Ford Mustang",
+   "category": 4,
+   "evidence": [
+    "D21:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Ford Mustang",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037947,
+   "retrieved_tokens": 593,
+   "retrieve_ms": 9089.343167026527,
+   "retrieve_cost": 0.00021567000000000003
+  },
+  {
+   "idx": 117,
+   "question": "What does Dave find satisfying about restoring old cars?",
+   "gold": "Transforming something old and beat-up into something beautiful",
+   "category": 4,
+   "evidence": [
+    "D21:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Transforming something broken into beauty.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00046834199999999996,
+   "retrieved_tokens": 1163,
+   "retrieve_ms": 8778.659625037108,
+   "retrieve_cost": 0.00021634200000000004
+  },
+  {
+   "idx": 118,
+   "question": "What do Calvin and Dave use to reach their goals?",
+   "gold": "Hard work and determination",
+   "category": 4,
+   "evidence": [
+    "D21:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Hard work and motivation.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00038283,
+   "retrieved_tokens": 756,
+   "retrieve_ms": 8867.485333001241,
+   "retrieve_cost": 0.00019278000000000003
+  },
+  {
+   "idx": 119,
+   "question": "What does working on cars represent for Dave?",
+   "gold": "Therapy and a way to get away from everyday stress",
+   "category": 4,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Therapeutic and fulfilling escape.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000475794,
+   "retrieved_tokens": 1199,
+   "retrieve_ms": 9031.237750023138,
+   "retrieve_cost": 0.00021869400000000002
+  },
+  {
+   "idx": 120,
+   "question": "What does Dave aim to do with his passion for cars?",
+   "gold": "Take something broken and make it into something awesome",
+   "category": 4,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Open a car shop.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000476184,
+   "retrieved_tokens": 1205,
+   "retrieve_ms": 8912.728791008703,
+   "retrieve_cost": 0.00021848400000000002
+  },
+  {
+   "idx": 121,
+   "question": "What did Calvin recently get that is a \"masterpiece on wheels\"?",
+   "gold": "Ferrari",
+   "category": 4,
+   "evidence": [
+    "D23:16"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A new Ferrari.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.000368604,
+   "retrieved_tokens": 583,
+   "retrieve_ms": 8943.831166950986,
+   "retrieve_cost": 0.00020420400000000004
+  },
+  {
+   "idx": 122,
+   "question": "Who headlined the music festival that Dave attended in October?",
+   "gold": "The Fireworks",
+   "category": 4,
+   "evidence": [
+    "D23:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The Fireworks.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000352242,
+   "retrieved_tokens": 453,
+   "retrieve_ms": 9125.71295798989,
+   "retrieve_cost": 0.00020794200000000002
+  },
+  {
+   "idx": 123,
+   "question": "How does Calvin stay motivated when faced with setbacks?",
+   "gold": "Reminds himself of his passion for goals, gets help from others, and takes a break to recharge",
+   "category": 4,
+   "evidence": [
+    "D23:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Reminds himself of his goals.",
+   "memories": 19,
+   "label": "WRONG",
+   "query_cost": 0.00041847,
+   "retrieved_tokens": 912,
+   "retrieve_ms": 9443.61558300443,
+   "retrieve_cost": 0.00020412000000000002
+  },
+  {
+   "idx": 124,
+   "question": "What activity does Dave find fulfilling, similar to Calvin's passion for music festivals?",
+   "gold": "fixing things",
+   "category": 4,
+   "evidence": [
+    "D23:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Restoring broken things.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.00043704000000000003,
+   "retrieved_tokens": 994,
+   "retrieve_ms": 9070.317082980182,
+   "retrieve_cost": 0.00020979000000000004
+  },
+  {
+   "idx": 125,
+   "question": "Where did Calvin and Dave meet Frank Ocean to start collaborating?",
+   "gold": "at a festival",
+   "category": 4,
+   "evidence": [
+    "D24:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "At a music festival in Tokyo.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000393102,
+   "retrieved_tokens": 684,
+   "retrieve_ms": 9252.480374998413,
+   "retrieve_cost": 0.00021235200000000002
+  },
+  {
+   "idx": 126,
+   "question": "Which part of Tokyo is described as Tokyo's Times Square by Calvin?",
+   "gold": "Shibuya Crossing",
+   "category": 4,
+   "evidence": [
+    "D24:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Shibuya Crossing",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000347364,
+   "retrieved_tokens": 454,
+   "retrieve_ms": 9330.597541003954,
+   "retrieve_cost": 0.00020231400000000001
+  },
+  {
+   "idx": 127,
+   "question": "What specific location in Tokyo does Calvin mention being excited to explore?",
+   "gold": "Shinjuku",
+   "category": 4,
+   "evidence": [
+    "D24:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Shinjuku",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000345264,
+   "retrieved_tokens": 453,
+   "retrieve_ms": 9294.285667012446,
+   "retrieve_cost": 0.00020126400000000002
+  },
+  {
+   "idx": 128,
+   "question": "What dish does Dave recommend Calvin to try in Tokyo?",
+   "gold": "ramen",
+   "category": 4,
+   "evidence": [
+    "D24:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Ramen",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000341424,
+   "retrieved_tokens": 441,
+   "retrieve_ms": 9251.943957991898,
+   "retrieve_cost": 0.00020042400000000002
+  },
+  {
+   "idx": 129,
+   "question": "What does Calvin find energizing during the tour?",
+   "gold": "Performing and connecting with the crowd",
+   "category": 4,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The crowd's energy.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004168500000000001,
+   "retrieved_tokens": 891,
+   "retrieve_ms": 9148.761541000567,
+   "retrieve_cost": 0.00020685000000000004
+  },
+  {
+   "idx": 130,
+   "question": "How does Calvin balance his job and personal life?",
+   "gold": "Takes it one day at a time",
+   "category": 4,
+   "evidence": [
+    "D25:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Staying connected and inspired.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00036132000000000004,
+   "retrieved_tokens": 521,
+   "retrieve_ms": 9168.97808399517,
+   "retrieve_cost": 0.00020622000000000001
+  },
+  {
+   "idx": 131,
+   "question": "What inspired Calvin's recent music?",
+   "gold": "Struggles that people go through",
+   "category": 4,
+   "evidence": [
+    "D25:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Struggles people go through.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00041485800000000005,
+   "retrieved_tokens": 904,
+   "retrieve_ms": 9461.28074999433,
+   "retrieve_cost": 0.00020260800000000004
+  },
+  {
+   "idx": 132,
+   "question": "How does Calvin describe his music in relation to capturing feelings?",
+   "gold": "Express himself and work through his emotions",
+   "category": 4,
+   "evidence": [
+    "D25:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "It captures people's struggles.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034690800000000005,
+   "retrieved_tokens": 435,
+   "retrieve_ms": 9303.695624985266,
+   "retrieve_cost": 0.00020470800000000003
+  },
+  {
+   "idx": 133,
+   "question": "Why did Dave start working on cars?",
+   "gold": "Fascinated with how machines work",
+   "category": 4,
+   "evidence": [
+    "D25:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Fascination with how machines work.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.00044722200000000005,
+   "retrieved_tokens": 1004,
+   "retrieve_ms": 9392.705166013911,
+   "retrieve_cost": 0.00021907200000000003
+  },
+  {
+   "idx": 134,
+   "question": "What is the toughest part of car restoration according to Dave?",
+   "gold": "Paying extra attention to detail",
+   "category": 4,
+   "evidence": [
+    "D25:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Not explicitly mentioned.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00036264,
+   "retrieved_tokens": 489,
+   "retrieve_ms": 9456.515041994862,
+   "retrieve_cost": 0.00021294000000000003
+  },
+  {
+   "idx": 135,
+   "question": "What does Calvin believe makes an artist create something extraordinary?",
+   "gold": "Paying attention to small details",
+   "category": 4,
+   "evidence": [
+    "D25:22"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Attention to small details.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00036523200000000006,
+   "retrieved_tokens": 553,
+   "retrieve_ms": 9603.421666950453,
+   "retrieve_cost": 0.00020563200000000003
+  },
+  {
+   "idx": 136,
+   "question": "When did Dave sell the car he restored last year?",
+   "gold": "Last year",
+   "category": 4,
+   "evidence": [
+    "D25:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "In 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036490200000000006,
+   "retrieved_tokens": 499,
+   "retrieve_ms": 9557.5410000165,
+   "retrieve_cost": 0.00021340200000000004
+  },
+  {
+   "idx": 137,
+   "question": "When did Calvin first get interested in cars?",
+   "gold": "at an early age",
+   "category": 4,
+   "evidence": [
+    "D26:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No specific date mentioned.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000365562,
+   "retrieved_tokens": 520,
+   "retrieve_ms": 9523.784082964994,
+   "retrieve_cost": 0.00021151200000000002
+  },
+  {
+   "idx": 138,
+   "question": "How did Calvin feel about performing with someone he admires?",
+   "gold": "Unreal, like a dream come true",
+   "category": 4,
+   "evidence": [
+    "D26:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "It was a dream come true.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00038858400000000003,
+   "retrieved_tokens": 711,
+   "retrieve_ms": 9479.575374978594,
+   "retrieve_cost": 0.00020378400000000004
+  },
+  {
+   "idx": 139,
+   "question": "What realization did the nightclub experience bring to Calvin?",
+   "gold": "how much music means to him, it's like his passion and purpose",
+   "category": 4,
+   "evidence": [
+    "D26:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Music is his passion and purpose.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00035898,
+   "retrieved_tokens": 535,
+   "retrieve_ms": 9602.990916988347,
+   "retrieve_cost": 0.00020118000000000002
+  },
+  {
+   "idx": 140,
+   "question": "What do Dave and Calvin agree on regarding their pursuits?",
+   "gold": "It's fulfilling and motivating",
+   "category": 4,
+   "evidence": [
+    "D26:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Hard work and determination matter.",
+   "memories": 18,
+   "label": "WRONG",
+   "query_cost": 0.00038342400000000005,
+   "retrieved_tokens": 740,
+   "retrieve_ms": 9643.073041981552,
+   "retrieve_cost": 0.00019517400000000003
+  },
+  {
+   "idx": 141,
+   "question": "Which city is featured in the photograph Dave showed Calvin?",
+   "gold": "Boston",
+   "category": 4,
+   "evidence": [
+    "D27:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Tokyo",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00034117800000000003,
+   "retrieved_tokens": 468,
+   "retrieve_ms": 9662.951582984533,
+   "retrieve_cost": 0.00019672800000000002
+  },
+  {
+   "idx": 142,
+   "question": "What did Calvin do recently at his Japanese house?",
+   "gold": "Threw a small party for his new album",
+   "category": 4,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Threw a small party for his album.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00038304,
+   "retrieved_tokens": 651,
+   "retrieve_ms": 9688.283124996815,
+   "retrieve_cost": 0.00020664000000000001
+  },
+  {
+   "idx": 143,
+   "question": "What did Dave recently start a blog about?",
+   "gold": "Car mods",
+   "category": 4,
+   "evidence": [
+    "D28:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Car mods.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034731000000000003,
+   "retrieved_tokens": 457,
+   "retrieve_ms": 9708.897374977823,
+   "retrieve_cost": 0.00020391000000000002
+  },
+  {
+   "idx": 144,
+   "question": "What is Dave's way to share his passion with others?",
+   "gold": "Through a blog on car mods",
+   "category": 4,
+   "evidence": [
+    "D28:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Blogging about car mods.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.000393288,
+   "retrieved_tokens": 722,
+   "retrieve_ms": 9745.809499989264,
+   "retrieve_cost": 0.00020743800000000003
+  },
+  {
+   "idx": 145,
+   "question": "What type of videos does Calvin usually watch on his television?",
+   "gold": "Music videos, concerts, documentaries about artists and their creative process",
+   "category": 4,
+   "evidence": [
+    "D28:31"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Music videos, concerts, documentaries.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00033588600000000003,
+   "retrieved_tokens": 421,
+   "retrieve_ms": 9772.47158298269,
+   "retrieve_cost": 0.00019458600000000004
+  },
+  {
+   "idx": 146,
+   "question": "What type of music has Dave been getting into lately?",
+   "gold": "Classic rock",
+   "category": 4,
+   "evidence": [
+    "D28:40"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Classic rock.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00034849200000000005,
+   "retrieved_tokens": 476,
+   "retrieve_ms": 9802.318707981613,
+   "retrieve_cost": 0.00020164200000000003
+  },
+  {
+   "idx": 147,
+   "question": "What tools does Calvin use to boost his motivation for music?",
+   "gold": "Writing lyrics and notes",
+   "category": 4,
+   "evidence": [
+    "D28:34"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Supportive people and positive energy.",
+   "memories": 16,
+   "label": "WRONG",
+   "query_cost": 0.000402324,
+   "retrieved_tokens": 790,
+   "retrieve_ms": 9843.664333980996,
+   "retrieve_cost": 0.00020567400000000004
+  },
+  {
+   "idx": 148,
+   "question": "What type of content does Dave post on his blog that inspired others to start their own DIY projects?",
+   "gold": "How he made his car look like a beast",
+   "category": 4,
+   "evidence": [
+    "D28:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Car modification tips.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00040075200000000004,
+   "retrieved_tokens": 724,
+   "retrieve_ms": 9868.793667003047,
+   "retrieve_cost": 0.00021340200000000004
+  },
+  {
+   "idx": 149,
+   "question": "What kind of impact does Dave's blog on car mods have on people?",
+   "gold": "It inspires others to start their DIY projects",
+   "category": 4,
+   "evidence": [
+    "D28:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Inspires creativity and DIY projects.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003861120000000001,
+   "retrieved_tokens": 612,
+   "retrieve_ms": 9895.435000013094,
+   "retrieve_cost": 0.00021466200000000004
+  },
+  {
+   "idx": 150,
+   "question": "Who did Calvin invite to see him perform in Boston on 13 November, 2023?",
+   "gold": "his old high school buddy",
+   "category": 4,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "His old high school buddy.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037296,
+   "retrieved_tokens": 540,
+   "retrieve_ms": 9919.141541991848,
+   "retrieve_cost": 0.00021231000000000003
+  },
+  {
+   "idx": 151,
+   "question": "What hobby did Calvin take up recently?",
+   "gold": "Photography",
+   "category": 4,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No recent hobby mentioned for Calvin.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00037377,
+   "retrieved_tokens": 618,
+   "retrieve_ms": 9991.672125004698,
+   "retrieve_cost": 0.00020412000000000002
+  },
+  {
+   "idx": 152,
+   "question": "What new item did Dave buy recently?",
+   "gold": "A vintage camera",
+   "category": 4,
+   "evidence": [
+    "D30:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information about Dave's recent purchase.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00032669400000000004,
+   "retrieved_tokens": 378,
+   "retrieve_ms": 10013.970332976896,
+   "retrieve_cost": 0.00019244400000000003
+  },
+  {
+   "idx": 153,
+   "question": "What type of photos does Dave like to capture with his new camera?",
+   "gold": "Nature - sunsets, beaches, waves",
+   "category": 4,
+   "evidence": [
+    "D30:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Nature and scenery photos.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00037197,
+   "retrieved_tokens": 637,
+   "retrieve_ms": 9932.08825000329,
+   "retrieve_cost": 0.00019887000000000003
+  },
+  {
+   "idx": 154,
+   "question": "What event did Calvin attend in Boston?",
+   "gold": "Fancy gala",
+   "category": 4,
+   "evidence": [
+    "D30:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A fancy gala.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00038952600000000006,
+   "retrieved_tokens": 681,
+   "retrieve_ms": 10037.881583964918,
+   "retrieve_cost": 0.00021222600000000004
+  },
+  {
+   "idx": 155,
+   "question": "What did Calvin discuss with the cool artist he met at the gala?",
+   "gold": "Music and art",
+   "category": 4,
+   "evidence": [
+    "D30:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Music and art.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036428400000000004,
+   "retrieved_tokens": 543,
+   "retrieve_ms": 10063.831290986855,
+   "retrieve_cost": 0.00020588400000000004
+  },
+  {
+   "idx": 156,
+   "question": "Where did Dave take a stunning photo of a waterfall?",
+   "gold": "Nearby park",
+   "category": 4,
+   "evidence": [
+    "D30:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "In a nearby park.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032352,
+   "retrieved_tokens": 341,
+   "retrieve_ms": 10087.716749985702,
+   "retrieve_cost": 0.00019572000000000003
+  },
+  {
+   "idx": 157,
+   "question": "What positive impact does Calvin mention nature has on tough times?",
+   "gold": "Nature helps us appreciate life",
+   "category": 4,
+   "evidence": [
+    "D30:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Helps appreciate life.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000375798,
+   "retrieved_tokens": 615,
+   "retrieve_ms": 10112.55970899947,
+   "retrieve_cost": 0.00020659800000000003
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 8792.21345850965,
+ "retrieve_cost_per_query": 0.00020534943037974686,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

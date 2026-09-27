@@ -1,0 +1,3748 @@
+{
+ "arm": "lean_l0",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 0,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": false,
+  "retrieval_rerank": false,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "heldout:conv-30",
+  "sessions": [
+   1,
+   19
+  ],
+  "messages": 369,
+  "questions": 81
+ },
+ "accuracy": 0.8395061728395061,
+ "accuracy_by_category": {
+  "1": 0.6363636363636364,
+  "2": 0.8846153846153846,
+  "4": 0.8636363636363636
+ },
+ "stored": 369,
+ "active": 369,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {
+  "dates_resolved": 0,
+  "dates_idiom_skipped": 0,
+  "units_indexed": 369
+ },
+ "facts_extracted": 369,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {
+  "unit": 369
+ },
+ "decision_cost_per_1k": 0.0,
+ "cost_per_1k": 0.0006001084010840109,
+ "write_latency_p50_ms": 187.9142500110902,
+ "decision_latency_p50_ms": 187.75370897492394,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 859.7283950617284,
+ "retrieved_tokens_median": 883,
+ "memories_mean": 20.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.0,
+  "claude": 0.0,
+  "openai": 0.015482769999999996
+ },
+ "cache": {
+  "hits": 0,
+  "misses": 612
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "When Jon has lost his job as a banker?",
+   "gold": "19 January, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "On January 19, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020669999999999998,
+   "retrieved_tokens": 853,
+   "retrieve_ms": 476.71883302973583,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 1,
+   "question": "When Gina has lost her job at Door Dash?",
+   "gold": "January, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "January 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020385,
+   "retrieved_tokens": 854,
+   "retrieve_ms": 471.4488339959644,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 2,
+   "question": "How do Jon and Gina both like to destress?",
+   "gold": "by dancing",
+   "category": 4,
+   "evidence": [
+    "D1:7",
+    "D1:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Through dancing.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019695000000000002,
+   "retrieved_tokens": 810,
+   "retrieve_ms": 468.7052079825662,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 3,
+   "question": "What do Jon and Gina both have in common?",
+   "gold": "They lost their jobs and decided to start their own businesses.",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D1:3",
+    "D1:4",
+    "D2:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Support for each other's dreams.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00016829999999999997,
+   "retrieved_tokens": 609,
+   "retrieve_ms": 465.82662500441074,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 4,
+   "question": "Why did Jon decide to start his dance studio?",
+   "gold": "He lost his job and decided to start his own business to share his passion.",
+   "category": 4,
+   "evidence": [
+    "D1:2",
+    "D1:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Losing his job gave him a push.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021435,
+   "retrieved_tokens": 904,
+   "retrieve_ms": 463.2699160138145,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 5,
+   "question": "What Jon thinks the ideal dance studio should look like?",
+   "gold": "By the water, with natural light and Marley flooring",
+   "category": 1,
+   "evidence": [
+    "D1:20",
+    "D2:4",
+    "D2:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "With natural light and good flooring.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020729999999999997,
+   "retrieved_tokens": 863,
+   "retrieve_ms": 458.16458394983783,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 6,
+   "question": "When is Jon's group performing at a festival?",
+   "gold": "February, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:24"
+   ],
+   "last_evidence_session": 19,
+   "answer": "February 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001806,
+   "retrieved_tokens": 699,
+   "retrieve_ms": 452.55391602404416,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 7,
+   "question": "When did Gina launch an ad campaign for her store?",
+   "gold": "29 January, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "January 29, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002268,
+   "retrieved_tokens": 989,
+   "retrieve_ms": 446.11354102380574,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 8,
+   "question": "When was Jon in Paris?",
+   "gold": "28 January 2023",
+   "category": 2,
+   "evidence": [
+    "D2:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "January 28, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00015675,
+   "retrieved_tokens": 532,
+   "retrieve_ms": 443.16083402372897,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 9,
+   "question": "Which city have both Jean and John visited?",
+   "gold": "Rome",
+   "category": 1,
+   "evidence": [
+    "D2:5",
+    "D15:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Rome",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00016544999999999998,
+   "retrieved_tokens": 612,
+   "retrieve_ms": 438.404249958694,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 10,
+   "question": "When did Gina team up with a local artist for some cool designs?",
+   "gold": "February, 2023",
+   "category": 2,
+   "evidence": [
+    "D5:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "February 8, 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022334999999999998,
+   "retrieved_tokens": 964,
+   "retrieve_ms": 433.4140829741955,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 11,
+   "question": "When did Gina get her tattoo?",
+   "gold": "A few years ago",
+   "category": 2,
+   "evidence": [
+    "D5:15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A few years ago.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001746,
+   "retrieved_tokens": 661,
+   "retrieve_ms": 428.7400839966722,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 12,
+   "question": "When did Jon start to go to the gym?",
+   "gold": "March, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Last week, March 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00017355000000000002,
+   "retrieved_tokens": 636,
+   "retrieve_ms": 425.32812495483086,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 13,
+   "question": "When did Gina open her online clothing store?",
+   "gold": "16 March, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "March 16, 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00023624999999999997,
+   "retrieved_tokens": 1060,
+   "retrieve_ms": 422.0800409675576,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 14,
+   "question": "When did Jon start expanding his studio's social media presence?",
+   "gold": "April, 2023",
+   "category": 2,
+   "evidence": [
+    "D8:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "April 3, 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020684999999999999,
+   "retrieved_tokens": 858,
+   "retrieve_ms": 421.22675001155585,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 15,
+   "question": "When did Jon host a dance competition?",
+   "gold": "May, 2023",
+   "category": 2,
+   "evidence": [
+    "D8:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "In May 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020669999999999998,
+   "retrieved_tokens": 869,
+   "retrieve_ms": 414.1612499952316,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 16,
+   "question": "When did Jon go to a fair to get more exposure for his dance studio?",
+   "gold": "24 April, 2023",
+   "category": 2,
+   "evidence": [
+    "D10:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "April 24, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00023475,
+   "retrieved_tokens": 1032,
+   "retrieve_ms": 411.2016669823788,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 17,
+   "question": "Why did Gina decide to start her own clothing store?",
+   "gold": "She always loved fashion trends and finding unique pieces and she lost her job so decided it was time to start her own business.",
+   "category": 1,
+   "evidence": [
+    "D6:8",
+    "D1:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To blend her love for dance and fashion.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00024975,
+   "retrieved_tokens": 1138,
+   "retrieve_ms": 406.8456669920124,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 18,
+   "question": "Do Jon and Gina start businesses out of what they love?",
+   "gold": "Yes",
+   "category": 1,
+   "evidence": [
+    "D1:4",
+    "D6:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Yes, they do.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022725,
+   "retrieved_tokens": 1002,
+   "retrieve_ms": 403.455582971219,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 19,
+   "question": "When did Gina interview for a design internship?",
+   "gold": "10 May, 2023",
+   "category": 2,
+   "evidence": [
+    "D11:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "2023-05-10",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022275,
+   "retrieved_tokens": 974,
+   "retrieve_ms": 399.75066599436104,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 20,
+   "question": "When did Gina get accepted for the design internship?",
+   "gold": "27 May, 2023",
+   "category": 2,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Gina had the interview on May 10, 2023.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002088,
+   "retrieved_tokens": 847,
+   "retrieve_ms": 397.0301660010591,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 21,
+   "question": "When did Jon start reading \"The Lean Startup\"?",
+   "gold": "May, 2023",
+   "category": 2,
+   "evidence": [
+    "D12:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "May 27, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001977,
+   "retrieved_tokens": 797,
+   "retrieve_ms": 394.43870895775035,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 22,
+   "question": "When did Gina develop a video presentation to teach how to style her fashion pieces? ",
+   "gold": "June, 2023",
+   "category": 2,
+   "evidence": [
+    "D13:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 13, 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00023024999999999996,
+   "retrieved_tokens": 1004,
+   "retrieve_ms": 391.8770420132205,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 23,
+   "question": "How did Gina promote her clothes store?",
+   "gold": "worked with an artist to make unique fashion pieces, made limited-edition sweatshirts, got some new offers and promotions for online store, developed a video presentation showing how to style her pieces",
+   "category": 1,
+   "evidence": [
+    "D5:5",
+    "D16:3",
+    "D8:4",
+    "D13:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Through ads and networking.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00024195,
+   "retrieved_tokens": 1108,
+   "retrieve_ms": 386.7834170232527,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 24,
+   "question": "Which events has Jon participated in to promote his business venture?",
+   "gold": "fair, networking events, dance competition",
+   "category": 1,
+   "evidence": [
+    "D10:1",
+    "D16:6",
+    "D8:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Attended a fair to show off his studio.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020715,
+   "retrieved_tokens": 848,
+   "retrieve_ms": 382.54983397200704,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 25,
+   "question": "What does Jon's dance studio offer?",
+   "gold": "one-on-one metoring and training to dancers,  workshops and classes to local schools and centers",
+   "category": 1,
+   "evidence": [
+    "D13:7",
+    "D8:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "One-on-one mentoring and training.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020729999999999997,
+   "retrieved_tokens": 869,
+   "retrieve_ms": 380.1264169742353,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 26,
+   "question": "When did Jon receive mentorship to promote his venture?",
+   "gold": "15 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 15, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001923,
+   "retrieved_tokens": 761,
+   "retrieve_ms": 375.9099580347538,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 27,
+   "question": "Did Jon and Gina both participate in dance competitions?",
+   "gold": "Yes",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D14:14",
+    "D1:16",
+    "D1:17",
+    "D9:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Yes, they both did.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022935,
+   "retrieved_tokens": 1016,
+   "retrieve_ms": 373.07079101447016,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 28,
+   "question": "When was Jon in Rome?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D15:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 12, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001452,
+   "retrieved_tokens": 455,
+   "retrieve_ms": 369.9686659965664,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 29,
+   "question": "Which cities has Jon visited?",
+   "gold": "Paris, Rome",
+   "category": 1,
+   "evidence": [
+    "D2:4",
+    "D15:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Paris and Rome.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001617,
+   "retrieved_tokens": 581,
+   "retrieve_ms": 366.3119580014609,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 30,
+   "question": "When Jon is planning to open his dance studio?",
+   "gold": "20 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D15:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No specific opening date mentioned.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00021104999999999998,
+   "retrieved_tokens": 894,
+   "retrieve_ms": 363.10820904327556,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 31,
+   "question": "How long did it take for Jon to open his studio?",
+   "gold": "six months",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D15:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "From February 1, 2023, to June 20, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020265,
+   "retrieved_tokens": 786,
+   "retrieve_ms": 356.97899997467175,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 32,
+   "question": "When did Gina design a limited collection of hoodies?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D16:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 14, 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021885,
+   "retrieved_tokens": 940,
+   "retrieve_ms": 353.87462499784306,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 33,
+   "question": "When did Jon visit networking events for his store?",
+   "gold": "20 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D16:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 20, 2023.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00020415,
+   "retrieved_tokens": 840,
+   "retrieve_ms": 350.8535419823602,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 34,
+   "question": "When did Gina start being recognized by fashion editors?",
+   "gold": "July 2023",
+   "category": 2,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "On July 9, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002421,
+   "retrieved_tokens": 1089,
+   "retrieve_ms": 346.77995799575,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 35,
+   "question": "When did Jon start learning marketing and analytics tools?",
+   "gold": "July, 2023",
+   "category": 2,
+   "evidence": [
+    "D17:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 9, 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019424999999999998,
+   "retrieved_tokens": 778,
+   "retrieve_ms": 342.18441700795665,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 36,
+   "question": "When did Jon and Gina decide to collaborate to create dance content?",
+   "gold": "21 July 2023",
+   "category": 2,
+   "evidence": [
+    "D18:18"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 21, 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00023714999999999996,
+   "retrieved_tokens": 1058,
+   "retrieve_ms": 339.10133299650624,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 37,
+   "question": "When did Gina mention Shia Labeouf?",
+   "gold": " 23 July, 2023",
+   "category": 2,
+   "evidence": [
+    "D19:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 23, 2023",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00016395,
+   "retrieved_tokens": 576,
+   "retrieve_ms": 332.43641699664295,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 38,
+   "question": "When did Gina go to a dance class with a group of friends?",
+   "gold": "21 July 2023",
+   "category": 2,
+   "evidence": [
+    "D19:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 21, 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000231,
+   "retrieved_tokens": 1011,
+   "retrieve_ms": 327.81212497502565,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 39,
+   "question": "What is Gina's favorite style of dance?",
+   "gold": "Contemporary",
+   "category": 4,
+   "evidence": [
+    "D1:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Contemporary dance.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002127,
+   "retrieved_tokens": 915,
+   "retrieve_ms": 325.19029203103855,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 40,
+   "question": "What is Jon's favorite style of dance?",
+   "gold": "Contemporary",
+   "category": 4,
+   "evidence": [
+    "D1:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Contemporary dance.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020295,
+   "retrieved_tokens": 850,
+   "retrieve_ms": 321.1963329813443,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 41,
+   "question": "What was Gina's favorite dancing memory?",
+   "gold": "Winning first place at a regionals dance competition",
+   "category": 4,
+   "evidence": [
+    "D1:17"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Winning first place at regionals.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021404999999999997,
+   "retrieved_tokens": 914,
+   "retrieve_ms": 317.57412501610816,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 42,
+   "question": "What kind of dance piece did Gina's team perform to win first place?",
+   "gold": "\"Finding Freedom\"",
+   "category": 4,
+   "evidence": [
+    "D1:19"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Contemporary piece called \"Finding Freedom.\"",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022215,
+   "retrieved_tokens": 950,
+   "retrieve_ms": 316.2929170066491,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 43,
+   "question": "What do the dancers in the photo represent?",
+   "gold": "They are performing at the festival",
+   "category": 4,
+   "evidence": [
+    "D1:25"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Passion and self-expression.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002148,
+   "retrieved_tokens": 921,
+   "retrieve_ms": 313.4956659632735,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 44,
+   "question": "What does Gina say about the dancers in the photo?",
+   "gold": "They look graceful",
+   "category": 4,
+   "evidence": [
+    "D1:26"
+   ],
+   "last_evidence_session": 19,
+   "answer": "They're so graceful!",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021119999999999998,
+   "retrieved_tokens": 901,
+   "retrieve_ms": 308.9867500239052,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 45,
+   "question": "What is Jon's attitude towards being part of the dance festival?",
+   "gold": "Glad",
+   "category": 4,
+   "evidence": [
+    "D1:28"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Excited and passionate.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021344999999999998,
+   "retrieved_tokens": 908,
+   "retrieve_ms": 306.73512496287003,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 46,
+   "question": "What kind of flooring is Jon looking for in his dance studio?",
+   "gold": "Marley flooring",
+   "category": 4,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Marley flooring.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019559999999999998,
+   "retrieved_tokens": 793,
+   "retrieve_ms": 303.6179999471642,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 47,
+   "question": "What did Gina find for her clothing store on 1 February, 2023?",
+   "gold": "The perfect spot for her store",
+   "category": 4,
+   "evidence": [
+    "D3:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A wholesaler replied positively.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002283,
+   "retrieved_tokens": 995,
+   "retrieve_ms": 298.2423750218004,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 48,
+   "question": "What did Gina design for her store?",
+   "gold": "the space, furniture, and decor",
+   "category": 4,
+   "evidence": [
+    "D3:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A cozy and inviting space.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00023085,
+   "retrieved_tokens": 1030,
+   "retrieve_ms": 293.174208025448,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 49,
+   "question": "What did Gina want her customers to feel in her store?",
+   "gold": "cozy and comfortable",
+   "category": 4,
+   "evidence": [
+    "D3:6",
+    "D3:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Like they're in a cool oasis.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002262,
+   "retrieved_tokens": 987,
+   "retrieve_ms": 287.4085420044139,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 50,
+   "question": "What did Jon say about Gina's progress with her store?",
+   "gold": "hard work's paying off",
+   "category": 4,
+   "evidence": [
+    "D3:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "\"Your store looks great!\"",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002181,
+   "retrieved_tokens": 937,
+   "retrieve_ms": 284.0767499874346,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 51,
+   "question": "What made Gina choose the furniture and decor for her store?",
+   "gold": "personal style and customer comfort",
+   "category": 4,
+   "evidence": [
+    "D3:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To match her style and create coziness.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00023745,
+   "retrieved_tokens": 1054,
+   "retrieve_ms": 280.83845804212615,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 52,
+   "question": "What did Jon say about creating a special experience for customers?",
+   "gold": "It's the key to making them feel welcome and coming back",
+   "category": 4,
+   "evidence": [
+    "D3:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Creating a special experience is key.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018974999999999998,
+   "retrieved_tokens": 744,
+   "retrieve_ms": 276.4009169768542,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 53,
+   "question": "What did Gina say about creating an experience for her customers?",
+   "gold": "making them want to come back",
+   "category": 4,
+   "evidence": [
+    "D3:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Creating a cozy oasis for customers.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00025334999999999995,
+   "retrieved_tokens": 1168,
+   "retrieve_ms": 272.4227079888806,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 54,
+   "question": "How is Gina's store doing?",
+   "gold": "The store is doing great.",
+   "category": 4,
+   "evidence": [
+    "D4:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Gina's store is doing great.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00020805000000000002,
+   "retrieved_tokens": 872,
+   "retrieve_ms": 269.5087500032969,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 55,
+   "question": "What does Gina's tattoo symbolize?",
+   "gold": "Freedom and expressing herself through dance",
+   "category": 4,
+   "evidence": [
+    "D5:15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Freedom and self-expression.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018705,
+   "retrieved_tokens": 744,
+   "retrieve_ms": 266.75191696267575,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 56,
+   "question": "What did Jon and Gina compare their entrepreneurial journeys to?",
+   "gold": "dancing together and supporting each other",
+   "category": 4,
+   "evidence": [
+    "D6:15",
+    "D6:16"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A roller coaster.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0002175,
+   "retrieved_tokens": 943,
+   "retrieve_ms": 263.8799590058625,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 57,
+   "question": "What advice does Gina give to Jon about running a successful business?",
+   "gold": "build relationships with customers, create a strong brand image, stay positive",
+   "category": 4,
+   "evidence": [
+    "D7:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Network for help and contacts.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002259,
+   "retrieved_tokens": 987,
+   "retrieve_ms": 261.3243749947287,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 58,
+   "question": "Why did Jon shut down his bank account?",
+   "gold": "for his business",
+   "category": 4,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To help his business grow.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018389999999999997,
+   "retrieved_tokens": 715,
+   "retrieve_ms": 259.08824999351054,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 59,
+   "question": "Why did Gina combine her clothing business with dance?",
+   "gold": "she is passionate about dance and fashion",
+   "category": 4,
+   "evidence": [
+    "D8:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To show creativity and share her love.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00024105,
+   "retrieved_tokens": 1086,
+   "retrieve_ms": 254.592125013005,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 60,
+   "question": "What does Jon's dance make him?",
+   "gold": "happy",
+   "category": 4,
+   "evidence": [
+    "D9:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Happy and fulfilled.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002121,
+   "retrieved_tokens": 913,
+   "retrieve_ms": 252.0820409990847,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 61,
+   "question": "What did Gina receive from a dance contest?",
+   "gold": "a trophy",
+   "category": 4,
+   "evidence": [
+    "D9:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A trophy.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021795,
+   "retrieved_tokens": 954,
+   "retrieve_ms": 248.94508300349116,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 62,
+   "question": "How does Gina stay confident in her business?",
+   "gold": "By reminding herself of her successes and progress, having a support system, and focusing on why she started",
+   "category": 4,
+   "evidence": [
+    "D10:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "By reminding herself of her successes.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002286,
+   "retrieved_tokens": 1009,
+   "retrieve_ms": 244.5657500065863,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 63,
+   "question": "What kind of professional experience did Gina get accepted for on May 23, 2023?",
+   "gold": "fashion internship",
+   "category": 4,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Fashion internship.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001968,
+   "retrieved_tokens": 793,
+   "retrieve_ms": 241.63645796943456,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 64,
+   "question": "Where is Gina's fashion internship?",
+   "gold": "fashion department of an international company",
+   "category": 4,
+   "evidence": [
+    "D12:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "International company, fashion department.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00022904999999999998,
+   "retrieved_tokens": 1020,
+   "retrieve_ms": 238.72437502723187,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 65,
+   "question": "What book is Jon currently reading?",
+   "gold": "The Lean Startup",
+   "category": 4,
+   "evidence": [
+    "D12:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "\"The Lean Startup\"",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001482,
+   "retrieved_tokens": 489,
+   "retrieve_ms": 235.74958299286664,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 66,
+   "question": "What is Jon offering to the dancers at his dance studio?",
+   "gold": "One-on-one mentoring and training",
+   "category": 4,
+   "evidence": [
+    "D13:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "One-on-one mentoring and training.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0002106,
+   "retrieved_tokens": 883,
+   "retrieve_ms": 230.35241599427536,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 67,
+   "question": "How does Jon use the clipboard with a notepad attached to it?",
+   "gold": "To set goals, track achievements, and find areas for improvement",
+   "category": 4,
+   "evidence": [
+    "D13:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "The memories do not mention a clipboard with a notepad.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00016514999999999998,
+   "retrieved_tokens": 556,
+   "retrieve_ms": 227.9352499754168,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 68,
+   "question": "What does Jon tell Gina he won't do?",
+   "gold": "quit",
+   "category": 4,
+   "evidence": [
+    "D14:17"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Give up.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00016755,
+   "retrieved_tokens": 618,
+   "retrieve_ms": 225.56958300992846,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 69,
+   "question": "What did Jon take a trip to Rome for?",
+   "gold": "To clear his mind",
+   "category": 4,
+   "evidence": [
+    "D15:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To clear his mind.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001737,
+   "retrieved_tokens": 649,
+   "retrieve_ms": 218.51375000551343,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 70,
+   "question": "What is Jon working on opening?",
+   "gold": "a dance studio",
+   "category": 4,
+   "evidence": [
+    "D15:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A dance studio.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00017385,
+   "retrieved_tokens": 660,
+   "retrieve_ms": 212.76045904960483,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 71,
+   "question": "How does Gina describe the studio that Jon has opened?",
+   "gold": "amazing",
+   "category": 4,
+   "evidence": [
+    "D15:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Awesome and important for expression.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021569999999999998,
+   "retrieved_tokens": 923,
+   "retrieve_ms": 208.1795419799164,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 72,
+   "question": "How does Jon feel about the opening night of his dance studio?",
+   "gold": "excited",
+   "category": 4,
+   "evidence": [
+    "D15:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Excited and hopeful.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021419999999999998,
+   "retrieved_tokens": 913,
+   "retrieve_ms": 204.7710829647258,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 73,
+   "question": "How does Gina describe the feeling that dance brings?",
+   "gold": "magical",
+   "category": 4,
+   "evidence": [
+    "D15:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Dance is stress relief and joy.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021854999999999997,
+   "retrieved_tokens": 940,
+   "retrieve_ms": 201.07079099398106,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 74,
+   "question": "What does Jon plan to do at the grand opening of his dance studio?",
+   "gold": "savor all the good vibes",
+   "category": 4,
+   "evidence": [
+    "D15:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Host a dance competition.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00021765,
+   "retrieved_tokens": 932,
+   "retrieve_ms": 197.93970801401883,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 75,
+   "question": "What does Gina say to Jon about the grand opening?",
+   "gold": "Let's live it up and make some great memories",
+   "category": 4,
+   "evidence": [
+    "D15:12"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Can't wait for tomorrow's grand opening!",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001926,
+   "retrieved_tokens": 761,
+   "retrieve_ms": 192.80812499346212,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 76,
+   "question": "What is the general sentiment about the upcoming grand opening?",
+   "gold": "excitement",
+   "category": 4,
+   "evidence": [
+    "D15:18",
+    "D15:19"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Excitement and positivity.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00019935,
+   "retrieved_tokens": 814,
+   "retrieve_ms": 188.1642920197919,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 77,
+   "question": "What did Gina make a limited edition line of?",
+   "gold": "Hoodies",
+   "category": 4,
+   "evidence": [
+    "D16:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Hoodies.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00021465,
+   "retrieved_tokens": 926,
+   "retrieve_ms": 185.80941599793732,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 78,
+   "question": "According to Gina, what makes Jon a perfect mentor and guide?",
+   "gold": "His positivity and determination",
+   "category": 4,
+   "evidence": [
+    "D17:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "His positivity and determination.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000201,
+   "retrieved_tokens": 825,
+   "retrieve_ms": 183.6202919948846,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 80,
+   "question": "What plans does Jon have after receiving advice at the networking event?",
+   "gold": "Sprucing up his business plan, tweaking his pitch to investors, and working on an online platform.",
+   "category": 4,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Sprucing up his biz plan.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00018524999999999998,
+   "retrieved_tokens": 712,
+   "retrieve_ms": 180.49333395902067,
+   "retrieve_cost": 0.0
+  },
+  {
+   "idx": 81,
+   "question": "What offer does Gina make to Jon regarding social media?",
+   "gold": "Helping with making content and managing his social media accounts.",
+   "category": 4,
+   "evidence": [
+    "D18:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Manage social media accounts.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0001902,
+   "retrieved_tokens": 757,
+   "retrieve_ms": 168.08375000255182,
+   "retrieve_cost": 0.0
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "write_outcomes": [
+  {
+   "message": "D1:1",
+   "text": "Gina: Hey Jon! Good to see you. What's up? Anything new?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:2",
+   "text": "Jon: Hey Gina! Good to see you too. Lost my job as a banker yesterday, so I'm gonna take a shot at starting my own business.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:3",
+   "text": "Gina: Sorry about your job Jon, but starting your own business sounds awesome! Unfortunately, I also lost my job at Door Dash this month. What business are you thinking of?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:4",
+   "text": "Jon: Sorry to hear that! I'm starting a dance studio 'cause I'm passionate about dancing and it'd be great to share it with others.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:5",
+   "text": "Gina: That's cool, Jon! What got you into this biz?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:6",
+   "text": "Jon: I've been into dancing since I was a kid and it's been my passion and escape. I wanna start a dance studio so I can teach others the joy that dancing brings me.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:7",
+   "text": "Gina: Wow Jon, same here! Dance is pretty much my go-to for stress relief. Got any fave styles?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:8",
+   "text": "Jon: Cool, Gina! I love all dances, but contemporary is my top pick. It's so expressive and powerful! What's your fave?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:9",
+   "text": "Gina: Yeah, me too! Contemporary dance is so expressive and graceful - it really speaks to me.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:10",
+   "text": "Jon: Wow, great idea! Let's go to a dance class, it'll be so much fun!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:11",
+   "text": "Gina: Yeah! Let's explore some new dance moves. We should plan a dance session soon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:12",
+   "text": "Jon: Yeah definitely! Wanna see my moves next Fri? Can't wait!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:13",
+   "text": "Gina: Sounds great, Jon! Next Friday works. Let's boogie!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:14",
+   "text": "Jon: Wow, I'm excited too! This is gonna be great!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:15",
+   "text": "Gina: Wow! What did you get?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:16",
+   "text": "Jon: Woah, that pic's from when my dance crew took home first in a local comp last year. It was amazing up on that stage! I'm super keen to spread that intensity with other peeps. Gina, you ever been in any dance comps or shows?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:17",
+   "text": "Gina: I used to compete in a few dance competitions and shows - my fav memory was when my team won first place at a regionals at age fifteen. It was an awesome feeling of accomplishment!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:18",
+   "text": "Jon: Wow! Winning first place is amazing! What dance were you doing?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:19",
+   "text": "Gina: Thanks! We just did a contemporary piece called \"Finding Freedom.\" It was really emotional and powerful.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:20",
+   "text": "Jon: Wow, that must've been great! Check my ideal dance studio by the water.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:21",
+   "text": "Gina: Cool setup! Man, you can't deny that view! Got time to rehearse with a biz and a new store?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:22",
+   "text": "Jon: Hopefully, we will find a place like this that will inspire us!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:23",
+   "text": "Gina: Wow, it looks great! What dances do you practice? Got any projects planned?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:24",
+   "text": "Jon: Thanks! I rehearsed with a small group of dancers after work. We do all kinds of dances, from contemporary to hip-hop. We've got some cool projects in the works. Finishing up choreography to perform at a nearby festival next month. Can't wait!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:25",
+   "text": "Gina: Wow, it looks awesome! Are they yours at the festival? They're so graceful!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:26",
+   "text": "Jon: Yeah, they're the ones performing at the festival! They've been practicing hard and will definitely impress with their grace and skill.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:27",
+   "text": "Gina: Wow, they look great! Can't wait to see them rock the festival. Gonna be awesome!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D1:28",
+   "text": "Jon: Yeah, awesome! Glad to be part of it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:1",
+   "text": "Gina: Hey Jon! Long time no see! Things have been hectic lately. I just launched an ad campaign for my clothing store in hopes of growing the business. Starting my own store and taking risks is both scary and rewarding. I'm excited to see where it takes me!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:2",
+   "text": "Jon: Hey Gina! Whoa, your store looks great! All your hard work really paid off - congrats! Must be awesome to see your stuff on display.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:3",
+   "text": "Gina: Thanks a bunch! It's awesome seeing my vision happen. How's the dance studio going? Did you find the right spot?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:4",
+   "text": "Jon: Hey Gina! Thanks for asking. I'm on the hunt for the ideal spot for my dance studio and it's been quite a journey! I've been looking at different places and picturing how the space would look. I even found a place with great natural light! Oh, I've been to Paris yesterday! It was sooo cool.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:5",
+   "text": "Gina: Wow, nice spot! Where is it? Got any other features you want to think about before you decide? Paris?! That is really great Jon! Never had a chance to visit it. Been only to Rome once.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:6",
+   "text": "Jon: It's downtown which is awesome cuz it's easy to get to. Plus the natural light! Gotta check the size & floor quality too. We need a good dance floor with enough bounce for me & my students to dance safely.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:7",
+   "text": "Gina: Definitely! Dance floors help avoid injuries and make dancing more enjoyable. You thinking about it is great. Any particular type of flooring you like?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:8",
+   "text": "Jon: Yeah, good flooring's crucial. I'm after Marley flooring, which is what dance studios usually use. It's great 'cause it's grippy but still lets you move, plus it's tough and easy to keep clean.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:9",
+   "text": "Gina: Sounds great! Marley's perfect; it's got the right amount of grip and movement. Can't wait to see your dance studio done!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:10",
+   "text": "Jon: Yeah, can't wait to see it done! Looking for the right place and getting everything ready has been a mix of exciting and nerve-wracking, but I'm determined to make it work. It'll be worth it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:11",
+   "text": "Gina: Believe in yourself, Jon! The process may be tough, but you got this. Push through and it'll be worth it. Don't forget to take breaks and dance it out when you need to destress!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:12",
+   "text": "Jon: Glad I have you in my corner! Gotta make time to dance and vent, that's for sure. We'll make it through this - hang in there!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:13",
+   "text": "Gina: Thanks, Jon! Appreciate your support!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:14",
+   "text": "Jon: Let's keep going and chase our dreams!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:15",
+   "text": "Gina: Yeah! We've done so much, and there's nothing but good stuff coming. Let's keep going after our goals and making them happen.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D2:16",
+   "text": "Jon: Success is almost here. We got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:1",
+   "text": "Jon: Hey Gina, hope you're doing ok! Still following my passion for dance. It's been bumpy, but I'm determined to make it work. I'm still searching for a place to open my dance studio.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:2",
+   "text": "Gina: Hi Jon! So happy you're pushing forward with dancing! Inspiring \ud83d\udcaa I emailed some wholesalers and one replied and said yes today! I'm over the moon because now I can expand my clothing store and get closer to my customers. Check it out - here's a pic!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:3",
+   "text": "Jon: Wow, Gina! You found the perfect spot for your store. Way to go, hard work's paying off!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:4",
+   "text": "Gina: Thanks! Glad you like it. Yeah, it's a great spot. Here's a peek at the space I designed. Cozy and inviting - perfect for customers to check out all the trendy pieces.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:5",
+   "text": "Jon: Wow, it looks great! Must've taken you ages to design it. What made you pick out the furniture and decor?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:6",
+   "text": "Gina: Thanks! It took a bit of time but I wanted to make the place look like my own style and make my customers feel cozy. I chose furniture that looks great and is comfy too. The chandelier adds a nice glam feel while matching the style of the store.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:7",
+   "text": "Jon: Your store looks great - your customers will be so comfy.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:8",
+   "text": "Gina: Thanks! Making my spot comfortable and inviting for my customers is key. I want 'em to feel like they're in a cool oasis. Just creating an experience that'll make 'em wanna come back.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:9",
+   "text": "Jon: That's a great goal! Creating a special experience for customers is the key to making them feel welcome and coming back. I think you can create that space you're imagining.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:10",
+   "text": "Gina: Thanks. Your support means a lot. I'm sure with my hard work and effort, I can make a special shopping experience for my customers. It's tough but I'm up for the challenge!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:11",
+   "text": "Jon: I'm always here to support you! Go create something awesome with your store. Keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:12",
+   "text": "Gina: Thanks, Jon! I'll try my best. You're gonna do great with your dance studio, just keep going and stay positive! We'll get through this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:13",
+   "text": "Jon: Thanks! Your words mean a lot. I'm staying positive and pushing forward. We've put our hearts into our dreams and I'm sure we'll make it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D3:14",
+   "text": "Gina: Sure thing, Jon! Stay motivated and keep going. Hard work pays off eventually. We can do this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:1",
+   "text": "Jon: Hey Gina! What's up? How's the store going? I gotta tell you about this thing with my biz.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:2",
+   "text": "Gina: Hey Jon! The store's doing great! It's a wild ride. How's the biz?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:3",
+   "text": "Jon: Hey Gina! I'm putting in a lot of work on my business even with the obstacles. I'm gonna make it happen!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:4",
+   "text": "Gina: Wow! You've got drive! Keep it up and you'll definitely make a splash.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:5",
+   "text": "Jon: Thanks Gina! Your help really means a lot. Sometimes it's hard when things don't go my way, but I'm sure if I keep pushing, I'll reach my dreams!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:6",
+   "text": "Gina: Understand where you're at, Jon. Setbacks are just opportunities for comebacks. You got the skills, passion, and drive. Plus my full support. Don't give up, buddy!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:7",
+   "text": "Jon: Thanks! Setbacks can be tough, but with your support, I can handle anything. Appreciate you having my back!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:8",
+   "text": "Gina: I'm here for you no matter what! Anything you want to say about your biz?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:9",
+   "text": "Jon: Searching for a dance studio location has been tricky, but I'm determined to find the right spot - when I do, I'm sure the rest will follow!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:10",
+   "text": "Gina: Searching for the perfect dance studio's a tough job, Jon. Hang in there and you'll find it soon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:11",
+   "text": "Jon: Thanks! Appreciate your encouragement - it means a lot! I'm working on my business and some new dance routines - rehearsing hard for an upcoming show. I'm passionate about dancing and it brings me so much joy and fulfillment.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:12",
+   "text": "Gina: Wow, Jon! You're so talented! What show ya got planned?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:13",
+   "text": "Jon: I'm getting ready for a dance comp near me next month. It's a great chance for me to show my skillz and, hopefully, get some props from the dance fam. Super stoked!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:14",
+   "text": "Gina: Wow Jon, you're gonna kill it in that competition. Your hard work and talent will pay off! Good luck.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:15",
+   "text": "Jon: Thanks! Your help means a lot. I'll do my best to make you proud!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:16",
+   "text": "Gina: No doubt, Jon you've got this. Your passion and commitment are awesome! Keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:17",
+   "text": "Jon: Thanks! I'm going for my dreams!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:18",
+   "text": "Gina: Absolutely Jon. I'm always here to cheer you on. Make your dreams happen - keep going and believe in yourself. You got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D4:19",
+   "text": "Jon: Thanks, Gina! Your kind words mean a lot. I won't give up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:1",
+   "text": "Gina: Hey Jon! Great hearing from you again. How have you been? BTW, I found a cool new fashion piece for my store. Can't wait to share with my customers.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:2",
+   "text": "Jon: Hey Gina! Congrats on the new fashion piece! Looks like your store is growing. Remenber the festival I told you about? Had that performance and it was awesome - so many people there complementing my dance moves. Dancing brings me joy and it was nice to be reminded why I'm passionate about it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:3",
+   "text": "Gina: Wow! That looks great. You look badass on stage. BTW, what's your favorite part of running your own studio?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:4",
+   "text": "Jon: Thanks, Gina! I love running my own studio. It's great having the freedom to create a space and help dancers of all ages and levels express themselves. I'm super thrilled about dancing each day and seeing my students progress. It's so fulfilling.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:5",
+   "text": "Gina: That's awesome! I'm sure you feel great knowing your students are doing so well with dance. It's amazing what it can do for people! Oh, and btw - I've been working hard on my online store and just teamed up with a local artist for some cool designs. Check 'em out!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:6",
+   "text": "Jon: It looks awesome. Your commitment and creativity in your business really stands out. How'd you come up with these cool designs?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:7",
+   "text": "Gina: Thanks Jon! I got the idea from a fashion mag and saw there wasn't much around like it. So I worked with the artist to make it happen - it's all about being ahead of the game and giving my customers something different.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:8",
+   "text": "Jon: Nice one, Gina! You never shy away from a challenge and always try something new. I'm impressed by your willingness to take risks - it's really inspiring.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:9",
+   "text": "Gina: Thanks! Taking risks is scary but it's the only way to grow, right? Just part of the journey to success.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:10",
+   "text": "Jon: Yeah, I totally agree - taking risks is key for success. It's made me grow, and even got me out of my secure 9-5 as a banker. Now, I'm aiming to turn my dancing passion into a business. I'm determined to make it work, I just know it! That being said, I definitely don't underestimate the difficulties - it ain't been a walk in the park, that's for sure.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:11",
+   "text": "Gina: It's tough starting a biz, but don't let it get you down. You can make your studio work, I'm sure. And remember, I'm always here for you.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:12",
+   "text": "Jon: Thanks, Gina. Your help means a lot. I'll keep plugging away and stay optimistic.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:13",
+   "text": "Gina: This quote kept me positive through tough times. We all need a push sometimes, right? Even made a tattoo to remind myself about it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:14",
+   "text": "Jon: Love the tattoo, did you just get it?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:15",
+   "text": "Gina: Thanks! Got the tattoo a few years ago, it stands for freedom - dancing without worrying what people think. A reminder to follow my passions and express myself.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:16",
+   "text": "Jon: Nice reminder, Gina! It's so important to have freedom and express ourselves without worry. Dance gives me an escape to be myself.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:17",
+   "text": "Gina: Totally agree, Jon. Dancing lets us be ourselves and ain't nothing like the feeling it gives us. You're so dedicated to your studio, it's inspiring. Chase those dreams, buddy!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:18",
+   "text": "Jon: Thanks, Gina! Your support means so much. I'm gonna keep chasing after those dreams. Dance is my passion, and I'm gonna keep working hard to make it a success!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:19",
+   "text": "Gina: This is the right attitude! How have you been juggling dance and business goals?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:20",
+   "text": "Jon: Thanks! Juggling both my passions can be tricky, but so rewarding. Dancing and running my biz need hard work, plus they give me energy for each other. My dance moves get me pumped to tackle my business goals, and successes there boost my drive to keep dreaming on the dance floor. It's a balancing act, but fun.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:21",
+   "text": "Gina: Wow, Jon! You're amazing at juggling both your passions. Finding that happy medium is key - keep going and don't stop dreaming, buddy!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:22",
+   "text": "Jon: Thanks, Gina! Your pep-talk really meant a lot. I'm not gonna give up on my dreams - my dance studio and biz ventures need the hard work I'm putting in. Love having you in my corner, thanks for always being there!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D5:23",
+   "text": "Gina: Yeah Jon, I'm here for you! Chasing our dreams and helping each other out. Let's keep movin' forward!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:1",
+   "text": "Jon: Hi Gina! Been hectic for me lately. Started hitting the gym last week to stay on track with the venture. Gotta figure out how to balance it all, but it's going well. How about you?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:2",
+   "text": "Gina: Hey Jon! Great to hear from you. Been having some tough times lately.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:3",
+   "text": "Jon: Oof, sorry to hear that. What's up? Is there anything I can do to help?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:4",
+   "text": "Gina: Thanks, Jon! Appreciate your offer. Since I lost my job at Door Dash, things have been tough. But here's some good news - I've got something to share!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:5",
+   "text": "Jon: Wow, that's awesome! Can't wait to hear it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:6",
+   "text": "Gina: Yay! My online clothes store is open! I've been dreaming of this for a while now - can't wait to see what happens!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:7",
+   "text": "Jon: Congrats! That's awesome! What gave you the idea to start the online store?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:8",
+   "text": "Gina: Thanks! I'm passionate about fashion trends and finding unique pieces. Plus, I wanted to blend my love for dance and fashion, so it was a perfect match.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:9",
+   "text": "Jon: Wow, that's awesome! Combining your two interests into a store is super cool. Best of luck with it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:10",
+   "text": "Gina: Thanks! How is biz going? I hope it's going well!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:11",
+   "text": "Jon: Thanks for askin', Gina! Losing my job was hard, but I'm livin' my dreams now. Startin' my biz has been tough but I'm gonna make it! I keep facing new challenges, but I'm sure it'll be worth it in the end.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:12",
+   "text": "Gina: Yeah, starting and running my own biz has had its ups and downs - but it's been an amazing ride!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:13",
+   "text": "Jon: Yeah, it's been a rollercoaster. But your success really inspires me to keep pushing forward. Your determination is awesome!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:14",
+   "text": "Gina: Thanks, Jon! Your words are really encouraging. Glad my journey is inspiring others.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:15",
+   "text": "Jon: Yeah, totally! It's great we both face the same challenges, it motivates us and it's like having a partner to dance with!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:16",
+   "text": "Gina: Yep! We're both on different paths, but it's nice to have someone to root for us. We can do it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:17",
+   "text": "Jon: Definitely! Having someone back us up is great. Let's keep going and reach success together!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:18",
+   "text": "Gina: Let's keep chasing our dreams, supporting each other, and celebrating achievements. We can do great things together!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D6:19",
+   "text": "Jon: Yeah, Gina, thanks for having my back. Here's to taking on new heights, and all the trials that come with it. Cheers!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:1",
+   "text": "Jon: Hey Gina, how's it going?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:2",
+   "text": "Gina: Hey Jon, my online clothing store has been a roller coaster but rewarding. Starting a business takes courage - you hang in there too!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:3",
+   "text": "Jon: Thanks Gina! It's been tough, but I'm gonna make it happen. It's been great! And hey, you're awesome with your store. How's it going?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:4",
+   "text": "Gina: Thanks! Appreciate your kind words. Store's going good, just been keeping up with fashion trends so I can offer the best pieces to customers. It's been a lot of work, but really enjoying it. Got any advice or tips on running a successful biz?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:5",
+   "text": "Jon: Yeah, brand identity is key. Make sure yours stands out. Also be sure to build relationships with your customers \u2013 let them know you care. And don't forget to stay positive and motivate others. Your energy will be contagious!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:6",
+   "text": "Gina: Thanks for the advice, Jon! Building relationships and creating a strong brand image for my store is something I'm always working on. You're right, staying positive is key. What helps you stay motivated with your dance studio business?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:7",
+   "text": "Jon: Seeing my students succeed motivates me. It's awesome to help them learn and reach their goals. Your support, Gina, means a lot too. Here's a photo of us after during one of the dance clases.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:8",
+   "text": "Gina: That's awesome, Jon! Seeing your students grow and succeed must be really fulfilling. Glad I can be part of this journey!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:9",
+   "text": "Jon: Thanks for being there for me! It's really made a huge difference and it feels great.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:10",
+   "text": "Gina: Glad I could help, Jon! It's nice to be part of something positive. Supporting your dreams is awesome!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:11",
+   "text": "Jon: Thanks for being there for me. Your help means a lot.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:12",
+   "text": "Gina: I'm here for you, rooting for you all the way.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:13",
+   "text": "Jon: Thanks, I'm really grateful for your help with staying motivated.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:14",
+   "text": "Gina: Glad to cheer you on. Keep going and never give up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:15",
+   "text": "Jon: Thanks, Gina! I won't quit - your words motivate me to keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:16",
+   "text": "Gina: Believe in yourself. Even when it's tough, you got this! Keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D7:17",
+   "text": "Jon: I'm gonna keep on believing in myself. Thanks for the kind words!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:1",
+   "text": "Jon: Hey Gina, I had to shut down my bank account. It was tough, but I needed to do it for my biz.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:2",
+   "text": "Gina: Oh no, Jon! Sorry to hear that. Tough decision for you? How're you handling the changes?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:3",
+   "text": "Jon: It was a tough call, but I thought it'd help my biz grow. Handling changes has been hard, but I'm staying positive and looking ahead. Anything new for you?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:4",
+   "text": "Gina: Oof, that's tough, Jon. I got some new offers and promotions going on my online store to try and bring in new customers. It's been a wild ride starting my business, but I'm not giving up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:5",
+   "text": "Jon: Nice one, Gina! Love how you never give up. What helps you stay motivated?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:6",
+   "text": "Gina: Thanks Jon! Dance is my stress relief and fashion fuels my creativity. I love finding new trends for my store. It keeps me motivated to keep growing. Check out this pic of my fave dance session!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:7",
+   "text": "Jon: Wow, that's great! What made you combine clothing biz and dance?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:8",
+   "text": "Gina: Thanks! I'm passionate about dance and fashion so combining them lets me show my creativity and share my love with others. Plus, I can add dance-inspired items to my store!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:9",
+   "text": "Jon: Nice work! Combining passions is always cool. How's it going?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:10",
+   "text": "Gina: Thanks! So far, so good - customers love the new offers and promotions, which means I'm seeing more sales. People seem to really like my designs, so I'm always on the hunt for unique, trendy pieces. Growing my customer base is the main focus right now.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:11",
+   "text": "Jon: Sounds like all your effort's paying off. Anything planned to grow your customer base?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:12",
+   "text": "Gina: Yeah, I have a few plans. I'm thinking of working with some fashion bloggers and influencers in the next few months to get more attention for my store. Plus, I'm going to do more ads so I can reach more people. I'm really focused on building my customer base and making my store a top destination for fashion fans. It's awesome to see it all coming together! You, Jon? What do you have going for your dance studio?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:13",
+   "text": "Jon: Thanks, Gina! I'm expanding my dance studio's social media presence and offering workshops and classes to local schools and centers. I'm also hosting a dance competition next month to showcase local talent and bring more attention to my studio. All the work's paying off - I'm seeing progress and the dancers are so excited. It's such a great feeling to give a place where people can express themselves through dance!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:14",
+   "text": "Gina: Wow! That's fantastic that your studio's expanding and giving dancers an outlet. So proud of the progress you've made - keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:15",
+   "text": "Jon: Thanks! Your backing means a lot. I'm trying to make my plan work, even though it's been tough. Your encouragement really helps. Are you coming to the event next month? Love to have you there!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:16",
+   "text": "Gina: Woah, cool event! What's gonna be happening? I'd love to join in and show my support!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:17",
+   "text": "Jon: Thanks, Gina! My dance studio and some other schools are bringing their best moves for an awesome night of performances and judging. It'll be super creative and fun. Come join us!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:18",
+   "text": "Gina: Sounds great! I'm definitely in for the show.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:19",
+   "text": "Jon: Cool! Can't wait to see you!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:20",
+   "text": "Gina: Thanks, Jon! See you at the event!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:21",
+   "text": "Jon: Gina, good luck with your store!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:22",
+   "text": "Gina: Thanks, Jon! Appreciate the kind words. <3",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:23",
+   "text": "Jon: Sure, I am always there for you!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:24",
+   "text": "Gina: Thanks! Your support means a lot. I'm gonna keep pursuing my goals and I hope you do too!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:25",
+   "text": "Jon: Thanks! I won't quit on my dreams. Your words really motivate me. Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D8:26",
+   "text": "Gina: Bye Jon! You got this! Believe in yourself and keep pushing. Take care!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:1",
+   "text": "Jon: Hey Gina! I'm turning my loves of dance into a business. I'm sunk tons of time into the studio lately, and look at my students - they're already killing it. I'm even learning with them!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:2",
+   "text": "Gina: Hey Jon! Wow, way to take your passion and make it into a biz! The dance studio looks awesome.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:3",
+   "text": "Jon: Thanks, Gina! I'm determined to make this studio work. Losing my job was tough but it gave me the push I needed to do what I love.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:4",
+   "text": "Gina: Woah, Jon! Tough times can be a gateway to awesome things. Glad you worked up the courage to go after your dreams!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:5",
+   "text": "Jon: Yeah, Gina! It's been tough, but I'm living my true self. Dancing makes me so happy, and now I get to share that with other people. Seeing my students get better at it brings me such joy.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:6",
+   "text": "Gina: Wow Jon, you look so happy when you dance! Show the world your true self and keep dancing!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:7",
+   "text": "Jon: Thanks a bunch, Gina! You seriously rock. Dancing for me is like a way to express myself and find my happy place. I used to be scared to death of what people would think, but I learnt that my own happiness is the most important thing. It's been tough but also the best thing ever!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:8",
+   "text": "Gina: Yeah, I do remember those dance classes! I used to love spending time in the studio. That photo looks awesome, brings back lots of memories. It's nice to know, dance is still your happy place.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:9",
+   "text": "Jon: Nice, Gina! I'm happy that dance has such a special meaning to both of us. It's a really cool way to express ourselves. I loved taking lessons with my friends when I was younger. Those memories are so precious. So glad I can still enjoy it with my own studio. Thanks for always being there for me.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:10",
+   "text": "Gina: Hey Jon! Got your back - dance is awesome for expressing yourself and finding happiness. Here's one of my trophies from a dance contest, nice reminder of the hard work, dedication and joy it brings.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:11",
+   "text": "Jon: Wow! It looks awesome! Thanks for the support, it really means a lot.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:12",
+   "text": "Gina: No prob, Jon! You earned all the kudos for your hard work. Keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:13",
+   "text": "Jon: Thanks! Gonna keep pushing and working hard. Won't let anything hold me back!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D9:14",
+   "text": "Gina: Way to go, Jon! Keep it up, you're almost there!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:1",
+   "text": "Jon: Hi Gina! I just wanted to fill you in on my business. Yesterday, I went to a fair to show off my studio, it was both stressful and great! I got some possible leads, so that was awesome. But overall, I've learned that this biz is no cakewalk and having confidence in yourself is important for making it successful!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:2",
+   "text": "Gina: Hey Jon, congrats on the fair! It's awesome to see your hard work paying off. Keep on pushing, pal, you're headed for greatness. Oh, and BTW, I started my own online clothing store not so long ago - pretty cool, huh?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:3",
+   "text": "Jon: Thanks, Gina! Appreciate your support. Your store looks great, I remember it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:4",
+   "text": "Gina: Thanks, Jon! After losing my job, I wanted to take control of my own destiny and this seemed like the perfect way to do it. It's been a tough journey, but very rewarding.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:5",
+   "text": "Jon: Wow, you're awesome for going for it! Setbacks can help us reach our potential, right? I'm having trouble with my business project. Any advice on staying motivated even when times are tough?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:6",
+   "text": "Gina: Yeah Jon! Challenges are awesome for learning and growth. To stay motivated, I think of the big goal and why I'm doing it. I also get help from people who support me. And of course, I dance it out. Do you need advice on anything in particular?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:7",
+   "text": "Jon: I've been feeling kinda low on confidence lately. It's hard to run a business when you don't have faith in yourself. Any tips on how you stay confident in your business?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:8",
+   "text": "Gina: I get it, Jon. Confidence is important in business. I stay motivated by reminding myself of my successes and progress. It also helps to have a good support system. Just focus on why you started this \u2013 because you love it! Have faith in yourself, Jon. I do!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:9",
+   "text": "Jon: Thanks! Your words mean a lot. Gotta focus on success and why I started. You're right, I love it and that'll keep my confidence up.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:10",
+   "text": "Gina: No worries, Jon! Sounds like what I said was helpful. You're incredibly talented and passionate about dance. Don't forget, believe in yourself and your abilities. Tackle any obstacle that comes your way and keep shining!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:11",
+   "text": "Jon: Thanks! Your support means a lot. I'm gonna keep going and reach my dreams no matter what.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:12",
+   "text": "Gina: Go for it, Jon! You got this! Don't let anything stop you. We're in this together!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:13",
+   "text": "Jon: Appreciate your encouragement. We'll keep pushing each other on this path.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D10:14",
+   "text": "Gina: Yeah! Let's keep each other going. We can do it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:1",
+   "text": "Jon: Hi! Since we last spoke I am still working on the dance studio and things are looking up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:2",
+   "text": "Gina: Hi! You're so inspiring taking it on and opening your own studio!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:3",
+   "text": "Jon: Thanks! Losing my job gave me the push to finally start my dream business: my own dance studio! Now I'm stepping into the unknown and hoping for the best.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:4",
+   "text": "Gina: It must be scary stepping into the unknown but I know you can do it, Jon. With your determination and drive, your dance studio will be a huge success. Keep that positive outlook and keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:5",
+   "text": "Jon: Thanks! It's a bit scary, but I just think about my love for dance and how it makes me feel. It's been my stress-buster since childhood!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:6",
+   "text": "Gina: Gotcha, Jon! Dance is my stress fix too. As soon as I start, all my worries vanish. It's amazing what we can do for our own mental health with something we enjoy.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:7",
+   "text": "Jon: Yeah, Gina! Dancing helps me de-stress. It's where I'm most alive. It's a must-have in my life.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:8",
+   "text": "Gina: I get it, Jon. Dance is just me -- I can't picture life without it. It's like air.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:9",
+   "text": "Jon: Yep! Dancing is like second nature to me. I'm living my dream by having my own dance studio and teaching others.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:10",
+   "text": "Gina: You're living the dream and inspiring others too! Your studio will totally change things for lots of folks.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:11",
+   "text": "Jon: I hope so, Gina. I want to create a place for people to dance and express themselves - it's been a dream of mine.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:12",
+   "text": "Gina: That's a great dream, Jon! Giving people a place to express themselves with dance is really important. Your studio is gonna make a huge difference. Can't wait to see it happen!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:13",
+   "text": "Jon: Thanks! Your help means a lot. Keep you posted on the dance studio progress.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:14",
+   "text": "Gina: Thanks! Really appreciate you keeping me in the loop on this cool project. Can't wait to hear more and watch it come to life! Oh, btw, I had an interview for a design internship yesterday! It was so cool.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:15",
+   "text": "Jon: Wow, Gina, I'm stoked about this! Taking a risk is scary, but I'm sure following my dreams will pay off in the end. How did the interview go?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:16",
+   "text": "Gina: It was great!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:17",
+   "text": "Jon: Glad to hear it. Been practicing dance routines lately, it keeps my mind focused and motivated.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:18",
+   "text": "Gina: Wow! That's great. Dancing is awesome for staying focused. Wanna show me a routine sometime?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:19",
+   "text": "Jon: Sure, Gina! Wanna see one of my routines? Lemme know when you got time and I'll send you a vid.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:20",
+   "text": "Gina: Yeah, Jon, I'll watch your routine! So proud of you!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:21",
+   "text": "Jon: Thanks a lot! Your help really means a lot. I'll get the video to you soon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D11:22",
+   "text": "Gina: No prob! Always here to help. Can't wait to see the vid!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:1",
+   "text": "Gina: Hey Jon! Long time no talk! A lot's happened - I just got accepted for a fashion internship!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:2",
+   "text": "Jon: Congrats, Gina! That's awesome news about the fashion internship. \ud83c\udf89 So stoked for you. Where is the internship and how're you feelin' about it?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:3",
+   "text": "Gina: Thanks! I'm excited and kinda nervous. Gonna be a big change. It's part-time position in the fashion department of an international company.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:4",
+   "text": "Jon: Way to go, Gina! You really stepped up. What's your plan for the future?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:5",
+   "text": "Gina: Thanks! I'm a mix of excited and scared to get into fashion, but I'm trying to stay upbeat and learn as much as I can. What about you? Got something new?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:6",
+   "text": "Jon: I'm currently reading \"The Lean Startup\" and hoping it'll give me tips for my biz.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:7",
+   "text": "Gina: It sounds great! Could it spark any ideas for your dance studio?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:8",
+   "text": "Jon: Yeah, the book got me thinking about building a focused and efficient business. Adapting and tweaking from customer feedback is important too, so I'm gonna try it out!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:9",
+   "text": "Gina: Woah, Jon, that whiteboard's got a bunch of good ideas! How you gonna keep track and stay on schedule with those dates?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:10",
+   "text": "Jon: Thanks, Gina! It helps me keep track of ideas and milestones. Gives me a visual of my progress and keeps me organized.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:11",
+   "text": "Gina: Nice idea! Having something visual can help with organizing and motivation. What're you working on currently?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:12",
+   "text": "Jon: I'm wrapping up the business plan and looking for investors. My passion for the project and belief in its success are driving me.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:13",
+   "text": "Gina: Wow, Jon! Impressed by your commitment. How's the hunt for investors going?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:14",
+   "text": "Jon: Thanks! Searching for investors has been tough, but I'm staying hopeful. It's all a process and I'm learning a ton.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:15",
+   "text": "Gina: Yeah Jon, you've got the right attitude! Keep learning and growing through it all. Keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:16",
+   "text": "Jon: Thanks! I really appreciate your help. I'm gonna keep on going and never quit.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:17",
+   "text": "Gina: Keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:18",
+   "text": "Jon: Thanks! Your words really mean a lot. Don't worry, I won't let anything get me down.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D12:19",
+   "text": "Gina: Go Jon! Obstacles are inevitable, but you can do awesome things. Keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:1",
+   "text": "Jon: Hey Gina, thanks for being there for me and believing in me. It means a lot.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:2",
+   "text": "Gina: Sure, Jon! I'm always around for you. How've you been since we caught up?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:3",
+   "text": "Jon:  I'm prepping for my dance studio more than ever!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:4",
+   "text": "Gina: Proud of you for starting your own business! It takes strength to stay hopeful. What are you doing to prep for your dance studio? I have developed a video presentation to teach how to style my fashion pieces, btw. ",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:5",
+   "text": "Jon: Thanks, Gina! It's been so inspiring to work with our young dancers, seeing their passion and commitment. Opening the dance studio's been a great experience - I want it to be a place of support and encouragement for all our dancers. Will you show me this presentation?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:6",
+   "text": "Gina: Shure, I will send it to you later. Starting this studio isn't just a business, it's a place for dancers to grow. What support are you offering them?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:7",
+   "text": "Jon: Besides the dance classes and workshops, I'm offering one-on-one mentoring and training to help dancers reach their full potential.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:8",
+   "text": "Gina: Your one-on-one mentoring and training will really push dancers to reach their goals. I totally get it, I had a mentor too when I was learning how to dance.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:9",
+   "text": "Jon: Yeah, a mentor can do wonders. Guidance and support can help dancers really shine.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:10",
+   "text": "Gina: Nice one, Jon! How've you been using it?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:11",
+   "text": "Jon: I'm using it to stay organized and motivated. It sets goals, tracks my achievements and helps me find areas to improve.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:12",
+   "text": "Gina: Really cool system! Being organized sure is key for getting stuff done. How do you keep up with your goals and progress?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:13",
+   "text": "Jon: I also use whiteboard to stay on track, visualize goals and tokenize successes. It keeps me motivated and focused.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:14",
+   "text": "Gina: Cool! Are you using different colors?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:15",
+   "text": "Jon: Yes. I color-code achievements so I can easily track my progress and stay motivated.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:16",
+   "text": "Gina: Wow, color-coding is a great way to track your progress & stay motivated. Keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:17",
+   "text": "Jon: Thanks! It helps me stay motivated and reminds me why I'm doing this.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:18",
+   "text": "Gina: Yeah, its a great idea!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:19",
+   "text": "Jon: Thanks!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:20",
+   "text": "Gina: Remember that staying positive is very important.  Rock on!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:21",
+   "text": "Jon: Thanks, Gina! Your support's really been awesome.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:22",
+   "text": "Gina: Thanks! Keep going for your dreams and don't quit!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D13:23",
+   "text": "Jon: I won't give up, Gina! I'll keep pushing and working to make my dreams happen. Thanks for the support!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:1",
+   "text": "Jon: Gina, you won't believe it - I got mentored by this amazing business dude yesterday! It was really inspiring and now I'm even more pumped to chase my dreams. What's been up with you lately?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:2",
+   "text": "Gina: Wow, Jon! Mentors can really help. I'm working on my online store, growing the customer base. It's tough but I'm determined. How about you? Any new things happening?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:3",
+   "text": "Jon: Been doing some promotion for my business. Crazy ride so far, but I'm hanging in there. Got any tips for marketing?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:4",
+   "text": "Gina: Awesome! Marketing is key. Use social media channels and work with influencers for bigger reach.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:5",
+   "text": "Jon: Thanks for the advice, Gina! I already started doing what you said about social media and posted some of my dance videos. It's creating a bit of a stir.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:6",
+   "text": "Gina: Nice! Glad your dance vids are doing well online. Keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:7",
+   "text": "Jon: Your help really helps. Hey, have you thought about being an entrepreneur?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:8",
+   "text": "Gina: Ha, yeah, Jon. I've been one 'cause I lost my job. I opened an online clothing store and it's been great! Being my own boss and doing something I love is awesome.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:9",
+   "text": "Jon: Wow, Gina! You did great taking that leap. Congrats! Got any advice for someone just starting out?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:10",
+   "text": "Gina: Thanks, Jon! It was a huge jump, but totally worth it. My advice: stay passionate, focused and resilient. Challenges will come, but believe in yourself and keep going. And stay open to learning and improving.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:11",
+   "text": "Jon: Appreciate your advice. Gotta stay resilient and focused, that's key!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:12",
+   "text": "Gina: Yep Jon, staying resilient and focused is key for any entrepreneur. Keep going and don't give up! You got this!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:13",
+   "text": "Jon: Thanks! I won't quit, no matter what. Your encouragement really motivates me to keep going.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:14",
+   "text": "Gina: Way to go, Jon! Don't quit, remember, failures lead you closer to success. Here's a pic from when I was dancing - it was a tough road, but it was worth it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:15",
+   "text": "Jon: Wow, that's an awesome pic! You guys look great and passionate about dancing. Reminds me how much I love performing. Thanks for sharing!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:16",
+   "text": "Gina: Thanks! I'm glad the pic reminded you of your love for dancing. Keep going after your dreams!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:17",
+   "text": "Jon: Sure thing, Gina! Your help means a lot to me. I'm not giving up.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:18",
+   "text": "Gina: Go, Jon! I'm here for you. Keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:19",
+   "text": "Jon: Knowing you've got my back really helps keep me going. I won't let you down!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D14:20",
+   "text": "Gina: No worries, Jon! You're really inspiring with your determination and passion for dance. Keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:1",
+   "text": "Jon: Hey Gina, hope you're doing great! Still working on my biz. Took a short trip last week to Rome to clear my mind a little.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:2",
+   "text": "Gina: Hi! Good for you! It definitely will help you to concentrate on your biz better.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:3",
+   "text": "Jon: Thanks, Gina. Still working on opening a dance studio.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:4",
+   "text": "Gina: When are you opening the studio?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:5",
+   "text": "Jon: The official opening night is tomorrow. I'm working hard to make everything just right. Can't wait to see it all come together!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:6",
+   "text": "Gina: Congrats, Jon! The studio looks amazing. You've put a lot of work into this and I'm so pumped for the launch tomorrow. Don't miss a beat!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:7",
+   "text": "Jon: Thanks, Gina! I'm excited! It's been a wild ride, but I'm feeling good and ready to give it my best.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:8",
+   "text": "Gina: Wow, Jon, you must be so excited! You've come so far since we last talked, and tomorrow's gonna be a blast! All those long nights were worth it - so take some time to savor it. Capture the joy and thrill that dance brings - it's magical!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:9",
+   "text": "Jon: Tomorrow's gonna be an awesome night and I'm not gonna forget a second of it. I put so much into this and I want to savor all the good vibes. Thanks for always having my back. You're the best!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:10",
+   "text": "Gina: I'm always proud of you. Enjoy the good feels tomorrow, you earned it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:11",
+   "text": "Jon: Thanks! Your pride and support mean a lot. Looking forward to enjoying the moment with you.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:12",
+   "text": "Gina: I'll be right by your side, Jon. Let's live it up and make some great memories tomorrow. So excited!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:13",
+   "text": "Jon: Yeah! Let's make some awesome memories tomorrow at the grand opening!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:14",
+   "text": "Gina: Can't wait to make more memories at your dance studio!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:15",
+   "text": "Jon: Looking forward to more cool memories!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:16",
+   "text": "Gina: I love being around friends and having such a great time. Can't wait to have fun at your dance studio!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:17",
+   "text": "Jon: Agreed!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:18",
+   "text": "Gina: Can't wait for tomorrow's grand opening!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:19",
+   "text": "Jon: Woohoo! Tomorrow's opening will be so much fun. Can't wait for it - and for you to be there!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:20",
+   "text": "Gina: Can't wait too!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:21",
+   "text": "Jon: Definitely! Let's make tomorrow unforgettable, Gina. See you there! Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D15:22",
+   "text": "Gina: See you tomorrow. Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:1",
+   "text": "Gina: Hey Jon, what's been up? Some pretty cool stuff happened since we talked. I have acquired some new unique pieces for my store.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:2",
+   "text": "Jon: Congrats on your store, Gina! Happy for you! It looks sick - is it a unique piece you're selling?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:3",
+   "text": "Gina: Thanks! This hoodie isn't for sale, it's from my own collection. I made a limited edition line last week to show off my style and creativity - it was tough but worth it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:4",
+   "text": "Jon: What gave you the idea?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:5",
+   "text": "Gina: This design reminds me of the grit it takes to stand out and face challenges.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:6",
+   "text": "Jon: That's awesome, Gina! Yesterday I chose to go to networking events to make things happen. It's been tough but I'm staying determined and focused.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:7",
+   "text": "Gina: Way to go, Jon! Attending those networking events takes guts and drive. Keep it up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:8",
+   "text": "Jon: Thanks! It's been tough going since I lost my job, but I'm sure investing my time in my business will pay off eventually. I really appreciate your help.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:9",
+   "text": "Gina: No worries, Jon! You got this! Let me know if you need anything.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:10",
+   "text": "Jon: Your help matters to me. I am writing all my plans down.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:11",
+   "text": "Gina: Nice work! Tracking your plans and goals is key. It's like a picture of all your progress.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:12",
+   "text": "Jon: Thanks, Gina! Seeing my goals written down on paper really helps keep me motivated and focused on what I have to do. I know it won't be easy, but I'm sure it'll pay off. Thanks for the support!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:13",
+   "text": "Gina: No worries, Jon! When things get rough, keep persevering and keep working hard. You'll get there! Don't quit!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:14",
+   "text": "Jon: Thanks, Gina! That sign reminds me to never give up, however hard things get. I'll keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:15",
+   "text": "Gina: Believe in yourself and keep going. You can do it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D16:16",
+   "text": "Jon: Thanks! I'm feeling confident and won't give up. Your support means a ton to me.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:1",
+   "text": "Gina: Hey Jon! Long time no chat! How's the dance studio? Last week was wild, I got noticed by fashion editors and it's been amazing but kinda scary. Everything's exciting but it's a lot of pressure to keep going up!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:2",
+   "text": "Jon: Hey Gina! Congrats on the fashion editors reach-out, that's awesome! Dance practice has been fun and exhausting. I'm gonna stay determined and make my own path by going full-time with my biz idea.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:3",
+   "text": "Gina: Just remember that sometimes stumbling blocks can be opened doors. Keep going!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:4",
+   "text": "Jon: Thanks! Your support and encouragement means a lot. Losing my job was a bummer, but it pushed me to take the plunge and go for my biz dreams. Started to learn all these marketing and analytics tools to push the biz forward today. It's been tricky, but I'm up for the challenge and I'm gonna make this work!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:5",
+   "text": "Gina: Go get 'em, Jon!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:6",
+   "text": "Jon: I'm also excited to guide and mentor aspiring dancers on their dreams.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:7",
+   "text": "Gina: Wow, Jon! That's awesome. Loving what you do and bringing joy to others is so rewarding. You're definitely the perfect mentor & guide. Your positivity and determination will make your dance studio a hit!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:8",
+   "text": "Jon: Thanks, Gina - really appreciate your words and encouragement! Dance has the power to bring us together and create sweet moments. Moments like this remind me why I'm chasing my dream and keep me pushing through any struggles.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:9",
+   "text": "Gina: Take comfort in knowing you've got a solid community cheering you on, me included. Keep on pushing!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:10",
+   "text": "Jon: Feeling supported by all of you means so much. It gives me the oomph to keep chasing my dreams. Your faith in me is priceless - I won't let you down!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:11",
+   "text": "Gina: Don't let anything stop you. You have potential!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:12",
+   "text": "Jon: Thanks, Gina! Your faith in me is a real boost. I'm gonna make my dreams come true!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:13",
+   "text": "Gina: Keep pushing and you'll get there. Your dreams are so close!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:14",
+   "text": "Jon: Thanks, Gina! I won't quit, even when it's hard. I'm gonna make it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:15",
+   "text": "Gina: You got this, Jon! Don't let the bumps in the road bring you down. Keep going and make your dreams a reality! I'm rooting for you!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:16",
+   "text": "Jon: Thanks, Gina! Your belief in me means the world. I'm not gonna let anything or anyone stop me. I'll keep pushing and make my dreams come true. Thanks for being a great friend. You rock!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:17",
+   "text": "Gina: Hey Jon, glad I could help! Always here to cheer you on.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:18",
+   "text": "Jon: Thanks! Glad that you are on my side.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:19",
+   "text": "Gina: Sure, see ya. Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:20",
+   "text": "Jon: Bye!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D17:21",
+   "text": "Gina: ;)",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:1",
+   "text": "Gina: Hey Jon! Long time no talk! Last week, I built a new website for customers to make orders. It's been a wild ride but I'm loving it. What's up with you? How's the dance studio?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:2",
+   "text": "Jon: Hey Gina, congrats on the clothing store! The dance studio is on tenuous grounds right now, but I'm staying positive. I got a temp job to help cover expenses while I look for investors. It's tough, but I'm sure it'll be worth it.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:3",
+   "text": "Gina: Thanks, Jon! Appreciate the kind words. Sorry to hear about the studio, but glad to see the positivity. Not easy facing setbacks but I believe in you. Finding investors can be tough, but you've got the passion and experience to make it happen. Rome wasn't built in a day so keep pushing on!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:4",
+   "text": "Jon: Thanks for the support. Running a business isn't easy, but I'm determined to make it work. How have you tackled challenges in your business? Got any advice?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:5",
+   "text": "Gina: I've had some tough times with my business, Jon. Sourcing trendy pieces for my store was a big hurdle. I had to do a lot of research and networking. My advice? Don't be scared to reach out to people in your field for help and contacts. Networking was a lifesaver for me and opened me up to amazing products that I might not have found otherwise.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:6",
+   "text": "Jon: Awesome advice! Lately I've been networking and it's gotten me some good stuff. Really can't beat what connections can do. Check this pic I got from the last networking event!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:7",
+   "text": "Gina: Nice one, Jon! Networking really pays off. Connecting with like-minded people is key. How was the event?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:8",
+   "text": "Jon: Thanks! The event was awesome. I met some investors and got some good advice. The energy was really motivating, it gave me a boost to go after my goals.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:9",
+   "text": "Gina: Wow, Jon! Congrats on the successful night! What are your plans now with the advice you got?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:10",
+   "text": "Jon: Taking your advice, I'm sprucing up my biz plan and tweaking my pitch to investors. I'm also working on an online platform to show off the dance studio's stuff.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:11",
+   "text": "Gina: Sounds like a great plan, Jon! An online platform can really show off your studio and get investors. Need help with anything?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:12",
+   "text": "Jon: Thanks, Gina! Appreciate the offer. Need help with marketing strategies - any advice on reaching my target audience and raising awareness for the dance studio?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:13",
+   "text": "Gina: Yeah Jon, marketing is key for getting your dance studio noticed. Instagram and TikTok can help you reach a younger crowd. Posting dance clips or content related to dance can help. You could also collaborate with local influencers or dance communities. I could help you with making content or even managing your accounts if you want.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:14",
+   "text": "Jon: Sounds great. I'd really appreciate your help with making content and managing my social media. Let's get together and make the dance studio look awesome!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:15",
+   "text": "Gina: Let's create some cool content and manage your social media accounts.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:16",
+   "text": "Jon: Thanks for the support. You rock!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:17",
+   "text": "Gina: Thanks, Jon! You're awesome. Let's get to work and make your studio shine!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:18",
+   "text": "Jon: Definitely, Gina! Let's make our collaboration awesome and bring some dance magic to the world. Can't wait to see what we can do together!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:19",
+   "text": "Gina: Definitely, Jon! I'm pumped to collaborate with you and make some sweet moves. Together, we can make a difference and show the world what we can do. Let's go for it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:20",
+   "text": "Jon: Yeah, Gina! We'll rock the dance floor and teach others to chase their dreams. Let's go for it and make an impact!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:21",
+   "text": "Gina: Yeah Jon! Let's make a difference and show 'em what we got. We can do amazing things together!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D18:22",
+   "text": "Jon: Thanks for having my back.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:1",
+   "text": "Jon: Hey Gina! We haven't talked in a few days. Been rehearsing hard and working on business plans. It's been stressful, but dancing has kept me going.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:2",
+   "text": "Gina: Hey Jon! Remember, just do it! You should get to the point where anyone else would quit and you're not going to stop there. No, what are you waiting for? Do it! Just do it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:3",
+   "text": "Jon: Ha, ha! Thanks, Gina. Sounds familiar, who do those words belong to?",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:4",
+   "text": "Gina: It's Shia Labeouf!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:5",
+   "text": "Jon: Ahhahha, really!? Yea, that definitely him.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:6",
+   "text": "Gina: Hah, yeah!) But really having a creative space for dancers is so important. Last Friday at dance class with a group of friends I felt it. Your studio will be a go-to spot for self-expression. Keep up the good work and don't forget your passion for dance.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:7",
+   "text": "Jon: Thanks, Gina! Your words of encouragement keep me motivated. Can't wait 'til my studio starts welcoming dancers of all ages and backgrounds!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:8",
+   "text": "Gina: I'm so happy to see my words motivating you, Jon. <3",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:9",
+   "text": "Jon: Thanks a ton, Gina! Your help and encouragement mean a lot. Your support will help me make it happen.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:10",
+   "text": "Gina: You're welcome, Jon! I'm here to support you. Every step's getting you closer to your dream. Never give up! You're doing great.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:11",
+   "text": "Jon: Thanks, Gina! I won't quit. I'm gonna keep going, whatever comes my way.",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:12",
+   "text": "Gina: Remember Jon, Just do it!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:13",
+   "text": "Jon: Ah ha ha, yeah, JUST DOING IT!",
+   "action": "unit",
+   "target": null
+  },
+  {
+   "message": "D19:14",
+   "text": "Gina: That's the spirit! Bye!",
+   "action": "unit",
+   "target": null
+  }
+ ],
+ "retrieve_ms_p50": 8099.336041952483,
+ "retrieve_cost_per_query": 0.0,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {
+  "embeddings": 0.0006001084010840109,
+  "escalations": 0.0,
+  "extraction": 0.0,
+  "jev": 0.0,
+  "llm_decisions": 0.0
+ },
+ "store_size_buckets": []
+}

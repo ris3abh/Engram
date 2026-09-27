@@ -1,0 +1,3603 @@
+{
+ "arm": "fx_batched",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "mem0",
+  "store_source_text": true,
+  "worth_filter": false,
+  "merge_policy": "same_as",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "mem0_update",
+  "relation_decider": "llm_batched",
+  "cardinality_rule": true,
+  "close_agreement": true,
+  "candidate_source": "cosine+graph",
+  "fulfills_rule": "question",
+  "belief": true,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "not_planned_mass",
+  "update_multi_sibling": true,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "compact",
+  "relation_version": 2,
+  "temporal_version": 2,
+  "edge_type_version": 1,
+  "same_attribute_gate": true
+ },
+ "slice": {
+  "name": "dev_updates2",
+  "sessions": [
+   1,
+   4
+  ],
+  "messages": 134,
+  "questions": 20
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 62,
+   "store_size": 133,
+   "questions": 20,
+   "accuracy": 0.95,
+   "no_memory": 0,
+   "early_questions": 20,
+   "early_accuracy": 0.95
+  }
+ ],
+ "accuracy": 0.95,
+ "accuracy_by_category": {
+  "update2": 0.95
+ },
+ "stored": 133,
+ "active": 121,
+ "tentative": 114,
+ "disputed": 20,
+ "same_as_edges": 1,
+ "pipeline_stats": {
+  "against_applied": 22,
+  "belief_closes": 11,
+  "plan_fulfilled_asks": 327,
+  "against_blocked_structure": 18,
+  "against_blocked": 22,
+  "against_blocked_temporal": 4,
+  "fulfilled": 1
+ },
+ "facts_extracted": 133,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 11,
+ "closes_detail": [
+  {
+   "closed": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "closed_source": "D1:3",
+   "by": "Caroline found the transgender stories shared at the LGBTQ support group she attended on May 7, 2023, to be very inspiring and felt happy and thankful for all the support.",
+   "by_source": "D1:5",
+   "labeled": false
+  },
+  {
+   "closed": "Melanie ran a charity race for mental health on May 20, 2023, and found the experience rewarding, prompting her to reflect on the importance of taking care of our minds.",
+   "closed_source": "D2:1",
+   "by": "Melanie found the charity race for mental health on May 20, 2023, to be thought-provoking and is starting to realize the importance of self-care. She acknowledges that taking care of herself enables her to better care for her family.",
+   "by_source": "D2:3",
+   "labeled": false
+  },
+  {
+   "closed": "Caroline participated in a school event around June 2-3, 2023, where she talked about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since starting her transition three years ago.",
+   "closed_source": "D3:1",
+   "by": "Caroline felt powerful giving her talk at the school event around June 2-3, 2023, where she shared her transgender journey, struggles, and personal growth since coming out. She was grateful to see how the audience related to her message and felt inspired to be better allies.",
+   "by_source": "D3:3",
+   "labeled": false
+  },
+  {
+   "closed": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be.",
+   "closed_source": "D1:8",
+   "by": "Melanie expressed admiration for Caroline's courage and finds it inspiring.",
+   "by_source": "D3:10",
+   "labeled": false
+  },
+  {
+   "closed": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning.",
+   "closed_source": "D4:2",
+   "by": "Melanie complimented Caroline on her necklace, expressing that it's gorgeous and reflecting on the significance of treasured items.",
+   "by_source": "D4:4",
+   "labeled": false
+  },
+  {
+   "closed": "Melanie took her family camping in the mountains around June 20-26, 2023, and described it as a really nice time together.",
+   "closed_source": "D4:6",
+   "by": "Melanie had an awesome family camping trip around June 20-26, 2023, where they explored nature, roasted marshmallows around the campfire, and went on a hike with the two younger kids, who love nature. She described the view from the top as amazing and emphasized the special moments shared together as a family.",
+   "by_source": "D4:8",
+   "labeled": false
+  },
+  {
+   "closed": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "closed_source": "D1:11",
+   "by": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "by_source": "D4:11",
+   "labeled": false
+  },
+  {
+   "closed": "Caroline's favorite coffee spot is Blue Door Caf\u00e9.",
+   "closed_source": "U2:N01.1",
+   "by": "Caroline's favorite coffee spot is Grind House as of October 30, 2023.",
+   "by_source": "U2:N01.2",
+   "labeled": false
+  },
+  {
+   "closed": "Caroline switched her volunteer shift at the community center to Thursdays around October 3, 2023.",
+   "closed_source": "U2:C05.2",
+   "by": "Caroline's volunteer shift at the community center moved to Saturday mornings around November 1, 2023.",
+   "by_source": "U2:C05.3",
+   "labeled": false
+  },
+  {
+   "closed": "Melanie's book club meets at Anna's house.",
+   "closed_source": "U2:N04.1",
+   "by": "Melanie's book club meets at the public library as of November 9, 2023.",
+   "by_source": "U2:N04.2",
+   "labeled": false
+  },
+  {
+   "closed": "Caroline's phone is an iPhone 12.",
+   "closed_source": "U2:N05.1",
+   "by": "Caroline's phone is a Pixel 8 as of November 14, 2023.",
+   "by_source": "U2:N05.2",
+   "labeled": false
+  }
+ ],
+ "wrong_closes": 11,
+ "escalations": 0,
+ "llm_decisions": 132,
+ "actions": {
+  "inserted": 100,
+  "updated": 22,
+  "disputed": 11
+ },
+ "decision_cost_per_1k": 0.676345255035139,
+ "cost_per_1k": 1.9860092102590199,
+ "write_latency_p50_ms": 5613.4161459922325,
+ "decision_latency_p50_ms": 5650.439104472753,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 906.55,
+ "retrieved_tokens_median": 869.0,
+ "memories_mean": 13.65,
+ "stale_fact_rate": 0.0,
+ "stale": {
+  "labels_in_slice": 1,
+  "claims_stored": 1,
+  "claims_stale": 0,
+  "rate": 0.0,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.00011898599999999999,
+  "claude": 0.0,
+  "openai": 0.00240075
+ },
+ "cache": {
+  "hits": 2693,
+  "misses": 18
+ },
+ "answers": [
+  {
+   "idx": "U2:P01",
+   "question": "What instrument did Melanie play in June 2023?",
+   "gold": "Violin",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Violin",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00044271793806451617,
+   "retrieved_tokens": 1183,
+   "retrieve_ms": 353.70712500298396,
+   "retrieve_cost": 0.00019041793806451616,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:P02",
+   "question": "Where did Caroline's grandma live in May 2023?",
+   "gold": "Sweden",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Sweden",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00042205212158808933,
+   "retrieved_tokens": 1072,
+   "retrieve_ms": 273.01454200642183,
+   "retrieve_cost": 0.00018610212158808937,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:P03",
+   "question": "Which adoption agency was Caroline working with in early July 2023?",
+   "gold": "The agency she chose for its LGBTQ+ inclusivity (before switching to Rainbow Families)",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Caroline was with Rainbow Families.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037701729749103945,
+   "retrieved_tokens": 725,
+   "retrieve_ms": 255.88775001233444,
+   "retrieve_cost": 0.00018951729749103947,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:P04",
+   "question": "Did Melanie have a job in June 2023?",
+   "gold": "Yes",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "No, she quit on June 30, 2023.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.0004191363725806452,
+   "retrieved_tokens": 968,
+   "retrieve_ms": 281.631332996767,
+   "retrieve_cost": 0.00019248637258064517,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:P05",
+   "question": "What was Melanie's main creative outlet in May 2023?",
+   "gold": "Painting",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Painting",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.0004417763612903226,
+   "retrieved_tokens": 1162,
+   "retrieve_ms": 340.84395796526223,
+   "retrieve_cost": 0.0001926263612903226,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C01q1",
+   "question": "Where does Caroline live now?",
+   "gold": "A house in Evanston",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Evanston",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00040216435483870973,
+   "retrieved_tokens": 965,
+   "retrieve_ms": 370.93320896383375,
+   "retrieve_cost": 0.0001834643548387097,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C01q2",
+   "question": "Where was Caroline living in October 2023?",
+   "gold": "A two-bedroom in Oak Park",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "In a two-bedroom apartment in Oak Park.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0004029125462365592,
+   "retrieved_tokens": 899,
+   "retrieve_ms": 446.74670801032335,
+   "retrieve_cost": 0.00018931254623655918,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C02q1",
+   "question": "How is Melanie learning guitar now?",
+   "gold": "A group class at the community center",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "In a group guitar class.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003985792785923754,
+   "retrieved_tokens": 815,
+   "retrieve_ms": 564.8880830267444,
+   "retrieve_cost": 0.0002002792785923754,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C02q2",
+   "question": "Who was teaching Melanie guitar in early October 2023?",
+   "gold": "Priya",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Priya was teaching Melanie guitar.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00039841552173913047,
+   "retrieved_tokens": 868,
+   "retrieve_ms": 346.32637503091246,
+   "retrieve_cost": 0.00019006552173913047,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C03q1",
+   "question": "Which children is Caroline currently matched with?",
+   "gold": "Maya and Sam (siblings)",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Maya and Sam.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003932397913043479,
+   "retrieved_tokens": 867,
+   "retrieve_ms": 355.1227500429377,
+   "retrieve_cost": 0.00018743979130434786,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C03q2",
+   "question": "Who was Caroline matched with in October 2023?",
+   "gold": "Leo, a 7-year-old",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "A 7-year-old named Leo.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003498792602150538,
+   "retrieved_tokens": 553,
+   "retrieve_ms": 402.11833303328604,
+   "retrieve_cost": 0.0001884792602150538,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C04q1",
+   "question": "Which school does Melanie's oldest child attend now?",
+   "gold": "Lincoln Middle School",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Lincoln Middle School.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00037770524516129035,
+   "retrieved_tokens": 737,
+   "retrieve_ms": 372.2381249535829,
+   "retrieve_cost": 0.00019140524516129034,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C04q2",
+   "question": "Which school was Melanie's oldest at in late October 2023?",
+   "gold": "Riverside Academy",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Riverside Academy",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00040259264258064517,
+   "retrieved_tokens": 886,
+   "retrieve_ms": 381.38325000181794,
+   "retrieve_cost": 0.0001927426425806452,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C05q1",
+   "question": "When does Caroline volunteer at the community center now?",
+   "gold": "Every other Saturday morning",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Every other Saturday morning.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003899471935483871,
+   "retrieved_tokens": 758,
+   "retrieve_ms": 651.7779999994673,
+   "retrieve_cost": 0.0001998971935483871,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C05q2",
+   "question": "What day did Caroline volunteer in mid-October 2023?",
+   "gold": "Thursdays",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Caroline volunteered on Thursdays.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00038457680545905706,
+   "retrieved_tokens": 698,
+   "retrieve_ms": 660.1588749908842,
+   "retrieve_cost": 0.0002020268054590571,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N01",
+   "question": "What is Caroline's favorite coffee spot?",
+   "gold": "Grind House",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Grind House",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004914450205278592,
+   "retrieved_tokens": 1485,
+   "retrieve_ms": 630.421917012427,
+   "retrieve_cost": 0.00019414502052785926,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N02",
+   "question": "What car does Melanie's family drive?",
+   "gold": "A silver SUV",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Silver SUV.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003794659747800587,
+   "retrieved_tokens": 754,
+   "retrieve_ms": 386.77325000753626,
+   "retrieve_cost": 0.00019181597478005867,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N03",
+   "question": "Who is Caroline's therapist?",
+   "gold": "Dr. Kim",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Dr. Kim",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00040402852370266485,
+   "retrieved_tokens": 870,
+   "retrieve_ms": 668.2153330184519,
+   "retrieve_cost": 0.00019957852370266482,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N04",
+   "question": "Where does Melanie's book club meet?",
+   "gold": "The public library",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "At the public library.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037015432258064517,
+   "retrieved_tokens": 618,
+   "retrieve_ms": 637.9625410190783,
+   "retrieve_cost": 0.0002017043225806452,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N05",
+   "question": "What phone does Caroline have?",
+   "gold": "A Pixel 8",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Pixel 8",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.0004557285032258065,
+   "retrieved_tokens": 1248,
+   "retrieve_ms": 679.6422919724137,
+   "retrieve_cost": 0.00019457850322580648,
+   "checkpoint": 62,
+   "store_size": 133
+  }
+ ],
+ "asked": [
+  {
+   "idx": "U2:P01",
+   "question": "What instrument did Melanie play in June 2023?",
+   "gold": "Violin",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Violin",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00044271793806451617,
+   "retrieved_tokens": 1183,
+   "retrieve_ms": 353.70712500298396,
+   "retrieve_cost": 0.00019041793806451616,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:P02",
+   "question": "Where did Caroline's grandma live in May 2023?",
+   "gold": "Sweden",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Sweden",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00042205212158808933,
+   "retrieved_tokens": 1072,
+   "retrieve_ms": 273.01454200642183,
+   "retrieve_cost": 0.00018610212158808937,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:P03",
+   "question": "Which adoption agency was Caroline working with in early July 2023?",
+   "gold": "The agency she chose for its LGBTQ+ inclusivity (before switching to Rainbow Families)",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Caroline was with Rainbow Families.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037701729749103945,
+   "retrieved_tokens": 725,
+   "retrieve_ms": 255.88775001233444,
+   "retrieve_cost": 0.00018951729749103947,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:P04",
+   "question": "Did Melanie have a job in June 2023?",
+   "gold": "Yes",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "No, she quit on June 30, 2023.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.0004191363725806452,
+   "retrieved_tokens": 968,
+   "retrieve_ms": 281.631332996767,
+   "retrieve_cost": 0.00019248637258064517,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:P05",
+   "question": "What was Melanie's main creative outlet in May 2023?",
+   "gold": "Painting",
+   "category": "update2",
+   "type": "point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Painting",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.0004417763612903226,
+   "retrieved_tokens": 1162,
+   "retrieve_ms": 340.84395796526223,
+   "retrieve_cost": 0.0001926263612903226,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C01q1",
+   "question": "Where does Caroline live now?",
+   "gold": "A house in Evanston",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Evanston",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00040216435483870973,
+   "retrieved_tokens": 965,
+   "retrieve_ms": 370.93320896383375,
+   "retrieve_cost": 0.0001834643548387097,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C01q2",
+   "question": "Where was Caroline living in October 2023?",
+   "gold": "A two-bedroom in Oak Park",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "In a two-bedroom apartment in Oak Park.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0004029125462365592,
+   "retrieved_tokens": 899,
+   "retrieve_ms": 446.74670801032335,
+   "retrieve_cost": 0.00018931254623655918,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C02q1",
+   "question": "How is Melanie learning guitar now?",
+   "gold": "A group class at the community center",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "In a group guitar class.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003985792785923754,
+   "retrieved_tokens": 815,
+   "retrieve_ms": 564.8880830267444,
+   "retrieve_cost": 0.0002002792785923754,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C02q2",
+   "question": "Who was teaching Melanie guitar in early October 2023?",
+   "gold": "Priya",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Priya was teaching Melanie guitar.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00039841552173913047,
+   "retrieved_tokens": 868,
+   "retrieve_ms": 346.32637503091246,
+   "retrieve_cost": 0.00019006552173913047,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C03q1",
+   "question": "Which children is Caroline currently matched with?",
+   "gold": "Maya and Sam (siblings)",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Maya and Sam.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003932397913043479,
+   "retrieved_tokens": 867,
+   "retrieve_ms": 355.1227500429377,
+   "retrieve_cost": 0.00018743979130434786,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C03q2",
+   "question": "Who was Caroline matched with in October 2023?",
+   "gold": "Leo, a 7-year-old",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "A 7-year-old named Leo.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003498792602150538,
+   "retrieved_tokens": 553,
+   "retrieve_ms": 402.11833303328604,
+   "retrieve_cost": 0.0001884792602150538,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C04q1",
+   "question": "Which school does Melanie's oldest child attend now?",
+   "gold": "Lincoln Middle School",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Lincoln Middle School.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00037770524516129035,
+   "retrieved_tokens": 737,
+   "retrieve_ms": 372.2381249535829,
+   "retrieve_cost": 0.00019140524516129034,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C04q2",
+   "question": "Which school was Melanie's oldest at in late October 2023?",
+   "gold": "Riverside Academy",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Riverside Academy",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00040259264258064517,
+   "retrieved_tokens": 886,
+   "retrieve_ms": 381.38325000181794,
+   "retrieve_cost": 0.0001927426425806452,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C05q1",
+   "question": "When does Caroline volunteer at the community center now?",
+   "gold": "Every other Saturday morning",
+   "category": "update2",
+   "type": "chain_current",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Every other Saturday morning.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003899471935483871,
+   "retrieved_tokens": 758,
+   "retrieve_ms": 651.7779999994673,
+   "retrieve_cost": 0.0001998971935483871,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:C05q2",
+   "question": "What day did Caroline volunteer in mid-October 2023?",
+   "gold": "Thursdays",
+   "category": "update2",
+   "type": "chain_point_in_time",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Caroline volunteered on Thursdays.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00038457680545905706,
+   "retrieved_tokens": 698,
+   "retrieve_ms": 660.1588749908842,
+   "retrieve_cost": 0.0002020268054590571,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N01",
+   "question": "What is Caroline's favorite coffee spot?",
+   "gold": "Grind House",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Grind House",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004914450205278592,
+   "retrieved_tokens": 1485,
+   "retrieve_ms": 630.421917012427,
+   "retrieve_cost": 0.00019414502052785926,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N02",
+   "question": "What car does Melanie's family drive?",
+   "gold": "A silver SUV",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Silver SUV.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003794659747800587,
+   "retrieved_tokens": 754,
+   "retrieve_ms": 386.77325000753626,
+   "retrieve_cost": 0.00019181597478005867,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N03",
+   "question": "Who is Caroline's therapist?",
+   "gold": "Dr. Kim",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Dr. Kim",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00040402852370266485,
+   "retrieved_tokens": 870,
+   "retrieve_ms": 668.2153330184519,
+   "retrieve_cost": 0.00019957852370266482,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N04",
+   "question": "Where does Melanie's book club meet?",
+   "gold": "The public library",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "At the public library.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037015432258064517,
+   "retrieved_tokens": 618,
+   "retrieve_ms": 637.9625410190783,
+   "retrieve_cost": 0.0002017043225806452,
+   "checkpoint": 62,
+   "store_size": 133
+  },
+  {
+   "idx": "U2:N05",
+   "question": "What phone does Caroline have?",
+   "gold": "A Pixel 8",
+   "category": "update2",
+   "type": "no_temporal_cue",
+   "evidence": [],
+   "last_evidence_session": 62,
+   "answer": "Pixel 8",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.0004557285032258065,
+   "retrieved_tokens": 1248,
+   "retrieve_ms": 679.6422919724137,
+   "retrieve_cost": 0.00019457850322580648,
+   "checkpoint": 62,
+   "store_size": 133
+  }
+ ],
+ "options": {
+  "top_k": null,
+  "no_dates": false,
+  "no_answer": false
+ },
+ "write_outcomes": [
+  {
+   "message": "D1:3",
+   "text": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:5",
+   "text": "Caroline found the transgender stories shared at the LGBTQ support group she attended on May 7, 2023, to be very inspiring and felt happy and thankful for all the support.",
+   "action": "updated",
+   "target": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful."
+  },
+  {
+   "message": "D1:6",
+   "text": "Melanie complimented Caroline on a painting and expressed appreciation for the helpful LGBTQ support group Caroline attended, asking how it has impacted her.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:7",
+   "text": "Caroline feels accepted and has gained the courage to embrace herself after attending the LGBTQ support group on May 7, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:8",
+   "text": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:9",
+   "text": "Caroline plans to continue her education and explore career options, which she finds exciting.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:10",
+   "text": "Melanie asked Caroline about the types of jobs she is considering and if any particular options stand out to her.",
+   "action": "updated",
+   "target": "Caroline plans to continue her education and explore career options, which she finds exciting."
+  },
+  {
+   "message": "D1:11",
+   "text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:12",
+   "text": "Melanie believes Caroline would be a great counselor, highlighting her empathy and understanding as valuable traits for helping others.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:14",
+   "text": "Melanie painted a lake sunrise in 2022, which holds special significance for her.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:15",
+   "text": "Caroline complimented Melanie on her painting, noting that the colors blend nicely and expressing that painting seems like a great outlet for self-expression.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:16",
+   "text": "Melanie enjoys painting as a fun way to express her feelings and get creative, finding it a great way to relax after a long day.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:17",
+   "text": "Caroline agrees with Melanie that relaxing and expressing oneself is important and plans to do some research after their conversation on May 8, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D1:18",
+   "text": "Melanie believes that taking care of oneself is vital and plans to go swimming with the kids after their conversation on May 8, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:1",
+   "text": "Melanie ran a charity race for mental health on May 20, 2023, and found the experience rewarding, prompting her to reflect on the importance of taking care of our minds.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:2",
+   "text": "Caroline expressed pride in Melanie for participating in the charity race for mental health that took place on May 20, 2023, highlighting the importance of making a difference and raising awareness.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:3",
+   "text": "Melanie found the charity race for mental health on May 20, 2023, to be thought-provoking and is starting to realize the importance of self-care. She acknowledges that taking care of herself enables her to better care for her family.",
+   "action": "updated",
+   "target": "Melanie ran a charity race for mental health on May 20, 2023, and found the experience rewarding, prompting her to reflect on the importance of taking care of our minds."
+  },
+  {
+   "message": "D2:5",
+   "text": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:7",
+   "text": "Melanie's kids are excited about summer break, and they are considering going camping in June 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:7",
+   "text": "Melanie is currently working on her painting skills and is doing her best to improve.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:8",
+   "text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:9",
+   "text": "Melanie expressed admiration for Caroline's plans to adopt children in need, stating that her future family will be lucky to have her.",
+   "action": "updated",
+   "target": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need."
+  },
+  {
+   "message": "D2:10",
+   "text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:10",
+   "text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:11",
+   "text": "Melanie expressed enthusiasm about an adoption agency Caroline is considering and asked what influenced her choice.",
+   "action": "updated",
+   "target": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies."
+  },
+  {
+   "message": "D2:12",
+   "text": "Caroline chose the adoption agency she is considering because they help LGBTQ+ individuals with adoption, and their inclusivity and support resonated with her.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:13",
+   "text": "Melanie expressed appreciation for the inclusivity and support of the adoption agency Caroline is considering and asked if there is anything Caroline is excited about in the adoption process.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:14",
+   "text": "Caroline is thrilled about the prospect of creating a family for children in need and acknowledges that being a single parent will be challenging, but she is ready to take on the challenge.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:15",
+   "text": "Melanie praised Caroline for her plans to create a family for children in need, expressing that Caroline will be an awesome mom and wishing her good luck.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:16",
+   "text": "Caroline expressed gratitude for Melanie's kind words, stating they mean a lot to her as she strives to ensure the kids she plans to adopt have a safe and loving home.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D2:17",
+   "text": "Melanie believes Caroline has a caring heart and expresses confidence that the children she plans to adopt will receive all the love and stability they need, showing excitement for this new chapter in Caroline's life.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:1",
+   "text": "Caroline participated in a school event around June 2-3, 2023, where she talked about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since starting her transition three years ago.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:2",
+   "text": "Melanie expressed pride in Caroline for spreading awareness about her transgender journey at a school event around June 2-3, 2023, and encouraged her to continue inspiring others with her strength and courage.",
+   "action": "updated",
+   "target": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be."
+  },
+  {
+   "message": "D3:3",
+   "text": "Caroline felt powerful giving her talk at the school event around June 2-3, 2023, where she shared her transgender journey, struggles, and personal growth since coming out. She was grateful to see how the audience related to her message and felt inspired to be better allies.",
+   "action": "updated",
+   "target": "Caroline participated in a school event around June 2-3, 2023, where she talked about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since starting her transition three years ago."
+  },
+  {
+   "message": "D3:3",
+   "text": "Caroline believes conversations about gender identity and inclusion are necessary and is thankful for the opportunity to give a voice to the trans community.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:5",
+   "text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:6",
+   "text": "Melanie expressed that it takes courage to talk about personal stories and emphasized the importance of vulnerability in creating bonds and understanding among people. She believes sharing stories can inspire and encourage others facing similar challenges.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:7",
+   "text": "Caroline expressed gratitude for the opportunity to share her story and give others hope, emphasizing the importance of unique paths and collaboration in building a more inclusive and understanding world.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:7",
+   "text": "Caroline plans to continue using her voice to make a change and lift others up, acknowledging Melanie's role in this journey.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:8",
+   "text": "Melanie expressed gratitude to Caroline for allowing her to be part of her journey and pride in the difference Caroline is making. She emphasized the importance of motivating and helping each other as they navigate through life together.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:9",
+   "text": "Caroline expressed a desire to spread love and understanding, thanking Melanie for her support and encouragement, and emphasized their ability to tackle life's challenges together.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:10",
+   "text": "Melanie feels motivated by her family, who provide her with love and support, and she aspires to be courageous for them.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:10",
+   "text": "Melanie expressed admiration for Caroline's courage and finds it inspiring.",
+   "action": "updated",
+   "target": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be."
+  },
+  {
+   "message": "D3:11",
+   "text": "Caroline's friends, family, and mentors are her sources of motivation and strength, helping her to push on in her journey.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:11",
+   "text": "Caroline shared a picture from a meetup with her friends and family last week.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:12",
+   "text": "Melanie admired a photo shared by Caroline and inquired about the duration of her strong support system.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:13",
+   "text": "Caroline has known her friends for 4 years since moving from her home country, and their love and support have been crucial, especially after a tough breakup.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:13",
+   "text": "Caroline feels lucky to have a strong support system that has been there for her through everything, and she expresses gratitude for their help.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:14",
+   "text": "Melanie feels lucky to have her husband and kids, who keep her motivated.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:15",
+   "text": "Caroline admired a family picture shared by Melanie and asked how long she has been married.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:16",
+   "text": "Melanie has been married for 5 years as of June 9, 2023, and reflected on how time flies since she wore her wedding dress.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:17",
+   "text": "Caroline congratulated Melanie on her wedding, complimenting how great they looked on their wedding day and wishing her many happy years together.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:18",
+   "text": "Melanie expressed appreciation for Caroline's kind words and is looking forward to more happy years, emphasizing that her family and moments make it all worth it.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:20",
+   "text": "Melanie had a fun family gathering where they played games, ate good food, and spent quality time together, emphasizing that family moments make life awesome.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:22",
+   "text": "Melanie cherishes time spent with her family, stating that it is when she truly feels alive and happy.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D3:23",
+   "text": "Caroline expressed that spending time with loved ones brings her immense happiness and makes her feel thankful, emphasizing that family is everything.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:2",
+   "text": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:3",
+   "text": "Caroline's necklace is a special gift from her grandma in Sweden, given to her when she was young. It symbolizes love, faith, and strength, serving as a reminder of her roots and the support she receives from her family.",
+   "action": "updated",
+   "target": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning."
+  },
+  {
+   "message": "D4:4",
+   "text": "Melanie complimented Caroline on her necklace, expressing that it's gorgeous and reflecting on the significance of treasured items.",
+   "action": "updated",
+   "target": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning."
+  },
+  {
+   "message": "D4:4",
+   "text": "Melanie asked Caroline if she has any other treasured objects similar to the necklace.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:5",
+   "text": "Caroline has a hand-painted bowl that holds sentimental value, made by a friend for her 18th birthday ten years ago. The bowl's pattern and colors remind her of art and self-expression.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:6",
+   "text": "Melanie took her family camping in the mountains around June 20-26, 2023, and described it as a really nice time together.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:7",
+   "text": "Caroline expressed interest in Melanie's recent family camping trip, asking how it was and if there was anything fun about it.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:8",
+   "text": "Melanie had an awesome family camping trip around June 20-26, 2023, where they explored nature, roasted marshmallows around the campfire, and went on a hike with the two younger kids, who love nature. She described the view from the top as amazing and emphasized the special moments shared together as a family.",
+   "action": "updated",
+   "target": "Melanie took her family camping in the mountains around June 20-26, 2023, and described it as a really nice time together."
+  },
+  {
+   "message": "D4:10",
+   "text": "Melanie values family time and considers it important in her life.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:11",
+   "text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "action": "updated",
+   "target": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues."
+  },
+  {
+   "message": "D4:12",
+   "text": "Melanie asked Caroline about the specific types of counseling and mental health services she wants to pursue.",
+   "action": "updated",
+   "target": "Melanie asked Caroline about the types of jobs she is considering and if any particular options stand out to her."
+  },
+  {
+   "message": "D4:13",
+   "text": "Caroline is considering a career in counseling, specifically working with transgender individuals to help them accept themselves and support their mental health.",
+   "action": "updated",
+   "target": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues."
+  },
+  {
+   "message": "D4:13",
+   "text": "Caroline attended an LGBTQ+ counseling workshop on June 23, 2023, where she learned about different therapeutic methods and how to best work with transgender individuals.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:13",
+   "text": "Caroline was inspired by the passion of the professionals at the LGBTQ+ counseling workshop for creating a safe space for transgender individuals.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:14",
+   "text": "Melanie finds Caroline's dedication to helping others through counseling impressive and inspiring, and she inquired about what motivated Caroline to pursue this career path.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:15",
+   "text": "Caroline is looking into a career in counseling and mental health, motivated by her own journey and the support she received, which made a significant difference in her life.",
+   "action": "updated",
+   "target": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her."
+  },
+  {
+   "message": "D4:15",
+   "text": "Caroline is passionate about creating a safe and inviting space for people to grow, inspired by how counseling and support groups improved her life.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:16",
+   "text": "Melanie praised Caroline for her passion and hard work in helping others, acknowledging the significant impact she is making through her experiences.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "D4:18",
+   "text": "Melanie congratulated Caroline on pursuing her passion for counseling and mental health, expressing admiration for her dedication to helping others.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:E01",
+   "text": "Melanie hasn't painted in weeks and is now focusing on pottery as her main creative outlet, attending the studio three evenings a week.",
+   "action": "disputed",
+   "target": "Melanie is currently working on her painting skills and is doing her best to improve."
+  },
+  {
+   "message": "U:E02",
+   "text": "Melanie's favorite painting has changed; her new favorite is the forest-at-dusk piece she finished around June 27, 2023, replacing the lake sunrise painting.",
+   "action": "disputed",
+   "target": "Melanie painted a lake sunrise in 2022, which holds special significance for her."
+  },
+  {
+   "message": "U:E03",
+   "text": "Melanie quit her job on June 30, 2023, to be home with her kids full-time.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:E04",
+   "text": "Caroline lost her grandma's necklace at the beach on July 8, 2023, and despite searching for hours, it could not be found.",
+   "action": "disputed",
+   "target": "Caroline's necklace is a special gift from her grandma in Sweden, given to her when she was young. It symbolizes love, faith, and strength, serving as a reminder of her roots and the support she receives from her family."
+  },
+  {
+   "message": "U:E05",
+   "text": "Caroline's hand-painted bowl from her 18th birthday, which held sentimental value, fell off the shelf and shattered around July 11, 2023. She kept a shard but the bowl is now gone.",
+   "action": "disputed",
+   "target": "Caroline has a hand-painted bowl that holds sentimental value, made by a friend for her 18th birthday ten years ago. The bowl's pattern and colors remind her of art and self-expression."
+  },
+  {
+   "message": "U:E06",
+   "text": "Caroline no longer attends the LGBTQ support group as it disbanded after the organizer moved away.",
+   "action": "disputed",
+   "target": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful."
+  },
+  {
+   "message": "U:E07",
+   "text": "Melanie's local pool closed permanently around July 15, 2023, so she and her kids no longer swim there and have switched to biking together instead.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:E08",
+   "text": "Melanie's two younger kids have moved on from their interest in nature and are now completely obsessed with dinosaurs.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:E09",
+   "text": "Melanie sold her violin in June 2023 and is now learning guitar, finding it more fun to play with her kids.",
+   "action": "updated",
+   "target": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family."
+  },
+  {
+   "message": "U:E10",
+   "text": "Melanie has been experiencing knee issues, so she stopped running completely and now swims laps at the gym instead.",
+   "action": "disputed",
+   "target": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family."
+  },
+  {
+   "message": "U:E11",
+   "text": "Melanie has swapped reading for meditation in her me-time, dedicating twenty minutes every morning to the practice.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:E12",
+   "text": "Caroline switched her adoption agency to Rainbow Families around July 25, 2023, because they are closer to home and move faster.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:E13",
+   "text": "Caroline has changed her adoption plan as of July 27, 2023, deciding to foster first instead of adopting right away to learn the ropes.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:E14",
+   "text": "Melanie has established a consistent self-care routine that she feels is now effective, marking a significant improvement from her previous struggles with self-care.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:E15",
+   "text": "Caroline's grandma moved from Sweden and now lives in Norway with her aunt as of July 31, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:S01",
+   "text": "Melanie and her spouse's first apartment after their wedding was very small, and they still laugh about it.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:S02",
+   "text": "Caroline wanted to be a nurse back in high school, reflecting on how her career aspirations have changed over time.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:S03",
+   "text": "Caroline felt lonely during her first year after moving, before she met her friends.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:S04",
+   "text": "Caroline mentioned that she might move back to Sweden someday, but not in the near future.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:S05",
+   "text": "Melanie wants to run another charity race in the fall of 2023, considering participating in a half marathon this time.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:S06",
+   "text": "Melanie hopes to camp at the Grand Canyon next summer, contingent on saving up.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:S07",
+   "text": "Caroline attended her first counseling workshop on June 23, 2023.",
+   "action": "inserted",
+   "target": "Caroline attended an LGBTQ+ counseling workshop on June 23, 2023, where she learned about different therapeutic methods and how to best work with transgender individuals."
+  },
+  {
+   "message": "U:S08",
+   "text": "Before coming out, Caroline was too scared to tell anyone about herself.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:S09",
+   "text": "Caroline used to believe she would only adopt with a partner someday, but her perspective has changed.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:S10",
+   "text": "Melanie used to be really shy, even as a teenager.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:F01",
+   "text": "Caroline enrolled in a psychology certificate program at the community college around August 23, 2023, with classes starting the following week.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:F02",
+   "text": "Melanie's kids' summer break started around August 24, 2023, and they are enjoying every minute of it.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:F03",
+   "text": "Caroline started volunteering as a peer counselor for trans youth at the community center around August 25, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:F04",
+   "text": "Caroline finished her research and submitted her application to Rainbow Families on August 21, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U:F05",
+   "text": "Caroline gave another talk about her journey at a high school in the next town around August 28, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C01.1",
+   "text": "Caroline moved into a studio apartment downtown around September 3, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:N01.1",
+   "text": "Caroline's favorite coffee spot is Blue Door Caf\u00e9.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C02.1",
+   "text": "Melanie's guitar teacher is named Ben, and she describes him as really patient.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:N02.1",
+   "text": "Melanie drives a blue minivan.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C04.1",
+   "text": "Melanie's oldest child started at Lincoln Middle School around September 4, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:N03.1",
+   "text": "Caroline's therapist is Dr. Alvarez.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C03.1",
+   "text": "Caroline passed her foster home study around September 10, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:N04.1",
+   "text": "Melanie's book club meets at Anna's house.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C05.1",
+   "text": "Caroline volunteers at the community center on Tuesdays.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:N05.1",
+   "text": "Caroline's phone is an iPhone 12.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C02.2",
+   "text": "Melanie switched guitar teachers and is now learning from Priya.",
+   "action": "updated",
+   "target": "Melanie's guitar teacher is named Ben, and she describes him as really patient."
+  },
+  {
+   "message": "U2:C01.2",
+   "text": "Caroline moved into a two-bedroom apartment in Oak Park around October 1, 2023, to accommodate a foster child.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C05.2",
+   "text": "Caroline switched her volunteer shift at the community center to Thursdays around October 3, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C03.2",
+   "text": "Caroline has been matched with a 7-year-old named Leo around October 8, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C04.2",
+   "text": "Melanie moved her oldest child to Riverside Academy around October 15, 2023, because Lincoln Middle School wasn't a good fit.",
+   "action": "disputed",
+   "target": "Melanie's oldest child started at Lincoln Middle School around September 4, 2023."
+  },
+  {
+   "message": "U2:C02.3",
+   "text": "Melanie's guitar teacher Priya moved away around October 2023, so she is currently learning guitar from YouTube videos.",
+   "action": "disputed",
+   "target": "Melanie switched guitar teachers and is now learning from Priya."
+  },
+  {
+   "message": "U2:N01.2",
+   "text": "Caroline's favorite coffee spot is Grind House as of October 30, 2023.",
+   "action": "updated",
+   "target": "Caroline's favorite coffee spot is Blue Door Caf\u00e9."
+  },
+  {
+   "message": "U2:C05.3",
+   "text": "Caroline's volunteer shift at the community center moved to Saturday mornings around November 1, 2023.",
+   "action": "updated",
+   "target": "Caroline switched her volunteer shift at the community center to Thursdays around October 3, 2023."
+  },
+  {
+   "message": "U2:N02.2",
+   "text": "Melanie drives a silver SUV.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C03.3",
+   "text": "Caroline's foster child Leo went back to live with his grandmother around November 5, 2023, which she believes is the best thing for him.",
+   "action": "disputed",
+   "target": "Caroline has been matched with a 7-year-old named Leo around October 8, 2023."
+  },
+  {
+   "message": "U2:N03.2",
+   "text": "Caroline's therapist is now Dr. Kim as of November 6, 2023.",
+   "action": "updated",
+   "target": "Caroline's therapist is Dr. Alvarez."
+  },
+  {
+   "message": "U2:N04.2",
+   "text": "Melanie's book club meets at the public library as of November 9, 2023.",
+   "action": "updated",
+   "target": "Melanie's book club meets at Anna's house."
+  },
+  {
+   "message": "U2:C01.3",
+   "text": "Caroline found a house and now lives in Evanston as of November 12, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:N05.2",
+   "text": "Caroline's phone is a Pixel 8 as of November 14, 2023.",
+   "action": "updated",
+   "target": "Caroline's phone is an iPhone 12."
+  },
+  {
+   "message": "U2:C02.4",
+   "text": "Melanie joined a group guitar class at the community center around November 20, 2023, instead of learning from YouTube videos.",
+   "action": "disputed",
+   "target": "Melanie's guitar teacher Priya moved away around October 2023, so she is currently learning guitar from YouTube videos."
+  },
+  {
+   "message": "U2:C04.3",
+   "text": "Melanie's oldest child returned to Lincoln Middle School around November 25, 2023, after finding Riverside Academy too far away.",
+   "action": "disputed",
+   "target": "Melanie moved her oldest child to Riverside Academy around October 15, 2023, because Lincoln Middle School wasn't a good fit."
+  },
+  {
+   "message": "U2:C03.4",
+   "text": "Caroline has been matched with two siblings named Maya and Sam around December 3, 2023.",
+   "action": "inserted",
+   "target": null
+  },
+  {
+   "message": "U2:C05.4",
+   "text": "Caroline cut back her volunteering at the community center to every other Saturday morning around December 6, 2023.",
+   "action": "inserted",
+   "target": null
+  }
+ ],
+ "retrieve_ms_p50": 384.0782500046771,
+ "retrieve_cost_per_query": 0.00019290425377536016,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "same_attribute_report": {
+  "evidence_events": 0,
+  "evidence_applied": 0,
+  "evidence_unconfirmed": 0,
+  "facts_lowered": 0,
+  "facts_lowered_closed": 0,
+  "closes_via_same_attribute": []
+ },
+ "hygiene": {
+  "groups": 21,
+  "pairs": 518,
+  "decisions": 518,
+  "merges": 1,
+  "drops": 0,
+  "already_linked": 0,
+  "failed_requests": 0,
+  "cost_usd": 0.0032285436530363632,
+  "jev_latency_ms": 2593.2112109148875,
+  "wall_s": 2.758020166947972,
+  "merged_pairs": [
+   [
+    "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+    "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+    0.86
+   ]
+  ]
+ },
+ "storage_before_hygiene": {
+  "storage": {
+   "closes": 12,
+   "closes_correct": 5,
+   "closes_wrong": 7,
+   "closes_by_reason": {
+    "belief_wrong": 7,
+    "fulfilled_correct": 1,
+    "belief_correct": 4
+   },
+   "reopens": 0,
+   "disputed": 20,
+   "against_blocked": 22,
+   "against_unconfirmed": 0,
+   "plan_fulfilled_asks": 327
+  },
+  "update_behavior": {
+   "stale": 18,
+   "not_stored": 1,
+   "kept": 10,
+   "fulfilled": 1
+  }
+ },
+ "locomo_accuracy": 0.95,
+ "locomo_accuracy_excl": 0.95,
+ "locomo_q": 20,
+ "locomo_q_excl": 20,
+ "update_accuracy": null,
+ "update_accuracy_by_tier": {
+  "easy": null,
+  "subtle": null,
+  "fulfilled": null
+ },
+ "update_items": [
+  {
+   "id": "E01",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E02",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E03",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "not_stored",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E04",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E05",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E06",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E07",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E08",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E09",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E10",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E11",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E12",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E13",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E14",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "E15",
+   "tier": "easy",
+   "expected": "close",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S01",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S02",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S03",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S04",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S05",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S06",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S07",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S08",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S09",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "S10",
+   "tier": "subtle",
+   "expected": "no_close",
+   "behavior": "kept",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F01",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F02",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "fulfilled",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F03",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F04",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  },
+  {
+   "id": "F05",
+   "tier": "fulfilled",
+   "expected": "close_fulfilled",
+   "behavior": "stale",
+   "answer": null,
+   "label": null
+  }
+ ],
+ "update_behavior": {
+  "stale": 18,
+  "not_stored": 1,
+  "kept": 10,
+  "fulfilled": 1
+ },
+ "stale_on_close_items": [
+  18,
+  19
+ ],
+ "over_close_on_no_close_items": [
+  0,
+  10
+ ],
+ "storage": {
+  "closes": 12,
+  "closes_correct": 5,
+  "closes_wrong": 7,
+  "closes_by_reason": {
+   "belief_wrong": 7,
+   "fulfilled_correct": 1,
+   "belief_correct": 4
+  },
+  "reopens": 0,
+  "disputed": 20,
+  "against_blocked": 22,
+  "against_unconfirmed": 0,
+  "plan_fulfilled_asks": 327
+ },
+ "set2_accuracy": 0.95,
+ "set2_q": 20,
+ "set2_accuracy_by_type": {
+  "chain_current": [
+   1.0,
+   5
+  ],
+  "chain_point_in_time": [
+   1.0,
+   5
+  ],
+  "no_temporal_cue": [
+   1.0,
+   5
+  ],
+  "point_in_time": [
+   0.8,
+   5
+  ]
+ },
+ "set2_stale_values": [
+  12,
+  16
+ ],
+ "set2_stale_pairs": [
+  [
+   "U2:C01.1",
+   "U2:C01.2"
+  ],
+  [
+   "U2:C01.2",
+   "U2:C01.3"
+  ],
+  [
+   "U2:C02.1",
+   "U2:C02.2"
+  ],
+  [
+   "U2:C02.2",
+   "U2:C02.3"
+  ],
+  [
+   "U2:C02.3",
+   "U2:C02.4"
+  ],
+  [
+   "U2:C03.2",
+   "U2:C03.3"
+  ],
+  [
+   "U2:C04.1",
+   "U2:C04.2"
+  ],
+  [
+   "U2:C04.2",
+   "U2:C04.3"
+  ],
+  [
+   "U2:C05.1",
+   "U2:C05.2"
+  ],
+  [
+   "U2:C05.3",
+   "U2:C05.4"
+  ],
+  [
+   "U2:N02.1",
+   "U2:N02.2"
+  ],
+  [
+   "U2:N03.1",
+   "U2:N03.2"
+  ]
+ ],
+ "set2_keep_ok": [
+  1,
+  1
+ ],
+ "fulfills_log": [
+  {
+   "plan": "Melanie's kids are excited about summer break, and they are considering going camping in June 2023.",
+   "plan_relation": "family_of",
+   "plan_source": "D2:7",
+   "by": "Melanie took her family camping in the mountains around June 20-26, 2023, and described it as a really nice time together.",
+   "by_source": "D4:6",
+   "jev_relation": "plan_fulfilled",
+   "p": 0.94,
+   "temporal": "past"
+  }
+ ],
+ "belief_trace": [
+  {
+   "message": "D1:3",
+   "fact": "82bc6f8c48ac4ee4",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "fact_source": "D1:3"
+  },
+  {
+   "message": "D1:5",
+   "fact": "78f02278656d4bca",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline found the transgender stories shared at the LGBTQ support group she attended on May 7, 2023, to be very inspiring and felt happy and thankful for all the support.",
+   "fact_source": "D1:5"
+  },
+  {
+   "message": "D1:5",
+   "fact": "82bc6f8c48ac4ee4",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.02,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "fact_source": "D1:3"
+  },
+  {
+   "message": "D1:6",
+   "fact": "3aed68b18f554d26",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie complimented Caroline on a painting and expressed appreciation for the helpful LGBTQ support group Caroline attended, asking how it has impacted her.",
+   "fact_source": "D1:6"
+  },
+  {
+   "message": "D1:7",
+   "fact": "dc1ce48fd1db47c3",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline feels accepted and has gained the courage to embrace herself after attending the LGBTQ support group on May 7, 2023.",
+   "fact_source": "D1:7"
+  },
+  {
+   "message": "D1:8",
+   "fact": "d33ddb61e88c4e8e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be.",
+   "fact_source": "D1:8"
+  },
+  {
+   "message": "D1:9",
+   "fact": "c378015533da4fbf",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline plans to continue her education and explore career options, which she finds exciting.",
+   "fact_source": "D1:9"
+  },
+  {
+   "message": "D1:10",
+   "fact": "dc5e18bcbe41425f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie asked Caroline about the types of jobs she is considering and if any particular options stand out to her.",
+   "fact_source": "D1:10"
+  },
+  {
+   "message": "D1:10",
+   "fact": "c378015533da4fbf",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Caroline plans to continue her education and explore career options, which she finds exciting.",
+   "fact_source": "D1:9"
+  },
+  {
+   "message": "D1:11",
+   "fact": "d5a39dcf99474f27",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D1:12",
+   "fact": "815ac8a75e2d483d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie believes Caroline would be a great counselor, highlighting her empathy and understanding as valuable traits for helping others.",
+   "fact_source": "D1:12"
+  },
+  {
+   "message": "D1:14",
+   "fact": "cab8056128e645d2",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie painted a lake sunrise in 2022, which holds special significance for her.",
+   "fact_source": "D1:14"
+  },
+  {
+   "message": "D1:15",
+   "fact": "dc74f0b94d2244fb",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline complimented Melanie on her painting, noting that the colors blend nicely and expressing that painting seems like a great outlet for self-expression.",
+   "fact_source": "D1:15"
+  },
+  {
+   "message": "D1:16",
+   "fact": "1619784667f8489e",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Melanie enjoys painting as a fun way to express her feelings and get creative, finding it a great way to relax after a long day.",
+   "fact_source": "D1:16"
+  },
+  {
+   "message": "D1:17",
+   "fact": "54e4fecdd8b64346",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline agrees with Melanie that relaxing and expressing oneself is important and plans to do some research after their conversation on May 8, 2023.",
+   "fact_source": "D1:17"
+  },
+  {
+   "message": "D1:18",
+   "fact": "16f0db4a48a048af",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie believes that taking care of oneself is vital and plans to go swimming with the kids after their conversation on May 8, 2023.",
+   "fact_source": "D1:18"
+  },
+  {
+   "message": "D2:1",
+   "fact": "7bc68d8a03204bc9",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie ran a charity race for mental health on May 20, 2023, and found the experience rewarding, prompting her to reflect on the importance of taking care of our minds.",
+   "fact_source": "D2:1"
+  },
+  {
+   "message": "D2:2",
+   "fact": "8b35879696d646b4",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed pride in Melanie for participating in the charity race for mental health that took place on May 20, 2023, highlighting the importance of making a difference and raising awareness.",
+   "fact_source": "D2:2"
+  },
+  {
+   "message": "D2:3",
+   "fact": "6b20e7625242463f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie found the charity race for mental health on May 20, 2023, to be thought-provoking and is starting to realize the importance of self-care. She acknowledges that taking care of herself enables her to better care for her family.",
+   "fact_source": "D2:3"
+  },
+  {
+   "message": "D2:3",
+   "fact": "7bc68d8a03204bc9",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.02,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Melanie ran a charity race for mental health on May 20, 2023, and found the experience rewarding, prompting her to reflect on the importance of taking care of our minds.",
+   "fact_source": "D2:1"
+  },
+  {
+   "message": "D2:5",
+   "fact": "e5d7ce998f2046a0",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family.",
+   "fact_source": "D2:5"
+  },
+  {
+   "message": "D2:7",
+   "fact": "59a07d490f4c486f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's kids are excited about summer break, and they are considering going camping in June 2023.",
+   "fact_source": "D2:7"
+  },
+  {
+   "message": "D2:7",
+   "fact": "4106621544374725",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie is currently working on her painting skills and is doing her best to improve.",
+   "fact_source": "D2:7"
+  },
+  {
+   "message": "D2:8",
+   "fact": "78890664487e4878",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:9",
+   "fact": "4dc5a4279da24116",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed admiration for Caroline's plans to adopt children in need, stating that her future family will be lucky to have her.",
+   "fact_source": "D2:9"
+  },
+  {
+   "message": "D2:9",
+   "fact": "78890664487e4878",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.98,
+   "event": "blocked_temporal",
+   "fact_text": "Caroline is researching adoption agencies as it has been her dream to have a family and provide a loving home to children in need.",
+   "fact_source": "D2:8"
+  },
+  {
+   "message": "D2:10",
+   "fact": "3021bb706fe24238",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline's goal is to give children a loving home, and she feels grateful for the support from friends and mentors as she works to turn her dream of adoption into a reality.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:10",
+   "fact": "9b87462af1df4581",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:11",
+   "fact": "58e1940d7d5e4f4d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed enthusiasm about an adoption agency Caroline is considering and asked what influenced her choice.",
+   "fact_source": "D2:11"
+  },
+  {
+   "message": "D2:11",
+   "fact": "9b87462af1df4581",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Caroline is feeling hopeful and optimistic about her adoption journey and is currently looking into one of the adoption agencies.",
+   "fact_source": "D2:10"
+  },
+  {
+   "message": "D2:12",
+   "fact": "8893c5fe9cce4869",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline chose the adoption agency she is considering because they help LGBTQ+ individuals with adoption, and their inclusivity and support resonated with her.",
+   "fact_source": "D2:12"
+  },
+  {
+   "message": "D2:13",
+   "fact": "41d6d4cb82934733",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed appreciation for the inclusivity and support of the adoption agency Caroline is considering and asked if there is anything Caroline is excited about in the adoption process.",
+   "fact_source": "D2:13"
+  },
+  {
+   "message": "D2:14",
+   "fact": "f7b748c9073349f2",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline is thrilled about the prospect of creating a family for children in need and acknowledges that being a single parent will be challenging, but she is ready to take on the challenge.",
+   "fact_source": "D2:14"
+  },
+  {
+   "message": "D2:15",
+   "fact": "7482f05169734818",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie praised Caroline for her plans to create a family for children in need, expressing that Caroline will be an awesome mom and wishing her good luck.",
+   "fact_source": "D2:15"
+  },
+  {
+   "message": "D2:16",
+   "fact": "9d907f931ff24d26",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed gratitude for Melanie's kind words, stating they mean a lot to her as she strives to ensure the kids she plans to adopt have a safe and loving home.",
+   "fact_source": "D2:16"
+  },
+  {
+   "message": "D2:17",
+   "fact": "28c44a9cf64a4695",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie believes Caroline has a caring heart and expresses confidence that the children she plans to adopt will receive all the love and stability they need, showing excitement for this new chapter in Caroline's life.",
+   "fact_source": "D2:17"
+  },
+  {
+   "message": "D3:1",
+   "fact": "87294f1f68f04e37",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline participated in a school event around June 2-3, 2023, where she talked about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since starting her transition three years ago.",
+   "fact_source": "D3:1"
+  },
+  {
+   "message": "D3:2",
+   "fact": "515b569b8f7948aa",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed pride in Caroline for spreading awareness about her transgender journey at a school event around June 2-3, 2023, and encouraged her to continue inspiring others with her strength and courage.",
+   "fact_source": "D3:2"
+  },
+  {
+   "message": "D3:2",
+   "fact": "d33ddb61e88c4e8e",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be.",
+   "fact_source": "D1:8"
+  },
+  {
+   "message": "D3:3",
+   "fact": "6f83a92418c5408f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline believes conversations about gender identity and inclusion are necessary and is thankful for the opportunity to give a voice to the trans community.",
+   "fact_source": "D3:3"
+  },
+  {
+   "message": "D3:3",
+   "fact": "dd8f6771bc164fa8",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline felt powerful giving her talk at the school event around June 2-3, 2023, where she shared her transgender journey, struggles, and personal growth since coming out. She was grateful to see how the audience related to her message and felt inspired to be better allies.",
+   "fact_source": "D3:3"
+  },
+  {
+   "message": "D3:3",
+   "fact": "87294f1f68f04e37",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.02,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Caroline participated in a school event around June 2-3, 2023, where she talked about her transgender journey and encouraged students to get involved in the LGBTQ community, reflecting on her progress since starting her transition three years ago.",
+   "fact_source": "D3:1"
+  },
+  {
+   "message": "D3:5",
+   "fact": "0a38341e66814028",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline believes sharing experiences is important for promoting understanding and acceptance, and she feels blessed with love and support throughout her journey. She aims to pass this support on to others to help build a strong, supportive community of hope.",
+   "fact_source": "D3:5"
+  },
+  {
+   "message": "D3:6",
+   "fact": "16027717fa8444c6",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed that it takes courage to talk about personal stories and emphasized the importance of vulnerability in creating bonds and understanding among people. She believes sharing stories can inspire and encourage others facing similar challenges.",
+   "fact_source": "D3:6"
+  },
+  {
+   "message": "D3:7",
+   "fact": "51c504becb984893",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline plans to continue using her voice to make a change and lift others up, acknowledging Melanie's role in this journey.",
+   "fact_source": "D3:7"
+  },
+  {
+   "message": "D3:7",
+   "fact": "9dd2ca4e39474bc6",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed gratitude for the opportunity to share her story and give others hope, emphasizing the importance of unique paths and collaboration in building a more inclusive and understanding world.",
+   "fact_source": "D3:7"
+  },
+  {
+   "message": "D3:8",
+   "fact": "53887f0184b444df",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed gratitude to Caroline for allowing her to be part of her journey and pride in the difference Caroline is making. She emphasized the importance of motivating and helping each other as they navigate through life together.",
+   "fact_source": "D3:8"
+  },
+  {
+   "message": "D3:9",
+   "fact": "fad6107b1ab14919",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed a desire to spread love and understanding, thanking Melanie for her support and encouragement, and emphasized their ability to tackle life's challenges together.",
+   "fact_source": "D3:9"
+  },
+  {
+   "message": "D3:10",
+   "fact": "eb3e20f608334480",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie feels motivated by her family, who provide her with love and support, and she aspires to be courageous for them.",
+   "fact_source": "D3:10"
+  },
+  {
+   "message": "D3:10",
+   "fact": "b6465b0ce8754845",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed admiration for Caroline's courage and finds it inspiring.",
+   "fact_source": "D3:10"
+  },
+  {
+   "message": "D3:10",
+   "fact": "d33ddb61e88c4e8e",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.02,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Melanie expressed admiration for Caroline's courage after attending the LGBTQ support group and asked what her next steps would be.",
+   "fact_source": "D1:8"
+  },
+  {
+   "message": "D3:11",
+   "fact": "525425eb3ecb4f6d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline shared a picture from a meetup with her friends and family last week.",
+   "fact_source": "D3:11"
+  },
+  {
+   "message": "D3:11",
+   "fact": "bc61c5b3061d4b9c",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's friends, family, and mentors are her sources of motivation and strength, helping her to push on in her journey.",
+   "fact_source": "D3:11"
+  },
+  {
+   "message": "D3:12",
+   "fact": "0b922f3d172d49a3",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie admired a photo shared by Caroline and inquired about the duration of her strong support system.",
+   "fact_source": "D3:12"
+  },
+  {
+   "message": "D3:13",
+   "fact": "9d82d9df31ba425e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline feels lucky to have a strong support system that has been there for her through everything, and she expresses gratitude for their help.",
+   "fact_source": "D3:13"
+  },
+  {
+   "message": "D3:13",
+   "fact": "2c53323578c240fc",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline has known her friends for 4 years since moving from her home country, and their love and support have been crucial, especially after a tough breakup.",
+   "fact_source": "D3:13"
+  },
+  {
+   "message": "D3:14",
+   "fact": "6befcfc383024369",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie feels lucky to have her husband and kids, who keep her motivated.",
+   "fact_source": "D3:14"
+  },
+  {
+   "message": "D3:15",
+   "fact": "484d9ef637ee4fdb",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline admired a family picture shared by Melanie and asked how long she has been married.",
+   "fact_source": "D3:15"
+  },
+  {
+   "message": "D3:16",
+   "fact": "3b7de75a0c084d5e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie has been married for 5 years as of June 9, 2023, and reflected on how time flies since she wore her wedding dress.",
+   "fact_source": "D3:16"
+  },
+  {
+   "message": "D3:17",
+   "fact": "048359d4964343b7",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline congratulated Melanie on her wedding, complimenting how great they looked on their wedding day and wishing her many happy years together.",
+   "fact_source": "D3:17"
+  },
+  {
+   "message": "D3:18",
+   "fact": "893f9db7a0fe4d47",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie expressed appreciation for Caroline's kind words and is looking forward to more happy years, emphasizing that her family and moments make it all worth it.",
+   "fact_source": "D3:18"
+  },
+  {
+   "message": "D3:20",
+   "fact": "2823b0a1819b4712",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie had a fun family gathering where they played games, ate good food, and spent quality time together, emphasizing that family moments make life awesome.",
+   "fact_source": "D3:20"
+  },
+  {
+   "message": "D3:22",
+   "fact": "82449be5c5154111",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie cherishes time spent with her family, stating that it is when she truly feels alive and happy.",
+   "fact_source": "D3:22"
+  },
+  {
+   "message": "D3:23",
+   "fact": "0fa13ee151e741f9",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed that spending time with loved ones brings her immense happiness and makes her feel thankful, emphasizing that family is everything.",
+   "fact_source": "D3:23"
+  },
+  {
+   "message": "D4:2",
+   "fact": "cbda16527a5c4064",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning.",
+   "fact_source": "D4:2"
+  },
+  {
+   "message": "D4:3",
+   "fact": "be9915c2876e410f",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline's necklace is a special gift from her grandma in Sweden, given to her when she was young. It symbolizes love, faith, and strength, serving as a reminder of her roots and the support she receives from her family.",
+   "fact_source": "D4:3"
+  },
+  {
+   "message": "D4:3",
+   "fact": "cbda16527a5c4064",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning.",
+   "fact_source": "D4:2"
+  },
+  {
+   "message": "D4:4",
+   "fact": "aa394dc2ac0f436e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie asked Caroline if she has any other treasured objects similar to the necklace.",
+   "fact_source": "D4:4"
+  },
+  {
+   "message": "D4:4",
+   "fact": "c18380d4075048dd",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie complimented Caroline on her necklace, expressing that it's gorgeous and reflecting on the significance of treasured items.",
+   "fact_source": "D4:4"
+  },
+  {
+   "message": "D4:4",
+   "fact": "cbda16527a5c4064",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.02,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Melanie complimented Caroline on her necklace and inquired if it has any special meaning.",
+   "fact_source": "D4:2"
+  },
+  {
+   "message": "D4:5",
+   "fact": "b45279b76c0041f5",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline has a hand-painted bowl that holds sentimental value, made by a friend for her 18th birthday ten years ago. The bowl's pattern and colors remind her of art and self-expression.",
+   "fact_source": "D4:5"
+  },
+  {
+   "message": "D4:6",
+   "fact": "6ec2c853719a4ef6",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie took her family camping in the mountains around June 20-26, 2023, and described it as a really nice time together.",
+   "fact_source": "D4:6"
+  },
+  {
+   "message": "D4:7",
+   "fact": "efd68faef32b44b9",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline expressed interest in Melanie's recent family camping trip, asking how it was and if there was anything fun about it.",
+   "fact_source": "D4:7"
+  },
+  {
+   "message": "D4:8",
+   "fact": "04ab7acf319b40d0",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie had an awesome family camping trip around June 20-26, 2023, where they explored nature, roasted marshmallows around the campfire, and went on a hike with the two younger kids, who love nature. She described the view from the top as amazing and emphasized the special moments shared together as a family.",
+   "fact_source": "D4:8"
+  },
+  {
+   "message": "D4:8",
+   "fact": "6ec2c853719a4ef6",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.02,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Melanie took her family camping in the mountains around June 20-26, 2023, and described it as a really nice time together.",
+   "fact_source": "D4:6"
+  },
+  {
+   "message": "D4:10",
+   "fact": "26d3df7f59ac4308",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie values family time and considers it important in her life.",
+   "fact_source": "D4:10"
+  },
+  {
+   "message": "D4:11",
+   "fact": "2cced2e8ad214a30",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "fact_source": "D4:11"
+  },
+  {
+   "message": "D4:11",
+   "fact": "d5a39dcf99474f27",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.02000000000000002,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D4:12",
+   "fact": "618bb7cc8dbe49d5",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie asked Caroline about the specific types of counseling and mental health services she wants to pursue.",
+   "fact_source": "D4:12"
+  },
+  {
+   "message": "D4:12",
+   "fact": "dc5e18bcbe41425f",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_temporal",
+   "fact_text": "Melanie asked Caroline about the types of jobs she is considering and if any particular options stand out to her.",
+   "fact_source": "D1:10"
+  },
+  {
+   "message": "D4:13",
+   "fact": "8f520367b51047fa",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline was inspired by the passion of the professionals at the LGBTQ+ counseling workshop for creating a safe space for transgender individuals.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "D4:13",
+   "fact": "c7fc7488807e43e0",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline is considering a career in counseling, specifically working with transgender individuals to help them accept themselves and support their mental health.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "D4:13",
+   "fact": "d5a39dcf99474f27",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.02000000000000002,
+   "event": "blocked_temporal",
+   "fact_text": "Caroline is interested in pursuing a career in counseling or mental health to support individuals with similar issues.",
+   "fact_source": "D1:11"
+  },
+  {
+   "message": "D4:13",
+   "fact": "ead60fbf29e2406d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline attended an LGBTQ+ counseling workshop on June 23, 2023, where she learned about different therapeutic methods and how to best work with transgender individuals.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "D4:14",
+   "fact": "6426bdb004b64130",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie finds Caroline's dedication to helping others through counseling impressive and inspiring, and she inquired about what motivated Caroline to pursue this career path.",
+   "fact_source": "D4:14"
+  },
+  {
+   "message": "D4:15",
+   "fact": "c5636a4086254ed3",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline is looking into a career in counseling and mental health, motivated by her own journey and the support she received, which made a significant difference in her life.",
+   "fact_source": "D4:15"
+  },
+  {
+   "message": "D4:15",
+   "fact": "2cced2e8ad214a30",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.98,
+   "event": "blocked_temporal",
+   "fact_text": "Caroline has been looking into counseling and mental health as a career to help people who have gone through similar experiences as her.",
+   "fact_source": "D4:11"
+  },
+  {
+   "message": "D4:15",
+   "fact": "22345e7e0e5942fb",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline is passionate about creating a safe and inviting space for people to grow, inspired by how counseling and support groups improved her life.",
+   "fact_source": "D4:15"
+  },
+  {
+   "message": "D4:16",
+   "fact": "19bf76cefe144fc4",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie praised Caroline for her passion and hard work in helping others, acknowledging the significant impact she is making through her experiences.",
+   "fact_source": "D4:16"
+  },
+  {
+   "message": "D4:18",
+   "fact": "3bb7603eb1e842f3",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie congratulated Caroline on pursuing her passion for counseling and mental health, expressing admiration for her dedication to helping others.",
+   "fact_source": "D4:18"
+  },
+  {
+   "message": "U:E01",
+   "fact": "aa1e7c7b088a4bc9",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Melanie hasn't painted in weeks and is now focusing on pottery as her main creative outlet, attending the studio three evenings a week.",
+   "fact_source": "U:E01"
+  },
+  {
+   "message": "U:E01",
+   "fact": "4106621544374725",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie is currently working on her painting skills and is doing her best to improve.",
+   "fact_source": "D2:7"
+  },
+  {
+   "message": "U:E02",
+   "fact": "39dfcf90aafa4ae1",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's favorite painting has changed; her new favorite is the forest-at-dusk piece she finished around June 27, 2023, replacing the lake sunrise painting.",
+   "fact_source": "U:E02"
+  },
+  {
+   "message": "U:E02",
+   "fact": "cab8056128e645d2",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie painted a lake sunrise in 2022, which holds special significance for her.",
+   "fact_source": "D1:14"
+  },
+  {
+   "message": "U:E03",
+   "fact": "bfbd52f1590d4e12",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Melanie quit her job on June 30, 2023, to be home with her kids full-time.",
+   "fact_source": "U:E03"
+  },
+  {
+   "message": "U:E04",
+   "fact": "ca02273eef8d4271",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline lost her grandma's necklace at the beach on July 8, 2023, and despite searching for hours, it could not be found.",
+   "fact_source": "U:E04"
+  },
+  {
+   "message": "U:E04",
+   "fact": "be9915c2876e410f",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.98,
+   "event": "blocked_structure",
+   "fact_text": "Caroline's necklace is a special gift from her grandma in Sweden, given to her when she was young. It symbolizes love, faith, and strength, serving as a reminder of her roots and the support she receives from her family.",
+   "fact_source": "D4:3"
+  },
+  {
+   "message": "U:E05",
+   "fact": "e190fa731533437d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's hand-painted bowl from her 18th birthday, which held sentimental value, fell off the shelf and shattered around July 11, 2023. She kept a shard but the bowl is now gone.",
+   "fact_source": "U:E05"
+  },
+  {
+   "message": "U:E05",
+   "fact": "b45279b76c0041f5",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Caroline has a hand-painted bowl that holds sentimental value, made by a friend for her 18th birthday ten years ago. The bowl's pattern and colors remind her of art and self-expression.",
+   "fact_source": "D4:5"
+  },
+  {
+   "message": "U:E06",
+   "fact": "52be2fa1934e473e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline no longer attends the LGBTQ support group as it disbanded after the organizer moved away.",
+   "fact_source": "U:E06"
+  },
+  {
+   "message": "U:E06",
+   "fact": "82bc6f8c48ac4ee4",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.02,
+   "event": "blocked_structure",
+   "fact_text": "Caroline attended an LGBTQ support group on May 7, 2023, and found the experience to be very powerful.",
+   "fact_source": "D1:3"
+  },
+  {
+   "message": "U:E07",
+   "fact": "67c5d95a5aef47df",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's local pool closed permanently around July 15, 2023, so she and her kids no longer swim there and have switched to biking together instead.",
+   "fact_source": "U:E07"
+  },
+  {
+   "message": "U:E08",
+   "fact": "86d790c5b5704f42",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's two younger kids have moved on from their interest in nature and are now completely obsessed with dinosaurs.",
+   "fact_source": "U:E08"
+  },
+  {
+   "message": "U:E09",
+   "fact": "790704e23112491c",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie sold her violin in June 2023 and is now learning guitar, finding it more fun to play with her kids.",
+   "fact_source": "U:E09"
+  },
+  {
+   "message": "U:E09",
+   "fact": "e5d7ce998f2046a0",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.98,
+   "event": "blocked_structure",
+   "fact_text": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family.",
+   "fact_source": "D2:5"
+  },
+  {
+   "message": "U:E10",
+   "fact": "d7bfb55f19984783",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Melanie has been experiencing knee issues, so she stopped running completely and now swims laps at the gym instead.",
+   "fact_source": "U:E10"
+  },
+  {
+   "message": "U:E10",
+   "fact": "e5d7ce998f2046a0",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.98,
+   "event": "blocked_structure",
+   "fact_text": "Melanie is carving out some me-time each day by running, reading, or playing her violin, which refreshes her and helps her stay present for her family.",
+   "fact_source": "D2:5"
+  },
+  {
+   "message": "U:E11",
+   "fact": "7838c7d562ea4380",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Melanie has swapped reading for meditation in her me-time, dedicating twenty minutes every morning to the practice.",
+   "fact_source": "U:E11"
+  },
+  {
+   "message": "U:E12",
+   "fact": "dab037e978674bd0",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline switched her adoption agency to Rainbow Families around July 25, 2023, because they are closer to home and move faster.",
+   "fact_source": "U:E12"
+  },
+  {
+   "message": "U:E13",
+   "fact": "45abbcf145f343a5",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline has changed her adoption plan as of July 27, 2023, deciding to foster first instead of adopting right away to learn the ropes.",
+   "fact_source": "U:E13"
+  },
+  {
+   "message": "U:E14",
+   "fact": "e8d4c143a2bf4e04",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Melanie has established a consistent self-care routine that she feels is now effective, marking a significant improvement from her previous struggles with self-care.",
+   "fact_source": "U:E14"
+  },
+  {
+   "message": "U:E15",
+   "fact": "a830148e6e0842bd",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's grandma moved from Sweden and now lives in Norway with her aunt as of July 31, 2023.",
+   "fact_source": "U:E15"
+  },
+  {
+   "message": "U:S01",
+   "fact": "7c5b04c4ecf141a8",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie and her spouse's first apartment after their wedding was very small, and they still laugh about it.",
+   "fact_source": "U:S01"
+  },
+  {
+   "message": "U:S02",
+   "fact": "e0684d839e9540e7",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline wanted to be a nurse back in high school, reflecting on how her career aspirations have changed over time.",
+   "fact_source": "U:S02"
+  },
+  {
+   "message": "U:S03",
+   "fact": "ad46b58eddef4e0e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline felt lonely during her first year after moving, before she met her friends.",
+   "fact_source": "U:S03"
+  },
+  {
+   "message": "U:S04",
+   "fact": "c36bc997a99d4776",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline mentioned that she might move back to Sweden someday, but not in the near future.",
+   "fact_source": "U:S04"
+  },
+  {
+   "message": "U:S05",
+   "fact": "7ae381df3b5d4668",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie wants to run another charity race in the fall of 2023, considering participating in a half marathon this time.",
+   "fact_source": "U:S05"
+  },
+  {
+   "message": "U:S06",
+   "fact": "2781acead59f4c0f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie hopes to camp at the Grand Canyon next summer, contingent on saving up.",
+   "fact_source": "U:S06"
+  },
+  {
+   "message": "U:S07",
+   "fact": "79bb648761334fe4",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline attended her first counseling workshop on June 23, 2023.",
+   "fact_source": "U:S07"
+  },
+  {
+   "message": "U:S07",
+   "fact": "ead60fbf29e2406d",
+   "label": "duplicate",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.98,
+   "closed": false,
+   "reopened": false,
+   "fact_text": "Caroline attended an LGBTQ+ counseling workshop on June 23, 2023, where she learned about different therapeutic methods and how to best work with transgender individuals.",
+   "fact_source": "D4:13"
+  },
+  {
+   "message": "U:S08",
+   "fact": "34eb217f8ecc4c4e",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Before coming out, Caroline was too scared to tell anyone about herself.",
+   "fact_source": "U:S08"
+  },
+  {
+   "message": "U:S09",
+   "fact": "174544c776a04d2f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline used to believe she would only adopt with a partner someday, but her perspective has changed.",
+   "fact_source": "U:S09"
+  },
+  {
+   "message": "U:S10",
+   "fact": "36bee22d2afb4dcb",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie used to be really shy, even as a teenager.",
+   "fact_source": "U:S10"
+  },
+  {
+   "message": "U:F01",
+   "fact": "e64a5588c79249cb",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline enrolled in a psychology certificate program at the community college around August 23, 2023, with classes starting the following week.",
+   "fact_source": "U:F01"
+  },
+  {
+   "message": "U:F02",
+   "fact": "24f19886d120499c",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's kids' summer break started around August 24, 2023, and they are enjoying every minute of it.",
+   "fact_source": "U:F02"
+  },
+  {
+   "message": "U:F03",
+   "fact": "5a9896121e8e41be",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline started volunteering as a peer counselor for trans youth at the community center around August 25, 2023.",
+   "fact_source": "U:F03"
+  },
+  {
+   "message": "U:F04",
+   "fact": "a8204cfbb0e24000",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline finished her research and submitted her application to Rainbow Families on August 21, 2023.",
+   "fact_source": "U:F04"
+  },
+  {
+   "message": "U:F05",
+   "fact": "8f95594cf6684fc1",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline gave another talk about her journey at a high school in the next town around August 28, 2023.",
+   "fact_source": "U:F05"
+  },
+  {
+   "message": "U2:C01.1",
+   "fact": "b42963614d7b4f3f",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline moved into a studio apartment downtown around September 3, 2023.",
+   "fact_source": "U2:C01.1"
+  },
+  {
+   "message": "U2:N01.1",
+   "fact": "f2cc4fde9c9c48d8",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline's favorite coffee spot is Blue Door Caf\u00e9.",
+   "fact_source": "U2:N01.1"
+  },
+  {
+   "message": "U2:C02.1",
+   "fact": "a78a05efb1f04ff3",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's guitar teacher is named Ben, and she describes him as really patient.",
+   "fact_source": "U2:C02.1"
+  },
+  {
+   "message": "U2:N02.1",
+   "fact": "b213ea1ca2414a13",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie drives a blue minivan.",
+   "fact_source": "U2:N02.1"
+  },
+  {
+   "message": "U2:C04.1",
+   "fact": "434fb650d1394823",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's oldest child started at Lincoln Middle School around September 4, 2023.",
+   "fact_source": "U2:C04.1"
+  },
+  {
+   "message": "U2:N03.1",
+   "fact": "3d059dddaef8421d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's therapist is Dr. Alvarez.",
+   "fact_source": "U2:N03.1"
+  },
+  {
+   "message": "U2:C03.1",
+   "fact": "d5fb1832e1464a42",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline passed her foster home study around September 10, 2023.",
+   "fact_source": "U2:C03.1"
+  },
+  {
+   "message": "U2:N04.1",
+   "fact": "cb336de566894d0b",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's book club meets at Anna's house.",
+   "fact_source": "U2:N04.1"
+  },
+  {
+   "message": "U2:C05.1",
+   "fact": "9bbdc0ba9d824f3b",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline volunteers at the community center on Tuesdays.",
+   "fact_source": "U2:C05.1"
+  },
+  {
+   "message": "U2:N05.1",
+   "fact": "9195eff8133540c1",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's phone is an iPhone 12.",
+   "fact_source": "U2:N05.1"
+  },
+  {
+   "message": "U2:C02.2",
+   "fact": "bf72e2122f3a4bf0",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie switched guitar teachers and is now learning from Priya.",
+   "fact_source": "U2:C02.2"
+  },
+  {
+   "message": "U2:C02.2",
+   "fact": "a78a05efb1f04ff3",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie's guitar teacher is named Ben, and she describes him as really patient.",
+   "fact_source": "U2:C02.1"
+  },
+  {
+   "message": "U2:C01.2",
+   "fact": "b6f692909b814e91",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline moved into a two-bedroom apartment in Oak Park around October 1, 2023, to accommodate a foster child.",
+   "fact_source": "U2:C01.2"
+  },
+  {
+   "message": "U2:C05.2",
+   "fact": "ec35c0e9b4e44606",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline switched her volunteer shift at the community center to Thursdays around October 3, 2023.",
+   "fact_source": "U2:C05.2"
+  },
+  {
+   "message": "U2:C03.2",
+   "fact": "f3e96bb9725d4f8d",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline has been matched with a 7-year-old named Leo around October 8, 2023.",
+   "fact_source": "U2:C03.2"
+  },
+  {
+   "message": "U2:C04.2",
+   "fact": "d684694ee9354767",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie moved her oldest child to Riverside Academy around October 15, 2023, because Lincoln Middle School wasn't a good fit.",
+   "fact_source": "U2:C04.2"
+  },
+  {
+   "message": "U2:C04.2",
+   "fact": "434fb650d1394823",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie's oldest child started at Lincoln Middle School around September 4, 2023.",
+   "fact_source": "U2:C04.1"
+  },
+  {
+   "message": "U2:C02.3",
+   "fact": "e61ce94a6c5042b9",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's guitar teacher Priya moved away around October 2023, so she is currently learning guitar from YouTube videos.",
+   "fact_source": "U2:C02.3"
+  },
+  {
+   "message": "U2:C02.3",
+   "fact": "bf72e2122f3a4bf0",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie switched guitar teachers and is now learning from Priya.",
+   "fact_source": "U2:C02.2"
+  },
+  {
+   "message": "U2:N01.2",
+   "fact": "0a1b0debaf504395",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's favorite coffee spot is Grind House as of October 30, 2023.",
+   "fact_source": "U2:N01.2"
+  },
+  {
+   "message": "U2:N01.2",
+   "fact": "f2cc4fde9c9c48d8",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.98,
+   "event": "applied",
+   "after": 0.02000000000000002,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Caroline's favorite coffee spot is Blue Door Caf\u00e9.",
+   "fact_source": "U2:N01.1"
+  },
+  {
+   "message": "U2:C05.3",
+   "fact": "452d179ae4154914",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's volunteer shift at the community center moved to Saturday mornings around November 1, 2023.",
+   "fact_source": "U2:C05.3"
+  },
+  {
+   "message": "U2:C05.3",
+   "fact": "ec35c0e9b4e44606",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.02,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Caroline switched her volunteer shift at the community center to Thursdays around October 3, 2023.",
+   "fact_source": "U2:C05.2"
+  },
+  {
+   "message": "U2:N02.2",
+   "fact": "62e491966de646dc",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie drives a silver SUV.",
+   "fact_source": "U2:N02.2"
+  },
+  {
+   "message": "U2:C03.3",
+   "fact": "fec4e349046e4d3c",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's foster child Leo went back to live with his grandmother around November 5, 2023, which she believes is the best thing for him.",
+   "fact_source": "U2:C03.3"
+  },
+  {
+   "message": "U2:C03.3",
+   "fact": "f3e96bb9725d4f8d",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Caroline has been matched with a 7-year-old named Leo around October 8, 2023.",
+   "fact_source": "U2:C03.2"
+  },
+  {
+   "message": "U2:N03.2",
+   "fact": "8e20de14bc774743",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's therapist is now Dr. Kim as of November 6, 2023.",
+   "fact_source": "U2:N03.2"
+  },
+  {
+   "message": "U2:N03.2",
+   "fact": "3d059dddaef8421d",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Caroline's therapist is Dr. Alvarez.",
+   "fact_source": "U2:N03.1"
+  },
+  {
+   "message": "U2:N04.2",
+   "fact": "88dc4846cecc4f01",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's book club meets at the public library as of November 9, 2023.",
+   "fact_source": "U2:N04.2"
+  },
+  {
+   "message": "U2:N04.2",
+   "fact": "cb336de566894d0b",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.02,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Melanie's book club meets at Anna's house.",
+   "fact_source": "U2:N04.1"
+  },
+  {
+   "message": "U2:C01.3",
+   "fact": "f9c6afe3d1f342cf",
+   "event": "insert",
+   "after": 0.98,
+   "fact_text": "Caroline found a house and now lives in Evanston as of November 12, 2023.",
+   "fact_source": "U2:C01.3"
+  },
+  {
+   "message": "U2:N05.2",
+   "fact": "40f3e377cd0d407b",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline's phone is a Pixel 8 as of November 14, 2023.",
+   "fact_source": "U2:N05.2"
+  },
+  {
+   "message": "U2:N05.2",
+   "fact": "9195eff8133540c1",
+   "label": "update",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "applied",
+   "after": 0.02,
+   "closed": true,
+   "reopened": false,
+   "fact_text": "Caroline's phone is an iPhone 12.",
+   "fact_source": "U2:N05.1"
+  },
+  {
+   "message": "U2:C02.4",
+   "fact": "815f6a07ccaa4740",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie joined a group guitar class at the community center around November 20, 2023, instead of learning from YouTube videos.",
+   "fact_source": "U2:C02.4"
+  },
+  {
+   "message": "U2:C02.4",
+   "fact": "e61ce94a6c5042b9",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie's guitar teacher Priya moved away around October 2023, so she is currently learning guitar from YouTube videos.",
+   "fact_source": "U2:C02.3"
+  },
+  {
+   "message": "U2:C04.3",
+   "fact": "475d2a4577974422",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Melanie's oldest child returned to Lincoln Middle School around November 25, 2023, after finding Riverside Academy too far away.",
+   "fact_source": "U2:C04.3"
+  },
+  {
+   "message": "U2:C04.3",
+   "fact": "d684694ee9354767",
+   "label": "contradiction",
+   "p": 1.0,
+   "before": 0.5,
+   "event": "blocked_structure",
+   "fact_text": "Melanie moved her oldest child to Riverside Academy around October 15, 2023, because Lincoln Middle School wasn't a good fit.",
+   "fact_source": "U2:C04.2"
+  },
+  {
+   "message": "U2:C03.4",
+   "fact": "ef98a11021b14a02",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline has been matched with two siblings named Maya and Sam around December 3, 2023.",
+   "fact_source": "U2:C03.4"
+  },
+  {
+   "message": "U2:C05.4",
+   "fact": "981209d1b0b048be",
+   "event": "insert",
+   "after": 0.5,
+   "fact_text": "Caroline cut back her volunteering at the community center to every other Saturday morning around December 6, 2023.",
+   "fact_source": "U2:C05.4"
+  }
+ ],
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {
+  "embeddings": 0.0013639552238805968,
+  "escalations": 0.0,
+  "extraction": 1.3083,
+  "jev": 0.11596092667693005,
+  "llm_decisions": 0.560384328358209
+ }
+}

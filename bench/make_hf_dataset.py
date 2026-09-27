@@ -1,7 +1,8 @@
 """Build the Hugging Face dataset in hf_dataset/ from the committed bench files and results (no API calls).
 
 Configs (one Parquet file each, under hf_dataset/data/):
-- update_set_1: the 30 author-written update items (tier, label, original fact, update message, question, gold).
+- update_set_1: the 30 update items (drafted and labeled with Claude; the author reviewed a subset): tier,
+  label, original fact, update message, question, gold.
 - update_set_2_messages / update_set_2_questions: the second update set's 28 messages and 20 questions.
 - contradiction_pairs: the 50 labeled (old fact, new fact, message) pairs.
 - escalation_labels: the 29 relation decisions Jev was unsure of, with Jev's and Laya's probabilities and the label

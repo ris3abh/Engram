@@ -11,6 +11,7 @@ from .embed import Embedder, HashEmbedder, SentenceEmbedder
 from .flags import Flags
 from .llm.base import LLMBackend, UsageLog
 from .pipeline.answer import Answer, answer
+from .pipeline.lean import LeanWriter
 from .pipeline.retrieve import Retriever
 from .pipeline.write import IngestResult, WritePipeline
 from .store import Store
@@ -27,7 +28,8 @@ class Engram:
     flags: Flags = Flags()
 
     def __post_init__(self) -> None:
-        self.writer = WritePipeline(self.store, self.backend, self.llm, self.embedder, self.log, self.flags)
+        writer = LeanWriter if self.flags.extraction == "lean" else WritePipeline
+        self.writer = writer(self.store, self.backend, self.llm, self.embedder, self.log, self.flags)
         self.retriever = Retriever(
             self.store,
             self.backend,
@@ -35,6 +37,10 @@ class Engram:
             cosine_floor=self.flags.retrieval_floor,
             history=self.flags.retrieval_history,
             rerank=self.flags.retrieval_rerank,
+            reranker=self.flags.retrieval_reranker,
+            shortlist=self.flags.retrieval_shortlist,
+            keep=self.flags.rerank_keep,
+            llm=self.llm,
         )
 
     async def ingest(self, text: str, **kw) -> IngestResult:

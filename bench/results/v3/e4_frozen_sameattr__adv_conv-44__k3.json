@@ -1,0 +1,1469 @@
+{
+ "arm": "e4_frozen_sameattr",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "mem0",
+  "store_source_text": true,
+  "worth_filter": false,
+  "merge_policy": "same_as",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "mem0_update",
+  "relation_decider": "jev",
+  "cardinality_rule": true,
+  "close_agreement": true,
+  "candidate_source": "cosine+graph",
+  "fulfills_rule": "question",
+  "belief": true,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "not_planned_mass",
+  "update_multi_sibling": true,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "compact",
+  "relation_version": 2,
+  "temporal_version": 2,
+  "edge_type_version": 1,
+  "same_attribute_gate": true,
+  "extraction": "llm",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "adv:conv-44",
+  "sessions": [
+   1,
+   28
+  ],
+  "messages": 675,
+  "questions": 35
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 28,
+   "store_size": 725,
+   "questions": 35,
+   "accuracy": 0.6571428571428571,
+   "no_memory": 0,
+   "early_questions": 35,
+   "early_accuracy": 0.6571428571428571
+  }
+ ],
+ "accuracy": 0.6571428571428571,
+ "accuracy_by_category": {
+  "5": 0.6571428571428571
+ },
+ "stored": 725,
+ "active": 719,
+ "tentative": 698,
+ "disputed": 21,
+ "same_as_edges": 5,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 236.97142857142856,
+ "retrieved_tokens_median": 237,
+ "memories_mean": 3.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.005825274,
+  "claude": 0.0,
+  "openai": 0.00599625
+ },
+ "cache": {
+  "hits": 84,
+  "misses": 1106
+ },
+ "answers": [
+  {
+   "idx": 123,
+   "question": "Which specific type of bird mesmerizes Audrey?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Hummingbird.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028374541935483874,
+   "retrieved_tokens": 256,
+   "retrieve_ms": 849.5370419695973,
+   "retrieve_cost": 0.00016989541935483874,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 124,
+   "question": "What kind of flowers does Andrew have a tattoo of?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D3:26"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify the type of flowers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002773109032258065,
+   "retrieved_tokens": 187,
+   "retrieve_ms": 947.3306660074741,
+   "retrieve_cost": 0.00016961090322580648,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 125,
+   "question": "What type of dog was Audrey looking to adopt based on her living space?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D5:3"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify the type of dog.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028664883870967747,
+   "retrieved_tokens": 199,
+   "retrieve_ms": 1190.9915420110337,
+   "retrieve_cost": 0.00017594883870967744,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 126,
+   "question": "Why did Audrey sign up for a workshop about car maintenance?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No information about car maintenance.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002931687096774194,
+   "retrieved_tokens": 283,
+   "retrieve_ms": 1463.9011659892276,
+   "retrieve_cost": 0.00017316870967741936,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 127,
+   "question": "How did Andrew hear about the workshop on bonding with pets?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "He asked Audrey about it.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029132148387096775,
+   "retrieved_tokens": 260,
+   "retrieve_ms": 1700.2954590134323,
+   "retrieve_cost": 0.00017477148387096776,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 128,
+   "question": "What type of training was the workshop Andrew signed up for in May 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Bonding with pets.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002990723225806452,
+   "retrieved_tokens": 258,
+   "retrieve_ms": 2054.4401250081137,
+   "retrieve_cost": 0.0001819223225806452,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 129,
+   "question": "How did Andrew describe the dog he met at the pet store?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "There is no information about Andrew describing a dog he met at the pet store.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028738645161290326,
+   "retrieved_tokens": 195,
+   "retrieve_ms": 2236.0579170053825,
+   "retrieve_cost": 0.00017428645161290325,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 130,
+   "question": "What challenge is Audrey facing in their search for a pet?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D7:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Finding dog-friendly places.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002791565806451613,
+   "retrieved_tokens": 204,
+   "retrieve_ms": 2538.531541998964,
+   "retrieve_cost": 0.00017160658064516133,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 131,
+   "question": "What indoor activities does Andrew plan on trying after the rock climbing class?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D8:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No indoor activities mentioned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002942177419354839,
+   "retrieved_tokens": 261,
+   "retrieve_ms": 2840.83262499189,
+   "retrieve_cost": 0.0001775177419354839,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 132,
+   "question": "What did Andrew set up in the backyard for their dogs on June 26, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D9:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew found a doggy daycare.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028812774193548386,
+   "retrieved_tokens": 199,
+   "retrieve_ms": 3140.949917025864,
+   "retrieve_cost": 0.0001777277419354839,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 133,
+   "question": "What did Audrey and her GF do on the Monday before July 24, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No relevant information found.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002971049032258065,
+   "retrieved_tokens": 216,
+   "retrieve_ms": 3406.962959037628,
+   "retrieve_cost": 0.00018565490322580648,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 134,
+   "question": "What is the name of Andrew's childhood dog?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not mention Andrew's childhood dog.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028386058064516133,
+   "retrieved_tokens": 216,
+   "retrieve_ms": 3728.1282499898225,
+   "retrieve_cost": 0.00017211058064516132,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 135,
+   "question": "What special memories does Andrew have with his childhood dog, Max?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No special memories mentioned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029504129032258066,
+   "retrieved_tokens": 316,
+   "retrieve_ms": 4005.2156249876134,
+   "retrieve_cost": 0.00017039129032258066,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 136,
+   "question": "What are some of the personalities of Andrew's four fur babies?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew has one puppy, Toby.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027355703225806456,
+   "retrieved_tokens": 180,
+   "retrieve_ms": 4333.35133298533,
+   "retrieve_cost": 0.00016810703225806454,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 137,
+   "question": "What type of classes did Andrew start with his pups recently on 4 August, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D14:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Agility classes.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028855374193548396,
+   "retrieved_tokens": 213,
+   "retrieve_ms": 4570.701957971323,
+   "retrieve_cost": 0.00017785374193548392,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 138,
+   "question": "What is essential to keep the dogs looking good according to Andrew?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D17:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Regular grooming is essential.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002856470322580645,
+   "retrieved_tokens": 249,
+   "retrieve_ms": 4854.127499973401,
+   "retrieve_cost": 0.0001710470322580645,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 139,
+   "question": "What did Audrey organize with the neighbors' cats?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No events with cats mentioned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002875567741935484,
+   "retrieved_tokens": 256,
+   "retrieve_ms": 5211.273042019457,
+   "retrieve_cost": 0.0001722067741935484,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 140,
+   "question": "What did Andrew do to give his dogs extra comfort as the weather cooled down?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Prepared essentials for Scout's comfort.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028760361290322583,
+   "retrieved_tokens": 252,
+   "retrieve_ms": 5389.675582991913,
+   "retrieve_cost": 0.00017045361290322583,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 141,
+   "question": "How does Andrew describe the new beds for his dogs?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "There are no memories from Andrew about the new beds.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028510664516129036,
+   "retrieved_tokens": 232,
+   "retrieve_ms": 5658.625708951149,
+   "retrieve_cost": 0.00017005664516129036,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 142,
+   "question": "How did Andrew calm down his dog after the leash incident?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not provide information about how Andrew calmed down his dog after a leash incident.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029426283870967744,
+   "retrieved_tokens": 243,
+   "retrieve_ms": 6013.922457990702,
+   "retrieve_cost": 0.00017246283870967744,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 143,
+   "question": "How often does Andrew take his dogs for walks?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify how often Andrew takes his dogs for walks.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028052264516129034,
+   "retrieved_tokens": 199,
+   "retrieve_ms": 6252.748375001829,
+   "retrieve_cost": 0.00016892264516129034,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 144,
+   "question": "What kind of vegetables does Audrey take care of?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify the types of vegetables.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002846041935483871,
+   "retrieved_tokens": 220,
+   "retrieve_ms": 6527.9302499839105,
+   "retrieve_cost": 0.00017225419354838714,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 145,
+   "question": "What did Andrew learn from reading books about economic systems?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D20:25"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No information about economic systems.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002732903225806452,
+   "retrieved_tokens": 177,
+   "retrieve_ms": 6801.119625044521,
+   "retrieve_cost": 0.0001694903225806452,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 146,
+   "question": "What was the reason Andrew couldn't walk his dogs for a period of time?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Work stress and lack of balance.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002953463225806452,
+   "retrieved_tokens": 279,
+   "retrieve_ms": 7098.416541004553,
+   "retrieve_cost": 0.0001744463225806452,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 147,
+   "question": "What type of jewelry does Andrew make?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify what type of jewelry Andrew makes.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002996758064516129,
+   "retrieved_tokens": 313,
+   "retrieve_ms": 7382.043792051263,
+   "retrieve_cost": 0.0001727758064516129,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 148,
+   "question": "Why does Andrew make jewelry out of recycled objects?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew admires Audrey's jewelry-making.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002924607096774194,
+   "retrieved_tokens": 281,
+   "retrieve_ms": 7585.109999985434,
+   "retrieve_cost": 0.00017216070967741937,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 149,
+   "question": "What type of games do Andrew's dogs like to play at the park?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify the games Andrew's dogs like to play.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002863910322580646,
+   "retrieved_tokens": 219,
+   "retrieve_ms": 7879.192708991468,
+   "retrieve_cost": 0.00017029103225806456,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 150,
+   "question": "What did Andrew make to thank his neighbors?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not mention Andrew making anything to thank his neighbors.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027965012903225807,
+   "retrieved_tokens": 198,
+   "retrieve_ms": 8176.822167006321,
+   "retrieve_cost": 0.00016910012903225807,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 151,
+   "question": "How do Andrew's dogs react to snow?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew's dogs dislike snow.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002808381290322581,
+   "retrieved_tokens": 237,
+   "retrieve_ms": 8418.492417025845,
+   "retrieve_cost": 0.00016863812903225808,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 152,
+   "question": "How does Andrew describe his dogs' response to snow?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No mention of snow response.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002796114193548387,
+   "retrieved_tokens": 224,
+   "retrieve_ms": 8684.684415988158,
+   "retrieve_cost": 0.00016876141935483872,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 153,
+   "question": "What kind of experiences are Audrey's cats the best companions for?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:24"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Road trips and tough times.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002905254193548387,
+   "retrieved_tokens": 239,
+   "retrieve_ms": 9020.54604201112,
+   "retrieve_cost": 0.00017682541935483873,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 154,
+   "question": "What activity do Audrey and Buddy enjoy doing together?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Exploring new trails.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028845967741935485,
+   "retrieved_tokens": 262,
+   "retrieve_ms": 9329.93800000986,
+   "retrieve_cost": 0.00017280967741935486,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 155,
+   "question": "What type of drink did Andrew recently try at a new spot in town?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D25:3"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Sushi.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002946222580645162,
+   "retrieved_tokens": 307,
+   "retrieve_ms": 9560.253833013121,
+   "retrieve_cost": 0.00017192225806451615,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 156,
+   "question": "Which type of pizza did Audrey suggest trying first to someone new to Italian cuisine?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D25:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No information available.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002797118709677419,
+   "retrieved_tokens": 218,
+   "retrieve_ms": 9879.841750022024,
+   "retrieve_cost": 0.00016946187096774195,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 157,
+   "question": "How often does Andrew meet up with other dog owners for tips and playdates?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Once a week.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028920387096774197,
+   "retrieved_tokens": 246,
+   "retrieve_ms": 10114.439916971605,
+   "retrieve_cost": 0.00017475387096774195,
+   "checkpoint": 28,
+   "store_size": 725
+  }
+ ],
+ "asked": [
+  {
+   "idx": 123,
+   "question": "Which specific type of bird mesmerizes Audrey?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Hummingbird.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028374541935483874,
+   "retrieved_tokens": 256,
+   "retrieve_ms": 849.5370419695973,
+   "retrieve_cost": 0.00016989541935483874,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 124,
+   "question": "What kind of flowers does Andrew have a tattoo of?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D3:26"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify the type of flowers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002773109032258065,
+   "retrieved_tokens": 187,
+   "retrieve_ms": 947.3306660074741,
+   "retrieve_cost": 0.00016961090322580648,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 125,
+   "question": "What type of dog was Audrey looking to adopt based on her living space?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D5:3"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify the type of dog.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028664883870967747,
+   "retrieved_tokens": 199,
+   "retrieve_ms": 1190.9915420110337,
+   "retrieve_cost": 0.00017594883870967744,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 126,
+   "question": "Why did Audrey sign up for a workshop about car maintenance?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No information about car maintenance.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002931687096774194,
+   "retrieved_tokens": 283,
+   "retrieve_ms": 1463.9011659892276,
+   "retrieve_cost": 0.00017316870967741936,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 127,
+   "question": "How did Andrew hear about the workshop on bonding with pets?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "He asked Audrey about it.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029132148387096775,
+   "retrieved_tokens": 260,
+   "retrieve_ms": 1700.2954590134323,
+   "retrieve_cost": 0.00017477148387096776,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 128,
+   "question": "What type of training was the workshop Andrew signed up for in May 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Bonding with pets.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002990723225806452,
+   "retrieved_tokens": 258,
+   "retrieve_ms": 2054.4401250081137,
+   "retrieve_cost": 0.0001819223225806452,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 129,
+   "question": "How did Andrew describe the dog he met at the pet store?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "There is no information about Andrew describing a dog he met at the pet store.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028738645161290326,
+   "retrieved_tokens": 195,
+   "retrieve_ms": 2236.0579170053825,
+   "retrieve_cost": 0.00017428645161290325,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 130,
+   "question": "What challenge is Audrey facing in their search for a pet?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D7:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Finding dog-friendly places.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002791565806451613,
+   "retrieved_tokens": 204,
+   "retrieve_ms": 2538.531541998964,
+   "retrieve_cost": 0.00017160658064516133,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 131,
+   "question": "What indoor activities does Andrew plan on trying after the rock climbing class?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D8:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No indoor activities mentioned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002942177419354839,
+   "retrieved_tokens": 261,
+   "retrieve_ms": 2840.83262499189,
+   "retrieve_cost": 0.0001775177419354839,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 132,
+   "question": "What did Andrew set up in the backyard for their dogs on June 26, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D9:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew found a doggy daycare.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028812774193548386,
+   "retrieved_tokens": 199,
+   "retrieve_ms": 3140.949917025864,
+   "retrieve_cost": 0.0001777277419354839,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 133,
+   "question": "What did Audrey and her GF do on the Monday before July 24, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No relevant information found.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002971049032258065,
+   "retrieved_tokens": 216,
+   "retrieve_ms": 3406.962959037628,
+   "retrieve_cost": 0.00018565490322580648,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 134,
+   "question": "What is the name of Andrew's childhood dog?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not mention Andrew's childhood dog.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028386058064516133,
+   "retrieved_tokens": 216,
+   "retrieve_ms": 3728.1282499898225,
+   "retrieve_cost": 0.00017211058064516132,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 135,
+   "question": "What special memories does Andrew have with his childhood dog, Max?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No special memories mentioned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029504129032258066,
+   "retrieved_tokens": 316,
+   "retrieve_ms": 4005.2156249876134,
+   "retrieve_cost": 0.00017039129032258066,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 136,
+   "question": "What are some of the personalities of Andrew's four fur babies?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D13:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew has one puppy, Toby.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027355703225806456,
+   "retrieved_tokens": 180,
+   "retrieve_ms": 4333.35133298533,
+   "retrieve_cost": 0.00016810703225806454,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 137,
+   "question": "What type of classes did Andrew start with his pups recently on 4 August, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D14:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Agility classes.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028855374193548396,
+   "retrieved_tokens": 213,
+   "retrieve_ms": 4570.701957971323,
+   "retrieve_cost": 0.00017785374193548392,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 138,
+   "question": "What is essential to keep the dogs looking good according to Andrew?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D17:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Regular grooming is essential.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002856470322580645,
+   "retrieved_tokens": 249,
+   "retrieve_ms": 4854.127499973401,
+   "retrieve_cost": 0.0001710470322580645,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 139,
+   "question": "What did Audrey organize with the neighbors' cats?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No events with cats mentioned.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002875567741935484,
+   "retrieved_tokens": 256,
+   "retrieve_ms": 5211.273042019457,
+   "retrieve_cost": 0.0001722067741935484,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 140,
+   "question": "What did Andrew do to give his dogs extra comfort as the weather cooled down?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Prepared essentials for Scout's comfort.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028760361290322583,
+   "retrieved_tokens": 252,
+   "retrieve_ms": 5389.675582991913,
+   "retrieve_cost": 0.00017045361290322583,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 141,
+   "question": "How does Andrew describe the new beds for his dogs?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "There are no memories from Andrew about the new beds.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028510664516129036,
+   "retrieved_tokens": 232,
+   "retrieve_ms": 5658.625708951149,
+   "retrieve_cost": 0.00017005664516129036,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 142,
+   "question": "How did Andrew calm down his dog after the leash incident?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not provide information about how Andrew calmed down his dog after a leash incident.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029426283870967744,
+   "retrieved_tokens": 243,
+   "retrieve_ms": 6013.922457990702,
+   "retrieve_cost": 0.00017246283870967744,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 143,
+   "question": "How often does Andrew take his dogs for walks?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify how often Andrew takes his dogs for walks.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028052264516129034,
+   "retrieved_tokens": 199,
+   "retrieve_ms": 6252.748375001829,
+   "retrieve_cost": 0.00016892264516129034,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 144,
+   "question": "What kind of vegetables does Audrey take care of?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify the types of vegetables.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002846041935483871,
+   "retrieved_tokens": 220,
+   "retrieve_ms": 6527.9302499839105,
+   "retrieve_cost": 0.00017225419354838714,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 145,
+   "question": "What did Andrew learn from reading books about economic systems?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D20:25"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No information about economic systems.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002732903225806452,
+   "retrieved_tokens": 177,
+   "retrieve_ms": 6801.119625044521,
+   "retrieve_cost": 0.0001694903225806452,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 146,
+   "question": "What was the reason Andrew couldn't walk his dogs for a period of time?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Work stress and lack of balance.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002953463225806452,
+   "retrieved_tokens": 279,
+   "retrieve_ms": 7098.416541004553,
+   "retrieve_cost": 0.0001744463225806452,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 147,
+   "question": "What type of jewelry does Andrew make?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify what type of jewelry Andrew makes.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002996758064516129,
+   "retrieved_tokens": 313,
+   "retrieve_ms": 7382.043792051263,
+   "retrieve_cost": 0.0001727758064516129,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 148,
+   "question": "Why does Andrew make jewelry out of recycled objects?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew admires Audrey's jewelry-making.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002924607096774194,
+   "retrieved_tokens": 281,
+   "retrieve_ms": 7585.109999985434,
+   "retrieve_cost": 0.00017216070967741937,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 149,
+   "question": "What type of games do Andrew's dogs like to play at the park?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not specify the games Andrew's dogs like to play.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002863910322580646,
+   "retrieved_tokens": 219,
+   "retrieve_ms": 7879.192708991468,
+   "retrieve_cost": 0.00017029103225806456,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 150,
+   "question": "What did Andrew make to thank his neighbors?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The memories do not mention Andrew making anything to thank his neighbors.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027965012903225807,
+   "retrieved_tokens": 198,
+   "retrieve_ms": 8176.822167006321,
+   "retrieve_cost": 0.00016910012903225807,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 151,
+   "question": "How do Andrew's dogs react to snow?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew's dogs dislike snow.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002808381290322581,
+   "retrieved_tokens": 237,
+   "retrieve_ms": 8418.492417025845,
+   "retrieve_cost": 0.00016863812903225808,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 152,
+   "question": "How does Andrew describe his dogs' response to snow?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No mention of snow response.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002796114193548387,
+   "retrieved_tokens": 224,
+   "retrieve_ms": 8684.684415988158,
+   "retrieve_cost": 0.00016876141935483872,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 153,
+   "question": "What kind of experiences are Audrey's cats the best companions for?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:24"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Road trips and tough times.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002905254193548387,
+   "retrieved_tokens": 239,
+   "retrieve_ms": 9020.54604201112,
+   "retrieve_cost": 0.00017682541935483873,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 154,
+   "question": "What activity do Audrey and Buddy enjoy doing together?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Exploring new trails.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028845967741935485,
+   "retrieved_tokens": 262,
+   "retrieve_ms": 9329.93800000986,
+   "retrieve_cost": 0.00017280967741935486,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 155,
+   "question": "What type of drink did Andrew recently try at a new spot in town?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D25:3"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Sushi.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002946222580645162,
+   "retrieved_tokens": 307,
+   "retrieve_ms": 9560.253833013121,
+   "retrieve_cost": 0.00017192225806451615,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 156,
+   "question": "Which type of pizza did Audrey suggest trying first to someone new to Italian cuisine?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D25:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No information available.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002797118709677419,
+   "retrieved_tokens": 218,
+   "retrieve_ms": 9879.841750022024,
+   "retrieve_cost": 0.00016946187096774195,
+   "checkpoint": 28,
+   "store_size": 725
+  },
+  {
+   "idx": 157,
+   "question": "How often does Andrew meet up with other dog owners for tips and playdates?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Once a week.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028920387096774197,
+   "retrieved_tokens": 246,
+   "retrieve_ms": 10114.439916971605,
+   "retrieve_cost": 0.00017475387096774195,
+   "checkpoint": 28,
+   "store_size": 725
+  }
+ ],
+ "options": {
+  "top_k": 3,
+  "no_dates": false,
+  "no_answer": false
+ },
+ "reused_store": "heldout_conv-44__k3",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 5389.675582991913,
+ "retrieve_cost_per_query": 0.00017284041290322583,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "same_attribute_report": {
+  "evidence_events": 0,
+  "evidence_applied": 0,
+  "evidence_unconfirmed": 0,
+  "facts_lowered": 0,
+  "facts_lowered_closed": 0,
+  "closes_via_same_attribute": []
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {}
+}

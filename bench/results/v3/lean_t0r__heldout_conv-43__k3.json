@@ -1,0 +1,7098 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "heldout:conv-43",
+  "sessions": [
+   1,
+   29
+  ],
+  "messages": 680,
+  "questions": 178
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 29,
+   "store_size": 680,
+   "questions": 178,
+   "accuracy": 0.7584269662921348,
+   "no_memory": 0,
+   "early_questions": 178,
+   "early_accuracy": 0.7584269662921348
+  }
+ ],
+ "accuracy": 0.7584269662921348,
+ "accuracy_by_category": {
+  "1": 0.6129032258064516,
+  "2": 0.7307692307692307,
+  "3": 0.42857142857142855,
+  "4": 0.8504672897196262
+ },
+ "stored": 680,
+ "active": 680,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 138.7921348314607,
+ "retrieved_tokens_median": 132.5,
+ "memories_mean": 3.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.03163099800000001,
+  "claude": 0.0,
+  "openai": 0.01723589999999999
+ },
+ "cache": {
+  "hits": 533,
+  "misses": 5519
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "what are John's goals with regards to his basketball career?",
+   "gold": "improve shooting percentage, win a championship",
+   "category": 1,
+   "evidence": [
+    "D1:9",
+    "D6:15",
+    "D11:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Improve shooting, win championship, endorsements.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002999690322580645,
+   "retrieved_tokens": 157,
+   "retrieve_ms": 4403.569791989867,
+   "retrieve_cost": 0.00019796903225806453,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 1,
+   "question": "What are John's goals for his career that are not related to his basketball skills?",
+   "gold": "get endorsements, build his brand, do charity work",
+   "category": 1,
+   "evidence": [
+    "D6:15",
+    "D11:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Building his brand and charity work.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030849561290322583,
+   "retrieved_tokens": 188,
+   "retrieve_ms": 4526.9871249911375,
+   "retrieve_cost": 0.00020094561290322582,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 2,
+   "question": "What items does John collect?",
+   "gold": "sneakers, fantasy movie DVDs, jerseys",
+   "category": 1,
+   "evidence": [
+    "D1:15",
+    "D12:18",
+    "D27:20"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Jerseys and sneakers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002703783870967742,
+   "retrieved_tokens": 157,
+   "retrieve_ms": 4569.764541985933,
+   "retrieve_cost": 0.0001716783870967742,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 3,
+   "question": "Would Tim enjoy reading books by C. S. Lewis or John Greene?",
+   "gold": "C. S.Lewis",
+   "category": 3,
+   "evidence": [
+    "D1:14",
+    "D1:16",
+    "D1:18"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yes, Tim enjoys fantasy books.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002847081290322581,
+   "retrieved_tokens": 167,
+   "retrieve_ms": 4627.6496250065975,
+   "retrieve_cost": 0.0001806081290322581,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 4,
+   "question": "What books has Tim read?",
+   "gold": "Harry Potter, Game of Thrones, the Name of the Wind, The Alchemist, The Hobbit, A Dance with Dragons, and the Wheel of Time.",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D2:7",
+    "D6:8",
+    "D11:26",
+    "D20:21",
+    "D26:36",
+    "D22:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A Dance with Dragons.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027161051612903224,
+   "retrieved_tokens": 103,
+   "retrieve_ms": 4689.354249974713,
+   "retrieve_cost": 0.00018101051612903226,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 5,
+   "question": "Based on Tim's collections, what is a shop that he would enjoy visiting in New York city?",
+   "gold": "House of MinaLima",
+   "category": 3,
+   "evidence": [
+    "D2:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A bookstore.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000278863935483871,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 4728.692832984962,
+   "retrieve_cost": 0.000180763935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 6,
+   "question": "In which month's game did John achieve a career-high score in points?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "June 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029693438709677423,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 4765.563125023618,
+   "retrieve_cost": 0.0001944843870967742,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 7,
+   "question": "Which geographical locations has Tim been to?",
+   "gold": "California, London, the Smoky Mountains",
+   "category": 1,
+   "evidence": [
+    "D1:18",
+    "D3:2",
+    "D14:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "London",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026499987096774197,
+   "retrieved_tokens": 116,
+   "retrieve_ms": 4824.568791023921,
+   "retrieve_cost": 0.00017424987096774196,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 8,
+   "question": "Which outdoor gear company likely signed up John for an endorsement deal?",
+   "gold": "Under Armour",
+   "category": 3,
+   "evidence": [
+    "D3:15",
+    "D25:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Renowned outdoor gear company.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002887745806451613,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 5031.752499984577,
+   "retrieve_cost": 0.00018857458064516132,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 9,
+   "question": "Which endorsement deals has John been offered?",
+   "gold": "basketball shoes and gear deal with Nike, potential sponsorship with Gatorade, Moxie a popular beverage company, outdoor gear company",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D3:15",
+    "D25:2",
+    "D29:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nike and Gatorade deals.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027813387096774195,
+   "retrieved_tokens": 130,
+   "retrieve_ms": 4937.977124995086,
+   "retrieve_cost": 0.00018168387096774194,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 10,
+   "question": "When was John in Seattle for a game?",
+   "gold": "early August, 2023",
+   "category": 2,
+   "evidence": [
+    "D3:19",
+    "D5:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002762990322580645,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 5082.153666997328,
+   "retrieve_cost": 0.00018389903225806453,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 11,
+   "question": "What sports does John like besides basketball?",
+   "gold": "surfing",
+   "category": 1,
+   "evidence": [
+    "D1:7",
+    "D2:14",
+    "D3:1",
+    "D3:25"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No other sports mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029785722580645167,
+   "retrieved_tokens": 195,
+   "retrieve_ms": 5121.905334002804,
+   "retrieve_cost": 0.00019285722580645164,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 12,
+   "question": "What year did John start surfing?",
+   "gold": "2018",
+   "category": 2,
+   "evidence": [
+    "D3:27"
+   ],
+   "last_evidence_session": 29,
+   "answer": "2018",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026396264516129035,
+   "retrieved_tokens": 81,
+   "retrieve_ms": 5199.674832983874,
+   "retrieve_cost": 0.00017816264516129035,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 13,
+   "question": "What does Tim do to escape reality?",
+   "gold": "Read fantasy books.",
+   "category": 1,
+   "evidence": [
+    "D2:11",
+    "D3:30"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Reads a good book.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002804792903225807,
+   "retrieved_tokens": 134,
+   "retrieve_ms": 5332.008333003614,
+   "retrieve_cost": 0.00018462929032258066,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 14,
+   "question": "What kind of writing does Tim do?",
+   "gold": "comments on favorite books in a fantasy literature forum, articles on fantasy novels, studying characters, themes, and making book recommendations, writing a fantasy novel",
+   "category": 1,
+   "evidence": [
+    "D2:1",
+    "D4:3",
+    "D4:5",
+    "D15:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim writes articles about fantasy novels.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028299541935483875,
+   "retrieved_tokens": 185,
+   "retrieve_ms": 5379.595334001351,
+   "retrieve_cost": 0.00017829541935483875,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 15,
+   "question": "Who is Anthony?",
+   "gold": "likely John's friend, colleague or family",
+   "category": 3,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "John's friend.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002670348387096774,
+   "retrieved_tokens": 119,
+   "retrieve_ms": 5427.12400003802,
+   "retrieve_cost": 0.00017523483870967744,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 16,
+   "question": "After how many weeks did Tim reconnect with the fellow Harry Potter fan from California?",
+   "gold": "three weeks",
+   "category": 2,
+   "evidence": [
+    "D3:2",
+    "D5:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "About 3 weeks.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030040664516129035,
+   "retrieved_tokens": 215,
+   "retrieve_ms": 5473.885124956723,
+   "retrieve_cost": 0.00019000664516129035,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 17,
+   "question": "How many games has John mentioned winning?",
+   "gold": "6",
+   "category": 1,
+   "evidence": [
+    "D3:3",
+    "D5:2",
+    "D22:4",
+    "D23:7",
+    "D24:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Three games.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029062896774193555,
+   "retrieved_tokens": 179,
+   "retrieve_ms": 5643.5846670065075,
+   "retrieve_cost": 0.00018922896774193552,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 18,
+   "question": "What authors has Tim read books from?",
+   "gold": "J.K. Rowling, R.R. Martin, Patrick Rothfuss, Paulo Coelho, and J. R. R. Tolkien.",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D2:7",
+    "D4:7",
+    "D5:15",
+    "D:11:26",
+    "D20:21",
+    "D26:36"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Patrick Rothfuss.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002727973548387097,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 5578.669040987734,
+   "retrieve_cost": 0.0001800973548387097,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 19,
+   "question": "What is a prominent charity organization that John might want to work with and why?",
+   "gold": "Good Sports, because they work with Nike, Gatorade, and Under Armour and they aim toprovide youth sports opportunities for kids ages 3-18 in high-need communities.",
+   "category": 3,
+   "evidence": [
+    "D3:13",
+    "D3:15",
+    "D6:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Local organization supporting disadvantaged kids.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002956788387096774,
+   "retrieved_tokens": 199,
+   "retrieve_ms": 5696.348708006553,
+   "retrieve_cost": 0.00018707883870967742,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 20,
+   "question": "Which city was John in before traveling to Chicago?",
+   "gold": "Seattle",
+   "category": 2,
+   "evidence": [
+    "D3:19",
+    "D5:2",
+    "D6:1",
+    "D6:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No previous city mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000269016,
+   "retrieved_tokens": 102,
+   "retrieve_ms": 5767.375333001837,
+   "retrieve_cost": 0.00017736600000000004,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 21,
+   "question": "Which US cities does John mention visiting to Tim?",
+   "gold": "Seattle, Chicago, New York",
+   "category": 1,
+   "evidence": [
+    "D3:19",
+    "D6:3",
+    "D9:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "New York City, Chicago.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002805015483870968,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 5844.288124993909,
+   "retrieve_cost": 0.0001801515483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 22,
+   "question": "When did John meet with his teammates after returning from Chicago?",
+   "gold": "August 15, 2023",
+   "category": 2,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 15, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028998948387096775,
+   "retrieved_tokens": 144,
+   "retrieve_ms": 5888.198708998971,
+   "retrieve_cost": 0.00018963948387096775,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 23,
+   "question": "When is Tim attending a book conference?",
+   "gold": "September 2023",
+   "category": 2,
+   "evidence": [
+    "D7:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "September 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002887141935483871,
+   "retrieved_tokens": 204,
+   "retrieve_ms": 6084.244457946625,
+   "retrieve_cost": 0.00018296419354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 24,
+   "question": "Where was John between August 11 and August 15 2023?",
+   "gold": "Chicago",
+   "category": 2,
+   "evidence": [
+    "D6:1",
+    "D6:3",
+    "D7:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No information available.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002681309032258065,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 6124.488458037376,
+   "retrieve_cost": 0.00017318090322580648,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 25,
+   "question": "What similar sports collectible do Tim and John own?",
+   "gold": "signed basketball",
+   "category": 1,
+   "evidence": [
+    "D7:7",
+    "D7:9",
+    "D16:7",
+    "D16:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Jerseys.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002701213548387097,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 6164.832499984186,
+   "retrieve_cost": 0.0001799713548387097,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 26,
+   "question": "Which TV series does Tim mention watching?",
+   "gold": "That, Wheel of Time",
+   "category": 1,
+   "evidence": [
+    "D17:1",
+    "D17:11",
+    "D26:36"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Game of Thrones",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000265819935483871,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 6253.557665972039,
+   "retrieve_cost": 0.000176269935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 27,
+   "question": "Which popular time management technique does Tim use to prepare for exams?",
+   "gold": "Pomodoro technique",
+   "category": 3,
+   "evidence": [
+    "D18:3",
+    "D18:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Pomodoro Technique",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002772147096774194,
+   "retrieved_tokens": 127,
+   "retrieve_ms": 6302.809250017162,
+   "retrieve_cost": 0.00018211470967741938,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 28,
+   "question": "Which popular music composer's tunes does Tim enjoy playing on the piano?",
+   "gold": "John Williams",
+   "category": 3,
+   "evidence": [
+    "D8:14",
+    "D8:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific composer mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027700993548387097,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 6472.690665978007,
+   "retrieve_cost": 0.00017395993548387098,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 29,
+   "question": "What schools did John play basketball in and how many years was he with his team during high school?",
+   "gold": "Middle school, high school, and college and he was with his high school team for 4 years.",
+   "category": 1,
+   "evidence": [
+    "D6:13",
+    "D9:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Four years in high school.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003100573548387097,
+   "retrieved_tokens": 206,
+   "retrieve_ms": 6529.736124968622,
+   "retrieve_cost": 0.0001992073548387097,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 30,
+   "question": "Which cities has John been to?",
+   "gold": "Seattle, Chicago, New York, and Paris.",
+   "category": 1,
+   "evidence": [
+    "D3:19",
+    "D6:3",
+    "D9:6",
+    "D27:36"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Chicago, New York City.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027980748387096773,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 6593.507791985758,
+   "retrieve_cost": 0.00018035748387096776,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 31,
+   "question": "What month did Tim plan on going to Universal Studios?",
+   "gold": "September, 2023",
+   "category": 2,
+   "evidence": [
+    "D10:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "September 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002748116129032258,
+   "retrieved_tokens": 112,
+   "retrieve_ms": 6642.937417025678,
+   "retrieve_cost": 0.00018196161290322583,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 32,
+   "question": "Which US states might Tim be in during September 2023 based on his plans of visiting Universal Studios?",
+   "gold": "California or Florida",
+   "category": 3,
+   "evidence": [
+    "D10:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "California or Florida.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027874780645161293,
+   "retrieved_tokens": 112,
+   "retrieve_ms": 6780.603040999267,
+   "retrieve_cost": 0.00018289780645161293,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 33,
+   "question": "When does John plan on traveling with his team on a team trip?",
+   "gold": "October, 2023",
+   "category": 2,
+   "evidence": [
+    "D11:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "October 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002693523870967742,
+   "retrieved_tokens": 83,
+   "retrieve_ms": 6845.347625028808,
+   "retrieve_cost": 0.00017995238709677422,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 34,
+   "question": "What could John do after his basketball career?",
+   "gold": "become a basketball coach since he likes giving back and leadership",
+   "category": 3,
+   "evidence": [
+    "D11:19",
+    "D26:1",
+    "D27:26"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Mentor younger players.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003125616774193548,
+   "retrieved_tokens": 213,
+   "retrieve_ms": 6896.291957993526,
+   "retrieve_cost": 0.00020456167741935485,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 35,
+   "question": "What outdoor activities does John enjoy?",
+   "gold": "Hiking, surfing",
+   "category": 1,
+   "evidence": [
+    "D3:27",
+    "D12:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Surfing and camping.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026774090322580647,
+   "retrieved_tokens": 84,
+   "retrieve_ms": 7001.212291012052,
+   "retrieve_cost": 0.00017969090322580647,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 36,
+   "question": "Who is Tim and John's favorite basketball player?",
+   "gold": "LeBron James",
+   "category": 1,
+   "evidence": [
+    "D12:20",
+    "D12:22",
+    "D16:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "LeBron James.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002710155483870968,
+   "retrieved_tokens": 91,
+   "retrieve_ms": 7071.354000014253,
+   "retrieve_cost": 0.0001819155483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 37,
+   "question": "Which week did Tim visit the UK for the Harry Potter Conference?",
+   "gold": "The week before October 13th, 2023.",
+   "category": 2,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Week of October 6, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031089870967741936,
+   "retrieved_tokens": 232,
+   "retrieve_ms": 7136.611499998253,
+   "retrieve_cost": 0.00019584870967741936,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 38,
+   "question": "which country has Tim visited most frequently in his travels?",
+   "gold": "UK",
+   "category": 1,
+   "evidence": [
+    "D1:18",
+    "D13:1",
+    "D18:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific country mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002741454193548388,
+   "retrieved_tokens": 121,
+   "retrieve_ms": 7304.634042026009,
+   "retrieve_cost": 0.00017934541935483875,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 39,
+   "question": "What year did Tim go to the Smoky Mountains?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D14:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002613516774193548,
+   "retrieved_tokens": 91,
+   "retrieve_ms": 7414.519125013612,
+   "retrieve_cost": 0.00017285167741935484,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 40,
+   "question": "Has Tim been to North Carolina and/or Tennesee states in the US?",
+   "gold": "Yes",
+   "category": 2,
+   "evidence": [
+    "D14:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yes, Tim visited Tennessee.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002764861935483871,
+   "retrieved_tokens": 122,
+   "retrieve_ms": 7497.416166006587,
+   "retrieve_cost": 0.0001794361935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 41,
+   "question": "What kind of fiction stories does Tim write?",
+   "gold": "Fantasy stories with plot twists",
+   "category": 1,
+   "evidence": [
+    "D15:3",
+    "D16:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fantasy novels.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002823315483870968,
+   "retrieved_tokens": 150,
+   "retrieve_ms": 7569.4255830021575,
+   "retrieve_cost": 0.0001849815483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 42,
+   "question": "What has John cooked?",
+   "gold": "Soup, a slow cooker meal, and honey garlic chicken with roasted veg.",
+   "category": 1,
+   "evidence": [
+    "D10:4",
+    "D15:30",
+    "D15:31",
+    "D15:32"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Honey garlic chicken.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002642924516129033,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 7731.627542001661,
+   "retrieve_cost": 0.00016979245161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 43,
+   "question": "What does John like about Lebron James?",
+   "gold": "His heart, determination, skills, and leadership.",
+   "category": 1,
+   "evidence": [
+    "D12:20",
+    "D16:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "His skills and leadership.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002816585806451613,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 7623.856332967989,
+   "retrieve_cost": 0.0001886585806451613,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 44,
+   "question": "When did John and his wife go on a European vacation?",
+   "gold": "November, 2023.",
+   "category": 2,
+   "evidence": [
+    "D16:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "November 6, 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002764861935483871,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 7781.145499960985,
+   "retrieve_cost": 0.00017838619354838714,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 45,
+   "question": "Which country was Tim visiting in the second week of November?",
+   "gold": "UK",
+   "category": 2,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "United Kingdom",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002732196774193549,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 7844.489292008802,
+   "retrieve_cost": 0.00018036967741935487,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 46,
+   "question": "Where was Tim in the week before 16 November 2023?",
+   "gold": "UK",
+   "category": 2,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No information available.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002664747096774194,
+   "retrieved_tokens": 83,
+   "retrieve_ms": 7963.638125045691,
+   "retrieve_cost": 0.0001770747096774194,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 47,
+   "question": "When did John get married at a greenhouse?",
+   "gold": "last week of September 2023",
+   "category": 2,
+   "evidence": [
+    "D12:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "October 2, 2023",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026993109677419353,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 7881.522624986246,
+   "retrieve_cost": 0.00017273109677419355,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 48,
+   "question": "When did John get an ankle injury in 2023?",
+   "gold": "around November 16, 2023",
+   "category": 1,
+   "evidence": [
+    "D18:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Last season, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002916661935483871,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 8011.903208040167,
+   "retrieve_cost": 0.00018951619354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 49,
+   "question": "How many times has John injured his ankle?",
+   "gold": "two times",
+   "category": 1,
+   "evidence": [
+    "D18:2",
+    "D19:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Once.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002891657419354839,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 8133.236582973041,
+   "retrieve_cost": 0.00019091574193548389,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 50,
+   "question": "Which book was John reading during his recovery from an ankle injury?",
+   "gold": "The Alchemist",
+   "category": 1,
+   "evidence": [
+    "D19:20",
+    "D18:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The memories do not specify a book.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028967090322580644,
+   "retrieved_tokens": 188,
+   "retrieve_ms": 8202.291707973927,
+   "retrieve_cost": 0.00018242090322580646,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 51,
+   "question": "What kind of yoga for building core strength might John benefit from?",
+   "gold": "Hatha Yoga",
+   "category": 3,
+   "evidence": [
+    "D20:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Warrior II pose.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002868669677419355,
+   "retrieved_tokens": 132,
+   "retrieve_ms": 8338.896791974548,
+   "retrieve_cost": 0.0001898169677419355,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 52,
+   "question": "What does John do to supplement his basketball training?",
+   "gold": "Yoga, strength training",
+   "category": 1,
+   "evidence": [
+    "D8:5",
+    "D20:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Incorporates strength training.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00030878109677419353,
+   "retrieved_tokens": 191,
+   "retrieve_ms": 8255.464166984893,
+   "retrieve_cost": 0.00020318109677419356,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 53,
+   "question": "What other exercises can help John with his basketball performance?",
+   "gold": "Sprinting, long-distance running, and boxing.",
+   "category": 3,
+   "evidence": [
+    "D8:5",
+    "D20:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Strength training and agility drills.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000301027935483871,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 8493.712417024653,
+   "retrieve_cost": 0.000201427935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 54,
+   "question": "When did John take a trip to the Rocky Mountains?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D20:40"
+   ],
+   "last_evidence_session": 29,
+   "answer": "In 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027252522580645163,
+   "retrieved_tokens": 117,
+   "retrieve_ms": 8398.200249997899,
+   "retrieve_cost": 0.00017832522580645165,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 55,
+   "question": "When did John start playing professionally?",
+   "gold": "May, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:3",
+    "D21:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "December 2022",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002873127096774194,
+   "retrieved_tokens": 148,
+   "retrieve_ms": 8619.668415980414,
+   "retrieve_cost": 0.00019026270967741939,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 56,
+   "question": "When did Tim start playing the violin?",
+   "gold": "August 2023",
+   "category": 2,
+   "evidence": [
+    "D21:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002629147741935484,
+   "retrieved_tokens": 104,
+   "retrieve_ms": 8535.366666968912,
+   "retrieve_cost": 0.0001721647741935484,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 57,
+   "question": "What instruments does Tim play?",
+   "gold": "piano, violin",
+   "category": 1,
+   "evidence": [
+    "D8:12",
+    "D21:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Violin and piano.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027127703225806454,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 8678.440540970769,
+   "retrieve_cost": 0.00017062703225806456,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 58,
+   "question": "When did John attend the Harry Potter trivia?",
+   "gold": "August 2023.",
+   "category": 2,
+   "evidence": [
+    "D4:8",
+    "D22:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028609548387096775,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 8745.719582948368,
+   "retrieve_cost": 0.00018514548387096777,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 59,
+   "question": "Which career-high performances did John achieve in 2023?",
+   "gold": "highest point score, highest assist",
+   "category": 1,
+   "evidence": [
+    "D3:1",
+    "D23:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "40 points on July 9, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003062597419354839,
+   "retrieved_tokens": 195,
+   "retrieve_ms": 8875.060208025388,
+   "retrieve_cost": 0.0001964597419354839,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 60,
+   "question": "When did John achieve a career-high assist performance?",
+   "gold": "December 11, 2023",
+   "category": 2,
+   "evidence": [
+    "D23:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "December 8, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003028438064516129,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 8764.086249982938,
+   "retrieve_cost": 0.00020024380645161291,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 61,
+   "question": "What books has John read?",
+   "gold": "inpsiring book on dreaming big, The Alchemist, fantasy series, non-fiction books on personal development, Dune",
+   "category": 1,
+   "evidence": [
+    "D4:10",
+    "D11:26",
+    "D17:9",
+    "D19:16",
+    "D19:20",
+    "D22:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The Hobbit, Dune.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026452393548387094,
+   "retrieved_tokens": 101,
+   "retrieve_ms": 8914.590959029738,
+   "retrieve_cost": 0.00017362393548387098,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 62,
+   "question": "What does John do to share his knowledge?",
+   "gold": "gives seminars, mentors younger players.",
+   "category": 1,
+   "evidence": [
+    "D14:3",
+    "D26:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Mentors younger players on his team.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002794625806451613,
+   "retrieved_tokens": 153,
+   "retrieve_ms": 8976.331791956909,
+   "retrieve_cost": 0.0001786625806451613,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 63,
+   "question": "When did John organize a basketball camp for kids?",
+   "gold": "summer 2023",
+   "category": 2,
+   "evidence": [
+    "D26:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Last summer (2023).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031480625806451615,
+   "retrieved_tokens": 250,
+   "retrieve_ms": 9135.615791019518,
+   "retrieve_cost": 0.00020035625806451616,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 64,
+   "question": "Which month was John in Italy?",
+   "gold": "December, 2023",
+   "category": 2,
+   "evidence": [
+    "D27:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "December 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026901445161290325,
+   "retrieved_tokens": 137,
+   "retrieve_ms": 9060.31987501774,
+   "retrieve_cost": 0.00017361445161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 65,
+   "question": "What fantasy movies does Tim like?",
+   "gold": "Lord of the Rings, Harry Potter, and Star Wars.",
+   "category": 1,
+   "evidence": [
+    "D8:16",
+    "D8:18",
+    "D26:28",
+    "D26:32",
+    "D27:21"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Harry Potter, Lord of the Rings, Star Wars.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027998245161290323,
+   "retrieved_tokens": 132,
+   "retrieve_ms": 9201.160333992448,
+   "retrieve_cost": 0.00018113245161290327,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 66,
+   "question": "What is a Star Wars book that Tim might enjoy?",
+   "gold": "Star Wars: Jedi Apprentice by Judy Blundell and David Farland. It is a highly rated and immersive series about his favorite movies.",
+   "category": 3,
+   "evidence": [
+    "D27:19",
+    "D27:21"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim might enjoy \"Star Wars: Thrawn.\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002719929677419355,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 9258.657083031721,
+   "retrieve_cost": 0.0001773429677419355,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 67,
+   "question": "What would be a good hobby related to his travel dreams for Tim to pick up?",
+   "gold": "Writing a travel blog.",
+   "category": 3,
+   "evidence": [
+    "D4:1",
+    "D6:6",
+    "D15:3",
+    "D27:37"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Joining a travel club.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028750625806451614,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 9408.314750005957,
+   "retrieve_cost": 0.00018565625806451615,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 68,
+   "question": "What day did Tim get into his study abroad program?",
+   "gold": "Januarty 5, 2024",
+   "category": 2,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "January 7, 2024",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028427225806451617,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 9288.944459054619,
+   "retrieve_cost": 0.00018767225806451616,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 69,
+   "question": "When will Tim leave for Ireland?",
+   "gold": "February, 2024",
+   "category": 2,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "February 2024",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002634094838709678,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 9526.401666982565,
+   "retrieve_cost": 0.00017220948387096778,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 70,
+   "question": "Which Star Wars-related locations would Tim enjoy during his visit to Ireland?",
+   "gold": "Skellig Michael, Malin Head, Loop Head, Ceann Sib\u00e9al, and Brow Head because they are Star Wars filming locations.",
+   "category": 3,
+   "evidence": [
+    "D1:18",
+    "D27:21",
+    "D28:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific Star Wars locations mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002779678064516129,
+   "retrieved_tokens": 99,
+   "retrieve_ms": 9433.512915973552,
+   "retrieve_cost": 0.00018436780645161293,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 71,
+   "question": "Which team did John sign with on 21 May, 2023?",
+   "gold": "The Minnesota Wolves",
+   "category": 4,
+   "evidence": [
+    "D1:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The memories do not specify the team.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028148400000000003,
+   "retrieved_tokens": 78,
+   "retrieve_ms": 9713.28933298355,
+   "retrieve_cost": 0.00019013400000000003,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 72,
+   "question": "What is John's position on the team he signed with?",
+   "gold": "shooting guard",
+   "category": 4,
+   "evidence": [
+    "D1:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Shooting guard",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002820226451612903,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 9634.492958022747,
+   "retrieve_cost": 0.00018887264516129036,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 73,
+   "question": "What challenge did John encounter during pre-season training?",
+   "gold": "fitting into the new team's style of play",
+   "category": 4,
+   "evidence": [
+    "D1:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fitting into the new team's style.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002847967741935484,
+   "retrieved_tokens": 105,
+   "retrieve_ms": 9739.309084019624,
+   "retrieve_cost": 0.0001908967741935484,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 74,
+   "question": "What aspects of the Harry Potter universe will be discussed in John's fan project collaborations?",
+   "gold": "characters, spells, magical creatures",
+   "category": 4,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Characters, spells, and magical creatures.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002900680645161291,
+   "retrieved_tokens": 157,
+   "retrieve_ms": 9788.521125039551,
+   "retrieve_cost": 0.00018656806451612906,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 75,
+   "question": "What forum did Tim join recently?",
+   "gold": "fantasy literature forum",
+   "category": 4,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fantasy literature forum.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002611523225806452,
+   "retrieved_tokens": 88,
+   "retrieve_ms": 9905.248957977165,
+   "retrieve_cost": 0.00017310232258064518,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 76,
+   "question": "What kind of picture did Tim share as part of their Harry Potter book collection?",
+   "gold": "MinaLima's creation from the Harry Potter films",
+   "category": 4,
+   "evidence": [
+    "D2:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A picture from MinaLima.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028485154838709683,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 9966.066624969244,
+   "retrieve_cost": 0.00018855154838709682,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 77,
+   "question": "What was the highest number of points John scored in a game recently?",
+   "gold": "40 points",
+   "category": 4,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "40 points",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002940963870967742,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 10022.345000004862,
+   "retrieve_cost": 0.0001928463870967742,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 78,
+   "question": "What did John celebrate at a restaurant with teammates?",
+   "gold": "a tough win",
+   "category": 4,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A tough win.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000284316,
+   "retrieved_tokens": 131,
+   "retrieve_ms": 10101.611917023547,
+   "retrieve_cost": 0.00018891600000000002,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 79,
+   "question": "What kind of deals did John sign with Nike and Gatorade?",
+   "gold": "basketball shoe and gear deal with Nike, potential sponsorship deal with Gatorade",
+   "category": 4,
+   "evidence": [
+    "D3:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Basketball shoe and gear deal.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000295453935483871,
+   "retrieved_tokens": 129,
+   "retrieve_ms": 10169.412166986149,
+   "retrieve_cost": 0.000197353935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 80,
+   "question": "Which city is John excited to have a game at?",
+   "gold": "Seattle",
+   "category": 4,
+   "evidence": [
+    "D3:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Seattle",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002709274838709678,
+   "retrieved_tokens": 92,
+   "retrieve_ms": 10242.273500014562,
+   "retrieve_cost": 0.00018287748387096778,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 81,
+   "question": "How long has John been surfing?",
+   "gold": "five years",
+   "category": 4,
+   "evidence": [
+    "D3:27"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Five years.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00025523051612903226,
+   "retrieved_tokens": 81,
+   "retrieve_ms": 10352.31854201993,
+   "retrieve_cost": 0.00016883051612903228,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 82,
+   "question": "How does John feel while surfing?",
+   "gold": "super exciting and free-feeling",
+   "category": 4,
+   "evidence": [
+    "D3:29"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The feeling was unreal!",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002619301935483871,
+   "retrieved_tokens": 94,
+   "retrieve_ms": 10409.394457994495,
+   "retrieve_cost": 0.00017238019354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 83,
+   "question": "What kind of articles has Tim been writing about for the online magazine?",
+   "gold": "different fantasy novels, characters, themes, and book recommendations",
+   "category": 4,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fantasy novels.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002751421935483871,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 10458.726249984466,
+   "retrieve_cost": 0.00018019219354838711,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 84,
+   "question": "Which two fantasy novels does Tim particularly enjoy writing about?",
+   "gold": "Harry Potter and Game of Thrones",
+   "category": 4,
+   "evidence": [
+    "D4:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The Hobbit, The Name of the Wind.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002789237419354839,
+   "retrieved_tokens": 102,
+   "retrieve_ms": 10535.78912501689,
+   "retrieve_cost": 0.0001845737419354839,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 85,
+   "question": "What did Anthony and John end up playing during the charity event?",
+   "gold": "an intense Harry Potter trivia contest",
+   "category": 4,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Harry Potter trivia contest.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029169445161290327,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 10656.8374169874,
+   "retrieve_cost": 0.00019209445161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 86,
+   "question": "What did John share with the person he skyped about?",
+   "gold": "Characters from Harry Potter",
+   "category": 4,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Collaborations for the fan project.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027796141935483874,
+   "retrieved_tokens": 158,
+   "retrieve_ms": 10727.605500025675,
+   "retrieve_cost": 0.00017611141935483873,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 87,
+   "question": "How did John describe the team bond?",
+   "gold": "Awesome",
+   "category": 4,
+   "evidence": [
+    "D5:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Like a family away from home.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028679767741935486,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 10820.046707987785,
+   "retrieve_cost": 0.0001912476774193549,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 88,
+   "question": "How did John get introduced to basketball?",
+   "gold": "Dad signed him up for a local league",
+   "category": 4,
+   "evidence": [
+    "D6:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Watched NBA games with his dad.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031107600000000003,
+   "retrieved_tokens": 198,
+   "retrieve_ms": 10900.086624955293,
+   "retrieve_cost": 0.00020382600000000002,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 89,
+   "question": "What is John's number one goal in his basketball career?",
+   "gold": "Winning a championship",
+   "category": 4,
+   "evidence": [
+    "D6:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Winning a championship.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029657187096774197,
+   "retrieved_tokens": 157,
+   "retrieve_ms": 10986.35295900749,
+   "retrieve_cost": 0.00019697187096774196,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 90,
+   "question": "What organization is John teaming up with for his charity work?",
+   "gold": "A local organization helping disadvantaged kids with sports and school",
+   "category": 4,
+   "evidence": [
+    "D6:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A local organization for disadvantaged kids.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029155509677419357,
+   "retrieved_tokens": 174,
+   "retrieve_ms": 11068.216459010728,
+   "retrieve_cost": 0.00018730509677419355,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 91,
+   "question": "When did John meet back up with his teammates after his trip in August 2023?",
+   "gold": "Aug 15th",
+   "category": 4,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 15, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028925825806451613,
+   "retrieved_tokens": 145,
+   "retrieve_ms": 11134.564207983203,
+   "retrieve_cost": 0.00018695825806451614,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 92,
+   "question": "What did John's teammates give him when they met on Aug 15th?",
+   "gold": "a basketball with autographs on it",
+   "category": 4,
+   "evidence": [
+    "D7:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A signed ball.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028743890322580653,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 11253.709083015565,
+   "retrieve_cost": 0.0001878389032258065,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 93,
+   "question": "Why did John's teammates sign the basketball they gave him?",
+   "gold": "to show their friendship and appreciation",
+   "category": 4,
+   "evidence": [
+    "D7:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "To show friendship and appreciation.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029355464516129035,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 11346.167667012196,
+   "retrieve_cost": 0.00019395464516129034,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 94,
+   "question": "What is the main intention behind Tim wanting to attend the book conference?",
+   "gold": "to learn more about literature and create a stronger bond to it",
+   "category": 4,
+   "evidence": [
+    "D7:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "To learn more about literature.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030339716129032263,
+   "retrieved_tokens": 228,
+   "retrieve_ms": 11436.979666992556,
+   "retrieve_cost": 0.00019104716129032264,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 95,
+   "question": "What new activity has Tim started learning in August 2023?",
+   "gold": "play the piano",
+   "category": 4,
+   "evidence": [
+    "D8:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Learning to play the piano.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028255664516129033,
+   "retrieved_tokens": 175,
+   "retrieve_ms": 11631.6584579763,
+   "retrieve_cost": 0.00017845664516129034,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 96,
+   "question": "Which movie's theme is Tim's favorite to play on the piano?",
+   "gold": "\"Harry Potter and the Philosopher's Stone\"",
+   "category": 4,
+   "evidence": [
+    "D8:14",
+    "D8:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Not specified in memories.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027086903225806457,
+   "retrieved_tokens": 130,
+   "retrieve_ms": 11688.396084005944,
+   "retrieve_cost": 0.00017381903225806454,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 97,
+   "question": "What special memory does \"Harry Potter and the Philosopher's Stone\" bring to Tim?",
+   "gold": "Watching it with his family",
+   "category": 4,
+   "evidence": [
+    "D8:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Watching it with family.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029045206451612906,
+   "retrieved_tokens": 153,
+   "retrieve_ms": 11763.827540969942,
+   "retrieve_cost": 0.00018875206451612905,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 98,
+   "question": "Which movie does Tim mention they enjoy watching during Thanksgiving?",
+   "gold": "\"Home Alone\"",
+   "category": 4,
+   "evidence": [
+    "D8:24"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Home Alone\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002680890967741936,
+   "retrieved_tokens": 108,
+   "retrieve_ms": 11830.542124982458,
+   "retrieve_cost": 0.00017583909677419357,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 99,
+   "question": "What tradition does Tim mention they love during Thanksgiving?",
+   "gold": "Prepping the feast and talking about what they're thankful for",
+   "category": 4,
+   "evidence": [
+    "D8:22"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Watching movies together.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026291516129032264,
+   "retrieved_tokens": 106,
+   "retrieve_ms": 11890.275458979886,
+   "retrieve_cost": 0.0001712651612903226,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 100,
+   "question": "How long did John and his high school basketball teammates play together?",
+   "gold": "Four years",
+   "category": 4,
+   "evidence": [
+    "D9:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Four years.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030157470967741935,
+   "retrieved_tokens": 169,
+   "retrieve_ms": 12067.133625037968,
+   "retrieve_cost": 0.00020017470967741938,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 101,
+   "question": "How was John's experience in New York City?",
+   "gold": "Amazing",
+   "category": 4,
+   "evidence": [
+    "D9:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Amazing and exciting.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027211335483870967,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 11968.22716697352,
+   "retrieve_cost": 0.00017896335483870969,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 102,
+   "question": "What did John say about NYC, enticing Tim to visit?",
+   "gold": "It's got so much to check out - the culture, food - you won't regret it.",
+   "category": 4,
+   "evidence": [
+    "D9:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "NYC is amazing and adventurous!",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028295845161290325,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 12179.632665996905,
+   "retrieve_cost": 0.00018335845161290324,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 103,
+   "question": "What kind of soup did John make recently?",
+   "gold": "tasty soup with sage",
+   "category": 4,
+   "evidence": [
+    "D10:4",
+    "D10:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The specific type of soup is not mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026903903225806454,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 12094.691624981351,
+   "retrieve_cost": 0.00017423903225806454,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 104,
+   "question": "What spice did John add to the soup for flavor?",
+   "gold": "sage",
+   "category": 4,
+   "evidence": [
+    "D10:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Sage",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002570572258064516,
+   "retrieved_tokens": 83,
+   "retrieve_ms": 12225.915791990701,
+   "retrieve_cost": 0.00016975722580645162,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 105,
+   "question": "What is Tim excited to see at Universal Studios?",
+   "gold": "The Harry Potter stuff",
+   "category": 4,
+   "evidence": [
+    "D10:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Harry Potter stuff.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027613045161290324,
+   "retrieved_tokens": 116,
+   "retrieve_ms": 12346.652375010308,
+   "retrieve_cost": 0.00018298045161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 106,
+   "question": "Where are John and his teammates planning to explore on a team trip?",
+   "gold": "a new city",
+   "category": 4,
+   "evidence": [
+    "D11:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Galway",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027196432258064517,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 12402.690707996953,
+   "retrieve_cost": 0.00017986432258064518,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 107,
+   "question": "What city did Tim suggest to John for the team trip next month?",
+   "gold": "Edinburgh, Scotland",
+   "category": 4,
+   "evidence": [
+    "D11:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Edinburgh, Scotland",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002794710967741936,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 12480.545542028267,
+   "retrieve_cost": 0.00018407109677419356,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 108,
+   "question": "What does John want to do after his basketball career?",
+   "gold": "positively influence and inspire others, potentially start a foundation and engage in charity work",
+   "category": 4,
+   "evidence": [
+    "D11:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Start a foundation and do charity work.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030829045161290323,
+   "retrieved_tokens": 192,
+   "retrieve_ms": 12548.685958026908,
+   "retrieve_cost": 0.00020104045161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 109,
+   "question": "What advice did Tim give John about picking endorsements?",
+   "gold": "Ensure they align with values and brand, look for companies that share the desire to make a change and help others, make sure the endorsement feels authentic",
+   "category": 4,
+   "evidence": [
+    "D11:22"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Align with values and brand.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027996367741935487,
+   "retrieved_tokens": 121,
+   "retrieve_ms": 12662.564583006315,
+   "retrieve_cost": 0.00018486367741935489,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 110,
+   "question": "What book recommendation did Tim give to John for the trip?",
+   "gold": "A fantasy novel by Patrick Rothfuss",
+   "category": 4,
+   "evidence": [
+    "D11:24"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A fantasy novel by Patrick Rothfuss.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002785590967741936,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 12727.28399996413,
+   "retrieve_cost": 0.00018045909677419356,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 111,
+   "question": "What type of venue did John and his girlfriend choose for their wedding ceremony?",
+   "gold": "Greenhouse",
+   "category": 4,
+   "evidence": [
+    "D12:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A greenhouse venue.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027858116129032265,
+   "retrieved_tokens": 152,
+   "retrieve_ms": 12787.252957990859,
+   "retrieve_cost": 0.00017853116129032263,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 112,
+   "question": "What was the setting for John and his wife's first dance?",
+   "gold": "Cozy restaurant",
+   "category": 4,
+   "evidence": [
+    "D12:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Cozy restaurant with music and candlelight.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028092580645161297,
+   "retrieved_tokens": 164,
+   "retrieve_ms": 12930.09920901386,
+   "retrieve_cost": 0.00017697580645161293,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 113,
+   "question": "Which basketball team does Tim support?",
+   "gold": "The Wolves",
+   "category": 4,
+   "evidence": [
+    "D12:21"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The Wolves.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026851858064516127,
+   "retrieved_tokens": 78,
+   "retrieve_ms": 12984.427000046708,
+   "retrieve_cost": 0.0001825685806451613,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 114,
+   "question": "What passion does Tim mention connects him with people from all over the world?",
+   "gold": "passion for fantasy stuff",
+   "category": 4,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "His passion for fantasy stuff.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030563322580645164,
+   "retrieved_tokens": 214,
+   "retrieve_ms": 13041.94920900045,
+   "retrieve_cost": 0.00019508322580645164,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 115,
+   "question": "How does John describe the game season for his team?",
+   "gold": "intense with tough losses and great wins",
+   "category": 4,
+   "evidence": [
+    "D13:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Intense with tough losses and great wins.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029134858064516127,
+   "retrieved_tokens": 145,
+   "retrieve_ms": 13214.07729195198,
+   "retrieve_cost": 0.00019054858064516128,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 116,
+   "question": "How does John say his team handles tough opponents?",
+   "gold": "by backing each other up and not quitting",
+   "category": 4,
+   "evidence": [
+    "D13:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "They back each other up.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029192148387096776,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 13268.568874977063,
+   "retrieve_cost": 0.00019157148387096776,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 117,
+   "question": "What motivates John's team to get better, according to John?",
+   "gold": "facing tough opponents",
+   "category": 4,
+   "evidence": [
+    "D13:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tough opponents and strong support.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028865806451612905,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 13326.905833964702,
+   "retrieve_cost": 0.00019055806451612905,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 118,
+   "question": "What did John's team win at the end of the season?",
+   "gold": "a trophy",
+   "category": 4,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A trophy.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002767066451612903,
+   "retrieved_tokens": 94,
+   "retrieve_ms": 13389.052042039111,
+   "retrieve_cost": 0.00018685664516129033,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 119,
+   "question": "Where did Tim capture the photography of the sunset over the mountain range?",
+   "gold": "Smoky Mountains",
+   "category": 4,
+   "evidence": [
+    "D14:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Smoky Mountains",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002672376774193549,
+   "retrieved_tokens": 121,
+   "retrieve_ms": 13464.950915949885,
+   "retrieve_cost": 0.00017213767741935487,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 120,
+   "question": "How does John feel about being seen as a mentor by some of the younger players?",
+   "gold": "It feels great",
+   "category": 4,
+   "evidence": [
+    "D14:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He feels rewarded and fulfilled.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003011912903225806,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 13669.094125041738,
+   "retrieve_cost": 0.00019769129032258065,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 121,
+   "question": "What does John find rewarding about mentoring the younger players?",
+   "gold": "Seeing their growth, improvement, and confidence",
+   "category": 4,
+   "evidence": [
+    "D14:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Seeing their growth and improvement.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029676696774193553,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 13593.83650001837,
+   "retrieve_cost": 0.00019506696774193553,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 122,
+   "question": "What has John been able to help the younger players achieve?",
+   "gold": "reach their goals",
+   "category": 4,
+   "evidence": [
+    "D14:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Growth, improvement, and confidence.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000305371935483871,
+   "retrieved_tokens": 184,
+   "retrieve_ms": 13709.00462497957,
+   "retrieve_cost": 0.000199621935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 123,
+   "question": "What genre is the novel that Tim is writing?",
+   "gold": "Fantasy",
+   "category": 4,
+   "evidence": [
+    "D15:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fantasy",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002895882580645161,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 13767.862708016764,
+   "retrieve_cost": 0.00018653825806451614,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 124,
+   "question": "Who is one of Tim's sources of inspiration for writing?",
+   "gold": "J.K. Rowling",
+   "category": 4,
+   "evidence": [
+    "D15:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "J.K. Rowling",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002874315483870968,
+   "retrieved_tokens": 167,
+   "retrieve_ms": 13865.858166012913,
+   "retrieve_cost": 0.0001860315483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 125,
+   "question": "What J.K. Rowling quote does Tim resonate with?",
+   "gold": "\"Turn on the light - happiness hides in the darkest of times.\"",
+   "category": 4,
+   "evidence": [
+    "D15:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Turn on the light - happiness hides in the darkest of times.\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002947101290322581,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 13919.514041976072,
+   "retrieve_cost": 0.0001892601290322581,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 126,
+   "question": "What does John write on the whiteboard to help him stay motivated?",
+   "gold": "motivational quotes and strategies",
+   "category": 4,
+   "evidence": [
+    "D15:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Motivational quotes and strategies.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028145380645161293,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 13977.870792034082,
+   "retrieve_cost": 0.0001847038064516129,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 127,
+   "question": "What hobby is a therapy for John when away from the court?",
+   "gold": "Cooking",
+   "category": 4,
+   "evidence": [
+    "D15:30"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Cooking is therapy for John.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003065535483870968,
+   "retrieved_tokens": 196,
+   "retrieve_ms": 14121.465625008568,
+   "retrieve_cost": 0.0001993035483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 128,
+   "question": "What type of meal does John often cook using a slow cooker?",
+   "gold": "honey garlic chicken with roasted veg",
+   "category": 4,
+   "evidence": [
+    "D15:32",
+    "D15:33"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The memories do not specify the type of meal John cooks.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002785337419354839,
+   "retrieved_tokens": 138,
+   "retrieve_ms": 14175.44987500878,
+   "retrieve_cost": 0.0001763837419354839,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 129,
+   "question": "How will John share the honey garlic chicken recipe with the other person?",
+   "gold": "write it down and mail it",
+   "category": 4,
+   "evidence": [
+    "D15:34"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He will mail it to them.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026437606451612907,
+   "retrieved_tokens": 106,
+   "retrieve_ms": 14236.714750004467,
+   "retrieve_cost": 0.00016972606451612907,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 130,
+   "question": "What was Tim's huge writing issue last week,as mentioned on November 6, 2023?",
+   "gold": "He got stuck on a plot twist",
+   "category": 4,
+   "evidence": [
+    "D16:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Stuck on a plot twist.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002837007096774194,
+   "retrieved_tokens": 171,
+   "retrieve_ms": 14306.897333008237,
+   "retrieve_cost": 0.00017720070967741937,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 131,
+   "question": "What does Tim have that serves as a reminder of hard work and is his prized possession?",
+   "gold": "a basketball signed by his favorite player",
+   "category": 4,
+   "evidence": [
+    "D16:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A basketball signed by his favorite player.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028862419354838714,
+   "retrieved_tokens": 180,
+   "retrieve_ms": 14385.828500031494,
+   "retrieve_cost": 0.00018107419354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 132,
+   "question": "Why do Tim and John find LeBron inspiring?",
+   "gold": "LeBron's determination and the epic block in Game 7 of the '16 Finals",
+   "category": 4,
+   "evidence": [
+    "D16:9",
+    "D16:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Work ethic and determination.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002821229032258065,
+   "retrieved_tokens": 140,
+   "retrieve_ms": 14440.894333005417,
+   "retrieve_cost": 0.00018477290322580647,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 133,
+   "question": "How did John describe the views during their road trip out on the European coastline?",
+   "gold": "Spectacular",
+   "category": 4,
+   "evidence": [
+    "D17:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Spectacular and beautiful.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000276198,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 14506.895583996084,
+   "retrieve_cost": 0.00017929800000000002,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 134,
+   "question": "What is one of Tim's favorite fantasy TV shows, as mentioned on November 11, 2023?",
+   "gold": "\"That\"",
+   "category": 4,
+   "evidence": [
+    "D17:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"That\" is one of his favorites.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002816512258064516,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 14594.551207963377,
+   "retrieve_cost": 0.00018160122580645165,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 135,
+   "question": "How does Tim stay motivated during difficult study sessions?",
+   "gold": "Visualizing goals and success",
+   "category": 4,
+   "evidence": [
+    "D18:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "By remembering why he loves writing and reading.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028870006451612906,
+   "retrieved_tokens": 150,
+   "retrieve_ms": 14708.291582996026,
+   "retrieve_cost": 0.00018745006451612907,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 136,
+   "question": "What did Tim say about his injury on 16 November, 2023?",
+   "gold": "The doctor said it's not too serious",
+   "category": 4,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim mentioned a bummer about the injury.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002726545161290323,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 14764.47808399098,
+   "retrieve_cost": 0.00017710451612903228,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 137,
+   "question": "What was the setback Tim faced in his writing project on 21 November, 2023?",
+   "gold": "Story based on experiences in the UK didn't go as planned",
+   "category": 4,
+   "evidence": [
+    "D19:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Writing a story based on UK experiences.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029879225806451614,
+   "retrieved_tokens": 213,
+   "retrieve_ms": 14809.527791978326,
+   "retrieve_cost": 0.00018599225806451616,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 138,
+   "question": "How did John overcome his ankle injury from last season?",
+   "gold": "stayed focused on recovery and worked hard to strengthen his body",
+   "category": 4,
+   "evidence": [
+    "D19:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Focused on recovery and physical therapy.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029798806451612905,
+   "retrieved_tokens": 179,
+   "retrieve_ms": 14954.04491701629,
+   "retrieve_cost": 0.00019328806451612905,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 139,
+   "question": "What motivated Tim to keep pushing himself to get better in writing and reading?",
+   "gold": "Love for writing and reading",
+   "category": 4,
+   "evidence": [
+    "D19:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "His love for writing and reading.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002955327096774194,
+   "retrieved_tokens": 172,
+   "retrieve_ms": 15039.883082965389,
+   "retrieve_cost": 0.00019068270967741938,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 140,
+   "question": "How did John overcome a mistake he made during a big game in basketball?",
+   "gold": "Worked hard to get better and focused on growth",
+   "category": 4,
+   "evidence": [
+    "D19:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He worked hard to get better.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000318177870967742,
+   "retrieved_tokens": 213,
+   "retrieve_ms": 15086.685957969166,
+   "retrieve_cost": 0.00020717787096774198,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 141,
+   "question": "What book did John recently finish rereading that left him feeling inspired and hopeful about following dreams?",
+   "gold": "The Alchemist",
+   "category": 4,
+   "evidence": [
+    "D19:20"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"The Alchemist\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002797352903225807,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 15174.658707983326,
+   "retrieve_cost": 0.00018328529032258066,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 142,
+   "question": "How did \"The Alchemist\" impact John's perspective on following dreams?",
+   "gold": "made him think again about following dreams and searching for personal legends",
+   "category": 4,
+   "evidence": [
+    "D19:20"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Motivated him to chase dreams.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028661980645161296,
+   "retrieved_tokens": 144,
+   "retrieve_ms": 15354.053790972102,
+   "retrieve_cost": 0.00018566980645161294,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 143,
+   "question": "What is John trying out to improve his strength and flexibility after recovery from ankle injury?",
+   "gold": "yoga",
+   "category": 4,
+   "evidence": [
+    "D20:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yoga",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028902929032258065,
+   "retrieved_tokens": 126,
+   "retrieve_ms": 15413.331374991685,
+   "retrieve_cost": 0.00019407929032258067,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 144,
+   "question": "How long does John usually hold the yoga pose he shared with Tim?",
+   "gold": "30-60 seconds",
+   "category": 4,
+   "evidence": [
+    "D20:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "30-60 seconds.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026346638709677425,
+   "retrieved_tokens": 91,
+   "retrieve_ms": 15467.242832994089,
+   "retrieve_cost": 0.00017226638709677422,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 145,
+   "question": "Where was the forest picture shared by John on December 1,2023 taken?",
+   "gold": "near his hometown",
+   "category": 4,
+   "evidence": [
+    "D20:28"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Near his hometown.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026937387096774194,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 15520.010750042275,
+   "retrieve_cost": 0.00017517387096774195,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 146,
+   "question": "What did Tim recently start learning in addition to being part of a travel club and working on studies?",
+   "gold": "an instrument",
+   "category": 4,
+   "evidence": [
+    "D21:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim recently started learning the violin.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028474200000000005,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 15570.17233298393,
+   "retrieve_cost": 0.00018379200000000003,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 147,
+   "question": "What instrument is Tim learning to play in December 2023?",
+   "gold": "violin",
+   "category": 4,
+   "evidence": [
+    "D21:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Violin",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027504619354838715,
+   "retrieved_tokens": 175,
+   "retrieve_ms": 15836.534083995502,
+   "retrieve_cost": 0.00017334619354838715,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 148,
+   "question": "How long has Tim been playing the piano for, as of December 2023?",
+   "gold": "about four months",
+   "category": 4,
+   "evidence": [
+    "D21:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Four months.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002646747096774194,
+   "retrieved_tokens": 104,
+   "retrieve_ms": 16022.645290999208,
+   "retrieve_cost": 0.00017182470967741937,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 149,
+   "question": "What book did Tim just finish reading on 8th December, 2023?",
+   "gold": "\"A Dance with Dragons\"",
+   "category": 4,
+   "evidence": [
+    "D22:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A Dance with Dragons",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027101341935483874,
+   "retrieved_tokens": 91,
+   "retrieve_ms": 15885.48133301083,
+   "retrieve_cost": 0.00017951341935483874,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 150,
+   "question": "Which book did Tim recommend to John as a good story on 8th December, 2023?",
+   "gold": "\"A Dance with Dragons\"",
+   "category": 4,
+   "evidence": [
+    "D22:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"A Dance with Dragons\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002828450322580646,
+   "retrieved_tokens": 139,
+   "retrieve_ms": 16076.36695803376,
+   "retrieve_cost": 0.00018234503225806456,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 151,
+   "question": "What is the topic of discussion between John and Tim on 11 December, 2023?",
+   "gold": "Academic achievements and sports successes",
+   "category": 4,
+   "evidence": [
+    "D23:1",
+    "D23:2",
+    "D23:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "New success stories.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002678781290322581,
+   "retrieved_tokens": 77,
+   "retrieve_ms": 16136.895458970685,
+   "retrieve_cost": 0.0001778781290322581,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 152,
+   "question": "What kind of game did John have a career-high in assists in?",
+   "gold": "basketball",
+   "category": 4,
+   "evidence": [
+    "D23:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A basketball game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030484025806451617,
+   "retrieved_tokens": 218,
+   "retrieve_ms": 16203.956167038996,
+   "retrieve_cost": 0.00019519025806451616,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 153,
+   "question": "What was John's way of dealing with doubts and stress when he was younger?",
+   "gold": "practicing basketball outside for hours",
+   "category": 4,
+   "evidence": [
+    "D23:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Practicing basketball outside for hours.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002956950967741936,
+   "retrieved_tokens": 176,
+   "retrieve_ms": 16268.982084002346,
+   "retrieve_cost": 0.00019024509677419358,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 154,
+   "question": "How did John feel about the atmosphere during the big game against the rival team?",
+   "gold": "electric and intense",
+   "category": 4,
+   "evidence": [
+    "D23:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "It was electric and intense.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002926267741935484,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 16339.390708017163,
+   "retrieve_cost": 0.0001894267741935484,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 155,
+   "question": "How did John feel after being able to jog without pain?",
+   "gold": "It was a huge success.",
+   "category": 4,
+   "evidence": [
+    "D24:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He felt relieved and successful.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028605987096774196,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 16401.07020898722,
+   "retrieve_cost": 0.00018810987096774196,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 156,
+   "question": "What kind of deal did John get in December?",
+   "gold": "Deal with a renowned outdoor gear company",
+   "category": 4,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Outdoor gear company deal.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027516290322580645,
+   "retrieved_tokens": 158,
+   "retrieve_ms": 16464.316291967407,
+   "retrieve_cost": 0.00017511290322580648,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 157,
+   "question": "Where was the photoshoot done for John's gear deal?",
+   "gold": "In a gorgeous forest",
+   "category": 4,
+   "evidence": [
+    "D25:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "In a gorgeous forest.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027954909677419356,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 16519.21554200817,
+   "retrieve_cost": 0.00018444909677419358,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 158,
+   "question": "In which area has John's team seen the most growth during training?",
+   "gold": "Communication and bonding",
+   "category": 4,
+   "evidence": [
+    "D25:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Communication and bonding.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028738219354838715,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 16580.046457995195,
+   "retrieve_cost": 0.00019363219354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 159,
+   "question": "What type of seminars is John conducting?",
+   "gold": "Sports and marketing seminars",
+   "category": 4,
+   "evidence": [
+    "D26:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Sports and marketing seminars.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002682841935483871,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 16636.931959015783,
+   "retrieve_cost": 0.0001739341935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 160,
+   "question": "What activity did Tim do after reading the stories about the Himalayan trek?",
+   "gold": "visited a travel agency",
+   "category": 4,
+   "evidence": [
+    "D26:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim wrote more articles.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002816732903225806,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 16691.984084027354,
+   "retrieve_cost": 0.00018177329032258066,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 161,
+   "question": "What is one cause that John supports with his influence and resources?",
+   "gold": "youth sports and fair chances in sports",
+   "category": 4,
+   "evidence": [
+    "D26:21"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Youth sports for underserved communities.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002859077419354839,
+   "retrieved_tokens": 177,
+   "retrieve_ms": 16749.510083987843,
+   "retrieve_cost": 0.00018150774193548388,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 162,
+   "question": "What new fantasy TV series is Tim excited about?",
+   "gold": "\"The Wheel of Time\"",
+   "category": 4,
+   "evidence": [
+    "D26:36"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The Wheel of Time",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002773155483870968,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 16806.08716700226,
+   "retrieve_cost": 0.0001829655483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 163,
+   "question": "Which language is Tim learning?",
+   "gold": "German",
+   "category": 4,
+   "evidence": [
+    "D27:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "German",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026501612903225805,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 16875.210999976844,
+   "retrieve_cost": 0.00017426612903225807,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 164,
+   "question": "What language does Tim know besides German?",
+   "gold": "Spanish",
+   "category": 4,
+   "evidence": [
+    "D27:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "French",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026349696774193547,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 17013.133749947883,
+   "retrieve_cost": 0.00017154696774193548,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 165,
+   "question": "What book did Tim get in Italy that inspired him to cook?",
+   "gold": "a cooking book",
+   "category": 4,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "John got a book in Italy.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002779310322580645,
+   "retrieved_tokens": 119,
+   "retrieve_ms": 17090.019249997567,
+   "retrieve_cost": 0.00018163103225806452,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 166,
+   "question": "What is John's favorite book series?",
+   "gold": "Harry Potter",
+   "category": 4,
+   "evidence": [
+    "D27:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Lord of the Rings",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026547561290322583,
+   "retrieved_tokens": 102,
+   "retrieve_ms": 17171.565208001994,
+   "retrieve_cost": 0.00017532561290322583,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 167,
+   "question": "According to John, who is his favorite character from Lord of the Rings?",
+   "gold": "Aragorn",
+   "category": 4,
+   "evidence": [
+    "D27:24"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Aragorn",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026797122580645165,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 17236.973833001684,
+   "retrieve_cost": 0.00017467122580645163,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 168,
+   "question": "Why does John like Aragorn from Lord of the Rings?",
+   "gold": "brave, selfless, down-to-earth attitude",
+   "category": 4,
+   "evidence": [
+    "D27:30"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Brave, selfless, great leader.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002693620645161291,
+   "retrieved_tokens": 105,
+   "retrieve_ms": 17307.42654198548,
+   "retrieve_cost": 0.00017426206451612907,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 169,
+   "question": "What kind of painting does John have in his room as a reminder?",
+   "gold": "a painting of Aragorn",
+   "category": 4,
+   "evidence": [
+    "D27:28"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Inspiring journey painting.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027355877419354843,
+   "retrieved_tokens": 122,
+   "retrieve_ms": 17383.486292033922,
+   "retrieve_cost": 0.00017770877419354844,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 170,
+   "question": "What is the painting of Aragorn a reminder for John to be in everything he does?",
+   "gold": "be a leader",
+   "category": 4,
+   "evidence": [
+    "D27:28"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A leader.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002767277419354839,
+   "retrieved_tokens": 108,
+   "retrieve_ms": 17450.827667023987,
+   "retrieve_cost": 0.00018297774193548388,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 171,
+   "question": "What map does Tim show to his friend John?",
+   "gold": "a map of Middle-earth from LOTR",
+   "category": 4,
+   "evidence": [
+    "D27:33"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Map of Middle-earth from LOTR.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026689470967741937,
+   "retrieved_tokens": 103,
+   "retrieve_ms": 17528.75287499046,
+   "retrieve_cost": 0.00017329470967741937,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 172,
+   "question": "Where will Tim be going for a semester abroad?",
+   "gold": "Ireland",
+   "category": 4,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Ireland",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027947767741935486,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 17692.11925001582,
+   "retrieve_cost": 0.00018557767741935488,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 173,
+   "question": "Which city in Ireland will Tim be staying in during his semester abroad?",
+   "gold": "Galway",
+   "category": 4,
+   "evidence": [
+    "D28:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Galway",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027596864516129036,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 17589.42183299223,
+   "retrieve_cost": 0.00018311864516129035,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 174,
+   "question": "What charity event did John organize recently in 2024?",
+   "gold": "benefit basketball game",
+   "category": 4,
+   "evidence": [
+    "D28:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Benefit basketball game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028184458064516135,
+   "retrieved_tokens": 131,
+   "retrieve_ms": 17737.496082962025,
+   "retrieve_cost": 0.00018584458064516132,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 175,
+   "question": "What achievement did John share with Tim in January 2024?",
+   "gold": "endorsement with a popular beverage company",
+   "category": 4,
+   "evidence": [
+    "D29:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No achievement shared in January 2024.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027822019354838715,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 17797.572000010405,
+   "retrieve_cost": 0.00018162019354838713,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 176,
+   "question": "What was Johns's reaction to sealing the deal with the beverage company?",
+   "gold": "crazy feeling, sense of accomplishment",
+   "category": 4,
+   "evidence": [
+    "D29:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Incredible and a dream come true.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002768357419354839,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 17994.583292049356,
+   "retrieve_cost": 0.0001797857419354839,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 177,
+   "question": "Which city did John recommend to Tim in January 2024?",
+   "gold": "Barcelona",
+   "category": 4,
+   "evidence": [
+    "D29:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No city was recommended.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027186387096774195,
+   "retrieved_tokens": 89,
+   "retrieve_ms": 17897.70354196662,
+   "retrieve_cost": 0.00018126387096774197,
+   "checkpoint": 29,
+   "store_size": 680
+  }
+ ],
+ "asked": [
+  {
+   "idx": 0,
+   "question": "what are John's goals with regards to his basketball career?",
+   "gold": "improve shooting percentage, win a championship",
+   "category": 1,
+   "evidence": [
+    "D1:9",
+    "D6:15",
+    "D11:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Improve shooting, win championship, endorsements.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002999690322580645,
+   "retrieved_tokens": 157,
+   "retrieve_ms": 4403.569791989867,
+   "retrieve_cost": 0.00019796903225806453,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 1,
+   "question": "What are John's goals for his career that are not related to his basketball skills?",
+   "gold": "get endorsements, build his brand, do charity work",
+   "category": 1,
+   "evidence": [
+    "D6:15",
+    "D11:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Building his brand and charity work.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030849561290322583,
+   "retrieved_tokens": 188,
+   "retrieve_ms": 4526.9871249911375,
+   "retrieve_cost": 0.00020094561290322582,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 2,
+   "question": "What items does John collect?",
+   "gold": "sneakers, fantasy movie DVDs, jerseys",
+   "category": 1,
+   "evidence": [
+    "D1:15",
+    "D12:18",
+    "D27:20"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Jerseys and sneakers.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002703783870967742,
+   "retrieved_tokens": 157,
+   "retrieve_ms": 4569.764541985933,
+   "retrieve_cost": 0.0001716783870967742,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 3,
+   "question": "Would Tim enjoy reading books by C. S. Lewis or John Greene?",
+   "gold": "C. S.Lewis",
+   "category": 3,
+   "evidence": [
+    "D1:14",
+    "D1:16",
+    "D1:18"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yes, Tim enjoys fantasy books.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002847081290322581,
+   "retrieved_tokens": 167,
+   "retrieve_ms": 4627.6496250065975,
+   "retrieve_cost": 0.0001806081290322581,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 4,
+   "question": "What books has Tim read?",
+   "gold": "Harry Potter, Game of Thrones, the Name of the Wind, The Alchemist, The Hobbit, A Dance with Dragons, and the Wheel of Time.",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D2:7",
+    "D6:8",
+    "D11:26",
+    "D20:21",
+    "D26:36",
+    "D22:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A Dance with Dragons.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027161051612903224,
+   "retrieved_tokens": 103,
+   "retrieve_ms": 4689.354249974713,
+   "retrieve_cost": 0.00018101051612903226,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 5,
+   "question": "Based on Tim's collections, what is a shop that he would enjoy visiting in New York city?",
+   "gold": "House of MinaLima",
+   "category": 3,
+   "evidence": [
+    "D2:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A bookstore.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000278863935483871,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 4728.692832984962,
+   "retrieve_cost": 0.000180763935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 6,
+   "question": "In which month's game did John achieve a career-high score in points?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "June 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029693438709677423,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 4765.563125023618,
+   "retrieve_cost": 0.0001944843870967742,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 7,
+   "question": "Which geographical locations has Tim been to?",
+   "gold": "California, London, the Smoky Mountains",
+   "category": 1,
+   "evidence": [
+    "D1:18",
+    "D3:2",
+    "D14:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "London",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026499987096774197,
+   "retrieved_tokens": 116,
+   "retrieve_ms": 4824.568791023921,
+   "retrieve_cost": 0.00017424987096774196,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 8,
+   "question": "Which outdoor gear company likely signed up John for an endorsement deal?",
+   "gold": "Under Armour",
+   "category": 3,
+   "evidence": [
+    "D3:15",
+    "D25:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Renowned outdoor gear company.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002887745806451613,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 5031.752499984577,
+   "retrieve_cost": 0.00018857458064516132,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 9,
+   "question": "Which endorsement deals has John been offered?",
+   "gold": "basketball shoes and gear deal with Nike, potential sponsorship with Gatorade, Moxie a popular beverage company, outdoor gear company",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D3:15",
+    "D25:2",
+    "D29:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Nike and Gatorade deals.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027813387096774195,
+   "retrieved_tokens": 130,
+   "retrieve_ms": 4937.977124995086,
+   "retrieve_cost": 0.00018168387096774194,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 10,
+   "question": "When was John in Seattle for a game?",
+   "gold": "early August, 2023",
+   "category": 2,
+   "evidence": [
+    "D3:19",
+    "D5:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002762990322580645,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 5082.153666997328,
+   "retrieve_cost": 0.00018389903225806453,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 11,
+   "question": "What sports does John like besides basketball?",
+   "gold": "surfing",
+   "category": 1,
+   "evidence": [
+    "D1:7",
+    "D2:14",
+    "D3:1",
+    "D3:25"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No other sports mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029785722580645167,
+   "retrieved_tokens": 195,
+   "retrieve_ms": 5121.905334002804,
+   "retrieve_cost": 0.00019285722580645164,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 12,
+   "question": "What year did John start surfing?",
+   "gold": "2018",
+   "category": 2,
+   "evidence": [
+    "D3:27"
+   ],
+   "last_evidence_session": 29,
+   "answer": "2018",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026396264516129035,
+   "retrieved_tokens": 81,
+   "retrieve_ms": 5199.674832983874,
+   "retrieve_cost": 0.00017816264516129035,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 13,
+   "question": "What does Tim do to escape reality?",
+   "gold": "Read fantasy books.",
+   "category": 1,
+   "evidence": [
+    "D2:11",
+    "D3:30"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Reads a good book.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002804792903225807,
+   "retrieved_tokens": 134,
+   "retrieve_ms": 5332.008333003614,
+   "retrieve_cost": 0.00018462929032258066,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 14,
+   "question": "What kind of writing does Tim do?",
+   "gold": "comments on favorite books in a fantasy literature forum, articles on fantasy novels, studying characters, themes, and making book recommendations, writing a fantasy novel",
+   "category": 1,
+   "evidence": [
+    "D2:1",
+    "D4:3",
+    "D4:5",
+    "D15:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim writes articles about fantasy novels.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028299541935483875,
+   "retrieved_tokens": 185,
+   "retrieve_ms": 5379.595334001351,
+   "retrieve_cost": 0.00017829541935483875,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 15,
+   "question": "Who is Anthony?",
+   "gold": "likely John's friend, colleague or family",
+   "category": 3,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "John's friend.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002670348387096774,
+   "retrieved_tokens": 119,
+   "retrieve_ms": 5427.12400003802,
+   "retrieve_cost": 0.00017523483870967744,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 16,
+   "question": "After how many weeks did Tim reconnect with the fellow Harry Potter fan from California?",
+   "gold": "three weeks",
+   "category": 2,
+   "evidence": [
+    "D3:2",
+    "D5:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "About 3 weeks.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030040664516129035,
+   "retrieved_tokens": 215,
+   "retrieve_ms": 5473.885124956723,
+   "retrieve_cost": 0.00019000664516129035,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 17,
+   "question": "How many games has John mentioned winning?",
+   "gold": "6",
+   "category": 1,
+   "evidence": [
+    "D3:3",
+    "D5:2",
+    "D22:4",
+    "D23:7",
+    "D24:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Three games.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00029062896774193555,
+   "retrieved_tokens": 179,
+   "retrieve_ms": 5643.5846670065075,
+   "retrieve_cost": 0.00018922896774193552,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 18,
+   "question": "What authors has Tim read books from?",
+   "gold": "J.K. Rowling, R.R. Martin, Patrick Rothfuss, Paulo Coelho, and J. R. R. Tolkien.",
+   "category": 1,
+   "evidence": [
+    "D1:14",
+    "D2:7",
+    "D4:7",
+    "D5:15",
+    "D:11:26",
+    "D20:21",
+    "D26:36"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Patrick Rothfuss.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002727973548387097,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 5578.669040987734,
+   "retrieve_cost": 0.0001800973548387097,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 19,
+   "question": "What is a prominent charity organization that John might want to work with and why?",
+   "gold": "Good Sports, because they work with Nike, Gatorade, and Under Armour and they aim toprovide youth sports opportunities for kids ages 3-18 in high-need communities.",
+   "category": 3,
+   "evidence": [
+    "D3:13",
+    "D3:15",
+    "D6:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Local organization supporting disadvantaged kids.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002956788387096774,
+   "retrieved_tokens": 199,
+   "retrieve_ms": 5696.348708006553,
+   "retrieve_cost": 0.00018707883870967742,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 20,
+   "question": "Which city was John in before traveling to Chicago?",
+   "gold": "Seattle",
+   "category": 2,
+   "evidence": [
+    "D3:19",
+    "D5:2",
+    "D6:1",
+    "D6:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No previous city mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000269016,
+   "retrieved_tokens": 102,
+   "retrieve_ms": 5767.375333001837,
+   "retrieve_cost": 0.00017736600000000004,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 21,
+   "question": "Which US cities does John mention visiting to Tim?",
+   "gold": "Seattle, Chicago, New York",
+   "category": 1,
+   "evidence": [
+    "D3:19",
+    "D6:3",
+    "D9:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "New York City, Chicago.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002805015483870968,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 5844.288124993909,
+   "retrieve_cost": 0.0001801515483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 22,
+   "question": "When did John meet with his teammates after returning from Chicago?",
+   "gold": "August 15, 2023",
+   "category": 2,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 15, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028998948387096775,
+   "retrieved_tokens": 144,
+   "retrieve_ms": 5888.198708998971,
+   "retrieve_cost": 0.00018963948387096775,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 23,
+   "question": "When is Tim attending a book conference?",
+   "gold": "September 2023",
+   "category": 2,
+   "evidence": [
+    "D7:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "September 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002887141935483871,
+   "retrieved_tokens": 204,
+   "retrieve_ms": 6084.244457946625,
+   "retrieve_cost": 0.00018296419354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 24,
+   "question": "Where was John between August 11 and August 15 2023?",
+   "gold": "Chicago",
+   "category": 2,
+   "evidence": [
+    "D6:1",
+    "D6:3",
+    "D7:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No information available.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002681309032258065,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 6124.488458037376,
+   "retrieve_cost": 0.00017318090322580648,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 25,
+   "question": "What similar sports collectible do Tim and John own?",
+   "gold": "signed basketball",
+   "category": 1,
+   "evidence": [
+    "D7:7",
+    "D7:9",
+    "D16:7",
+    "D16:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Jerseys.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002701213548387097,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 6164.832499984186,
+   "retrieve_cost": 0.0001799713548387097,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 26,
+   "question": "Which TV series does Tim mention watching?",
+   "gold": "That, Wheel of Time",
+   "category": 1,
+   "evidence": [
+    "D17:1",
+    "D17:11",
+    "D26:36"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Game of Thrones",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000265819935483871,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 6253.557665972039,
+   "retrieve_cost": 0.000176269935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 27,
+   "question": "Which popular time management technique does Tim use to prepare for exams?",
+   "gold": "Pomodoro technique",
+   "category": 3,
+   "evidence": [
+    "D18:3",
+    "D18:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Pomodoro Technique",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002772147096774194,
+   "retrieved_tokens": 127,
+   "retrieve_ms": 6302.809250017162,
+   "retrieve_cost": 0.00018211470967741938,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 28,
+   "question": "Which popular music composer's tunes does Tim enjoy playing on the piano?",
+   "gold": "John Williams",
+   "category": 3,
+   "evidence": [
+    "D8:14",
+    "D8:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific composer mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027700993548387097,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 6472.690665978007,
+   "retrieve_cost": 0.00017395993548387098,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 29,
+   "question": "What schools did John play basketball in and how many years was he with his team during high school?",
+   "gold": "Middle school, high school, and college and he was with his high school team for 4 years.",
+   "category": 1,
+   "evidence": [
+    "D6:13",
+    "D9:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Four years in high school.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003100573548387097,
+   "retrieved_tokens": 206,
+   "retrieve_ms": 6529.736124968622,
+   "retrieve_cost": 0.0001992073548387097,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 30,
+   "question": "Which cities has John been to?",
+   "gold": "Seattle, Chicago, New York, and Paris.",
+   "category": 1,
+   "evidence": [
+    "D3:19",
+    "D6:3",
+    "D9:6",
+    "D27:36"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Chicago, New York City.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027980748387096773,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 6593.507791985758,
+   "retrieve_cost": 0.00018035748387096776,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 31,
+   "question": "What month did Tim plan on going to Universal Studios?",
+   "gold": "September, 2023",
+   "category": 2,
+   "evidence": [
+    "D10:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "September 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002748116129032258,
+   "retrieved_tokens": 112,
+   "retrieve_ms": 6642.937417025678,
+   "retrieve_cost": 0.00018196161290322583,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 32,
+   "question": "Which US states might Tim be in during September 2023 based on his plans of visiting Universal Studios?",
+   "gold": "California or Florida",
+   "category": 3,
+   "evidence": [
+    "D10:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "California or Florida.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027874780645161293,
+   "retrieved_tokens": 112,
+   "retrieve_ms": 6780.603040999267,
+   "retrieve_cost": 0.00018289780645161293,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 33,
+   "question": "When does John plan on traveling with his team on a team trip?",
+   "gold": "October, 2023",
+   "category": 2,
+   "evidence": [
+    "D11:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "October 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002693523870967742,
+   "retrieved_tokens": 83,
+   "retrieve_ms": 6845.347625028808,
+   "retrieve_cost": 0.00017995238709677422,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 34,
+   "question": "What could John do after his basketball career?",
+   "gold": "become a basketball coach since he likes giving back and leadership",
+   "category": 3,
+   "evidence": [
+    "D11:19",
+    "D26:1",
+    "D27:26"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Mentor younger players.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003125616774193548,
+   "retrieved_tokens": 213,
+   "retrieve_ms": 6896.291957993526,
+   "retrieve_cost": 0.00020456167741935485,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 35,
+   "question": "What outdoor activities does John enjoy?",
+   "gold": "Hiking, surfing",
+   "category": 1,
+   "evidence": [
+    "D3:27",
+    "D12:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Surfing and camping.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026774090322580647,
+   "retrieved_tokens": 84,
+   "retrieve_ms": 7001.212291012052,
+   "retrieve_cost": 0.00017969090322580647,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 36,
+   "question": "Who is Tim and John's favorite basketball player?",
+   "gold": "LeBron James",
+   "category": 1,
+   "evidence": [
+    "D12:20",
+    "D12:22",
+    "D16:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "LeBron James.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002710155483870968,
+   "retrieved_tokens": 91,
+   "retrieve_ms": 7071.354000014253,
+   "retrieve_cost": 0.0001819155483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 37,
+   "question": "Which week did Tim visit the UK for the Harry Potter Conference?",
+   "gold": "The week before October 13th, 2023.",
+   "category": 2,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Week of October 6, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031089870967741936,
+   "retrieved_tokens": 232,
+   "retrieve_ms": 7136.611499998253,
+   "retrieve_cost": 0.00019584870967741936,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 38,
+   "question": "which country has Tim visited most frequently in his travels?",
+   "gold": "UK",
+   "category": 1,
+   "evidence": [
+    "D1:18",
+    "D13:1",
+    "D18:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific country mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002741454193548388,
+   "retrieved_tokens": 121,
+   "retrieve_ms": 7304.634042026009,
+   "retrieve_cost": 0.00017934541935483875,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 39,
+   "question": "What year did Tim go to the Smoky Mountains?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D14:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "2022",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002613516774193548,
+   "retrieved_tokens": 91,
+   "retrieve_ms": 7414.519125013612,
+   "retrieve_cost": 0.00017285167741935484,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 40,
+   "question": "Has Tim been to North Carolina and/or Tennesee states in the US?",
+   "gold": "Yes",
+   "category": 2,
+   "evidence": [
+    "D14:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yes, Tim visited Tennessee.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002764861935483871,
+   "retrieved_tokens": 122,
+   "retrieve_ms": 7497.416166006587,
+   "retrieve_cost": 0.0001794361935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 41,
+   "question": "What kind of fiction stories does Tim write?",
+   "gold": "Fantasy stories with plot twists",
+   "category": 1,
+   "evidence": [
+    "D15:3",
+    "D16:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fantasy novels.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002823315483870968,
+   "retrieved_tokens": 150,
+   "retrieve_ms": 7569.4255830021575,
+   "retrieve_cost": 0.0001849815483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 42,
+   "question": "What has John cooked?",
+   "gold": "Soup, a slow cooker meal, and honey garlic chicken with roasted veg.",
+   "category": 1,
+   "evidence": [
+    "D10:4",
+    "D15:30",
+    "D15:31",
+    "D15:32"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Honey garlic chicken.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002642924516129033,
+   "retrieved_tokens": 135,
+   "retrieve_ms": 7731.627542001661,
+   "retrieve_cost": 0.00016979245161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 43,
+   "question": "What does John like about Lebron James?",
+   "gold": "His heart, determination, skills, and leadership.",
+   "category": 1,
+   "evidence": [
+    "D12:20",
+    "D16:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "His skills and leadership.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002816585806451613,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 7623.856332967989,
+   "retrieve_cost": 0.0001886585806451613,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 44,
+   "question": "When did John and his wife go on a European vacation?",
+   "gold": "November, 2023.",
+   "category": 2,
+   "evidence": [
+    "D16:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "November 6, 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002764861935483871,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 7781.145499960985,
+   "retrieve_cost": 0.00017838619354838714,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 45,
+   "question": "Which country was Tim visiting in the second week of November?",
+   "gold": "UK",
+   "category": 2,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "United Kingdom",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002732196774193549,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 7844.489292008802,
+   "retrieve_cost": 0.00018036967741935487,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 46,
+   "question": "Where was Tim in the week before 16 November 2023?",
+   "gold": "UK",
+   "category": 2,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No information available.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002664747096774194,
+   "retrieved_tokens": 83,
+   "retrieve_ms": 7963.638125045691,
+   "retrieve_cost": 0.0001770747096774194,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 47,
+   "question": "When did John get married at a greenhouse?",
+   "gold": "last week of September 2023",
+   "category": 2,
+   "evidence": [
+    "D12:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "October 2, 2023",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026993109677419353,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 7881.522624986246,
+   "retrieve_cost": 0.00017273109677419355,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 48,
+   "question": "When did John get an ankle injury in 2023?",
+   "gold": "around November 16, 2023",
+   "category": 1,
+   "evidence": [
+    "D18:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Last season, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002916661935483871,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 8011.903208040167,
+   "retrieve_cost": 0.00018951619354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 49,
+   "question": "How many times has John injured his ankle?",
+   "gold": "two times",
+   "category": 1,
+   "evidence": [
+    "D18:2",
+    "D19:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Once.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002891657419354839,
+   "retrieved_tokens": 160,
+   "retrieve_ms": 8133.236582973041,
+   "retrieve_cost": 0.00019091574193548389,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 50,
+   "question": "Which book was John reading during his recovery from an ankle injury?",
+   "gold": "The Alchemist",
+   "category": 1,
+   "evidence": [
+    "D19:20",
+    "D18:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The memories do not specify a book.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028967090322580644,
+   "retrieved_tokens": 188,
+   "retrieve_ms": 8202.291707973927,
+   "retrieve_cost": 0.00018242090322580646,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 51,
+   "question": "What kind of yoga for building core strength might John benefit from?",
+   "gold": "Hatha Yoga",
+   "category": 3,
+   "evidence": [
+    "D20:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Warrior II pose.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002868669677419355,
+   "retrieved_tokens": 132,
+   "retrieve_ms": 8338.896791974548,
+   "retrieve_cost": 0.0001898169677419355,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 52,
+   "question": "What does John do to supplement his basketball training?",
+   "gold": "Yoga, strength training",
+   "category": 1,
+   "evidence": [
+    "D8:5",
+    "D20:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Incorporates strength training.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00030878109677419353,
+   "retrieved_tokens": 191,
+   "retrieve_ms": 8255.464166984893,
+   "retrieve_cost": 0.00020318109677419356,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 53,
+   "question": "What other exercises can help John with his basketball performance?",
+   "gold": "Sprinting, long-distance running, and boxing.",
+   "category": 3,
+   "evidence": [
+    "D8:5",
+    "D20:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Strength training and agility drills.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.000301027935483871,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 8493.712417024653,
+   "retrieve_cost": 0.000201427935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 54,
+   "question": "When did John take a trip to the Rocky Mountains?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D20:40"
+   ],
+   "last_evidence_session": 29,
+   "answer": "In 2022.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027252522580645163,
+   "retrieved_tokens": 117,
+   "retrieve_ms": 8398.200249997899,
+   "retrieve_cost": 0.00017832522580645165,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 55,
+   "question": "When did John start playing professionally?",
+   "gold": "May, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:3",
+    "D21:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "December 2022",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002873127096774194,
+   "retrieved_tokens": 148,
+   "retrieve_ms": 8619.668415980414,
+   "retrieve_cost": 0.00019026270967741939,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 56,
+   "question": "When did Tim start playing the violin?",
+   "gold": "August 2023",
+   "category": 2,
+   "evidence": [
+    "D21:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002629147741935484,
+   "retrieved_tokens": 104,
+   "retrieve_ms": 8535.366666968912,
+   "retrieve_cost": 0.0001721647741935484,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 57,
+   "question": "What instruments does Tim play?",
+   "gold": "piano, violin",
+   "category": 1,
+   "evidence": [
+    "D8:12",
+    "D21:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Violin and piano.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027127703225806454,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 8678.440540970769,
+   "retrieve_cost": 0.00017062703225806456,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 58,
+   "question": "When did John attend the Harry Potter trivia?",
+   "gold": "August 2023.",
+   "category": 2,
+   "evidence": [
+    "D4:8",
+    "D22:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028609548387096775,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 8745.719582948368,
+   "retrieve_cost": 0.00018514548387096777,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 59,
+   "question": "Which career-high performances did John achieve in 2023?",
+   "gold": "highest point score, highest assist",
+   "category": 1,
+   "evidence": [
+    "D3:1",
+    "D23:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "40 points on July 9, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003062597419354839,
+   "retrieved_tokens": 195,
+   "retrieve_ms": 8875.060208025388,
+   "retrieve_cost": 0.0001964597419354839,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 60,
+   "question": "When did John achieve a career-high assist performance?",
+   "gold": "December 11, 2023",
+   "category": 2,
+   "evidence": [
+    "D23:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "December 8, 2023.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0003028438064516129,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 8764.086249982938,
+   "retrieve_cost": 0.00020024380645161291,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 61,
+   "question": "What books has John read?",
+   "gold": "inpsiring book on dreaming big, The Alchemist, fantasy series, non-fiction books on personal development, Dune",
+   "category": 1,
+   "evidence": [
+    "D4:10",
+    "D11:26",
+    "D17:9",
+    "D19:16",
+    "D19:20",
+    "D22:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The Hobbit, Dune.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026452393548387094,
+   "retrieved_tokens": 101,
+   "retrieve_ms": 8914.590959029738,
+   "retrieve_cost": 0.00017362393548387098,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 62,
+   "question": "What does John do to share his knowledge?",
+   "gold": "gives seminars, mentors younger players.",
+   "category": 1,
+   "evidence": [
+    "D14:3",
+    "D26:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Mentors younger players on his team.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002794625806451613,
+   "retrieved_tokens": 153,
+   "retrieve_ms": 8976.331791956909,
+   "retrieve_cost": 0.0001786625806451613,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 63,
+   "question": "When did John organize a basketball camp for kids?",
+   "gold": "summer 2023",
+   "category": 2,
+   "evidence": [
+    "D26:23"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Last summer (2023).",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031480625806451615,
+   "retrieved_tokens": 250,
+   "retrieve_ms": 9135.615791019518,
+   "retrieve_cost": 0.00020035625806451616,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 64,
+   "question": "Which month was John in Italy?",
+   "gold": "December, 2023",
+   "category": 2,
+   "evidence": [
+    "D27:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "December 2023",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026901445161290325,
+   "retrieved_tokens": 137,
+   "retrieve_ms": 9060.31987501774,
+   "retrieve_cost": 0.00017361445161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 65,
+   "question": "What fantasy movies does Tim like?",
+   "gold": "Lord of the Rings, Harry Potter, and Star Wars.",
+   "category": 1,
+   "evidence": [
+    "D8:16",
+    "D8:18",
+    "D26:28",
+    "D26:32",
+    "D27:21"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Harry Potter, Lord of the Rings, Star Wars.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027998245161290323,
+   "retrieved_tokens": 132,
+   "retrieve_ms": 9201.160333992448,
+   "retrieve_cost": 0.00018113245161290327,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 66,
+   "question": "What is a Star Wars book that Tim might enjoy?",
+   "gold": "Star Wars: Jedi Apprentice by Judy Blundell and David Farland. It is a highly rated and immersive series about his favorite movies.",
+   "category": 3,
+   "evidence": [
+    "D27:19",
+    "D27:21"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim might enjoy \"Star Wars: Thrawn.\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002719929677419355,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 9258.657083031721,
+   "retrieve_cost": 0.0001773429677419355,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 67,
+   "question": "What would be a good hobby related to his travel dreams for Tim to pick up?",
+   "gold": "Writing a travel blog.",
+   "category": 3,
+   "evidence": [
+    "D4:1",
+    "D6:6",
+    "D15:3",
+    "D27:37"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Joining a travel club.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028750625806451614,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 9408.314750005957,
+   "retrieve_cost": 0.00018565625806451615,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 68,
+   "question": "What day did Tim get into his study abroad program?",
+   "gold": "Januarty 5, 2024",
+   "category": 2,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "January 7, 2024",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028427225806451617,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 9288.944459054619,
+   "retrieve_cost": 0.00018767225806451616,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 69,
+   "question": "When will Tim leave for Ireland?",
+   "gold": "February, 2024",
+   "category": 2,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "February 2024",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002634094838709678,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 9526.401666982565,
+   "retrieve_cost": 0.00017220948387096778,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 70,
+   "question": "Which Star Wars-related locations would Tim enjoy during his visit to Ireland?",
+   "gold": "Skellig Michael, Malin Head, Loop Head, Ceann Sib\u00e9al, and Brow Head because they are Star Wars filming locations.",
+   "category": 3,
+   "evidence": [
+    "D1:18",
+    "D27:21",
+    "D28:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No specific Star Wars locations mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002779678064516129,
+   "retrieved_tokens": 99,
+   "retrieve_ms": 9433.512915973552,
+   "retrieve_cost": 0.00018436780645161293,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 71,
+   "question": "Which team did John sign with on 21 May, 2023?",
+   "gold": "The Minnesota Wolves",
+   "category": 4,
+   "evidence": [
+    "D1:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The memories do not specify the team.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00028148400000000003,
+   "retrieved_tokens": 78,
+   "retrieve_ms": 9713.28933298355,
+   "retrieve_cost": 0.00019013400000000003,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 72,
+   "question": "What is John's position on the team he signed with?",
+   "gold": "shooting guard",
+   "category": 4,
+   "evidence": [
+    "D1:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Shooting guard",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002820226451612903,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 9634.492958022747,
+   "retrieve_cost": 0.00018887264516129036,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 73,
+   "question": "What challenge did John encounter during pre-season training?",
+   "gold": "fitting into the new team's style of play",
+   "category": 4,
+   "evidence": [
+    "D1:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fitting into the new team's style.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002847967741935484,
+   "retrieved_tokens": 105,
+   "retrieve_ms": 9739.309084019624,
+   "retrieve_cost": 0.0001908967741935484,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 74,
+   "question": "What aspects of the Harry Potter universe will be discussed in John's fan project collaborations?",
+   "gold": "characters, spells, magical creatures",
+   "category": 4,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Characters, spells, and magical creatures.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002900680645161291,
+   "retrieved_tokens": 157,
+   "retrieve_ms": 9788.521125039551,
+   "retrieve_cost": 0.00018656806451612906,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 75,
+   "question": "What forum did Tim join recently?",
+   "gold": "fantasy literature forum",
+   "category": 4,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fantasy literature forum.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002611523225806452,
+   "retrieved_tokens": 88,
+   "retrieve_ms": 9905.248957977165,
+   "retrieve_cost": 0.00017310232258064518,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 76,
+   "question": "What kind of picture did Tim share as part of their Harry Potter book collection?",
+   "gold": "MinaLima's creation from the Harry Potter films",
+   "category": 4,
+   "evidence": [
+    "D2:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A picture from MinaLima.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028485154838709683,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 9966.066624969244,
+   "retrieve_cost": 0.00018855154838709682,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 77,
+   "question": "What was the highest number of points John scored in a game recently?",
+   "gold": "40 points",
+   "category": 4,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "40 points",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002940963870967742,
+   "retrieved_tokens": 170,
+   "retrieve_ms": 10022.345000004862,
+   "retrieve_cost": 0.0001928463870967742,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 78,
+   "question": "What did John celebrate at a restaurant with teammates?",
+   "gold": "a tough win",
+   "category": 4,
+   "evidence": [
+    "D3:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A tough win.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000284316,
+   "retrieved_tokens": 131,
+   "retrieve_ms": 10101.611917023547,
+   "retrieve_cost": 0.00018891600000000002,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 79,
+   "question": "What kind of deals did John sign with Nike and Gatorade?",
+   "gold": "basketball shoe and gear deal with Nike, potential sponsorship deal with Gatorade",
+   "category": 4,
+   "evidence": [
+    "D3:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Basketball shoe and gear deal.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000295453935483871,
+   "retrieved_tokens": 129,
+   "retrieve_ms": 10169.412166986149,
+   "retrieve_cost": 0.000197353935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 80,
+   "question": "Which city is John excited to have a game at?",
+   "gold": "Seattle",
+   "category": 4,
+   "evidence": [
+    "D3:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Seattle",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002709274838709678,
+   "retrieved_tokens": 92,
+   "retrieve_ms": 10242.273500014562,
+   "retrieve_cost": 0.00018287748387096778,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 81,
+   "question": "How long has John been surfing?",
+   "gold": "five years",
+   "category": 4,
+   "evidence": [
+    "D3:27"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Five years.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00025523051612903226,
+   "retrieved_tokens": 81,
+   "retrieve_ms": 10352.31854201993,
+   "retrieve_cost": 0.00016883051612903228,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 82,
+   "question": "How does John feel while surfing?",
+   "gold": "super exciting and free-feeling",
+   "category": 4,
+   "evidence": [
+    "D3:29"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The feeling was unreal!",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002619301935483871,
+   "retrieved_tokens": 94,
+   "retrieve_ms": 10409.394457994495,
+   "retrieve_cost": 0.00017238019354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 83,
+   "question": "What kind of articles has Tim been writing about for the online magazine?",
+   "gold": "different fantasy novels, characters, themes, and book recommendations",
+   "category": 4,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fantasy novels.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002751421935483871,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 10458.726249984466,
+   "retrieve_cost": 0.00018019219354838711,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 84,
+   "question": "Which two fantasy novels does Tim particularly enjoy writing about?",
+   "gold": "Harry Potter and Game of Thrones",
+   "category": 4,
+   "evidence": [
+    "D4:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The Hobbit, The Name of the Wind.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002789237419354839,
+   "retrieved_tokens": 102,
+   "retrieve_ms": 10535.78912501689,
+   "retrieve_cost": 0.0001845737419354839,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 85,
+   "question": "What did Anthony and John end up playing during the charity event?",
+   "gold": "an intense Harry Potter trivia contest",
+   "category": 4,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Harry Potter trivia contest.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029169445161290327,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 10656.8374169874,
+   "retrieve_cost": 0.00019209445161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 86,
+   "question": "What did John share with the person he skyped about?",
+   "gold": "Characters from Harry Potter",
+   "category": 4,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Collaborations for the fan project.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027796141935483874,
+   "retrieved_tokens": 158,
+   "retrieve_ms": 10727.605500025675,
+   "retrieve_cost": 0.00017611141935483873,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 87,
+   "question": "How did John describe the team bond?",
+   "gold": "Awesome",
+   "category": 4,
+   "evidence": [
+    "D5:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Like a family away from home.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028679767741935486,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 10820.046707987785,
+   "retrieve_cost": 0.0001912476774193549,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 88,
+   "question": "How did John get introduced to basketball?",
+   "gold": "Dad signed him up for a local league",
+   "category": 4,
+   "evidence": [
+    "D6:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Watched NBA games with his dad.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00031107600000000003,
+   "retrieved_tokens": 198,
+   "retrieve_ms": 10900.086624955293,
+   "retrieve_cost": 0.00020382600000000002,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 89,
+   "question": "What is John's number one goal in his basketball career?",
+   "gold": "Winning a championship",
+   "category": 4,
+   "evidence": [
+    "D6:15"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Winning a championship.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029657187096774197,
+   "retrieved_tokens": 157,
+   "retrieve_ms": 10986.35295900749,
+   "retrieve_cost": 0.00019697187096774196,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 90,
+   "question": "What organization is John teaming up with for his charity work?",
+   "gold": "A local organization helping disadvantaged kids with sports and school",
+   "category": 4,
+   "evidence": [
+    "D6:17"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A local organization for disadvantaged kids.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029155509677419357,
+   "retrieved_tokens": 174,
+   "retrieve_ms": 11068.216459010728,
+   "retrieve_cost": 0.00018730509677419355,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 91,
+   "question": "When did John meet back up with his teammates after his trip in August 2023?",
+   "gold": "Aug 15th",
+   "category": 4,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "August 15, 2023.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028925825806451613,
+   "retrieved_tokens": 145,
+   "retrieve_ms": 11134.564207983203,
+   "retrieve_cost": 0.00018695825806451614,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 92,
+   "question": "What did John's teammates give him when they met on Aug 15th?",
+   "gold": "a basketball with autographs on it",
+   "category": 4,
+   "evidence": [
+    "D7:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A signed ball.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028743890322580653,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 11253.709083015565,
+   "retrieve_cost": 0.0001878389032258065,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 93,
+   "question": "Why did John's teammates sign the basketball they gave him?",
+   "gold": "to show their friendship and appreciation",
+   "category": 4,
+   "evidence": [
+    "D7:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "To show friendship and appreciation.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029355464516129035,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 11346.167667012196,
+   "retrieve_cost": 0.00019395464516129034,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 94,
+   "question": "What is the main intention behind Tim wanting to attend the book conference?",
+   "gold": "to learn more about literature and create a stronger bond to it",
+   "category": 4,
+   "evidence": [
+    "D7:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "To learn more about literature.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030339716129032263,
+   "retrieved_tokens": 228,
+   "retrieve_ms": 11436.979666992556,
+   "retrieve_cost": 0.00019104716129032264,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 95,
+   "question": "What new activity has Tim started learning in August 2023?",
+   "gold": "play the piano",
+   "category": 4,
+   "evidence": [
+    "D8:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Learning to play the piano.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028255664516129033,
+   "retrieved_tokens": 175,
+   "retrieve_ms": 11631.6584579763,
+   "retrieve_cost": 0.00017845664516129034,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 96,
+   "question": "Which movie's theme is Tim's favorite to play on the piano?",
+   "gold": "\"Harry Potter and the Philosopher's Stone\"",
+   "category": 4,
+   "evidence": [
+    "D8:14",
+    "D8:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Not specified in memories.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027086903225806457,
+   "retrieved_tokens": 130,
+   "retrieve_ms": 11688.396084005944,
+   "retrieve_cost": 0.00017381903225806454,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 97,
+   "question": "What special memory does \"Harry Potter and the Philosopher's Stone\" bring to Tim?",
+   "gold": "Watching it with his family",
+   "category": 4,
+   "evidence": [
+    "D8:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Watching it with family.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029045206451612906,
+   "retrieved_tokens": 153,
+   "retrieve_ms": 11763.827540969942,
+   "retrieve_cost": 0.00018875206451612905,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 98,
+   "question": "Which movie does Tim mention they enjoy watching during Thanksgiving?",
+   "gold": "\"Home Alone\"",
+   "category": 4,
+   "evidence": [
+    "D8:24"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Home Alone\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002680890967741936,
+   "retrieved_tokens": 108,
+   "retrieve_ms": 11830.542124982458,
+   "retrieve_cost": 0.00017583909677419357,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 99,
+   "question": "What tradition does Tim mention they love during Thanksgiving?",
+   "gold": "Prepping the feast and talking about what they're thankful for",
+   "category": 4,
+   "evidence": [
+    "D8:22"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Watching movies together.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026291516129032264,
+   "retrieved_tokens": 106,
+   "retrieve_ms": 11890.275458979886,
+   "retrieve_cost": 0.0001712651612903226,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 100,
+   "question": "How long did John and his high school basketball teammates play together?",
+   "gold": "Four years",
+   "category": 4,
+   "evidence": [
+    "D9:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Four years.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030157470967741935,
+   "retrieved_tokens": 169,
+   "retrieve_ms": 12067.133625037968,
+   "retrieve_cost": 0.00020017470967741938,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 101,
+   "question": "How was John's experience in New York City?",
+   "gold": "Amazing",
+   "category": 4,
+   "evidence": [
+    "D9:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Amazing and exciting.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027211335483870967,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 11968.22716697352,
+   "retrieve_cost": 0.00017896335483870969,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 102,
+   "question": "What did John say about NYC, enticing Tim to visit?",
+   "gold": "It's got so much to check out - the culture, food - you won't regret it.",
+   "category": 4,
+   "evidence": [
+    "D9:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "NYC is amazing and adventurous!",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028295845161290325,
+   "retrieved_tokens": 143,
+   "retrieve_ms": 12179.632665996905,
+   "retrieve_cost": 0.00018335845161290324,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 103,
+   "question": "What kind of soup did John make recently?",
+   "gold": "tasty soup with sage",
+   "category": 4,
+   "evidence": [
+    "D10:4",
+    "D10:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The specific type of soup is not mentioned.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026903903225806454,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 12094.691624981351,
+   "retrieve_cost": 0.00017423903225806454,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 104,
+   "question": "What spice did John add to the soup for flavor?",
+   "gold": "sage",
+   "category": 4,
+   "evidence": [
+    "D10:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Sage",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002570572258064516,
+   "retrieved_tokens": 83,
+   "retrieve_ms": 12225.915791990701,
+   "retrieve_cost": 0.00016975722580645162,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 105,
+   "question": "What is Tim excited to see at Universal Studios?",
+   "gold": "The Harry Potter stuff",
+   "category": 4,
+   "evidence": [
+    "D10:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Harry Potter stuff.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027613045161290324,
+   "retrieved_tokens": 116,
+   "retrieve_ms": 12346.652375010308,
+   "retrieve_cost": 0.00018298045161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 106,
+   "question": "Where are John and his teammates planning to explore on a team trip?",
+   "gold": "a new city",
+   "category": 4,
+   "evidence": [
+    "D11:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Galway",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027196432258064517,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 12402.690707996953,
+   "retrieve_cost": 0.00017986432258064518,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 107,
+   "question": "What city did Tim suggest to John for the team trip next month?",
+   "gold": "Edinburgh, Scotland",
+   "category": 4,
+   "evidence": [
+    "D11:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Edinburgh, Scotland",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002794710967741936,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 12480.545542028267,
+   "retrieve_cost": 0.00018407109677419356,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 108,
+   "question": "What does John want to do after his basketball career?",
+   "gold": "positively influence and inspire others, potentially start a foundation and engage in charity work",
+   "category": 4,
+   "evidence": [
+    "D11:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Start a foundation and do charity work.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030829045161290323,
+   "retrieved_tokens": 192,
+   "retrieve_ms": 12548.685958026908,
+   "retrieve_cost": 0.00020104045161290326,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 109,
+   "question": "What advice did Tim give John about picking endorsements?",
+   "gold": "Ensure they align with values and brand, look for companies that share the desire to make a change and help others, make sure the endorsement feels authentic",
+   "category": 4,
+   "evidence": [
+    "D11:22"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Align with values and brand.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027996367741935487,
+   "retrieved_tokens": 121,
+   "retrieve_ms": 12662.564583006315,
+   "retrieve_cost": 0.00018486367741935489,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 110,
+   "question": "What book recommendation did Tim give to John for the trip?",
+   "gold": "A fantasy novel by Patrick Rothfuss",
+   "category": 4,
+   "evidence": [
+    "D11:24"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A fantasy novel by Patrick Rothfuss.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002785590967741936,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 12727.28399996413,
+   "retrieve_cost": 0.00018045909677419356,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 111,
+   "question": "What type of venue did John and his girlfriend choose for their wedding ceremony?",
+   "gold": "Greenhouse",
+   "category": 4,
+   "evidence": [
+    "D12:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A greenhouse venue.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027858116129032265,
+   "retrieved_tokens": 152,
+   "retrieve_ms": 12787.252957990859,
+   "retrieve_cost": 0.00017853116129032263,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 112,
+   "question": "What was the setting for John and his wife's first dance?",
+   "gold": "Cozy restaurant",
+   "category": 4,
+   "evidence": [
+    "D12:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Cozy restaurant with music and candlelight.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028092580645161297,
+   "retrieved_tokens": 164,
+   "retrieve_ms": 12930.09920901386,
+   "retrieve_cost": 0.00017697580645161293,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 113,
+   "question": "Which basketball team does Tim support?",
+   "gold": "The Wolves",
+   "category": 4,
+   "evidence": [
+    "D12:21"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The Wolves.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026851858064516127,
+   "retrieved_tokens": 78,
+   "retrieve_ms": 12984.427000046708,
+   "retrieve_cost": 0.0001825685806451613,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 114,
+   "question": "What passion does Tim mention connects him with people from all over the world?",
+   "gold": "passion for fantasy stuff",
+   "category": 4,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "His passion for fantasy stuff.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030563322580645164,
+   "retrieved_tokens": 214,
+   "retrieve_ms": 13041.94920900045,
+   "retrieve_cost": 0.00019508322580645164,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 115,
+   "question": "How does John describe the game season for his team?",
+   "gold": "intense with tough losses and great wins",
+   "category": 4,
+   "evidence": [
+    "D13:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Intense with tough losses and great wins.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029134858064516127,
+   "retrieved_tokens": 145,
+   "retrieve_ms": 13214.07729195198,
+   "retrieve_cost": 0.00019054858064516128,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 116,
+   "question": "How does John say his team handles tough opponents?",
+   "gold": "by backing each other up and not quitting",
+   "category": 4,
+   "evidence": [
+    "D13:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "They back each other up.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029192148387096776,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 13268.568874977063,
+   "retrieve_cost": 0.00019157148387096776,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 117,
+   "question": "What motivates John's team to get better, according to John?",
+   "gold": "facing tough opponents",
+   "category": 4,
+   "evidence": [
+    "D13:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tough opponents and strong support.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028865806451612905,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 13326.905833964702,
+   "retrieve_cost": 0.00019055806451612905,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 118,
+   "question": "What did John's team win at the end of the season?",
+   "gold": "a trophy",
+   "category": 4,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A trophy.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002767066451612903,
+   "retrieved_tokens": 94,
+   "retrieve_ms": 13389.052042039111,
+   "retrieve_cost": 0.00018685664516129033,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 119,
+   "question": "Where did Tim capture the photography of the sunset over the mountain range?",
+   "gold": "Smoky Mountains",
+   "category": 4,
+   "evidence": [
+    "D14:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Smoky Mountains",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002672376774193549,
+   "retrieved_tokens": 121,
+   "retrieve_ms": 13464.950915949885,
+   "retrieve_cost": 0.00017213767741935487,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 120,
+   "question": "How does John feel about being seen as a mentor by some of the younger players?",
+   "gold": "It feels great",
+   "category": 4,
+   "evidence": [
+    "D14:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He feels rewarded and fulfilled.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003011912903225806,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 13669.094125041738,
+   "retrieve_cost": 0.00019769129032258065,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 121,
+   "question": "What does John find rewarding about mentoring the younger players?",
+   "gold": "Seeing their growth, improvement, and confidence",
+   "category": 4,
+   "evidence": [
+    "D14:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Seeing their growth and improvement.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029676696774193553,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 13593.83650001837,
+   "retrieve_cost": 0.00019506696774193553,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 122,
+   "question": "What has John been able to help the younger players achieve?",
+   "gold": "reach their goals",
+   "category": 4,
+   "evidence": [
+    "D14:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Growth, improvement, and confidence.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000305371935483871,
+   "retrieved_tokens": 184,
+   "retrieve_ms": 13709.00462497957,
+   "retrieve_cost": 0.000199621935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 123,
+   "question": "What genre is the novel that Tim is writing?",
+   "gold": "Fantasy",
+   "category": 4,
+   "evidence": [
+    "D15:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Fantasy",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002895882580645161,
+   "retrieved_tokens": 194,
+   "retrieve_ms": 13767.862708016764,
+   "retrieve_cost": 0.00018653825806451614,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 124,
+   "question": "Who is one of Tim's sources of inspiration for writing?",
+   "gold": "J.K. Rowling",
+   "category": 4,
+   "evidence": [
+    "D15:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "J.K. Rowling",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002874315483870968,
+   "retrieved_tokens": 167,
+   "retrieve_ms": 13865.858166012913,
+   "retrieve_cost": 0.0001860315483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 125,
+   "question": "What J.K. Rowling quote does Tim resonate with?",
+   "gold": "\"Turn on the light - happiness hides in the darkest of times.\"",
+   "category": 4,
+   "evidence": [
+    "D15:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"Turn on the light - happiness hides in the darkest of times.\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002947101290322581,
+   "retrieved_tokens": 156,
+   "retrieve_ms": 13919.514041976072,
+   "retrieve_cost": 0.0001892601290322581,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 126,
+   "question": "What does John write on the whiteboard to help him stay motivated?",
+   "gold": "motivational quotes and strategies",
+   "category": 4,
+   "evidence": [
+    "D15:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Motivational quotes and strategies.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028145380645161293,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 13977.870792034082,
+   "retrieve_cost": 0.0001847038064516129,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 127,
+   "question": "What hobby is a therapy for John when away from the court?",
+   "gold": "Cooking",
+   "category": 4,
+   "evidence": [
+    "D15:30"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Cooking is therapy for John.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0003065535483870968,
+   "retrieved_tokens": 196,
+   "retrieve_ms": 14121.465625008568,
+   "retrieve_cost": 0.0001993035483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 128,
+   "question": "What type of meal does John often cook using a slow cooker?",
+   "gold": "honey garlic chicken with roasted veg",
+   "category": 4,
+   "evidence": [
+    "D15:32",
+    "D15:33"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The memories do not specify the type of meal John cooks.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002785337419354839,
+   "retrieved_tokens": 138,
+   "retrieve_ms": 14175.44987500878,
+   "retrieve_cost": 0.0001763837419354839,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 129,
+   "question": "How will John share the honey garlic chicken recipe with the other person?",
+   "gold": "write it down and mail it",
+   "category": 4,
+   "evidence": [
+    "D15:34"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He will mail it to them.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026437606451612907,
+   "retrieved_tokens": 106,
+   "retrieve_ms": 14236.714750004467,
+   "retrieve_cost": 0.00016972606451612907,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 130,
+   "question": "What was Tim's huge writing issue last week,as mentioned on November 6, 2023?",
+   "gold": "He got stuck on a plot twist",
+   "category": 4,
+   "evidence": [
+    "D16:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Stuck on a plot twist.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002837007096774194,
+   "retrieved_tokens": 171,
+   "retrieve_ms": 14306.897333008237,
+   "retrieve_cost": 0.00017720070967741937,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 131,
+   "question": "What does Tim have that serves as a reminder of hard work and is his prized possession?",
+   "gold": "a basketball signed by his favorite player",
+   "category": 4,
+   "evidence": [
+    "D16:7"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A basketball signed by his favorite player.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028862419354838714,
+   "retrieved_tokens": 180,
+   "retrieve_ms": 14385.828500031494,
+   "retrieve_cost": 0.00018107419354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 132,
+   "question": "Why do Tim and John find LeBron inspiring?",
+   "gold": "LeBron's determination and the epic block in Game 7 of the '16 Finals",
+   "category": 4,
+   "evidence": [
+    "D16:9",
+    "D16:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Work ethic and determination.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002821229032258065,
+   "retrieved_tokens": 140,
+   "retrieve_ms": 14440.894333005417,
+   "retrieve_cost": 0.00018477290322580647,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 133,
+   "question": "How did John describe the views during their road trip out on the European coastline?",
+   "gold": "Spectacular",
+   "category": 4,
+   "evidence": [
+    "D17:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Spectacular and beautiful.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000276198,
+   "retrieved_tokens": 125,
+   "retrieve_ms": 14506.895583996084,
+   "retrieve_cost": 0.00017929800000000002,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 134,
+   "question": "What is one of Tim's favorite fantasy TV shows, as mentioned on November 11, 2023?",
+   "gold": "\"That\"",
+   "category": 4,
+   "evidence": [
+    "D17:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"That\" is one of his favorites.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002816512258064516,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 14594.551207963377,
+   "retrieve_cost": 0.00018160122580645165,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 135,
+   "question": "How does Tim stay motivated during difficult study sessions?",
+   "gold": "Visualizing goals and success",
+   "category": 4,
+   "evidence": [
+    "D18:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "By remembering why he loves writing and reading.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028870006451612906,
+   "retrieved_tokens": 150,
+   "retrieve_ms": 14708.291582996026,
+   "retrieve_cost": 0.00018745006451612907,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 136,
+   "question": "What did Tim say about his injury on 16 November, 2023?",
+   "gold": "The doctor said it's not too serious",
+   "category": 4,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim mentioned a bummer about the injury.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002726545161290323,
+   "retrieved_tokens": 100,
+   "retrieve_ms": 14764.47808399098,
+   "retrieve_cost": 0.00017710451612903228,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 137,
+   "question": "What was the setback Tim faced in his writing project on 21 November, 2023?",
+   "gold": "Story based on experiences in the UK didn't go as planned",
+   "category": 4,
+   "evidence": [
+    "D19:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Writing a story based on UK experiences.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029879225806451614,
+   "retrieved_tokens": 213,
+   "retrieve_ms": 14809.527791978326,
+   "retrieve_cost": 0.00018599225806451616,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 138,
+   "question": "How did John overcome his ankle injury from last season?",
+   "gold": "stayed focused on recovery and worked hard to strengthen his body",
+   "category": 4,
+   "evidence": [
+    "D19:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Focused on recovery and physical therapy.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00029798806451612905,
+   "retrieved_tokens": 179,
+   "retrieve_ms": 14954.04491701629,
+   "retrieve_cost": 0.00019328806451612905,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 139,
+   "question": "What motivated Tim to keep pushing himself to get better in writing and reading?",
+   "gold": "Love for writing and reading",
+   "category": 4,
+   "evidence": [
+    "D19:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "His love for writing and reading.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002955327096774194,
+   "retrieved_tokens": 172,
+   "retrieve_ms": 15039.883082965389,
+   "retrieve_cost": 0.00019068270967741938,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 140,
+   "question": "How did John overcome a mistake he made during a big game in basketball?",
+   "gold": "Worked hard to get better and focused on growth",
+   "category": 4,
+   "evidence": [
+    "D19:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He worked hard to get better.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.000318177870967742,
+   "retrieved_tokens": 213,
+   "retrieve_ms": 15086.685957969166,
+   "retrieve_cost": 0.00020717787096774198,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 141,
+   "question": "What book did John recently finish rereading that left him feeling inspired and hopeful about following dreams?",
+   "gold": "The Alchemist",
+   "category": 4,
+   "evidence": [
+    "D19:20"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"The Alchemist\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002797352903225807,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 15174.658707983326,
+   "retrieve_cost": 0.00018328529032258066,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 142,
+   "question": "How did \"The Alchemist\" impact John's perspective on following dreams?",
+   "gold": "made him think again about following dreams and searching for personal legends",
+   "category": 4,
+   "evidence": [
+    "D19:20"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Motivated him to chase dreams.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028661980645161296,
+   "retrieved_tokens": 144,
+   "retrieve_ms": 15354.053790972102,
+   "retrieve_cost": 0.00018566980645161294,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 143,
+   "question": "What is John trying out to improve his strength and flexibility after recovery from ankle injury?",
+   "gold": "yoga",
+   "category": 4,
+   "evidence": [
+    "D20:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Yoga",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028902929032258065,
+   "retrieved_tokens": 126,
+   "retrieve_ms": 15413.331374991685,
+   "retrieve_cost": 0.00019407929032258067,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 144,
+   "question": "How long does John usually hold the yoga pose he shared with Tim?",
+   "gold": "30-60 seconds",
+   "category": 4,
+   "evidence": [
+    "D20:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "30-60 seconds.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026346638709677425,
+   "retrieved_tokens": 91,
+   "retrieve_ms": 15467.242832994089,
+   "retrieve_cost": 0.00017226638709677422,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 145,
+   "question": "Where was the forest picture shared by John on December 1,2023 taken?",
+   "gold": "near his hometown",
+   "category": 4,
+   "evidence": [
+    "D20:28"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Near his hometown.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026937387096774194,
+   "retrieved_tokens": 109,
+   "retrieve_ms": 15520.010750042275,
+   "retrieve_cost": 0.00017517387096774195,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 146,
+   "question": "What did Tim recently start learning in addition to being part of a travel club and working on studies?",
+   "gold": "an instrument",
+   "category": 4,
+   "evidence": [
+    "D21:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim recently started learning the violin.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028474200000000005,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 15570.17233298393,
+   "retrieve_cost": 0.00018379200000000003,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 147,
+   "question": "What instrument is Tim learning to play in December 2023?",
+   "gold": "violin",
+   "category": 4,
+   "evidence": [
+    "D21:11"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Violin",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027504619354838715,
+   "retrieved_tokens": 175,
+   "retrieve_ms": 15836.534083995502,
+   "retrieve_cost": 0.00017334619354838715,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 148,
+   "question": "How long has Tim been playing the piano for, as of December 2023?",
+   "gold": "about four months",
+   "category": 4,
+   "evidence": [
+    "D21:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Four months.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002646747096774194,
+   "retrieved_tokens": 104,
+   "retrieve_ms": 16022.645290999208,
+   "retrieve_cost": 0.00017182470967741937,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 149,
+   "question": "What book did Tim just finish reading on 8th December, 2023?",
+   "gold": "\"A Dance with Dragons\"",
+   "category": 4,
+   "evidence": [
+    "D22:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A Dance with Dragons",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027101341935483874,
+   "retrieved_tokens": 91,
+   "retrieve_ms": 15885.48133301083,
+   "retrieve_cost": 0.00017951341935483874,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 150,
+   "question": "Which book did Tim recommend to John as a good story on 8th December, 2023?",
+   "gold": "\"A Dance with Dragons\"",
+   "category": 4,
+   "evidence": [
+    "D22:13"
+   ],
+   "last_evidence_session": 29,
+   "answer": "\"A Dance with Dragons\"",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002828450322580646,
+   "retrieved_tokens": 139,
+   "retrieve_ms": 16076.36695803376,
+   "retrieve_cost": 0.00018234503225806456,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 151,
+   "question": "What is the topic of discussion between John and Tim on 11 December, 2023?",
+   "gold": "Academic achievements and sports successes",
+   "category": 4,
+   "evidence": [
+    "D23:1",
+    "D23:2",
+    "D23:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "New success stories.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002678781290322581,
+   "retrieved_tokens": 77,
+   "retrieve_ms": 16136.895458970685,
+   "retrieve_cost": 0.0001778781290322581,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 152,
+   "question": "What kind of game did John have a career-high in assists in?",
+   "gold": "basketball",
+   "category": 4,
+   "evidence": [
+    "D23:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A basketball game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00030484025806451617,
+   "retrieved_tokens": 218,
+   "retrieve_ms": 16203.956167038996,
+   "retrieve_cost": 0.00019519025806451616,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 153,
+   "question": "What was John's way of dealing with doubts and stress when he was younger?",
+   "gold": "practicing basketball outside for hours",
+   "category": 4,
+   "evidence": [
+    "D23:9"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Practicing basketball outside for hours.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002956950967741936,
+   "retrieved_tokens": 176,
+   "retrieve_ms": 16268.982084002346,
+   "retrieve_cost": 0.00019024509677419358,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 154,
+   "question": "How did John feel about the atmosphere during the big game against the rival team?",
+   "gold": "electric and intense",
+   "category": 4,
+   "evidence": [
+    "D23:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "It was electric and intense.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002926267741935484,
+   "retrieved_tokens": 163,
+   "retrieve_ms": 16339.390708017163,
+   "retrieve_cost": 0.0001894267741935484,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 155,
+   "question": "How did John feel after being able to jog without pain?",
+   "gold": "It was a huge success.",
+   "category": 4,
+   "evidence": [
+    "D24:16"
+   ],
+   "last_evidence_session": 29,
+   "answer": "He felt relieved and successful.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028605987096774196,
+   "retrieved_tokens": 136,
+   "retrieve_ms": 16401.07020898722,
+   "retrieve_cost": 0.00018810987096774196,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 156,
+   "question": "What kind of deal did John get in December?",
+   "gold": "Deal with a renowned outdoor gear company",
+   "category": 4,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Outdoor gear company deal.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027516290322580645,
+   "retrieved_tokens": 158,
+   "retrieve_ms": 16464.316291967407,
+   "retrieve_cost": 0.00017511290322580648,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 157,
+   "question": "Where was the photoshoot done for John's gear deal?",
+   "gold": "In a gorgeous forest",
+   "category": 4,
+   "evidence": [
+    "D25:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "In a gorgeous forest.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027954909677419356,
+   "retrieved_tokens": 123,
+   "retrieve_ms": 16519.21554200817,
+   "retrieve_cost": 0.00018444909677419358,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 158,
+   "question": "In which area has John's team seen the most growth during training?",
+   "gold": "Communication and bonding",
+   "category": 4,
+   "evidence": [
+    "D25:14"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Communication and bonding.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028738219354838715,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 16580.046457995195,
+   "retrieve_cost": 0.00019363219354838712,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 159,
+   "question": "What type of seminars is John conducting?",
+   "gold": "Sports and marketing seminars",
+   "category": 4,
+   "evidence": [
+    "D26:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Sports and marketing seminars.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002682841935483871,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 16636.931959015783,
+   "retrieve_cost": 0.0001739341935483871,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 160,
+   "question": "What activity did Tim do after reading the stories about the Himalayan trek?",
+   "gold": "visited a travel agency",
+   "category": 4,
+   "evidence": [
+    "D26:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Tim wrote more articles.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002816732903225806,
+   "retrieved_tokens": 149,
+   "retrieve_ms": 16691.984084027354,
+   "retrieve_cost": 0.00018177329032258066,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 161,
+   "question": "What is one cause that John supports with his influence and resources?",
+   "gold": "youth sports and fair chances in sports",
+   "category": 4,
+   "evidence": [
+    "D26:21"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Youth sports for underserved communities.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002859077419354839,
+   "retrieved_tokens": 177,
+   "retrieve_ms": 16749.510083987843,
+   "retrieve_cost": 0.00018150774193548388,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 162,
+   "question": "What new fantasy TV series is Tim excited about?",
+   "gold": "\"The Wheel of Time\"",
+   "category": 4,
+   "evidence": [
+    "D26:36"
+   ],
+   "last_evidence_session": 29,
+   "answer": "The Wheel of Time",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002773155483870968,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 16806.08716700226,
+   "retrieve_cost": 0.0001829655483870968,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 163,
+   "question": "Which language is Tim learning?",
+   "gold": "German",
+   "category": 4,
+   "evidence": [
+    "D27:5"
+   ],
+   "last_evidence_session": 29,
+   "answer": "German",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026501612903225805,
+   "retrieved_tokens": 120,
+   "retrieve_ms": 16875.210999976844,
+   "retrieve_cost": 0.00017426612903225807,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 164,
+   "question": "What language does Tim know besides German?",
+   "gold": "Spanish",
+   "category": 4,
+   "evidence": [
+    "D27:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "French",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026349696774193547,
+   "retrieved_tokens": 124,
+   "retrieve_ms": 17013.133749947883,
+   "retrieve_cost": 0.00017154696774193548,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 165,
+   "question": "What book did Tim get in Italy that inspired him to cook?",
+   "gold": "a cooking book",
+   "category": 4,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "John got a book in Italy.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.0002779310322580645,
+   "retrieved_tokens": 119,
+   "retrieve_ms": 17090.019249997567,
+   "retrieve_cost": 0.00018163103225806452,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 166,
+   "question": "What is John's favorite book series?",
+   "gold": "Harry Potter",
+   "category": 4,
+   "evidence": [
+    "D27:19"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Lord of the Rings",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00026547561290322583,
+   "retrieved_tokens": 102,
+   "retrieve_ms": 17171.565208001994,
+   "retrieve_cost": 0.00017532561290322583,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 167,
+   "question": "According to John, who is his favorite character from Lord of the Rings?",
+   "gold": "Aragorn",
+   "category": 4,
+   "evidence": [
+    "D27:24"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Aragorn",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026797122580645165,
+   "retrieved_tokens": 111,
+   "retrieve_ms": 17236.973833001684,
+   "retrieve_cost": 0.00017467122580645163,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 168,
+   "question": "Why does John like Aragorn from Lord of the Rings?",
+   "gold": "brave, selfless, down-to-earth attitude",
+   "category": 4,
+   "evidence": [
+    "D27:30"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Brave, selfless, great leader.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002693620645161291,
+   "retrieved_tokens": 105,
+   "retrieve_ms": 17307.42654198548,
+   "retrieve_cost": 0.00017426206451612907,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 169,
+   "question": "What kind of painting does John have in his room as a reminder?",
+   "gold": "a painting of Aragorn",
+   "category": 4,
+   "evidence": [
+    "D27:28"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Inspiring journey painting.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027355877419354843,
+   "retrieved_tokens": 122,
+   "retrieve_ms": 17383.486292033922,
+   "retrieve_cost": 0.00017770877419354844,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 170,
+   "question": "What is the painting of Aragorn a reminder for John to be in everything he does?",
+   "gold": "be a leader",
+   "category": 4,
+   "evidence": [
+    "D27:28"
+   ],
+   "last_evidence_session": 29,
+   "answer": "A leader.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002767277419354839,
+   "retrieved_tokens": 108,
+   "retrieve_ms": 17450.827667023987,
+   "retrieve_cost": 0.00018297774193548388,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 171,
+   "question": "What map does Tim show to his friend John?",
+   "gold": "a map of Middle-earth from LOTR",
+   "category": 4,
+   "evidence": [
+    "D27:33"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Map of Middle-earth from LOTR.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00026689470967741937,
+   "retrieved_tokens": 103,
+   "retrieve_ms": 17528.75287499046,
+   "retrieve_cost": 0.00017329470967741937,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 172,
+   "question": "Where will Tim be going for a semester abroad?",
+   "gold": "Ireland",
+   "category": 4,
+   "evidence": [
+    "D28:1"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Ireland",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027947767741935486,
+   "retrieved_tokens": 133,
+   "retrieve_ms": 17692.11925001582,
+   "retrieve_cost": 0.00018557767741935488,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 173,
+   "question": "Which city in Ireland will Tim be staying in during his semester abroad?",
+   "gold": "Galway",
+   "category": 4,
+   "evidence": [
+    "D28:3"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Galway",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00027596864516129036,
+   "retrieved_tokens": 114,
+   "retrieve_ms": 17589.42183299223,
+   "retrieve_cost": 0.00018311864516129035,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 174,
+   "question": "What charity event did John organize recently in 2024?",
+   "gold": "benefit basketball game",
+   "category": 4,
+   "evidence": [
+    "D28:10"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Benefit basketball game.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.00028184458064516135,
+   "retrieved_tokens": 131,
+   "retrieve_ms": 17737.496082962025,
+   "retrieve_cost": 0.00018584458064516132,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 175,
+   "question": "What achievement did John share with Tim in January 2024?",
+   "gold": "endorsement with a popular beverage company",
+   "category": 4,
+   "evidence": [
+    "D29:4"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No achievement shared in January 2024.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027822019354838715,
+   "retrieved_tokens": 113,
+   "retrieve_ms": 17797.572000010405,
+   "retrieve_cost": 0.00018162019354838713,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 176,
+   "question": "What was Johns's reaction to sealing the deal with the beverage company?",
+   "gold": "crazy feeling, sense of accomplishment",
+   "category": 4,
+   "evidence": [
+    "D29:6"
+   ],
+   "last_evidence_session": 29,
+   "answer": "Incredible and a dream come true.",
+   "memories": 3,
+   "label": "CORRECT",
+   "query_cost": 0.0002768357419354839,
+   "retrieved_tokens": 118,
+   "retrieve_ms": 17994.583292049356,
+   "retrieve_cost": 0.0001797857419354839,
+   "checkpoint": 29,
+   "store_size": 680
+  },
+  {
+   "idx": 177,
+   "question": "Which city did John recommend to Tim in January 2024?",
+   "gold": "Barcelona",
+   "category": 4,
+   "evidence": [
+    "D29:12"
+   ],
+   "last_evidence_session": 29,
+   "answer": "No city was recommended.",
+   "memories": 3,
+   "label": "WRONG",
+   "query_cost": 0.00027186387096774195,
+   "retrieved_tokens": 89,
+   "retrieve_ms": 17897.70354196662,
+   "retrieve_cost": 0.00018126387096774197,
+   "checkpoint": 29,
+   "store_size": 680
+  }
+ ],
+ "options": {
+  "top_k": 3,
+  "no_dates": false,
+  "no_answer": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 10943.219791981392,
+ "retrieve_cost_per_query": 0.0001839146966292135,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {}
+}

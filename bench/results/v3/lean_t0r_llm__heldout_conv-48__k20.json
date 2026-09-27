@@ -1,0 +1,3469 @@
+{
+ "arm": "lean_t0r_llm",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "llm",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "heldout:conv-48",
+  "sessions": [
+   1,
+   30
+  ],
+  "messages": 681,
+  "questions": 191
+ },
+ "accuracy": 0.8219895287958116,
+ "accuracy_by_category": {
+  "1": 0.7619047619047619,
+  "2": 0.8809523809523809,
+  "3": 0.6,
+  "4": 0.8305084745762712
+ },
+ "stored": 681,
+ "active": 681,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 406.26178010471205,
+ "retrieved_tokens_median": 403,
+ "memories_mean": 10.696335078534032,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.0,
+  "claude": 0.0,
+  "openai": 0.053997150000000015
+ },
+ "cache": {
+  "hits": 613,
+  "misses": 342
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "What kind of project was Jolene working on in the beginning of January 2023?",
+   "gold": "electricity engineering project",
+   "category": 2,
+   "evidence": [
+    "D1:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Electrical engineering project.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0004079750322580645,
+   "retrieved_tokens": 560,
+   "retrieve_ms": 11694.385790964589,
+   "retrieve_cost": 0.0002456750322580645
+  },
+  {
+   "idx": 1,
+   "question": "Which of Deborah`s family and friends have passed away?",
+   "gold": "mother, father, her friend Karlie",
+   "category": 1,
+   "evidence": [
+    "D1:5",
+    "D2:1",
+    "D6:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah's dad and a friend.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003500982580645162,
+   "retrieved_tokens": 448,
+   "retrieve_ms": 11555.425666971132,
+   "retrieve_cost": 0.00020429825806451616
+  },
+  {
+   "idx": 2,
+   "question": "When did Deborah`s mother pass away?",
+   "gold": "a few years before 2023",
+   "category": 2,
+   "evidence": [
+    "D1:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A few years ago.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035142154838709673,
+   "retrieved_tokens": 401,
+   "retrieve_ms": 11627.731624990702,
+   "retrieve_cost": 0.00021537154838709675
+  },
+  {
+   "idx": 3,
+   "question": "When did Jolene`s mother pass away?",
+   "gold": "in 2022",
+   "category": 2,
+   "evidence": [
+    "D1:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "In 2022.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0002877594193548387,
+   "retrieved_tokens": 348,
+   "retrieve_ms": 14573.849291016813,
+   "retrieve_cost": 0.0001593594193548387
+  },
+  {
+   "idx": 4,
+   "question": "When did Jolene's mom gift her a pendant?",
+   "gold": "in 2010",
+   "category": 2,
+   "evidence": [
+    "D1:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "In 2010.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00028545967741935483,
+   "retrieved_tokens": 269,
+   "retrieve_ms": 11483.576208003797,
+   "retrieve_cost": 0.00016830967741935483
+  },
+  {
+   "idx": 5,
+   "question": "In what country did Jolene's mother buy her the pendant?",
+   "gold": "In France",
+   "category": 3,
+   "evidence": [
+    "D1:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "France",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00027551496774193545,
+   "retrieved_tokens": 245,
+   "retrieve_ms": 9378.397207998205,
+   "retrieve_cost": 0.00016376496774193547
+  },
+  {
+   "idx": 6,
+   "question": "What symbolic gifts do Deborah and Jolene have from their mothers?",
+   "gold": "pendants",
+   "category": 1,
+   "evidence": [
+    "D1:8",
+    "D1:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah has a pendant; Jolene has a pendant.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003837288387096774,
+   "retrieved_tokens": 435,
+   "retrieve_ms": 9451.817916007712,
+   "retrieve_cost": 0.00023687883870967744
+  },
+  {
+   "idx": 7,
+   "question": "Which country were Jolene and her mother visiting in 2010?",
+   "gold": "France",
+   "category": 2,
+   "evidence": [
+    "D1:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "France",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00031044096774193546,
+   "retrieved_tokens": 359,
+   "retrieve_ms": 13839.27145798225,
+   "retrieve_cost": 0.0001812909677419355
+  },
+  {
+   "idx": 8,
+   "question": "What helped Deborah find peace when grieving deaths of her loved ones?",
+   "gold": "yoga, old photos, the roses and dahlias in a flower garden, nature",
+   "category": 1,
+   "evidence": [
+    "D1:15",
+    "D2:3",
+    "D6:4",
+    "D15:29"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Art and nature.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.0004366954838709678,
+   "retrieved_tokens": 660,
+   "retrieve_ms": 11658.823834033683,
+   "retrieve_cost": 0.00026089548387096774
+  },
+  {
+   "idx": 9,
+   "question": "When did Deborah's father pass away?",
+   "gold": "January 25, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "January 25, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032618999999999997,
+   "retrieved_tokens": 362,
+   "retrieve_ms": 9383.722374972422,
+   "retrieve_cost": 0.00019418999999999998
+  },
+  {
+   "idx": 10,
+   "question": "When was Deborah's parents' wedding?",
+   "gold": "in 1993",
+   "category": 2,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "1993",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002880015483870967,
+   "retrieved_tokens": 310,
+   "retrieve_ms": 9292.372084048111,
+   "retrieve_cost": 0.00016740154838709674
+  },
+  {
+   "idx": 11,
+   "question": "Is Deborah married?",
+   "gold": "yes",
+   "category": 3,
+   "evidence": [
+    "D2:5",
+    "D19:11",
+    "D23:4",
+    "D28:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, Deborah is married.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0002454210967741936,
+   "retrieved_tokens": 215,
+   "retrieve_ms": 9244.054624985438,
+   "retrieve_cost": 0.00013787109677419358
+  },
+  {
+   "idx": 12,
+   "question": "When did Deborah receive an appreciation letter from her community?",
+   "gold": "January 26, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "2023-01-26",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000350508,
+   "retrieved_tokens": 403,
+   "retrieve_ms": 9109.847084037028,
+   "retrieve_cost": 0.000212658
+  },
+  {
+   "idx": 13,
+   "question": "What places give Deborah peace?",
+   "gold": "sitting in a spot by the window in her Mom's house, sitting by the beach, Bali, forest trail in a nearby park",
+   "category": 1,
+   "evidence": [
+    "D2:13",
+    "D4:34",
+    "D6:10",
+    "D19:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Park near her house, mom's old house.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00033213038709677416,
+   "retrieved_tokens": 414,
+   "retrieve_ms": 9182.482709002215,
+   "retrieve_cost": 0.00019173038709677419
+  },
+  {
+   "idx": 14,
+   "question": "What were Deborah's mother's hobbies?",
+   "gold": "reading, traveling, art, cooking",
+   "category": 1,
+   "evidence": [
+    "D2:17",
+    "D2:19",
+    "D12:3",
+    "D29:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Reading, cooking, and enjoying flowers.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039985741935483866,
+   "retrieved_tokens": 480,
+   "retrieve_ms": 9130.006166989915,
+   "retrieve_cost": 0.00025045741935483866
+  },
+  {
+   "idx": 15,
+   "question": "What pets does Jolene have?",
+   "gold": "snakes",
+   "category": 4,
+   "evidence": [
+    "D2:20",
+    "D2:22",
+    "D2:24"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Jolene has two snakes: Susie and Seraphim.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003344938064516129,
+   "retrieved_tokens": 443,
+   "retrieve_ms": 8984.919457987417,
+   "retrieve_cost": 0.0001870438064516129
+  },
+  {
+   "idx": 16,
+   "question": "What are the names of Jolene's snakes?",
+   "gold": "Susie, Seraphim",
+   "category": 4,
+   "evidence": [
+    "D2:20",
+    "D2:22"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Susie and Seraphim.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003119152258064516,
+   "retrieved_tokens": 383,
+   "retrieve_ms": 4727.822625020053,
+   "retrieve_cost": 0.00017676522580645161
+  },
+  {
+   "idx": 17,
+   "question": "When did Jolene buy her pet Seraphim?",
+   "gold": "in 2022",
+   "category": 2,
+   "evidence": [
+    "D2:24"
+   ],
+   "last_evidence_session": 30,
+   "answer": "In 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031653309677419356,
+   "retrieved_tokens": 342,
+   "retrieve_ms": 7665.831167018041,
+   "retrieve_cost": 0.00018843309677419356
+  },
+  {
+   "idx": 18,
+   "question": "In what country did Jolene buy snake Seraphim?",
+   "gold": "In France",
+   "category": 3,
+   "evidence": [
+    "D2:24"
+   ],
+   "last_evidence_session": 30,
+   "answer": "In Paris.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00030486522580645164,
+   "retrieved_tokens": 361,
+   "retrieve_ms": 7294.517999980599,
+   "retrieve_cost": 0.0001748152258064516
+  },
+  {
+   "idx": 19,
+   "question": "How many times has Jolene been to France?",
+   "gold": "two times",
+   "category": 1,
+   "evidence": [
+    "D2:24",
+    "D1:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Once, a year ago.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0002569846451612903,
+   "retrieved_tokens": 257,
+   "retrieve_ms": 8898.300000000745,
+   "retrieve_cost": 0.00014133464516129032
+  },
+  {
+   "idx": 20,
+   "question": "Which games have Jolene and her partner played together?",
+   "gold": "Detroit, Walking Dead, Battlefield 1, It Takes Two, Overcooked 2",
+   "category": 1,
+   "evidence": [
+    "D2:26",
+    "D2:30",
+    "D20:1",
+    "D15:10",
+    "D19:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "\"It Takes Two,\" \"Overcooked 2,\" \"Detroit,\" \"Battlefield 1.\"",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036114309677419355,
+   "retrieved_tokens": 420,
+   "retrieve_ms": 8992.353000037838,
+   "retrieve_cost": 0.00021234309677419354
+  },
+  {
+   "idx": 21,
+   "question": "When do Jolene and her partner plan to complete the game \"Walking Dead\"?",
+   "gold": "Saturday after 27 January, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:30"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Next Saturday, February 4, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003307116774193548,
+   "retrieved_tokens": 366,
+   "retrieve_ms": 6750.008333008736,
+   "retrieve_cost": 0.00019391167741935483
+  },
+  {
+   "idx": 22,
+   "question": "When did Deborah meet Anna?",
+   "gold": "31 January, 2023",
+   "category": 2,
+   "evidence": [
+    "D3:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "January 31, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00030926670967741936,
+   "retrieved_tokens": 344,
+   "retrieve_ms": 7190.054125036113,
+   "retrieve_cost": 0.00018056670967741935
+  },
+  {
+   "idx": 23,
+   "question": "Why did Jolene sometimes put off doing yoga?",
+   "gold": "She's more interested in playing video games",
+   "category": 3,
+   "evidence": [
+    "D3:11",
+    "D2:30"
+   ],
+   "last_evidence_session": 30,
+   "answer": "She got caught up in studies.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00036507832258064516,
+   "retrieved_tokens": 479,
+   "retrieve_ms": 11384.679250011686,
+   "retrieve_cost": 0.00021552832258064515
+  },
+  {
+   "idx": 24,
+   "question": "What new yoga poses did Deborah try?",
+   "gold": "Warrior II, Dancer Pose (Natarajasana), Tree pose",
+   "category": 1,
+   "evidence": [
+    "D4:14",
+    "D14:3",
+    "D14:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Dancer Pose and Tree Pose.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034954470967741934,
+   "retrieved_tokens": 334,
+   "retrieve_ms": 6433.938375033904,
+   "retrieve_cost": 0.00022234470967741934
+  },
+  {
+   "idx": 25,
+   "question": "What are Jolene's favorite books?",
+   "gold": "Sapiens, Avalanche by Neal Stephenson",
+   "category": 4,
+   "evidence": [
+    "D4:21",
+    "D4:23"
+   ],
+   "last_evidence_session": 30,
+   "answer": "\"Avalanche\" by Neal Stephenson.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000277066064516129,
+   "retrieved_tokens": 290,
+   "retrieve_ms": 8585.149082995486,
+   "retrieve_cost": 0.000155266064516129
+  },
+  {
+   "idx": 26,
+   "question": "Which book did Jolene read in January 2023?",
+   "gold": "Avalanche by Neal Stephenson",
+   "category": 2,
+   "evidence": [
+    "D4:23"
+   ],
+   "last_evidence_session": 30,
+   "answer": "\"Avalanche\" by Neal Stephenson.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032558729032258066,
+   "retrieved_tokens": 356,
+   "retrieve_ms": 8693.129374994896,
+   "retrieve_cost": 0.00019268729032258063
+  },
+  {
+   "idx": 27,
+   "question": "When was Jolene in Bogota?",
+   "gold": "in summer 2022",
+   "category": 2,
+   "evidence": [
+    "D4:33"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Summer 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002592834193548387,
+   "retrieved_tokens": 259,
+   "retrieve_ms": 6032.688124978449,
+   "retrieve_cost": 0.0001445334193548387
+  },
+  {
+   "idx": 28,
+   "question": "In what country was Jolene during summer 2022?",
+   "gold": "Colombia",
+   "category": 3,
+   "evidence": [
+    "D4:33"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Colombia",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0002709905806451613,
+   "retrieved_tokens": 236,
+   "retrieve_ms": 7718.135542003438,
+   "retrieve_cost": 0.0001602905806451613
+  },
+  {
+   "idx": 29,
+   "question": "When did Jolene have a mini-retreat to reflect on her career?",
+   "gold": "Wednesday before 9 February, 2023",
+   "category": 2,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "February 1, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003962343870967742,
+   "retrieved_tokens": 493,
+   "retrieve_ms": 8587.413750006817,
+   "retrieve_cost": 0.00024248438709677418
+  },
+  {
+   "idx": 30,
+   "question": "When did Jolene have a dinner and drinks with her friends?",
+   "gold": "21 February, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "2023-02-21",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003004085806451613,
+   "retrieved_tokens": 288,
+   "retrieve_ms": 5805.300915963016,
+   "retrieve_cost": 0.0001792085806451613
+  },
+  {
+   "idx": 31,
+   "question": "When was the last photo of Deborah and Karlie taken?",
+   "gold": "in summer 2022",
+   "category": 2,
+   "evidence": [
+    "D6:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Last summer (2022).",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033334432258064515,
+   "retrieved_tokens": 327,
+   "retrieve_ms": 10890.152167004999,
+   "retrieve_cost": 0.00020659432258064516
+  },
+  {
+   "idx": 32,
+   "question": "When was Deborah in Bali?",
+   "gold": "in 2022",
+   "category": 2,
+   "evidence": [
+    "D6:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "2022",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000275992064516129,
+   "retrieved_tokens": 239,
+   "retrieve_ms": 7447.740666975733,
+   "retrieve_cost": 0.000166642064516129
+  },
+  {
+   "idx": 33,
+   "question": "How long have Jolene and her partner been together?",
+   "gold": "for three years",
+   "category": 4,
+   "evidence": [
+    "D7:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Three years.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00030663309677419353,
+   "retrieved_tokens": 303,
+   "retrieve_ms": 8190.201374993194,
+   "retrieve_cost": 0.00018558309677419352
+  },
+  {
+   "idx": 34,
+   "question": "Which year did Jolene and her partner start dating?",
+   "gold": "2020",
+   "category": 2,
+   "evidence": [
+    "D7:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "2020",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00029443703225806453,
+   "retrieved_tokens": 246,
+   "retrieve_ms": 5400.387082947418,
+   "retrieve_cost": 0.00018253703225806452
+  },
+  {
+   "idx": 35,
+   "question": "When did Deborah go for her first morning jog in a nearby park?",
+   "gold": "24 February, 2023",
+   "category": 2,
+   "evidence": [
+    "D7:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "February 24, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003686651612903226,
+   "retrieved_tokens": 398,
+   "retrieve_ms": 6548.601416987367,
+   "retrieve_cost": 0.00023006516129032257
+  },
+  {
+   "idx": 36,
+   "question": "How old is Jolene?",
+   "gold": "likely no more than 30; since she's in school",
+   "category": 3,
+   "evidence": [
+    "D8:2",
+    "D13:5",
+    "D21:6",
+    "D21:8",
+    "D22:6",
+    "D22:14",
+    "D24:2",
+    "D24:14",
+    "D25:5",
+    "D26:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Not enough information available.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00024010335483870966,
+   "retrieved_tokens": 231,
+   "retrieve_ms": 6286.338958016131,
+   "retrieve_cost": 0.00013015335483870967
+  },
+  {
+   "idx": 37,
+   "question": "When did Jolene take Seraphim to the park?",
+   "gold": "Sunday before 2 March, 2023",
+   "category": 2,
+   "evidence": [
+    "D8:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "February 26, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00029521103225806447,
+   "retrieved_tokens": 316,
+   "retrieve_ms": 6008.454624970909,
+   "retrieve_cost": 0.0001689110322580645
+  },
+  {
+   "idx": 38,
+   "question": "When did Deborah start the yoga class in the neighborhood?",
+   "gold": "Friday before 13 March, 2023",
+   "category": 2,
+   "evidence": [
+    "D9:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "March 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000365226,
+   "retrieved_tokens": 387,
+   "retrieve_ms": 6140.739833994303,
+   "retrieve_cost": 0.000230976
+  },
+  {
+   "idx": 39,
+   "question": "What time management techniques do Deborah and Jolene use?",
+   "gold": "the Pomodoro Technique - 25 minutes work and 5-minute break, scheduler or to-do list, The Eisenhower Matrix, bullet journal",
+   "category": 1,
+   "evidence": [
+    "D10:4",
+    "D10:5",
+    "D10:6",
+    "D10:13",
+    "D18:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Pomodoro Technique, bullet journal.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000379668,
+   "retrieved_tokens": 423,
+   "retrieve_ms": 4202.4118329863995,
+   "retrieve_cost": 0.000238218
+  },
+  {
+   "idx": 40,
+   "question": "Does Deborah live close to the beach or the mountains?",
+   "gold": "beach",
+   "category": 3,
+   "evidence": [
+    "D10:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Close to the beach.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000365896064516129,
+   "retrieved_tokens": 423,
+   "retrieve_ms": 8640.156042005401,
+   "retrieve_cost": 0.000225646064516129
+  },
+  {
+   "idx": 41,
+   "question": "What ways do Deborah and Jolene use to enhance their yoga practice?",
+   "gold": "candles, music, essential oils",
+   "category": 1,
+   "evidence": [
+    "D11:4",
+    "D11:7",
+    "D28:16",
+    "D28:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Candles, oils, meditation, and music.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00043357664516129036,
+   "retrieved_tokens": 612,
+   "retrieve_ms": 6814.6764999837615,
+   "retrieve_cost": 0.00026107664516129034
+  },
+  {
+   "idx": 42,
+   "question": "What music pieces does Deborah listen to during her yoga practice?",
+   "gold": "Savana, Sleep",
+   "category": 4,
+   "evidence": [
+    "D11:8",
+    "D11:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "\"Savana\" and the album \"Sleep.\"",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037868535483870965,
+   "retrieved_tokens": 484,
+   "retrieve_ms": 4932.572334015276,
+   "retrieve_cost": 0.0002265853548387097
+  },
+  {
+   "idx": 43,
+   "question": "When did Deborah go for a bicycle ride with Anna?",
+   "gold": "first week of April, 2023",
+   "category": 2,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah did not go for a bicycle ride with Anna.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00035232793548387097,
+   "retrieved_tokens": 463,
+   "retrieve_ms": 4570.508458011318,
+   "retrieve_cost": 0.00020187793548387094
+  },
+  {
+   "idx": 44,
+   "question": "When did Deborah go to an art show with Anna?",
+   "gold": "on 9 April, 2023",
+   "category": 2,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah did not go to an art show with Anna.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00036741096774193545,
+   "retrieved_tokens": 415,
+   "retrieve_ms": 9688.118457968812,
+   "retrieve_cost": 0.0002241609677419355
+  },
+  {
+   "idx": 45,
+   "question": "When did Jolene finish her robotics project?",
+   "gold": "May 2023",
+   "category": 2,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "May 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00040156974193548387,
+   "retrieved_tokens": 499,
+   "retrieve_ms": 7954.666082980111,
+   "retrieve_cost": 0.00025111974193548387
+  },
+  {
+   "idx": 46,
+   "question": "How long did Jolene work on the robotics project given to her by her Professor?",
+   "gold": "four months",
+   "category": 2,
+   "evidence": [
+    "D3:1",
+    "D12:10",
+    "D13:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "From February 1, 2023, to March 28, 2023.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0004396186451612903,
+   "retrieved_tokens": 608,
+   "retrieve_ms": 6840.389083023183,
+   "retrieve_cost": 0.0002620186451612903
+  },
+  {
+   "idx": 47,
+   "question": "When did Jolene do yoga at Talkeetna?",
+   "gold": "on 5 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D13:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "June 5, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037882761290322577,
+   "retrieved_tokens": 390,
+   "retrieve_ms": 6783.71258295374,
+   "retrieve_cost": 0.0002417276129032258
+  },
+  {
+   "idx": 48,
+   "question": "Which US state did Jolene visit during her internship?",
+   "gold": "Alaska",
+   "category": 3,
+   "evidence": [
+    "D13:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not specify a US state.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00035722316129032256,
+   "retrieved_tokens": 341,
+   "retrieve_ms": 6982.105250004679,
+   "retrieve_cost": 0.00022687316129032256
+  },
+  {
+   "idx": 49,
+   "question": "How long has Jolene been doing yoga and meditation?",
+   "gold": "about 3 years",
+   "category": 4,
+   "evidence": [
+    "D13:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Three years.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003671773548387097,
+   "retrieved_tokens": 406,
+   "retrieve_ms": 4655.484207964037,
+   "retrieve_cost": 0.00023067735483870967
+  },
+  {
+   "idx": 50,
+   "question": "Which year did Jolene start practicing yoga?",
+   "gold": "2020",
+   "category": 2,
+   "evidence": [
+    "D13:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "2020",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003638678709677419,
+   "retrieved_tokens": 387,
+   "retrieve_ms": 5778.358332987409,
+   "retrieve_cost": 0.00023141787096774192
+  },
+  {
+   "idx": 51,
+   "question": "When did Jolene buy a new aquarium for Seraphim?",
+   "gold": "24 June, 2023",
+   "category": 2,
+   "evidence": [
+    "D14:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "June 24, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000331978064516129,
+   "retrieved_tokens": 335,
+   "retrieve_ms": 4208.913290989585,
+   "retrieve_cost": 0.00020252806451612903
+  },
+  {
+   "idx": 52,
+   "question": "When did Jolene lose a lot of progress in her work?",
+   "gold": "last week of July 2023",
+   "category": 2,
+   "evidence": [
+    "D16:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "July 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033595935483870967,
+   "retrieved_tokens": 320,
+   "retrieve_ms": 8410.404207999818,
+   "retrieve_cost": 0.00021115935483870965
+  },
+  {
+   "idx": 53,
+   "question": "When did Jolene adopt her snake Susie?",
+   "gold": "in 2021",
+   "category": 2,
+   "evidence": [
+    "D16:6",
+    "D28:26"
+   ],
+   "last_evidence_session": 30,
+   "answer": "August 2021",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032614258064516126,
+   "retrieved_tokens": 401,
+   "retrieve_ms": 6667.699999990873,
+   "retrieve_cost": 0.0001900925806451613
+  },
+  {
+   "idx": 54,
+   "question": "Which pet did Jolene adopt first - Susie or Seraphim?",
+   "gold": "Susie",
+   "category": 2,
+   "evidence": [
+    "D2:24",
+    "D2:28",
+    "D16:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Jolene adopted Susie first.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003299684516129032,
+   "retrieved_tokens": 337,
+   "retrieve_ms": 7475.867500004824,
+   "retrieve_cost": 0.0001996184516129032
+  },
+  {
+   "idx": 55,
+   "question": "Which pet did Jolene adopt more recently - Susie or Seraphim?",
+   "gold": "Seraphim",
+   "category": 2,
+   "evidence": [
+    "D2:24",
+    "D2:28",
+    "D16:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Seraphim",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003297954193548387,
+   "retrieved_tokens": 355,
+   "retrieve_ms": 6470.568457967602,
+   "retrieve_cost": 0.0001994454193548387
+  },
+  {
+   "idx": 56,
+   "question": "When did Deborah lead a meditation session during the sunset?",
+   "gold": "week before 16 August, 2023",
+   "category": 2,
+   "evidence": [
+    "D18:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Last week, on August 9, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003565364516129032,
+   "retrieved_tokens": 399,
+   "retrieve_ms": 4195.765124983154,
+   "retrieve_cost": 0.0002156864516129032
+  },
+  {
+   "idx": 57,
+   "question": "When did Jolene gift her partner a new console?",
+   "gold": "17 August, 2023",
+   "category": 2,
+   "evidence": [
+    "D19:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "August 17, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033539690322580644,
+   "retrieved_tokens": 383,
+   "retrieve_ms": 6403.93116697669,
+   "retrieve_cost": 0.00019934690322580644
+  },
+  {
+   "idx": 58,
+   "question": "What games does Jolene recommend for Deborah?",
+   "gold": "Zelda BOTW for Switch , Animal Crossing: New Horizons, Overcooked 2",
+   "category": 4,
+   "evidence": [
+    "D19:8",
+    "D19:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Zelda BOTW, Animal Crossing.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003600596129032258,
+   "retrieved_tokens": 397,
+   "retrieve_ms": 4670.661915966775,
+   "retrieve_cost": 0.0002225096129032258
+  },
+  {
+   "idx": 59,
+   "question": "What do Deborah and her husband do together?",
+   "gold": "play detective games together, spend time outdoors and explore nature",
+   "category": 4,
+   "evidence": [
+    "D19:13",
+    "D19:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Play detective games together.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003395549032258065,
+   "retrieved_tokens": 422,
+   "retrieve_ms": 3800.8781670359895,
+   "retrieve_cost": 0.00020005490322580645
+  },
+  {
+   "idx": 60,
+   "question": "When did Deborah go to a yoga retreat near her mom's place?",
+   "gold": "a week before 24 August,2023",
+   "category": 2,
+   "evidence": [
+    "D21:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "August 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003766707096774193,
+   "retrieved_tokens": 427,
+   "retrieve_ms": 6697.547666030005,
+   "retrieve_cost": 0.00023552070967741934
+  },
+  {
+   "idx": 61,
+   "question": "What projects is Jolene planning for next year?",
+   "gold": "developing renewable energy finding ways to supply clean water to those with limited access",
+   "category": 4,
+   "evidence": [
+    "D22:10",
+    "D22:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Renewable energy and clean water supply.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003895490322580645,
+   "retrieved_tokens": 513,
+   "retrieve_ms": 6988.278500037268,
+   "retrieve_cost": 0.0002342990322580645
+  },
+  {
+   "idx": 62,
+   "question": "Where did Deborah get her cats?",
+   "gold": "Luna is from the shelter and Max is her mother's cat",
+   "category": 4,
+   "evidence": [
+    "D22:23",
+    "D22:25"
+   ],
+   "last_evidence_session": 30,
+   "answer": "From a shelter.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00029270980645161295,
+   "retrieved_tokens": 284,
+   "retrieve_ms": 4643.642209004611,
+   "retrieve_cost": 0.00017510980645161293
+  },
+  {
+   "idx": 63,
+   "question": "How old are Deborah's cats?",
+   "gold": "Max is 8 years old and Luna is 5 years old",
+   "category": 4,
+   "evidence": [
+    "D22:27",
+    "D22:29"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Max is 8 years old; another cat is 5.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00028674870967741934,
+   "retrieved_tokens": 293,
+   "retrieve_ms": 5050.501165969763,
+   "retrieve_cost": 0.00016239870967741933
+  },
+  {
+   "idx": 64,
+   "question": "Does Deborah like cats?",
+   "gold": "Yes",
+   "category": 4,
+   "evidence": [
+    "D22:27",
+    "D15:25"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, she loves cats.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002938867741935484,
+   "retrieved_tokens": 303,
+   "retrieve_ms": 6094.794416974764,
+   "retrieve_cost": 0.00017283677419354838
+  },
+  {
+   "idx": 65,
+   "question": "Which country was Jolene located in during the last week of August 2023?",
+   "gold": "Brazil",
+   "category": 2,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Phuket, Thailand.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00028288122580645157,
+   "retrieved_tokens": 265,
+   "retrieve_ms": 7932.956665987149,
+   "retrieve_cost": 0.0001645312258064516
+  },
+  {
+   "idx": 66,
+   "question": "When did Jolene and her partner return home from Rio de Janeiro?",
+   "gold": "29 August, 2023",
+   "category": 2,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "August 29, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031409109677419354,
+   "retrieved_tokens": 325,
+   "retrieve_ms": 5123.919500038028,
+   "retrieve_cost": 0.00018584109677419357
+  },
+  {
+   "idx": 67,
+   "question": "What was Jolene doing with her partner in Rio de Janeiro?",
+   "gold": "they went on excursions, checked out some cool yoga classes, visited a lot of delicious cafes, visited an old temple",
+   "category": 4,
+   "evidence": [
+    "D23:15",
+    "D23:1",
+    "D23:3",
+    "D23:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Checked out yoga classes.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003118397419354838,
+   "retrieved_tokens": 331,
+   "retrieve_ms": 7150.802374992054,
+   "retrieve_cost": 0.00018478974193548384
+  },
+  {
+   "idx": 68,
+   "question": "When did Deborah visit Brazil?",
+   "gold": "2020",
+   "category": 2,
+   "evidence": [
+    "D23:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "2020",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00028877864516129034,
+   "retrieved_tokens": 298,
+   "retrieve_ms": 4494.37291698996,
+   "retrieve_cost": 0.0001705786451612903
+  },
+  {
+   "idx": 69,
+   "question": "Have Deborah and Jolene been to Rio de Janeiro?",
+   "gold": "yes",
+   "category": 4,
+   "evidence": [
+    "D23:1",
+    "D23:3",
+    "D23:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, both have been.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036908806451612904,
+   "retrieved_tokens": 422,
+   "retrieve_ms": 7003.57066601282,
+   "retrieve_cost": 0.00022838806451612903
+  },
+  {
+   "idx": 70,
+   "question": "Is the friend who wrote Deborah the motivational quote no longer alive?",
+   "gold": "likely yes",
+   "category": 3,
+   "evidence": [
+    "D23:22"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, the friend has passed away.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00037626909677419357,
+   "retrieved_tokens": 460,
+   "retrieve_ms": 5980.743707972579,
+   "retrieve_cost": 0.00022806909677419355
+  },
+  {
+   "idx": 71,
+   "question": "When did Deborah go to a community meetup?",
+   "gold": "last week of August 2023",
+   "category": 2,
+   "evidence": [
+    "D24:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "August 30, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037759916129032257,
+   "retrieved_tokens": 411,
+   "retrieve_ms": 4691.635249997489,
+   "retrieve_cost": 0.00023794916129032256
+  },
+  {
+   "idx": 72,
+   "question": "When did Jolene's parents give her first console?",
+   "gold": "when she was 10",
+   "category": 4,
+   "evidence": [
+    "D24:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "When she was 10 years old.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00030910993548387093,
+   "retrieved_tokens": 341,
+   "retrieve_ms": 6314.2299999599345,
+   "retrieve_cost": 0.00017935993548387095
+  },
+  {
+   "idx": 73,
+   "question": "Did Jolene teach herself how to play the console?",
+   "gold": "yes",
+   "category": 1,
+   "evidence": [
+    "D2:28",
+    "D24:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, she taught herself.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00029148,
+   "retrieved_tokens": 272,
+   "retrieve_ms": 6333.774959028233,
+   "retrieve_cost": 0.00017328
+  },
+  {
+   "idx": 74,
+   "question": "What do Deborah and Jolene plan to try when they meet in a new cafe?",
+   "gold": "coffee and fresh pastries",
+   "category": 4,
+   "evidence": [
+    "D26:10",
+    "D26:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Fresh pastries.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035834864516129036,
+   "retrieved_tokens": 416,
+   "retrieve_ms": 7522.035084024537,
+   "retrieve_cost": 0.00021854864516129033
+  },
+  {
+   "idx": 75,
+   "question": "What card game is Deborah talking about?",
+   "gold": "Exploding Kittens",
+   "category": 3,
+   "evidence": [
+    "D27:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A card game about cats.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0002811296129032258,
+   "retrieved_tokens": 339,
+   "retrieve_ms": 5117.3071669763885,
+   "retrieve_cost": 0.0001537796129032258
+  },
+  {
+   "idx": 76,
+   "question": "When did Jolene and her partner try scuba diving lessons?",
+   "gold": "Friday before 17 September, 2023",
+   "category": 2,
+   "evidence": [
+    "D29:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "September 15, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003763910322580645,
+   "retrieved_tokens": 406,
+   "retrieve_ms": 3756.5773330279626,
+   "retrieve_cost": 0.0002365910322580645
+  },
+  {
+   "idx": 77,
+   "question": "Where did Jolene and her partner find a cool diving spot?",
+   "gold": "Phuket",
+   "category": 1,
+   "evidence": [
+    "D27:1",
+    "D29:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memory does not specify the location of the diving spot.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003723176129032258,
+   "retrieved_tokens": 480,
+   "retrieve_ms": 6045.317083015107,
+   "retrieve_cost": 0.00021871761290322578
+  },
+  {
+   "idx": 78,
+   "question": "Where did Jolene and her partner spend most of September 2023?",
+   "gold": "Phuket",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Phuket, at a meditation retreat.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033647670967741936,
+   "retrieved_tokens": 348,
+   "retrieve_ms": 4186.632665980142,
+   "retrieve_cost": 0.00020447670967741935
+  },
+  {
+   "idx": 79,
+   "question": "Has Deborah tried surfing?",
+   "gold": "yes",
+   "category": 1,
+   "evidence": [
+    "D28:11",
+    "D29:25"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, she has.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00029978419354838705,
+   "retrieved_tokens": 310,
+   "retrieve_ms": 6100.554333999753,
+   "retrieve_cost": 0.00017828419354838708
+  },
+  {
+   "idx": 80,
+   "question": "Has Jolene tried surfing?",
+   "gold": "no",
+   "category": 1,
+   "evidence": [
+    "D10:20",
+    "D29:26",
+    "D29:30"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No, she hasn't tried surfing.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00029972593548387096,
+   "retrieved_tokens": 330,
+   "retrieve_ms": 4259.136499953456,
+   "retrieve_cost": 0.00017372593548387096
+  },
+  {
+   "idx": 81,
+   "question": "When did the Deboran and Jolene agree to go surfing?",
+   "gold": "in October 2023",
+   "category": 2,
+   "evidence": [
+    "D29:34"
+   ],
+   "last_evidence_session": 30,
+   "answer": "They agreed on March 22, 2023.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0003680661290322581,
+   "retrieved_tokens": 477,
+   "retrieve_ms": 4742.213665973395,
+   "retrieve_cost": 0.00021551612903225806
+  },
+  {
+   "idx": 82,
+   "question": "Which locations does Deborah practice her yoga at?",
+   "gold": "at her mother's old home, park, yoga studio, beach",
+   "category": 1,
+   "evidence": [
+    "D2:11",
+    "D2:13",
+    "D3:6",
+    "D4:12",
+    "D6:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Neighborhood yoga class, park.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00038996109677419356,
+   "retrieved_tokens": 535,
+   "retrieve_ms": 9130.367665959056,
+   "retrieve_cost": 0.00023291109677419356
+  },
+  {
+   "idx": 83,
+   "question": "What kind of professional activities does Jolene participate in to gain more experience in her field?",
+   "gold": "present work at virtual conference, attend workshops  and intern at firms",
+   "category": 1,
+   "evidence": [
+    "D21:6",
+    "D13:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Internships and workshops.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00042509167741935477,
+   "retrieved_tokens": 521,
+   "retrieve_ms": 3560.3343329858035,
+   "retrieve_cost": 0.0002680416774193548
+  },
+  {
+   "idx": 84,
+   "question": "What kind of engineering projects has Jolene worked on?",
+   "gold": "electrical engineering, robotics, sustainable water purifier, productive and affordable aerial surveillance system",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D3:1",
+    "D4:5",
+    "D17:10",
+    "D17:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Sustainable water purifier, robotics project.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00046048664516129025,
+   "retrieved_tokens": 658,
+   "retrieve_ms": 4180.708040948957,
+   "retrieve_cost": 0.00028318664516129027
+  },
+  {
+   "idx": 85,
+   "question": "Which community activities have Deborah and Anna participated in?",
+   "gold": "yoga, running",
+   "category": 1,
+   "evidence": [
+    "D4:12",
+    "D4:16",
+    "D15:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Running group and cleanup project.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000388080193548387,
+   "retrieved_tokens": 483,
+   "retrieve_ms": 4045.529583992902,
+   "retrieve_cost": 0.00023853019354838707
+  },
+  {
+   "idx": 86,
+   "question": "What gifts has Deborah received?",
+   "gold": "an appreciate letter from her community, a flower bouqet from her friend, a motivational quote from a friend",
+   "category": 1,
+   "evidence": [
+    "D2:7",
+    "D2:9",
+    "D4:26",
+    "D23:20",
+    "D23:22"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A bouquet from a friend.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00028375277419354837,
+   "retrieved_tokens": 296,
+   "retrieve_ms": 11751.892625004984,
+   "retrieve_cost": 0.0001634527741935484
+  },
+  {
+   "idx": 87,
+   "question": "Which countries has Deborah traveled to?",
+   "gold": "Thailand, Brazil",
+   "category": 1,
+   "evidence": [
+    "D6:10",
+    "D23:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Bali, Brazil (Rio de Janeiro).",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003011192903225806,
+   "retrieved_tokens": 309,
+   "retrieve_ms": 7648.182083037682,
+   "retrieve_cost": 0.00017676929032258066
+  },
+  {
+   "idx": 88,
+   "question": "What activities does Deborah pursue besides practicing and teaching yoga?",
+   "gold": "biking, going to art shows, running, organizing workshops to practice mindfulness and self-care, surfing, gardening",
+   "category": 1,
+   "evidence": [
+    "D12:1",
+    "D15:1",
+    "D15:11",
+    "D28:11",
+    "D29:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Running and organizing workshops.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000397568129032258,
+   "retrieved_tokens": 513,
+   "retrieve_ms": 5278.997791989241,
+   "retrieve_cost": 0.00024381812903225805
+  },
+  {
+   "idx": 89,
+   "question": "What are the names of Jolene's snakes?",
+   "gold": "Susie, Seraphim",
+   "category": 4,
+   "evidence": [
+    "D2:20",
+    "D2:22"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Susie and Seraphim.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003119152258064516,
+   "retrieved_tokens": 383,
+   "retrieve_ms": 4819.3164999829605,
+   "retrieve_cost": 0.00017676522580645161
+  },
+  {
+   "idx": 90,
+   "question": "What are Jolene's favorite books?",
+   "gold": "Sapiens, Avalanche by Neal Stephenson",
+   "category": 4,
+   "evidence": [
+    "D4:21",
+    "D4:23"
+   ],
+   "last_evidence_session": 30,
+   "answer": "\"Avalanche\" by Neal Stephenson.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000277066064516129,
+   "retrieved_tokens": 290,
+   "retrieve_ms": 7914.786459004972,
+   "retrieve_cost": 0.000155266064516129
+  },
+  {
+   "idx": 91,
+   "question": "What music pieces does Deborah listen to during her yoga practice?",
+   "gold": "Savana, Sleep",
+   "category": 4,
+   "evidence": [
+    "D11:8",
+    "D11:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "\"Savana\" and the album \"Sleep.\"",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037868535483870965,
+   "retrieved_tokens": 484,
+   "retrieve_ms": 4934.978874982335,
+   "retrieve_cost": 0.0002265853548387097
+  },
+  {
+   "idx": 92,
+   "question": "What games does Jolene recommend for Deborah?",
+   "gold": "Zelda BOTW for Switch , Animal Crossing: New Horizons, Overcooked 2",
+   "category": 4,
+   "evidence": [
+    "D19:8",
+    "D19:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Zelda BOTW, Animal Crossing.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003600596129032258,
+   "retrieved_tokens": 397,
+   "retrieve_ms": 4677.951375022531,
+   "retrieve_cost": 0.0002225096129032258
+  },
+  {
+   "idx": 93,
+   "question": "What projects is Jolene planning for next year?",
+   "gold": "developing renewable energy finding ways to supply clean water to those with limited access",
+   "category": 4,
+   "evidence": [
+    "D22:10",
+    "D22:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Renewable energy and clean water supply.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003895490322580645,
+   "retrieved_tokens": 513,
+   "retrieve_ms": 7300.457250035834,
+   "retrieve_cost": 0.0002342990322580645
+  },
+  {
+   "idx": 94,
+   "question": "Where did Deborah get her cats?",
+   "gold": "Luna is from the shelter and Max is her mother's cat",
+   "category": 4,
+   "evidence": [
+    "D22:23",
+    "D22:25"
+   ],
+   "last_evidence_session": 30,
+   "answer": "From a shelter.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00029270980645161295,
+   "retrieved_tokens": 284,
+   "retrieve_ms": 4867.1911660349,
+   "retrieve_cost": 0.00017510980645161293
+  },
+  {
+   "idx": 95,
+   "question": "How old are Deborah's cats?",
+   "gold": "Max is 8 years old and Luna is 5 years old",
+   "category": 4,
+   "evidence": [
+    "D22:27",
+    "D22:29"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Max is 8 years old; another cat is 5.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00028674870967741934,
+   "retrieved_tokens": 293,
+   "retrieve_ms": 5010.957499966025,
+   "retrieve_cost": 0.00016239870967741933
+  },
+  {
+   "idx": 96,
+   "question": "What was Jolene doing with her partner in Rio de Janeiro?",
+   "gold": "they went on excursions, checked out some cool yoga classes, visited a lot of delicious cafes, visited an old temple",
+   "category": 4,
+   "evidence": [
+    "D23:15",
+    "D23:1",
+    "D23:3",
+    "D23:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Checked out yoga classes.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003118397419354838,
+   "retrieved_tokens": 331,
+   "retrieve_ms": 7148.511415987741,
+   "retrieve_cost": 0.00018478974193548384
+  },
+  {
+   "idx": 97,
+   "question": "Have Deborah and Jolene been to Rio de Janeiro?",
+   "gold": "yes",
+   "category": 4,
+   "evidence": [
+    "D23:1",
+    "D23:3",
+    "D23:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yes, both have been.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036908806451612904,
+   "retrieved_tokens": 422,
+   "retrieve_ms": 7107.530375011265,
+   "retrieve_cost": 0.00022838806451612903
+  },
+  {
+   "idx": 98,
+   "question": "When did Jolene's parents give her first console?",
+   "gold": "when she was 10",
+   "category": 4,
+   "evidence": [
+    "D24:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "When she was 10 years old.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00030910993548387093,
+   "retrieved_tokens": 341,
+   "retrieve_ms": 6365.164582966827,
+   "retrieve_cost": 0.00017935993548387095
+  },
+  {
+   "idx": 99,
+   "question": "What do Deborah and Jolene plan to try when they meet in a new cafe?",
+   "gold": "coffee and fresh pastries",
+   "category": 4,
+   "evidence": [
+    "D26:10",
+    "D26:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Fresh pastries.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035834864516129036,
+   "retrieved_tokens": 416,
+   "retrieve_ms": 7631.805499957409,
+   "retrieve_cost": 0.00021854864516129033
+  },
+  {
+   "idx": 100,
+   "question": "What project did Jolene finish last week before 23 January, 2023?",
+   "gold": "an electrical engineering project",
+   "category": 4,
+   "evidence": [
+    "D1:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "An electrical engineering project.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003879329032258064,
+   "retrieved_tokens": 503,
+   "retrieve_ms": 7691.314583003987,
+   "retrieve_cost": 0.0002338829032258064
+  },
+  {
+   "idx": 101,
+   "question": "When did Jolene buy her pet snake?",
+   "gold": "A year ago",
+   "category": 4,
+   "evidence": [
+    "D2:24"
+   ],
+   "last_evidence_session": 30,
+   "answer": "January 2022",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003260938064516129,
+   "retrieved_tokens": 431,
+   "retrieve_ms": 4512.002291041426,
+   "retrieve_cost": 0.00018584380645161292
+  },
+  {
+   "idx": 102,
+   "question": "What project was Jolene working on as of 1 February, 2023?",
+   "gold": "Robotics project",
+   "category": 4,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A huge robotics project.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003949381935483871,
+   "retrieved_tokens": 561,
+   "retrieve_ms": 5324.14704200346,
+   "retrieve_cost": 0.00023218819354838712
+  },
+  {
+   "idx": 103,
+   "question": "Where did Deborah meet her new neighbor Anna?",
+   "gold": "yoga in the park",
+   "category": 4,
+   "evidence": [
+    "D3:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "At yoga in the park.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036335012903225805,
+   "retrieved_tokens": 411,
+   "retrieve_ms": 5455.264708027244,
+   "retrieve_cost": 0.00022490012903225807
+  },
+  {
+   "idx": 104,
+   "question": "What activity did Jolene and her partner plan to do together instead of resuming yoga?",
+   "gold": "play the console",
+   "category": 4,
+   "evidence": [
+    "D3:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "They planned a camping trip.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.0004108277419354838,
+   "retrieved_tokens": 546,
+   "retrieve_ms": 7112.25937504787,
+   "retrieve_cost": 0.00024942774193548384
+  },
+  {
+   "idx": 105,
+   "question": "What milestone did Jolene achieve recently on 4 February, 2023?",
+   "gold": "Design and build a sustainable water purifier for a rural community",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A major accomplishment as an engineer.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003289455483870968,
+   "retrieved_tokens": 338,
+   "retrieve_ms": 3813.966875022743,
+   "retrieve_cost": 0.00019874554838709675
+  },
+  {
+   "idx": 106,
+   "question": "What is Jolene's favorite book which she mentioned on 4 February, 2023?",
+   "gold": "\"Sapiens\"",
+   "category": 4,
+   "evidence": [
+    "D4:21"
+   ],
+   "last_evidence_session": 30,
+   "answer": "\"Avalanche\" by Neal Stephenson.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0002893081935483871,
+   "retrieved_tokens": 293,
+   "retrieve_ms": 4269.8069590260275,
+   "retrieve_cost": 0.0001637581935483871
+  },
+  {
+   "idx": 107,
+   "question": "What does Deborah bring with her whenever she comes to reflect on her mom?",
+   "gold": "amulet",
+   "category": 4,
+   "evidence": [
+    "D4:36"
+   ],
+   "last_evidence_session": 30,
+   "answer": "An amulet.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003998655483870968,
+   "retrieved_tokens": 485,
+   "retrieve_ms": 7586.910750018433,
+   "retrieve_cost": 0.00024971554838709676
+  },
+  {
+   "idx": 108,
+   "question": "What new outlook did Jolene gain after her mini retreat on 9 February, 2023?",
+   "gold": "A confidence boost",
+   "category": 4,
+   "evidence": [
+    "D5:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Incorporating relaxation and self-care.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00042241838709677416,
+   "retrieved_tokens": 584,
+   "retrieve_ms": 5299.373832996935,
+   "retrieve_cost": 0.00025351838709677417
+  },
+  {
+   "idx": 109,
+   "question": "What cool stuff did Jolene accomplish at the retreat on 9 February, 2023?",
+   "gold": "Came up with neat solutions for her engineering project",
+   "category": 4,
+   "evidence": [
+    "D5:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Gained a new outlook on life.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0004159683870967742,
+   "retrieved_tokens": 535,
+   "retrieve_ms": 4385.309125005733,
+   "retrieve_cost": 0.0002547183870967742
+  },
+  {
+   "idx": 110,
+   "question": "What idea did Jolene have to help underprivileged kids learn about STEM subjects on 9 February, 2023?",
+   "gold": "A volunteer program where engineers teach STEM to underprivileged kids",
+   "category": 4,
+   "evidence": [
+    "D5:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A volunteer program with engineers.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00044535658064516123,
+   "retrieved_tokens": 643,
+   "retrieve_ms": 7207.42854202399,
+   "retrieve_cost": 0.00026730658064516127
+  },
+  {
+   "idx": 111,
+   "question": "How does Jolene plan to involve local engineers in her idea of teaching STEM to underprivileged kids?",
+   "gold": "As guest speakers for workshops",
+   "category": 4,
+   "evidence": [
+    "D5:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "By inviting them as guest speakers.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00044979329032258063,
+   "retrieved_tokens": 611,
+   "retrieve_ms": 8801.576209021732,
+   "retrieve_cost": 0.00027714329032258063
+  },
+  {
+   "idx": 112,
+   "question": "What gave Deborah peace in the garden she visited?",
+   "gold": "Roses and dahlias",
+   "category": 4,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The roses and dahlias.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003647512258064516,
+   "retrieved_tokens": 477,
+   "retrieve_ms": 9173.247750033624,
+   "retrieve_cost": 0.00021610122580645162
+  },
+  {
+   "idx": 113,
+   "question": "Why did Deborah spend time in the garden?",
+   "gold": "to find comfort after losing a friend",
+   "category": 4,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "To find comfort after losing a friend.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033298470967741935,
+   "retrieved_tokens": 352,
+   "retrieve_ms": 7314.140415983275,
+   "retrieve_cost": 0.00020218470967741934
+  },
+  {
+   "idx": 114,
+   "question": "How did Jolene and her partner initially meet?",
+   "gold": "In an engineering class in college",
+   "category": 4,
+   "evidence": [
+    "D7:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "In an engineering class.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00029864922580645156,
+   "retrieved_tokens": 246,
+   "retrieve_ms": 9387.232124980073,
+   "retrieve_cost": 0.0001852492258064516
+  },
+  {
+   "idx": 115,
+   "question": "What activity does Deborah incorporate into her daily routine after going for a morning jog in the park?",
+   "gold": "spending time with loved ones",
+   "category": 4,
+   "evidence": [
+    "D7:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Running.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003915410322580645,
+   "retrieved_tokens": 496,
+   "retrieve_ms": 9466.249042015988,
+   "retrieve_cost": 0.0002397410322580645
+  },
+  {
+   "idx": 116,
+   "question": "According to Jolene, what does exercise help her to feel?",
+   "gold": "connected to her body",
+   "category": 4,
+   "evidence": [
+    "D7:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Calmer and clearer.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0003721974193548387,
+   "retrieved_tokens": 464,
+   "retrieve_ms": 9219.906209036708,
+   "retrieve_cost": 0.00022519741935483873
+  },
+  {
+   "idx": 117,
+   "question": "What did Deb share a photo of, which brought a smile to Jolene's face?",
+   "gold": "a yellow coffee cup with a handwritten message",
+   "category": 4,
+   "evidence": [
+    "D8:22"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A bouquet.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003482959354838709,
+   "retrieved_tokens": 345,
+   "retrieve_ms": 5134.561667044181,
+   "retrieve_cost": 0.00021884593548387096
+  },
+  {
+   "idx": 118,
+   "question": "What is one of Jolene's favorite dishes?",
+   "gold": "lasagna",
+   "category": 4,
+   "evidence": [
+    "D8:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Lasagna",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000281341935483871,
+   "retrieved_tokens": 301,
+   "retrieve_ms": 3570.668874948751,
+   "retrieve_cost": 0.00016149193548387097
+  },
+  {
+   "idx": 119,
+   "question": "What picture did Jolene share related to feeling overwhelmed?",
+   "gold": "a photo of a desk with a notebook and a computer monitor",
+   "category": 4,
+   "evidence": [
+    "D8:16"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A pic of her newest spread.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003984952258064516,
+   "retrieved_tokens": 493,
+   "retrieve_ms": 4897.577208001167,
+   "retrieve_cost": 0.00024654522580645164
+  },
+  {
+   "idx": 120,
+   "question": "What did Jolene and Deb discuss as a helpful strategy for studying and time management?",
+   "gold": "breaking tasks into smaller pieces and setting goals, using planners or schedulers",
+   "category": 4,
+   "evidence": [
+    "D8:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Using a schedule and prioritizing tasks.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039892083870967743,
+   "retrieved_tokens": 503,
+   "retrieve_ms": 8973.362083022948,
+   "retrieve_cost": 0.0002430708387096774
+  },
+  {
+   "idx": 121,
+   "question": "What did Jolene ask Deb to help with on 13 March, 2023?",
+   "gold": "time management",
+   "category": 4,
+   "evidence": [
+    "D9:14"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Jolene asked how Deb has been.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003562378064516129,
+   "retrieved_tokens": 400,
+   "retrieve_ms": 6828.216916997917,
+   "retrieve_cost": 0.0002149378064516129
+  },
+  {
+   "idx": 122,
+   "question": "What method does Deb suggest Jolene to try for organizing tasks based on importance and urgency?",
+   "gold": "The Eisenhower Matrix",
+   "category": 4,
+   "evidence": [
+    "D10:13"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Eisenhower Matrix",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036948154838709675,
+   "retrieved_tokens": 369,
+   "retrieve_ms": 7153.607208048925,
+   "retrieve_cost": 0.00023583154838709676
+  },
+  {
+   "idx": 123,
+   "question": "What did Jolene and Anna discuss while watching the sunset by the sea?",
+   "gold": "They realized they inspire each other",
+   "category": 4,
+   "evidence": [
+    "D10:17"
+   ],
+   "last_evidence_session": 30,
+   "answer": "They inspired each other.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003511784516129032,
+   "retrieved_tokens": 350,
+   "retrieve_ms": 7250.041792052798,
+   "retrieve_cost": 0.00022067845161290322
+  },
+  {
+   "idx": 124,
+   "question": "How does Jolene plan to pursue her dream of learning to surf?",
+   "gold": "gathering information, watching videos, getting a beginners' guide",
+   "category": 4,
+   "evidence": [
+    "D10:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "By gathering information and finding lessons.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003591528387096774,
+   "retrieved_tokens": 378,
+   "retrieve_ms": 5408.571500040125,
+   "retrieve_cost": 0.0002235528387096774
+  },
+  {
+   "idx": 125,
+   "question": "What did Deborah buy to enhance her yoga practice besides the props?",
+   "gold": "candle",
+   "category": 4,
+   "evidence": [
+    "D11:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Candles and essential oils.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003709395483870968,
+   "retrieved_tokens": 403,
+   "retrieve_ms": 9569.37562499661,
+   "retrieve_cost": 0.0002324895483870968
+  },
+  {
+   "idx": 126,
+   "question": "What type of music does Deborah find helpful during her yoga practice?",
+   "gold": "instrumental tracks with mellow melodies and rhythms",
+   "category": 4,
+   "evidence": [
+    "D11:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Instrumental tracks with mellow melodies.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00038858032258064516,
+   "retrieved_tokens": 451,
+   "retrieve_ms": 9399.225040979218,
+   "retrieve_cost": 0.00024233032258064518
+  },
+  {
+   "idx": 127,
+   "question": "Who are the musicians mentioned by Jolene that she enjoys listening to during her yoga practice?",
+   "gold": "Nils Frahm and Olafur Arnalds",
+   "category": 4,
+   "evidence": [
+    "D11:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Nils Frahm and Olafur Arnalds.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00039162774193548383,
+   "retrieved_tokens": 418,
+   "retrieve_ms": 5180.284582951572,
+   "retrieve_cost": 0.0002464277419354839
+  },
+  {
+   "idx": 128,
+   "question": "What album does Deborah recommend for meditation and deep relaxation?",
+   "gold": "'Sleep'",
+   "category": 4,
+   "evidence": [
+    "D11:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "'Sleep'",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034725,
+   "retrieved_tokens": 366,
+   "retrieve_ms": 5474.885665986221,
+   "retrieve_cost": 0.00021674999999999998
+  },
+  {
+   "idx": 129,
+   "question": "Which show did Deborah go to with a friend on 9 April, 2023?",
+   "gold": "an art show",
+   "category": 4,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No specific show mentioned.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00029129477419354835,
+   "retrieved_tokens": 309,
+   "retrieve_ms": 9413.880500011146,
+   "retrieve_cost": 0.00016604477419354837
+  },
+  {
+   "idx": 130,
+   "question": "What does Deborah find comforting about going to art shows?",
+   "gold": "It makes her feel like she's still experiencing it with her mom",
+   "category": 4,
+   "evidence": [
+    "D12:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Reminds her of her mom.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037268941935483866,
+   "retrieved_tokens": 431,
+   "retrieve_ms": 9263.591333990917,
+   "retrieve_cost": 0.00023003941935483872
+  },
+  {
+   "idx": 131,
+   "question": "How does Jolene describe the time spent with her snakes and partner?",
+   "gold": "Valuable and relaxing",
+   "category": 4,
+   "evidence": [
+    "D12:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Valuable and calming.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003735636774193548,
+   "retrieved_tokens": 452,
+   "retrieve_ms": 6618.706834036857,
+   "retrieve_cost": 0.00022806367741935482
+  },
+  {
+   "idx": 132,
+   "question": "What does Jolene enjoy doing with her partner after a long day?",
+   "gold": "Playing video games",
+   "category": 4,
+   "evidence": [
+    "D12:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Playing video games together.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003819745161290323,
+   "retrieved_tokens": 507,
+   "retrieve_ms": 8814.003583975136,
+   "retrieve_cost": 0.00022822451612903227
+  },
+  {
+   "idx": 133,
+   "question": "What is Jolene currently doing in June 2023?",
+   "gold": "interning at a well-known engineering firm",
+   "category": 4,
+   "evidence": [
+    "D13:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Studying for finals.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003434603225806451,
+   "retrieved_tokens": 468,
+   "retrieve_ms": 4789.775291981641,
+   "retrieve_cost": 0.00019616032258064516
+  },
+  {
+   "idx": 134,
+   "question": "For how long has Jolene had Seraphim as a pet?",
+   "gold": "one year",
+   "category": 4,
+   "evidence": [
+    "D14:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Since January 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003243601935483871,
+   "retrieved_tokens": 363,
+   "retrieve_ms": 5272.655958018731,
+   "retrieve_cost": 0.0001916101935483871
+  },
+  {
+   "idx": 135,
+   "question": "How does Jolene feel when spending time with Seraphim?",
+   "gold": "comforted",
+   "category": 4,
+   "evidence": [
+    "D14:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "She feels comforted and calm.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003307316129032258,
+   "retrieved_tokens": 433,
+   "retrieve_ms": 6427.027791971341,
+   "retrieve_cost": 0.00018718161290322578
+  },
+  {
+   "idx": 136,
+   "question": "Which new yoga pose did Deborah share a photo of?",
+   "gold": "tree pose",
+   "category": 4,
+   "evidence": [
+    "D14:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Tree pose.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035479064516129034,
+   "retrieved_tokens": 378,
+   "retrieve_ms": 9379.611500015017,
+   "retrieve_cost": 0.00022249064516129032
+  },
+  {
+   "idx": 137,
+   "question": "What group activity did Deborah start with Anna?",
+   "gold": "running group",
+   "category": 4,
+   "evidence": [
+    "D15:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Running group.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003903098709677419,
+   "retrieved_tokens": 527,
+   "retrieve_ms": 6241.554708976764,
+   "retrieve_cost": 0.00023625987096774191
+  },
+  {
+   "idx": 138,
+   "question": "What made being part of the running group easy for Deborah to stay motivated?",
+   "gold": "helping and pushing each other during runs",
+   "category": 4,
+   "evidence": [
+    "D15:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Supportive group pushing each other.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003838612258064516,
+   "retrieved_tokens": 435,
+   "retrieve_ms": 9066.248707997147,
+   "retrieve_cost": 0.0002394112258064516
+  },
+  {
+   "idx": 139,
+   "question": "Why did Jolene decide to get a snake as a pet?",
+   "gold": "fascinated by reptiles and it felt like the perfect pet",
+   "category": 4,
+   "evidence": [
+    "D15:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "She wanted company when lonely.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003363642580645161,
+   "retrieved_tokens": 434,
+   "retrieve_ms": 8813.372707983945,
+   "retrieve_cost": 0.00019326425806451614
+  },
+  {
+   "idx": 140,
+   "question": "What is the favorite game Jolene plays with her partner?",
+   "gold": "It takes two",
+   "category": 4,
+   "evidence": [
+    "D15:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "\"It Takes Two\"",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035125935483870966,
+   "retrieved_tokens": 412,
+   "retrieve_ms": 9083.610584028065,
+   "retrieve_cost": 0.00021295935483870966
+  },
+  {
+   "idx": 141,
+   "question": "What activity does Deborah do with her cats?",
+   "gold": "take them out for a run in the park every morning and evening",
+   "category": 4,
+   "evidence": [
+    "D15:27"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Takes them for runs in the park.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036107032258064515,
+   "retrieved_tokens": 422,
+   "retrieve_ms": 4626.731666969135,
+   "retrieve_cost": 0.00021917032258064517
+  },
+  {
+   "idx": 142,
+   "question": "How does Jolene describe the feeling of finding her snake snuggled under the bed after it got out?",
+   "gold": "It really showed how much she loves her.",
+   "category": 4,
+   "evidence": [
+    "D15:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Filled with love and gratitude.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035423496774193545,
+   "retrieved_tokens": 419,
+   "retrieve_ms": 6750.8353749872185,
+   "retrieve_cost": 0.0002106849677419355
+  },
+  {
+   "idx": 143,
+   "question": "Why does Deborah take her cats out for a run in the park every day?",
+   "gold": "Exercise and nature are important to her",
+   "category": 4,
+   "evidence": [
+    "D15:27"
+   ],
+   "last_evidence_session": 30,
+   "answer": "To find peace and refreshment.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003743868387096774,
+   "retrieved_tokens": 409,
+   "retrieve_ms": 9803.982292010915,
+   "retrieve_cost": 0.0002335368387096774
+  },
+  {
+   "idx": 144,
+   "question": "How did Jolene come to have her pet, Susie?",
+   "gold": "She adopted her two years ago when feeling lonely.",
+   "category": 4,
+   "evidence": [
+    "D16:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "She adopted her when lonely.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003056707741935484,
+   "retrieved_tokens": 290,
+   "retrieve_ms": 9907.07575000124,
+   "retrieve_cost": 0.00018417077419354837
+  },
+  {
+   "idx": 145,
+   "question": "What activities have been helping Jolene stay distracted during tough times?",
+   "gold": "Video games and spending time with her pet, Susie",
+   "category": 4,
+   "evidence": [
+    "D16:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Video games and pets.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.000384871935483871,
+   "retrieved_tokens": 499,
+   "retrieve_ms": 9820.800959016196,
+   "retrieve_cost": 0.00023262193548387097
+  },
+  {
+   "idx": 146,
+   "question": "What kind of yoga routine does Deborah recommend to Jolene?",
+   "gold": "A gentle flow routine focused on breathing and grounding",
+   "category": 4,
+   "evidence": [
+    "D16:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A gentle flow focused on breathing.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003764868387096774,
+   "retrieved_tokens": 441,
+   "retrieve_ms": 6524.6764160110615,
+   "retrieve_cost": 0.0002320368387096774
+  },
+  {
+   "idx": 147,
+   "question": "What did Jolene design inspired by their love for space and engines?",
+   "gold": "Notebooks",
+   "category": 4,
+   "evidence": [
+    "D17:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Notebooks with galaxies and circuitry.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003219466451612903,
+   "retrieved_tokens": 363,
+   "retrieve_ms": 9714.240542030893,
+   "retrieve_cost": 0.00018859664516129033
+  },
+  {
+   "idx": 148,
+   "question": "What journal has Jolene been using to help track tasks and stay organized?",
+   "gold": "bullet journal",
+   "category": 4,
+   "evidence": [
+    "D18:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Bullet journal.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037491948387096774,
+   "retrieved_tokens": 401,
+   "retrieve_ms": 9669.046916009393,
+   "retrieve_cost": 0.00023796948387096775
+  },
+  {
+   "idx": 149,
+   "question": "What game did Jolene recommend for being calming and cute?",
+   "gold": "Animal Crossing: New Horizons",
+   "category": 4,
+   "evidence": [
+    "D19:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Animal Crossing: New Horizons",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003857005161290322,
+   "retrieved_tokens": 482,
+   "retrieve_ms": 9809.413375041913,
+   "retrieve_cost": 0.00023630051612903222
+  },
+  {
+   "idx": 150,
+   "question": "What game did Jolene suggest as an awesome open-world game for the Nintendo Switch?",
+   "gold": "Zelda BOTW",
+   "category": 4,
+   "evidence": [
+    "D19:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Zelda BOTW",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003455105806451613,
+   "retrieved_tokens": 411,
+   "retrieve_ms": 9605.14595801942,
+   "retrieve_cost": 0.00020586058064516128
+  },
+  {
+   "idx": 151,
+   "question": "What did Deborah and her husband use to play to bond and make memories?",
+   "gold": "video games",
+   "category": 4,
+   "evidence": [
+    "D19:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Detective games together.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035678670967741937,
+   "retrieved_tokens": 345,
+   "retrieve_ms": 9864.041459048167,
+   "retrieve_cost": 0.00022703670967741936
+  },
+  {
+   "idx": 152,
+   "question": "What is special about the bench at the park near Deborah's house?",
+   "gold": "It holds special memories of conversations with her mom",
+   "category": 4,
+   "evidence": [
+    "D19:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "It holds memories with her mom.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003682649032258064,
+   "retrieved_tokens": 451,
+   "retrieve_ms": 9439.231124997605,
+   "retrieve_cost": 0.00022171490322580643
+  },
+  {
+   "idx": 153,
+   "question": "What did Deborah and her mom chat about at their special bench in the park?",
+   "gold": "dreams and life",
+   "category": 4,
+   "evidence": [
+    "D19:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Dreams and life.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0004357443870967742,
+   "retrieved_tokens": 597,
+   "retrieve_ms": 4353.916916996241,
+   "retrieve_cost": 0.0002678943870967742
+  },
+  {
+   "idx": 154,
+   "question": "What feeling does Deborah get when she thinks about the time spent with her mom at their special spot?",
+   "gold": "peace and gratitude",
+   "category": 4,
+   "evidence": [
+    "D19:21"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Peace and gratitude.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0004353011612903225,
+   "retrieved_tokens": 575,
+   "retrieve_ms": 9334.279500006232,
+   "retrieve_cost": 0.0002701511612903225
+  },
+  {
+   "idx": 155,
+   "question": "What habits does Jolene practice to feel balanced?",
+   "gold": "yoga, meditation, walks, and mindfulness",
+   "category": 4,
+   "evidence": [
+    "D20:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yoga and meditation.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003946141935483871,
+   "retrieved_tokens": 464,
+   "retrieve_ms": 9450.742541986983,
+   "retrieve_cost": 0.0002491141935483871
+  },
+  {
+   "idx": 156,
+   "question": "Which yoga pose is Jolene a fan of for rest and calmness?",
+   "gold": "savasana (the corpse pose)",
+   "category": 4,
+   "evidence": [
+    "D20:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Savasana (corpse pose)",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003472012258064516,
+   "retrieved_tokens": 384,
+   "retrieve_ms": 5949.754415953066,
+   "retrieve_cost": 0.0002098012258064516
+  },
+  {
+   "idx": 157,
+   "question": "How long has Jolene been doing yoga?",
+   "gold": "3 years",
+   "category": 4,
+   "evidence": [
+    "D20:21"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Three years.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035675825806451614,
+   "retrieved_tokens": 380,
+   "retrieve_ms": 9347.054042038508,
+   "retrieve_cost": 0.00022475825806451613
+  },
+  {
+   "idx": 158,
+   "question": "What did Jolene participate in recently that provided her with a rewarding experience?",
+   "gold": "presenting at a virtual conference",
+   "category": 4,
+   "evidence": [
+    "D21:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A virtual conference.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00040719658064516126,
+   "retrieved_tokens": 547,
+   "retrieve_ms": 9257.569209032226,
+   "retrieve_cost": 0.00024774658064516126
+  },
+  {
+   "idx": 159,
+   "question": "How did Jolene feel after receiving positive feedback at the virtual conference?",
+   "gold": "thrilled and rewarded",
+   "category": 4,
+   "evidence": [
+    "D21:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Thrilled and rewarded.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003994141935483871,
+   "retrieved_tokens": 496,
+   "retrieve_ms": 9442.965625028592,
+   "retrieve_cost": 0.0002473141935483871
+  },
+  {
+   "idx": 160,
+   "question": "What kind of event did Jolene present at recently?",
+   "gold": "virtual conference",
+   "category": 4,
+   "evidence": [
+    "D21:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A virtual conference.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003508838709677419,
+   "retrieved_tokens": 360,
+   "retrieve_ms": 9153.778792009689,
+   "retrieve_cost": 0.00022068387096774194
+  },
+  {
+   "idx": 161,
+   "question": "What did Jolene's mom stress the value of, which she wants to keep in mind for her engineering projects?",
+   "gold": "Helping others",
+   "category": 4,
+   "evidence": [
+    "D22:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Helping others.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0004429312258064517,
+   "retrieved_tokens": 549,
+   "retrieve_ms": 6210.498375003226,
+   "retrieve_cost": 0.00028138122580645164
+  },
+  {
+   "idx": 162,
+   "question": "What type of projects is Jolene interested in getting involved in the future?",
+   "gold": "Sustainable initiatives and developing innovative solutions for environmental issues",
+   "category": 4,
+   "evidence": [
+    "D22:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Sustainable initiatives and clean water supply.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0004308251612903226,
+   "retrieved_tokens": 637,
+   "retrieve_ms": 8599.419667036273,
+   "retrieve_cost": 0.0002554751612903226
+  },
+  {
+   "idx": 163,
+   "question": "How did Deborah get Luna, one of her cats?",
+   "gold": "From the shelter",
+   "category": 4,
+   "evidence": [
+    "D22:25"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah took Luna from the shelter.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003064668387096774,
+   "retrieved_tokens": 276,
+   "retrieve_ms": 5838.184332998935,
+   "retrieve_cost": 0.00018646683870967743
+  },
+  {
+   "idx": 164,
+   "question": "How old is Max?",
+   "gold": "8 years old",
+   "category": 4,
+   "evidence": [
+    "D22:27"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Max is 8 years old.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00030546425806451613,
+   "retrieved_tokens": 259,
+   "retrieve_ms": 8746.898124984,
+   "retrieve_cost": 0.00019041425806451612
+  },
+  {
+   "idx": 165,
+   "question": "What type of classes did Jolene and her partner check out during their trip to Rio de Janeiro on 30 August, 2023?",
+   "gold": "Yoga classes",
+   "category": 4,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yoga classes.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039293980645161293,
+   "retrieved_tokens": 464,
+   "retrieve_ms": 5771.4260830543935,
+   "retrieve_cost": 0.0002426398064516129
+  },
+  {
+   "idx": 166,
+   "question": "What type of place does Jolene visit to meditate?",
+   "gold": "A tranquil spot by a pond",
+   "category": 4,
+   "evidence": [
+    "D23:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A tranquil spot.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003893448387096774,
+   "retrieved_tokens": 559,
+   "retrieve_ms": 8637.281375005841,
+   "retrieve_cost": 0.0002292948387096774
+  },
+  {
+   "idx": 167,
+   "question": "What was the new plant Jolene got used as a reminder for on 30 August, 2023?",
+   "gold": "To nurture herself and embrace fresh starts",
+   "category": 4,
+   "evidence": [
+    "D23:29"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Nurturing herself and fresh starts.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002925503225806452,
+   "retrieved_tokens": 246,
+   "retrieve_ms": 5288.341999985278,
+   "retrieve_cost": 0.00017375032258064516
+  },
+  {
+   "idx": 168,
+   "question": "Why did Jolene get the new plant on 30 August, 2023?",
+   "gold": "As a reminder to nurture herself and embrace fresh starts",
+   "category": 4,
+   "evidence": [
+    "D23:29"
+   ],
+   "last_evidence_session": 30,
+   "answer": "To nurture herself and embrace fresh starts.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00029327051612903224,
+   "retrieved_tokens": 285,
+   "retrieve_ms": 3640.521624998655,
+   "retrieve_cost": 0.00017012051612903226
+  },
+  {
+   "idx": 169,
+   "question": "What has Jolene been focusing on lately besides studying?",
+   "gold": "relationship with her partner",
+   "category": 4,
+   "evidence": [
+    "D24:2"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Her relationship with her partner.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00039618290322580645,
+   "retrieved_tokens": 546,
+   "retrieve_ms": 3704.1742079891264,
+   "retrieve_cost": 0.00023688290322580646
+  },
+  {
+   "idx": 170,
+   "question": "How did Deborah's mom support her yoga practice when she first started?",
+   "gold": "attended classes with her",
+   "category": 4,
+   "evidence": [
+    "D24:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "She was her biggest fan.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00038334793548387095,
+   "retrieved_tokens": 411,
+   "retrieve_ms": 2816.469708981458,
+   "retrieve_cost": 0.00024339793548387096
+  },
+  {
+   "idx": 171,
+   "question": "What was the video game console that Jolene's parents got her at age 10?",
+   "gold": "nintendo game console",
+   "category": 4,
+   "evidence": [
+    "D24:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Not specified in the memories.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003349347096774193,
+   "retrieved_tokens": 382,
+   "retrieve_ms": 8338.15445896471,
+   "retrieve_cost": 0.00019813470967741935
+  },
+  {
+   "idx": 172,
+   "question": "What was one of Jolene's favorite games to play with her mom on the nintendo wii game system?",
+   "gold": "Monster Hunter: World",
+   "category": 4,
+   "evidence": [
+    "D24:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Not specified in memories.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00037060974193548385,
+   "retrieved_tokens": 411,
+   "retrieve_ms": 3973.0255829636008,
+   "retrieve_cost": 0.00022855974193548387
+  },
+  {
+   "idx": 173,
+   "question": "What course did Jolene sign up for on 6 September 2023?",
+   "gold": "meditation",
+   "category": 4,
+   "evidence": [
+    "D25:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Meditation course at a retreat.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003624799354838709,
+   "retrieved_tokens": 402,
+   "retrieve_ms": 3353.3228340093046,
+   "retrieve_cost": 0.00022267993548387094
+  },
+  {
+   "idx": 174,
+   "question": "Why did Jolene have to reschedule their meeting with Deborah on September 8, 2023?",
+   "gold": "Jolene already had plans",
+   "category": 4,
+   "evidence": [
+    "D26:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Storm forced cancellation of getaway.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00034978374193548386,
+   "retrieved_tokens": 356,
+   "retrieve_ms": 8229.265917034354,
+   "retrieve_cost": 0.00021598374193548388
+  },
+  {
+   "idx": 175,
+   "question": "Where did Jolene and her partner travel for a few weeks in September 2023?",
+   "gold": "Phuket",
+   "category": 4,
+   "evidence": [
+    "D27:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Phuket",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032435341935483866,
+   "retrieved_tokens": 387,
+   "retrieve_ms": 2794.862042006571,
+   "retrieve_cost": 0.00018920341935483868
+  },
+  {
+   "idx": 176,
+   "question": "What was the main focus of the session that stood out to Jolene during the retreat?",
+   "gold": "releasing expectations and judgments and savoring the present",
+   "category": 4,
+   "evidence": [
+    "D27:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Releasing expectations and savoring the present.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0004157781290322581,
+   "retrieved_tokens": 460,
+   "retrieve_ms": 8143.928957986645,
+   "retrieve_cost": 0.00026547812903225806
+  },
+  {
+   "idx": 177,
+   "question": "How did Jolene feel about her progress in practicing mindfulness and gratitude?",
+   "gold": "experiencing a new level of joy and happiness",
+   "category": 4,
+   "evidence": [
+    "D27:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "She felt incredibly peaceful and thankful.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0004571970967741936,
+   "retrieved_tokens": 717,
+   "retrieve_ms": 7590.150707983412,
+   "retrieve_cost": 0.0002707470967741936
+  },
+  {
+   "idx": 178,
+   "question": "What positive change did Jolene experience during the retreat?",
+   "gold": "finding inner peace",
+   "category": 4,
+   "evidence": [
+    "D27:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Inner peace and happiness.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0004229912903225806,
+   "retrieved_tokens": 615,
+   "retrieve_ms": 7980.484915955458,
+   "retrieve_cost": 0.00025394129032258063
+  },
+  {
+   "idx": 179,
+   "question": "What did Jolene recently play that she described to Deb?",
+   "gold": "a card game about cats",
+   "category": 4,
+   "evidence": [
+    "D27:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information available.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003298672258064516,
+   "retrieved_tokens": 326,
+   "retrieve_ms": 7848.3143339981325,
+   "retrieve_cost": 0.00020446722580645161
+  },
+  {
+   "idx": 180,
+   "question": "What did Deborah do with their mom's old friends?",
+   "gold": "reminisced and looked through photos",
+   "category": 4,
+   "evidence": [
+    "D28:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Reconnected and reminisced.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00039893980645161286,
+   "retrieved_tokens": 497,
+   "retrieve_ms": 7801.101666991599,
+   "retrieve_cost": 0.0002469898064516129
+  },
+  {
+   "idx": 181,
+   "question": "Where did Deborah get married?",
+   "gold": "on the beach",
+   "category": 4,
+   "evidence": [
+    "D28:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "At the beach.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0002702473548387097,
+   "retrieved_tokens": 221,
+   "retrieve_ms": 7680.993457965087,
+   "retrieve_cost": 0.00016239735483870965
+  },
+  {
+   "idx": 182,
+   "question": "What does yoga on the beach provide for Deborah?",
+   "gold": "a peaceful atmosphere",
+   "category": 4,
+   "evidence": [
+    "D28:15"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A peaceful atmosphere.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00037679903225806453,
+   "retrieved_tokens": 439,
+   "retrieve_ms": 2890.3492499957792,
+   "retrieve_cost": 0.00023504903225806452
+  },
+  {
+   "idx": 183,
+   "question": "How does Jolene describe their home room?",
+   "gold": "little haven for peace and rest",
+   "category": 4,
+   "evidence": [
+    "D28:22"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A little haven for peace.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031078838709677417,
+   "retrieved_tokens": 326,
+   "retrieve_ms": 7731.179083988536,
+   "retrieve_cost": 0.00018508838709677418
+  },
+  {
+   "idx": 184,
+   "question": "What new activity did Deborah and her neighbor organize for the community on 16 September, 2023?",
+   "gold": "Free gardening class",
+   "category": 4,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A free gardening class.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00038991541935483873,
+   "retrieved_tokens": 472,
+   "retrieve_ms": 7867.766041948926,
+   "retrieve_cost": 0.0002393154193548387
+  },
+  {
+   "idx": 185,
+   "question": "What was Deborah's mom passionate about?",
+   "gold": "Cooking",
+   "category": 4,
+   "evidence": [
+    "D29:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Cooking and travel.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003695841290322581,
+   "retrieved_tokens": 413,
+   "retrieve_ms": 7561.103916959837,
+   "retrieve_cost": 0.00023233412903225808
+  },
+  {
+   "idx": 186,
+   "question": "What food did Deborah's mom make for her on birthdays?",
+   "gold": "Pineapple cakes",
+   "category": 4,
+   "evidence": [
+    "D29:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Pineapple birthday cakes.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033990232258064514,
+   "retrieved_tokens": 409,
+   "retrieve_ms": 2652.0968330441974,
+   "retrieve_cost": 0.00020085232258064515
+  },
+  {
+   "idx": 187,
+   "question": "What kind of cookies did Jolene used to bake with someone close to her?",
+   "gold": "Chocolate chip cookies",
+   "category": 4,
+   "evidence": [
+    "D29:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Chocolate cookies.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000281346,
+   "retrieved_tokens": 272,
+   "retrieve_ms": 7574.6782500064,
+   "retrieve_cost": 0.000163446
+  },
+  {
+   "idx": 188,
+   "question": "What outdoor activity did Jolene suggest doing together with Deborah?",
+   "gold": "Surfing",
+   "category": 4,
+   "evidence": [
+    "D29:27"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Camping trip.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00042235103225806456,
+   "retrieved_tokens": 563,
+   "retrieve_ms": 7785.221291997004,
+   "retrieve_cost": 0.00026200103225806453
+  },
+  {
+   "idx": 189,
+   "question": "What activity did Deborah enjoy at the music festival with their pals on September 20, 2023?",
+   "gold": "Dancing and bopping around",
+   "category": 4,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Dancing and enjoying music.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003704678709677419,
+   "retrieved_tokens": 407,
+   "retrieve_ms": 7626.783374988008,
+   "retrieve_cost": 0.00022901787096774192
+  },
+  {
+   "idx": 190,
+   "question": "What did Deborah find freeing at the music festival?",
+   "gold": "Dancing and bopping around",
+   "category": 4,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Dancing and bopping around.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003338051612903226,
+   "retrieved_tokens": 324,
+   "retrieve_ms": 7467.98883395968,
+   "retrieve_cost": 0.00020750516129032257
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 8638.671624998096,
+ "retrieve_cost_per_query": 0.00021208795237290996,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

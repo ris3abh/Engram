@@ -1,0 +1,142 @@
+{
+ "arm": "lean_t0r",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "lmefull:gpt4_7abb270c",
+  "sessions": [
+   1,
+   48
+  ],
+  "messages": 467,
+  "questions": 1
+ },
+ "accuracy": 0.0,
+ "accuracy_by_category": {
+  "temporal-reasoning": 0.0
+ },
+ "stored": 467,
+ "active": 467,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 2811.0,
+ "retrieved_tokens_median": 2811,
+ "memories_mean": 10.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 0,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.00044423400000000006,
+  "claude": 0.0,
+  "openai": 0.0
+ },
+ "cache": {
+  "hits": 3,
+  "misses": 31
+ },
+ "answers": [
+  {
+   "idx": "gpt4_7abb270c",
+   "question": "What is the order of the six museums I visited from earliest to latest?",
+   "question_date": "2023/03/10 (Fri) 08:15",
+   "gold": "Science Museum, Museum of Contemporary Art, Metropolitan Museum of Art, Museum of History, Modern Art Museum, Natural History Museum",
+   "category": "temporal-reasoning",
+   "abstention": false,
+   "evidence": [
+    "answer_7093d898_1",
+    "answer_7093d898_2",
+    "answer_7093d898_3",
+    "answer_7093d898_4",
+    "answer_7093d898_5",
+    "answer_7093d898_6"
+   ],
+   "last_evidence_session": 48,
+   "answer": "1. Science Museum (2023-01-15)\n2. Natural History Museum (2023-01-15)\n3. Modern Art Museum (2023-02-20)\n4. Children's Museum (2023-03-04)\n5. Royal Institution (2023-01-15)\n6. Royal Observatory, Greenwich (2023-01-15)",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.000989184,
+   "retrieved_tokens": 2811,
+   "retrieve_ms": 372.44708399521187,
+   "retrieve_cost": 0.00044423400000000006
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_l0",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 375.5361250368878,
+ "retrieve_cost_per_query": 0.00044423400000000006,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

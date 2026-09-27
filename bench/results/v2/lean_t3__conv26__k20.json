@@ -1,0 +1,2772 @@
+{
+ "arm": "lean_t3",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": true,
+  "lean_worth_gate": true,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "conv26",
+  "sessions": [
+   1,
+   19
+  ],
+  "messages": 419,
+  "questions": 152
+ },
+ "accuracy": 0.8223684210526315,
+ "accuracy_by_category": {
+  "1": 0.8125,
+  "2": 0.8918918918918919,
+  "3": 0.7692307692307693,
+  "4": 0.8
+ },
+ "stored": 419,
+ "active": 419,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 630.0723684210526,
+ "retrieved_tokens_median": 594.5,
+ "memories_mean": 12.322368421052632,
+ "stale_fact_rate": 1.0,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 2,
+  "claims_stale": 2,
+  "rate": 1.0,
+  "stale_examples": [
+   {
+    "earlier_id": "D2:7",
+    "claim": "Melanie is thinking about going camping with her family next month.",
+    "later_id": "D4:6",
+    "kind": "update",
+    "still_active": [
+     "Melanie: Thanks, Caroline. It's still a work in progress, but I'm doing my best. My kids are so excited about summer break! We're thinking about going camping next month (June 2023). Any fun plans for the summer?"
+    ]
+   },
+   {
+    "earlier_id": "D5:13",
+    "claim": "Caroline is going to a transgender conference this month.",
+    "later_id": "D7:1",
+    "kind": "update",
+    "still_active": [
+     "Caroline: Thanks Mel! I'm going to a transgender conference this month (July 2023). I'm so excited to meet other people in the community and learn more about advocacy. It's gonna be great!"
+    ]
+   }
+  ]
+ },
+ "spend": {
+  "jev": 0.028707210000000007,
+  "claude": 0.0,
+  "openai": 0.015523800000000004
+ },
+ "cache": {
+  "hits": 453,
+  "misses": 4715
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "When did Caroline go to the LGBTQ support group?",
+   "gold": "7 May 2023",
+   "category": 2,
+   "evidence": [
+    "D1:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "2023-05-07",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003798667741935483,
+   "retrieved_tokens": 653,
+   "retrieve_ms": 4419.848208955955,
+   "retrieve_cost": 0.00020496677419354838
+  },
+  {
+   "idx": 1,
+   "question": "When did Melanie paint a sunrise?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D1:12"
+   ],
+   "last_evidence_session": 19,
+   "answer": "In 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003358316129032258,
+   "retrieved_tokens": 450,
+   "retrieve_ms": 3715.1835419936106,
+   "retrieve_cost": 0.00019288161290322584
+  },
+  {
+   "idx": 2,
+   "question": "What fields would Caroline be likely to pursue in her educaton?",
+   "gold": "Psychology, counseling certification",
+   "category": 3,
+   "evidence": [
+    "D1:9",
+    "D1:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Counseling and mental health.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00039699,
+   "retrieved_tokens": 865,
+   "retrieve_ms": 424.95933396276087,
+   "retrieve_cost": 0.00018879000000000001
+  },
+  {
+   "idx": 3,
+   "question": "What did Caroline research?",
+   "gold": "Adoption agencies",
+   "category": 1,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Adoption agencies.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00035340367741935484,
+   "retrieved_tokens": 616,
+   "retrieve_ms": 1806.282999983523,
+   "retrieve_cost": 0.00018675367741935486
+  },
+  {
+   "idx": 4,
+   "question": "What is Caroline's identity?",
+   "gold": "Transgender woman",
+   "category": 1,
+   "evidence": [
+    "D1:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Caroline identifies as transgender.",
+   "memories": 17,
+   "label": "CORRECT",
+   "query_cost": 0.0003743390322580645,
+   "retrieved_tokens": 759,
+   "retrieve_ms": 1276.4748749905266,
+   "retrieve_cost": 0.00018473903225806453
+  },
+  {
+   "idx": 5,
+   "question": "When did Melanie run a charity race?",
+   "gold": "The sunday before 25 May 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "May 20, 2023",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036989864516129035,
+   "retrieved_tokens": 616,
+   "retrieve_ms": 1149.1785839898512,
+   "retrieve_cost": 0.00020054864516129035
+  },
+  {
+   "idx": 6,
+   "question": "When is Melanie planning on going camping?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D2:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035593819354838715,
+   "retrieved_tokens": 583,
+   "retrieve_ms": 725.5489579983987,
+   "retrieve_cost": 0.00019333819354838713
+  },
+  {
+   "idx": 7,
+   "question": "What is Caroline's relationship status?",
+   "gold": "Single",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D2:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Single parent.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003370170967741936,
+   "retrieved_tokens": 500,
+   "retrieve_ms": 442.11641600122675,
+   "retrieve_cost": 0.0001877670967741936
+  },
+  {
+   "idx": 8,
+   "question": "When did Caroline give a speech at a school?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Week of May 29, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00039132464516129035,
+   "retrieved_tokens": 721,
+   "retrieve_ms": 489.6198330097832,
+   "retrieve_cost": 0.00020382464516129032
+  },
+  {
+   "idx": 9,
+   "question": "When did Caroline meet up with her friends, family, and mentors?",
+   "gold": "The week before 9 June 2023",
+   "category": 2,
+   "evidence": [
+    "D3:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Week of 2023-05-29.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003909315483870968,
+   "retrieved_tokens": 724,
+   "retrieve_ms": 574.2868329980411,
+   "retrieve_cost": 0.0002017815483870968
+  },
+  {
+   "idx": 10,
+   "question": "How long has Caroline had her current group of friends for?",
+   "gold": "4 years",
+   "category": 2,
+   "evidence": [
+    "D3:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "4 years",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003442604516129032,
+   "retrieved_tokens": 514,
+   "retrieve_ms": 1860.1909999852069,
+   "retrieve_cost": 0.00019201045161290324
+  },
+  {
+   "idx": 11,
+   "question": "Where did Caroline move from 4 years ago?",
+   "gold": "Sweden",
+   "category": 1,
+   "evidence": [
+    "D3:13",
+    "D4:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Her home country.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036133587096774195,
+   "retrieved_tokens": 593,
+   "retrieve_ms": 1447.8656249702908,
+   "retrieve_cost": 0.00019663587096774196
+  },
+  {
+   "idx": 12,
+   "question": "How long ago was Caroline's 18th birthday?",
+   "gold": "10 years ago",
+   "category": 2,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Ten years ago.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035481290322580646,
+   "retrieved_tokens": 537,
+   "retrieve_ms": 590.717917017173,
+   "retrieve_cost": 0.00019821290322580648
+  },
+  {
+   "idx": 13,
+   "question": "What career path has Caroline decided to persue?",
+   "gold": "counseling or mental health for Transgender people",
+   "category": 1,
+   "evidence": [
+    "D4:13",
+    "D1:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Counseling and mental health.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0003646285161290323,
+   "retrieved_tokens": 650,
+   "retrieve_ms": 541.1539589986205,
+   "retrieve_cost": 0.0001895785161290323
+  },
+  {
+   "idx": 14,
+   "question": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+   "gold": "Likely no",
+   "category": 3,
+   "evidence": [
+    "D4:15",
+    "D3:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No, she emphasizes support's importance.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003933623225806452,
+   "retrieved_tokens": 741,
+   "retrieve_ms": 1509.4790409784764,
+   "retrieve_cost": 0.0002016623225806452
+  },
+  {
+   "idx": 15,
+   "question": "What activities does Melanie partake in?",
+   "gold": "pottery, camping, painting, swimming",
+   "category": 1,
+   "evidence": [
+    "D5:4",
+    "D9:1",
+    "D1:12",
+    "D1:18"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Running, reading, painting, hiking, pottery.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000416415870967742,
+   "retrieved_tokens": 973,
+   "retrieve_ms": 1222.9839580249973,
+   "retrieve_cost": 0.00019201587096774196
+  },
+  {
+   "idx": 16,
+   "question": "When did Melanie sign up for a pottery class?",
+   "gold": "2 July 2023",
+   "category": 2,
+   "evidence": [
+    "D5:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "2023-07-02",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033621367741935485,
+   "retrieved_tokens": 468,
+   "retrieve_ms": 868.2850410114042,
+   "retrieve_cost": 0.00018906367741935488
+  },
+  {
+   "idx": 17,
+   "question": "When is Caroline going to the transgender conference?",
+   "gold": "July 2023",
+   "category": 2,
+   "evidence": [
+    "D5:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003767274193548387,
+   "retrieved_tokens": 625,
+   "retrieve_ms": 778.8667919812724,
+   "retrieve_cost": 0.00020752741935483874
+  },
+  {
+   "idx": 18,
+   "question": "Where has Melanie camped?",
+   "gold": "beach, mountains, forest",
+   "category": 1,
+   "evidence": [
+    "D6:16",
+    "D4:6",
+    "D8:32"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Mountains, beach, forest.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036383012903225807,
+   "retrieved_tokens": 603,
+   "retrieve_ms": 1151.1446249787696,
+   "retrieve_cost": 0.00019703012903225808
+  },
+  {
+   "idx": 19,
+   "question": "What do Melanie's kids like?",
+   "gold": "dinosaurs, nature",
+   "category": 1,
+   "evidence": [
+    "D6:6",
+    "D4:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Learning about animals and nature.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0003718045161290323,
+   "retrieved_tokens": 728,
+   "retrieve_ms": 937.6267080078833,
+   "retrieve_cost": 0.0001865545161290323
+  },
+  {
+   "idx": 20,
+   "question": "When did Melanie go to the museum?",
+   "gold": "5 July 2023",
+   "category": 2,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 5, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035737122580645165,
+   "retrieved_tokens": 537,
+   "retrieve_ms": 2283.745832974091,
+   "retrieve_cost": 0.00019987122580645165
+  },
+  {
+   "idx": 21,
+   "question": "When did Caroline have a picnic?",
+   "gold": "The week before 6 July 2023",
+   "category": 2,
+   "evidence": [
+    "D6:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Last week (week of June 26, 2023).",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003762329032258065,
+   "retrieved_tokens": 684,
+   "retrieve_ms": 1327.9351250384934,
+   "retrieve_cost": 0.00019338290322580648
+  },
+  {
+   "idx": 22,
+   "question": "Would Caroline likely have Dr. Seuss books on her bookshelf?",
+   "gold": "Yes, since she collects classic children's books",
+   "category": 3,
+   "evidence": [
+    "D6:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Yes, she has kids' books.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032299722580645166,
+   "retrieved_tokens": 391,
+   "retrieve_ms": 1818.3285410050303,
+   "retrieve_cost": 0.00018529722580645162
+  },
+  {
+   "idx": 23,
+   "question": "What books has Melanie read?",
+   "gold": "\"Nothing is Impossible\", \"Charlotte's Web\"",
+   "category": 1,
+   "evidence": [
+    "D7:8",
+    "D6:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "\"Charlotte's Web\" and another book in 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003533554838709678,
+   "retrieved_tokens": 538,
+   "retrieve_ms": 1406.0614579939283,
+   "retrieve_cost": 0.00019270548387096775
+  },
+  {
+   "idx": 24,
+   "question": "What does Melanie do to destress?",
+   "gold": "Running, pottery",
+   "category": 1,
+   "evidence": [
+    "D7:22",
+    "D5:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Running, reading, and playing violin.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004024784516129033,
+   "retrieved_tokens": 899,
+   "retrieve_ms": 1052.4592920555733,
+   "retrieve_cost": 0.00019007845161290323
+  },
+  {
+   "idx": 25,
+   "question": "When did Caroline go to the LGBTQ conference?",
+   "gold": "10 July 2023",
+   "category": 2,
+   "evidence": [
+    "D7:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 10, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000388704,
+   "retrieved_tokens": 694,
+   "retrieve_ms": 441.6580839897506,
+   "retrieve_cost": 0.00020735400000000003
+  },
+  {
+   "idx": 26,
+   "question": "When did Melanie read the book \"nothing is impossible\"?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D7:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "The memories do not mention \"nothing is impossible.\"",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003565083870967742,
+   "retrieved_tokens": 536,
+   "retrieve_ms": 742.175750026945,
+   "retrieve_cost": 0.00019645838709677423
+  },
+  {
+   "idx": 27,
+   "question": "Would Caroline pursue writing as a career option?",
+   "gold": "LIkely no; though she likes reading, she wants to be a counselor",
+   "category": 3,
+   "evidence": [
+    "D7:5",
+    "D7:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No, she is focused on counseling.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003223186451612904,
+   "retrieved_tokens": 374,
+   "retrieve_ms": 2373.315791017376,
+   "retrieve_cost": 0.00018836864516129037
+  },
+  {
+   "idx": 28,
+   "question": "When did Caroline go to the adoption meeting?",
+   "gold": "The friday before 15 July 2023",
+   "category": 2,
+   "evidence": [
+    "D8:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "2023-07-14",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003657671612903226,
+   "retrieved_tokens": 616,
+   "retrieve_ms": 790.2085410314612,
+   "retrieve_cost": 0.00019671716129032263
+  },
+  {
+   "idx": 29,
+   "question": "When did Melanie go to the pottery workshop?",
+   "gold": "The Friday before 15 July 2023",
+   "category": 2,
+   "evidence": [
+    "D8:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 15, 2023.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003603410322580645,
+   "retrieved_tokens": 594,
+   "retrieve_ms": 829.0738340001553,
+   "retrieve_cost": 0.00019339103225806452
+  },
+  {
+   "idx": 30,
+   "question": "Would Melanie be considered a member of the LGBTQ community?",
+   "gold": "Likely no, she does not refer to herself as part of it",
+   "category": 3,
+   "evidence": [],
+   "last_evidence_session": 19,
+   "answer": "The memories do not specify Melanie's identity.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003984156774193549,
+   "retrieved_tokens": 769,
+   "retrieve_ms": 665.6557500245981,
+   "retrieve_cost": 0.00020401567741935487
+  },
+  {
+   "idx": 31,
+   "question": "When did Melanie go camping in June?",
+   "gold": "The week before 27 June 2023",
+   "category": 2,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Week of June 19, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003699520645161291,
+   "retrieved_tokens": 599,
+   "retrieve_ms": 485.8523750444874,
+   "retrieve_cost": 0.00020135206451612906
+  },
+  {
+   "idx": 32,
+   "question": "What LGBTQ+ events has Caroline participated in?",
+   "gold": "Pride parade, school speech, support group",
+   "category": 1,
+   "evidence": [
+    "D5:1",
+    "D8:17",
+    "D3:1",
+    "D1:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Pride parade, LGBTQ conference, LGBTQ art show.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004629572903225807,
+   "retrieved_tokens": 1175,
+   "retrieve_ms": 2597.559792047832,
+   "retrieve_cost": 0.0002070572903225807
+  },
+  {
+   "idx": 33,
+   "question": "When did Caroline go to a pride parade during the summer?",
+   "gold": "The week before 3 July 2023",
+   "category": 2,
+   "evidence": [
+    "D5:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "June 2023 and August 11, 2023.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003866272258064516,
+   "retrieved_tokens": 667,
+   "retrieve_ms": 1733.4994999691844,
+   "retrieve_cost": 0.00020482722580645164
+  },
+  {
+   "idx": 34,
+   "question": "What events has Caroline participated in to help children?",
+   "gold": "Mentoring program, school speech",
+   "category": 1,
+   "evidence": [
+    "D9:2",
+    "D3:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Volunteering at an LGBTQ+ youth center.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.00039559529032258064,
+   "retrieved_tokens": 794,
+   "retrieve_ms": 1344.514915952459,
+   "retrieve_cost": 0.00019714529032258067
+  },
+  {
+   "idx": 35,
+   "question": "When did Melanie go camping in July?",
+   "gold": "two weekends before 17 July 2023",
+   "category": 2,
+   "evidence": [
+    "D9:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 2023",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003784234838709678,
+   "retrieved_tokens": 680,
+   "retrieve_ms": 1256.2465409864672,
+   "retrieve_cost": 0.00020127348387096778
+  },
+  {
+   "idx": 36,
+   "question": "When did Caroline join a mentorship program?",
+   "gold": "The weekend before 17 July 2023",
+   "category": 2,
+   "evidence": [
+    "D9:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 15, 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036847664516129035,
+   "retrieved_tokens": 590,
+   "retrieve_ms": 2065.953208017163,
+   "retrieve_cost": 0.00020302664516129036
+  },
+  {
+   "idx": 37,
+   "question": "What did Melanie paint recently?",
+   "gold": "sunset",
+   "category": 1,
+   "evidence": [
+    "D8:6; D9:17"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A landscape and still life.",
+   "memories": 15,
+   "label": "WRONG",
+   "query_cost": 0.0003689475483870968,
+   "retrieved_tokens": 673,
+   "retrieve_ms": 2237.8944999654777,
+   "retrieve_cost": 0.0001922475483870968
+  },
+  {
+   "idx": 38,
+   "question": "What activities has Melanie done with her family?",
+   "gold": "Pottery, painting, camping, museum, swimming, hiking",
+   "category": 1,
+   "evidence": [
+    "D8:4",
+    "D8:6",
+    "D9:1",
+    "D6:4",
+    "D1:18",
+    "D3:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Camping, hiking, pottery workshop.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00042751122580645166,
+   "retrieved_tokens": 1039,
+   "retrieve_ms": 1074.8083330108784,
+   "retrieve_cost": 0.00019441122580645163
+  },
+  {
+   "idx": 39,
+   "question": "In what ways is Caroline participating in the LGBTQ community?",
+   "gold": "Joining activist group, going to pride parades, participating in an art show, mentoring program",
+   "category": 1,
+   "evidence": [
+    "D10:3",
+    "D5:1",
+    "D9:12",
+    "D9:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Mentoring, activism, volunteering, art shows.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00047044722580645164,
+   "retrieved_tokens": 1230,
+   "retrieve_ms": 1631.9443329703063,
+   "retrieve_cost": 0.00020629722580645164
+  },
+  {
+   "idx": 40,
+   "question": "How many times has Melanie gone to the beach in 2023?",
+   "gold": "2",
+   "category": 1,
+   "evidence": [
+    "D10:8",
+    "D6:16"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Twice in 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003799761290322581,
+   "retrieved_tokens": 649,
+   "retrieve_ms": 1363.5676249978133,
+   "retrieve_cost": 0.0002038761290322581
+  },
+  {
+   "idx": 41,
+   "question": "When did Caroline join a new activist group?",
+   "gold": "The Tuesday before 20 July 2023",
+   "category": 2,
+   "evidence": [
+    "D10:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "July 18, 2023",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003904521290322581,
+   "retrieved_tokens": 700,
+   "retrieve_ms": 702.3891249555163,
+   "retrieve_cost": 0.0002082021290322581
+  },
+  {
+   "idx": 42,
+   "question": "Would Melanie be more interested in going to a national park or a theme park?",
+   "gold": "National park; she likes the outdoors",
+   "category": 3,
+   "evidence": [
+    "D10:12",
+    "D10:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "National park.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00041671045161290326,
+   "retrieved_tokens": 992,
+   "retrieve_ms": 878.560125012882,
+   "retrieve_cost": 0.00019096045161290324
+  },
+  {
+   "idx": 43,
+   "question": "What kind of art does Caroline make?",
+   "gold": "abstract art",
+   "category": 1,
+   "evidence": [
+    "D11:12",
+    "D11:8",
+    "D9:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Caroline makes paintings.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00039886141935483875,
+   "retrieved_tokens": 875,
+   "retrieve_ms": 589.1832500346936,
+   "retrieve_cost": 0.00019186141935483874
+  },
+  {
+   "idx": 44,
+   "question": "When is Melanie's daughter's birthday?",
+   "gold": "13 August",
+   "category": 2,
+   "evidence": [
+    "D11:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "August 13, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003434171612903226,
+   "retrieved_tokens": 477,
+   "retrieve_ms": 955.3193749743514,
+   "retrieve_cost": 0.0001946171612903226
+  },
+  {
+   "idx": 45,
+   "question": "When did Caroline attend a pride parade in August?",
+   "gold": "The Friday before 14 August 2023",
+   "category": 2,
+   "evidence": [
+    "D11:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "August 11, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00038306380645161296,
+   "retrieved_tokens": 667,
+   "retrieve_ms": 980.7225840049796,
+   "retrieve_cost": 0.0002048638064516129
+  },
+  {
+   "idx": 46,
+   "question": "Would Melanie be considered an ally to the transgender community?",
+   "gold": "Yes, she is supportive",
+   "category": 3,
+   "evidence": [],
+   "last_evidence_session": 19,
+   "answer": "Yes, she supports Caroline's journey.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.0004602387096774194,
+   "retrieved_tokens": 1143,
+   "retrieve_ms": 3989.27012499189,
+   "retrieve_cost": 0.0002103387096774194
+  },
+  {
+   "idx": 47,
+   "question": "Who supports Caroline when she has a negative experience?",
+   "gold": "Her mentors, family, and friends",
+   "category": 1,
+   "evidence": [
+    "D12:1",
+    "D3:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Her friends and support network.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.0004027176774193549,
+   "retrieved_tokens": 852,
+   "retrieve_ms": 617.5110830226913,
+   "retrieve_cost": 0.0001979676774193549
+  },
+  {
+   "idx": 48,
+   "question": "What types of pottery have Melanie and her kids made?",
+   "gold": "bowls, cup",
+   "category": 1,
+   "evidence": [
+    "D12:14",
+    "D8:4",
+    "D5:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "They made pots and bowls.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034611600000000005,
+   "retrieved_tokens": 519,
+   "retrieve_ms": 3148.3535830047913,
+   "retrieve_cost": 0.00019101600000000004
+  },
+  {
+   "idx": 49,
+   "question": "When did Caroline and Melanie go to a pride fesetival together?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D12:15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "In 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003841211612903226,
+   "retrieved_tokens": 666,
+   "retrieve_ms": 3887.210665969178,
+   "retrieve_cost": 0.0002066711612903226
+  },
+  {
+   "idx": 50,
+   "question": "What would Caroline's political leaning likely be?",
+   "gold": "Liberal",
+   "category": 3,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "LGBTQ rights advocate.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00040841787096774194,
+   "retrieved_tokens": 944,
+   "retrieve_ms": 4296.397041005548,
+   "retrieve_cost": 0.00019016787096774195
+  },
+  {
+   "idx": 51,
+   "question": "What has Melanie painted?",
+   "gold": "Horse, sunset, sunrise",
+   "category": 1,
+   "evidence": [
+    "D13:8",
+    "D8:6",
+    "D1:12"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A lake sunrise, horse painting, landscapes, still life.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.0003893806451612903,
+   "retrieved_tokens": 796,
+   "retrieve_ms": 4378.254416980781,
+   "retrieve_cost": 0.00019093064516129035
+  },
+  {
+   "idx": 52,
+   "question": "What are Melanie's pets' names?",
+   "gold": "Oliver, Luna, Bailey",
+   "category": 1,
+   "evidence": [
+    "D13:4",
+    "D7:18"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Luna, Oliver, and Bailey.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000323543806451613,
+   "retrieved_tokens": 410,
+   "retrieve_ms": 4320.031583018135,
+   "retrieve_cost": 0.00018449380645161294
+  },
+  {
+   "idx": 53,
+   "question": "When did Caroline apply to adoption agencies?",
+   "gold": "The week of 23 August 2023",
+   "category": 2,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Week of August 21, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036676703225806454,
+   "retrieved_tokens": 595,
+   "retrieve_ms": 3901.8694999977015,
+   "retrieve_cost": 0.00019876703225806452
+  },
+  {
+   "idx": 54,
+   "question": "When did Caroline draw a self-portrait?",
+   "gold": "The week before 23 August 2023",
+   "category": 2,
+   "evidence": [
+    "D13:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Week of August 14, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003486325161290323,
+   "retrieved_tokens": 523,
+   "retrieve_ms": 1824.7527919593267,
+   "retrieve_cost": 0.00019113251612903228
+  },
+  {
+   "idx": 55,
+   "question": "What subject have Caroline and Melanie both painted?",
+   "gold": "Sunsets",
+   "category": 1,
+   "evidence": [
+    "D14:5",
+    "D8:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Nature-inspired paintings.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.000340071870967742,
+   "retrieved_tokens": 479,
+   "retrieve_ms": 2590.3416670043953,
+   "retrieve_cost": 0.00019277187096774197
+  },
+  {
+   "idx": 56,
+   "question": "What symbols are important to Caroline?",
+   "gold": "Rainbow flag, transgender symbol",
+   "category": 1,
+   "evidence": [
+    "D14:15",
+    "D4:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Rainbow flag, eagle, necklace.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00043148632258064516,
+   "retrieved_tokens": 1057,
+   "retrieve_ms": 1525.371375028044,
+   "retrieve_cost": 0.00019628632258064516
+  },
+  {
+   "idx": 57,
+   "question": "When did Caroline encounter people on a hike and have a negative experience?",
+   "gold": "The week before 25 August 2023",
+   "category": 2,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Week of August 14, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003871707096774194,
+   "retrieved_tokens": 678,
+   "retrieve_ms": 1426.1072499793954,
+   "retrieve_cost": 0.00020492070967741938
+  },
+  {
+   "idx": 58,
+   "question": "When did Melanie make a plate in pottery class?",
+   "gold": "24 August 2023",
+   "category": 2,
+   "evidence": [
+    "D14:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No specific date mentioned.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003404936129032258,
+   "retrieved_tokens": 500,
+   "retrieve_ms": 914.5435839891434,
+   "retrieve_cost": 0.00018914361290322583
+  },
+  {
+   "idx": 59,
+   "question": "Would Caroline be considered religious?",
+   "gold": "Somewhat, but not extremely religious",
+   "category": 3,
+   "evidence": [
+    "D14:19",
+    "D12:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No, she encountered religious conservatives.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00033892025806451614,
+   "retrieved_tokens": 473,
+   "retrieve_ms": 2254.8060830449685,
+   "retrieve_cost": 0.00019162025806451617
+  },
+  {
+   "idx": 60,
+   "question": "What instruments does Melanie play?",
+   "gold": "clarinet and violin",
+   "category": 1,
+   "evidence": [
+    "D15:26",
+    "D2:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Clarinet and violin.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00032910909677419354,
+   "retrieved_tokens": 462,
+   "retrieve_ms": 1120.163167011924,
+   "retrieve_cost": 0.00018465909677419355
+  },
+  {
+   "idx": 61,
+   "question": "What musical artists/bands has Melanie seen?",
+   "gold": "Summer Sounds, Matt Patterson",
+   "category": 1,
+   "evidence": [
+    "D15:16",
+    "D11:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Matt Patterson.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032150283870967743,
+   "retrieved_tokens": 384,
+   "retrieve_ms": 1246.9003750011325,
+   "retrieve_cost": 0.00018905283870967744
+  },
+  {
+   "idx": 62,
+   "question": "When did Melanie go to the park?",
+   "gold": "27 August 2023",
+   "category": 2,
+   "evidence": [
+    "D15:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "August 27, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003642220645161291,
+   "retrieved_tokens": 587,
+   "retrieve_ms": 1648.148125037551,
+   "retrieve_cost": 0.00019862206451612906
+  },
+  {
+   "idx": 63,
+   "question": "When is Caroline's youth center putting on a talent show?",
+   "gold": "September 2023",
+   "category": 2,
+   "evidence": [
+    "D15:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "September 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003366851612903226,
+   "retrieved_tokens": 430,
+   "retrieve_ms": 1466.2649590172805,
+   "retrieve_cost": 0.00019583516129032262
+  },
+  {
+   "idx": 64,
+   "question": "Would Melanie likely enjoy the song \"The Four Seasons\" by Vivaldi?",
+   "gold": "Yes; it's classical music",
+   "category": 3,
+   "evidence": [
+    "D15:28"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Yes, she likes classical music.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00033056961290322574,
+   "retrieved_tokens": 441,
+   "retrieve_ms": 2399.816457997076,
+   "retrieve_cost": 0.0001850696129032258
+  },
+  {
+   "idx": 65,
+   "question": "What are some changes Caroline has faced during her transition journey?",
+   "gold": "Changes to her body, losing unsupportive friends",
+   "category": 1,
+   "evidence": [
+    "D16:15",
+    "D11:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Increased self-acceptance and support.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.0004142041935483871,
+   "retrieved_tokens": 839,
+   "retrieve_ms": 2078.7204580265097,
+   "retrieve_cost": 0.00020900419354838714
+  },
+  {
+   "idx": 66,
+   "question": "What does Melanie do with her family on hikes?",
+   "gold": "Roast marshmallows, tell stories",
+   "category": 1,
+   "evidence": [
+    "D16:4",
+    "D10:12"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Explores nature and shares stories.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003755504516129032,
+   "retrieved_tokens": 687,
+   "retrieve_ms": 2004.1817500023171,
+   "retrieve_cost": 0.00019495045161290324
+  },
+  {
+   "idx": 67,
+   "question": "When did Caroline go biking with friends?",
+   "gold": "The weekend before 13 September 2023",
+   "category": 2,
+   "evidence": [
+    "D16:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "2023-09-09",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003870253548387097,
+   "retrieved_tokens": 714,
+   "retrieve_ms": 1534.2378329951316,
+   "retrieve_cost": 0.0002035753548387097
+  },
+  {
+   "idx": 68,
+   "question": "How long has Melanie been practicing art?",
+   "gold": "Since 2016",
+   "category": 2,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Seven years.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003483601935483871,
+   "retrieved_tokens": 553,
+   "retrieve_ms": 1859.393667022232,
+   "retrieve_cost": 0.00019086019354838711
+  },
+  {
+   "idx": 69,
+   "question": "What personality traits might Melanie say Caroline has?",
+   "gold": "Thoughtful, authentic, driven",
+   "category": 3,
+   "evidence": [
+    "D16:18",
+    "D13:16",
+    "D7:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Caring, inspiring, courageous, supportive.",
+   "memories": 19,
+   "label": "WRONG",
+   "query_cost": 0.00036483522580645165,
+   "retrieved_tokens": 712,
+   "retrieve_ms": 2107.677499996498,
+   "retrieve_cost": 0.00017958522580645164
+  },
+  {
+   "idx": 70,
+   "question": "What transgender-specific events has Caroline attended?",
+   "gold": "Poetry reading, conference",
+   "category": 1,
+   "evidence": [
+    "D17:19",
+    "D15:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Transgender poetry reading, LGBTQ conference.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0004135637419354839,
+   "retrieved_tokens": 850,
+   "retrieve_ms": 4205.338082974777,
+   "retrieve_cost": 0.0002085137419354839
+  },
+  {
+   "idx": 71,
+   "question": "What book did Melanie read from Caroline's suggestion?",
+   "gold": "\"Becoming Nicole\"",
+   "category": 1,
+   "evidence": [
+    "D7:11",
+    "D17:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "\"Becoming Nicole\" by Amy Ellis Nutt.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003523935483870968,
+   "retrieved_tokens": 503,
+   "retrieve_ms": 4228.538124996703,
+   "retrieve_cost": 0.00019699354838709682
+  },
+  {
+   "idx": 72,
+   "question": "When did Melanie's friend adopt a child?",
+   "gold": "2022",
+   "category": 2,
+   "evidence": [
+    "D17:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "In 2022.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003608171612903226,
+   "retrieved_tokens": 566,
+   "retrieve_ms": 3334.04587500263,
+   "retrieve_cost": 0.00019986716129032263
+  },
+  {
+   "idx": 73,
+   "question": "When did Melanie get hurt?",
+   "gold": "September 2023",
+   "category": 2,
+   "evidence": [
+    "D17:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "September 2023",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003478726451612903,
+   "retrieved_tokens": 528,
+   "retrieve_ms": 2452.429708035197,
+   "retrieve_cost": 0.00019412264516129035
+  },
+  {
+   "idx": 74,
+   "question": "When did Melanie's family go on a roadtrip?",
+   "gold": "The weekend before 20 October 2023",
+   "category": 2,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Weekend of October 14, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036460180645161294,
+   "retrieved_tokens": 593,
+   "retrieve_ms": 2330.394041026011,
+   "retrieve_cost": 0.00019600180645161294
+  },
+  {
+   "idx": 75,
+   "question": "How many children does Melanie have?",
+   "gold": "3",
+   "category": 1,
+   "evidence": [
+    "D18:1",
+    "D18:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Two children.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00033831754838709683,
+   "retrieved_tokens": 490,
+   "retrieve_ms": 2034.941166988574,
+   "retrieve_cost": 0.00019056754838709682
+  },
+  {
+   "idx": 76,
+   "question": "When did Melanie go on a hike after the roadtrip?",
+   "gold": "19 October 2023",
+   "category": 1,
+   "evidence": [
+    "D18:17"
+   ],
+   "last_evidence_session": 19,
+   "answer": "2023-10-19",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037149987096774195,
+   "retrieved_tokens": 602,
+   "retrieve_ms": 2597.2486669779755,
+   "retrieve_cost": 0.00020364987096774197
+  },
+  {
+   "idx": 77,
+   "question": "Would Melanie go on another roadtrip soon?",
+   "gold": "Likely no; since this one went badly",
+   "category": 3,
+   "evidence": [
+    "D18:3",
+    "D18:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No, she just had one.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00036666019354838716,
+   "retrieved_tokens": 643,
+   "retrieve_ms": 1896.6780829941854,
+   "retrieve_cost": 0.00019296019354838714
+  },
+  {
+   "idx": 78,
+   "question": "What items has Melanie bought?",
+   "gold": "Figurines, shoes",
+   "category": 1,
+   "evidence": [
+    "D19:2",
+    "D7:18"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Figurines.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00033104341935483877,
+   "retrieved_tokens": 439,
+   "retrieve_ms": 2284.9120420287363,
+   "retrieve_cost": 0.00019064341935483875
+  },
+  {
+   "idx": 79,
+   "question": "When did Caroline pass the adoption interview?",
+   "gold": "The Friday before 22 October 2023",
+   "category": 2,
+   "evidence": [
+    "D19:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "October 20, 2023.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003736188387096775,
+   "retrieved_tokens": 616,
+   "retrieve_ms": 1597.6627499912865,
+   "retrieve_cost": 0.00020366883870967745
+  },
+  {
+   "idx": 80,
+   "question": "When did Melanie buy the figurines?",
+   "gold": "21 October 2023",
+   "category": 2,
+   "evidence": [
+    "D19:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "October 21, 2023.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003480389032258065,
+   "retrieved_tokens": 516,
+   "retrieve_ms": 1863.3874999941327,
+   "retrieve_cost": 0.0001930889032258065
+  },
+  {
+   "idx": 81,
+   "question": "Would Caroline want to move back to her home country soon?",
+   "gold": "No; she's in the process of adopting children.",
+   "category": 3,
+   "evidence": [
+    "D19:1",
+    "D19:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No, she seems settled.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034392638709677416,
+   "retrieved_tokens": 493,
+   "retrieve_ms": 1368.8336670165882,
+   "retrieve_cost": 0.0001924263870967742
+  },
+  {
+   "idx": 82,
+   "question": "What did the charity race raise awareness for?",
+   "gold": "mental health",
+   "category": 4,
+   "evidence": [
+    "D2:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Mental health.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035688967741935487,
+   "retrieved_tokens": 549,
+   "retrieve_ms": 2395.0802499894053,
+   "retrieve_cost": 0.00019968967741935487
+  },
+  {
+   "idx": 83,
+   "question": "What did Melanie realize after the charity race?",
+   "gold": "self-care is important",
+   "category": 4,
+   "evidence": [
+    "D2:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Self-care is really important.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034393954838709683,
+   "retrieved_tokens": 507,
+   "retrieve_ms": 1638.3383329957724,
+   "retrieve_cost": 0.0001912395483870968
+  },
+  {
+   "idx": 84,
+   "question": "How does Melanie prioritize self-care?",
+   "gold": "by carving out some me-time each day for activities like running, reading, or playing the violin",
+   "category": 4,
+   "evidence": [
+    "D2:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Running, reading, and pottery.",
+   "memories": 19,
+   "label": "WRONG",
+   "query_cost": 0.0003988213548387097,
+   "retrieved_tokens": 878,
+   "retrieve_ms": 2254.8329579876736,
+   "retrieve_cost": 0.00019047135483870968
+  },
+  {
+   "idx": 85,
+   "question": "What are Caroline's plans for the summer?",
+   "gold": "researching adoption agencies",
+   "category": 4,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Mentorship program for LGBTQ youth.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00034679361290322586,
+   "retrieved_tokens": 536,
+   "retrieve_ms": 2113.5802079807036,
+   "retrieve_cost": 0.00018914361290322585
+  },
+  {
+   "idx": 86,
+   "question": "What type of individuals does the adoption agency Caroline is considering support?",
+   "gold": "LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 19,
+   "answer": "LGBTQ+ individuals.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0004028897419354839,
+   "retrieved_tokens": 839,
+   "retrieve_ms": 3146.8992499867454,
+   "retrieve_cost": 0.0001991897419354839
+  },
+  {
+   "idx": 87,
+   "question": "Why did Caroline choose the adoption agency?",
+   "gold": "because of their inclusivity and support for LGBTQ+ individuals",
+   "category": 4,
+   "evidence": [
+    "D2:12"
+   ],
+   "last_evidence_session": 19,
+   "answer": "They help LGBTQ+ folks with adoption.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003725897419354839,
+   "retrieved_tokens": 639,
+   "retrieve_ms": 2410.9101250069216,
+   "retrieve_cost": 0.0001991897419354839
+  },
+  {
+   "idx": 88,
+   "question": "What is Caroline excited about in the adoption process?",
+   "gold": "creating a family for kids who need one",
+   "category": 4,
+   "evidence": [
+    "D2:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Creating a loving home for kids.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.00039130683870967746,
+   "retrieved_tokens": 814,
+   "retrieve_ms": 1804.0619170060381,
+   "retrieve_cost": 0.00019165683870967746
+  },
+  {
+   "idx": 89,
+   "question": "What does Melanie think about Caroline's decision to adopt?",
+   "gold": "she thinks Caroline is doing something amazing and will be an awesome mom",
+   "category": 4,
+   "evidence": [
+    "D2:15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Melanie thinks it's awesome.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00038601348387096775,
+   "retrieved_tokens": 788,
+   "retrieve_ms": 2137.9047500086017,
+   "retrieve_cost": 0.00019056348387096777
+  },
+  {
+   "idx": 90,
+   "question": "How long have Mel and her husband been married?",
+   "gold": "Mel and her husband have been married for 5 years.",
+   "category": 4,
+   "evidence": [
+    "D3:16"
+   ],
+   "last_evidence_session": 19,
+   "answer": "5 years",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003272866451612903,
+   "retrieved_tokens": 428,
+   "retrieve_ms": 1945.5347090261057,
+   "retrieve_cost": 0.00018853664516129033
+  },
+  {
+   "idx": 91,
+   "question": "What does Caroline's necklace symbolize?",
+   "gold": "love, faith, and strength",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Love, faith, and strength.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003561803225806452,
+   "retrieved_tokens": 567,
+   "retrieve_ms": 2618.4587909956463,
+   "retrieve_cost": 0.0001944803225806452
+  },
+  {
+   "idx": 92,
+   "question": "What country is Caroline's grandma from?",
+   "gold": "Sweden",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Sweden",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.000315853935483871,
+   "retrieved_tokens": 388,
+   "retrieve_ms": 1699.4843339780346,
+   "retrieve_cost": 0.000183703935483871
+  },
+  {
+   "idx": 93,
+   "question": "What was grandma's gift to Caroline?",
+   "gold": "necklace",
+   "category": 4,
+   "evidence": [
+    "D4:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A necklace from Sweden.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003273350322580645,
+   "retrieved_tokens": 442,
+   "retrieve_ms": 1918.9492500154302,
+   "retrieve_cost": 0.00018528503225806453
+  },
+  {
+   "idx": 94,
+   "question": "What is Melanie's hand-painted bowl a reminder of?",
+   "gold": "art and self-expression",
+   "category": 4,
+   "evidence": [
+    "D4:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Creativity and emotional expression.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.00041754658064516127,
+   "retrieved_tokens": 986,
+   "retrieve_ms": 3799.821124994196,
+   "retrieve_cost": 0.0001923965806451613
+  },
+  {
+   "idx": 95,
+   "question": "What did Melanie and her family do while camping?",
+   "gold": "explored nature, roasted marshmallows, and went on a hike",
+   "category": 4,
+   "evidence": [
+    "D4:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Explored nature and roasted marshmallows.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003878976774193549,
+   "retrieved_tokens": 751,
+   "retrieve_ms": 3710.397082963027,
+   "retrieve_cost": 0.00019649767741935486
+  },
+  {
+   "idx": 96,
+   "question": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+   "gold": "working with trans people, helping them accept themselves and supporting their mental health",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Supporting trans people's mental health.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003550858064516129,
+   "retrieved_tokens": 539,
+   "retrieve_ms": 3460.642750025727,
+   "retrieve_cost": 0.0001960858064516129
+  },
+  {
+   "idx": 97,
+   "question": "What workshop did Caroline attend recently?",
+   "gold": "LGBTQ+ counseling workshop",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "LGBTQ+ counseling workshop.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00037573780645161286,
+   "retrieved_tokens": 636,
+   "retrieve_ms": 2729.7365840058774,
+   "retrieve_cost": 0.0002036878064516129
+  },
+  {
+   "idx": 98,
+   "question": "What was discussed in the LGBTQ+ counseling workshop?",
+   "gold": "therapeutic methods and how to best work with trans people",
+   "category": 4,
+   "evidence": [
+    "D4:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Therapeutic methods for trans people.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0004076949677419355,
+   "retrieved_tokens": 810,
+   "retrieve_ms": 2323.8842909922823,
+   "retrieve_cost": 0.0002080449677419355
+  },
+  {
+   "idx": 99,
+   "question": "What motivated Caroline to pursue counseling?",
+   "gold": "her own journey and the support she received, and how counseling improved her life",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Her own struggles and support received.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0003989914838709677,
+   "retrieved_tokens": 841,
+   "retrieve_ms": 3971.2690000305884,
+   "retrieve_cost": 0.00019619148387096775
+  },
+  {
+   "idx": 100,
+   "question": "What kind of place does Caroline want to create for people?",
+   "gold": "a safe and inviting place for people to grow",
+   "category": 4,
+   "evidence": [
+    "D4:15"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A safe and inviting place.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00043622864516129037,
+   "retrieved_tokens": 1085,
+   "retrieve_ms": 2700.62625000719,
+   "retrieve_cost": 0.00019592864516129036
+  },
+  {
+   "idx": 101,
+   "question": "Did Melanie make the black and white bowl in the photo?",
+   "gold": "Yes",
+   "category": 4,
+   "evidence": [
+    "D5:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No, she made a different bowl.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00034712419354838715,
+   "retrieved_tokens": 540,
+   "retrieve_ms": 2905.6804589927197,
+   "retrieve_cost": 0.00018737419354838711
+  },
+  {
+   "idx": 102,
+   "question": "What kind of books does Caroline have in her library?",
+   "gold": "kids' books - classics, stories from different cultures, educational books",
+   "category": 4,
+   "evidence": [
+    "D6:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Kids' books, classics, educational books.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031752929032258063,
+   "retrieved_tokens": 387,
+   "retrieve_ms": 3651.6788749722764,
+   "retrieve_cost": 0.00018042929032258066
+  },
+  {
+   "idx": 103,
+   "question": "What was Melanie's favorite book from her childhood?",
+   "gold": "\"Charlotte's Web\"",
+   "category": 4,
+   "evidence": [
+    "D6:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "\"Charlotte's Web\"",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034471374193548393,
+   "retrieved_tokens": 497,
+   "retrieve_ms": 3385.5440000188537,
+   "retrieve_cost": 0.0001938137419354839
+  },
+  {
+   "idx": 104,
+   "question": "What book did Caroline recommend to Melanie?",
+   "gold": "\"Becoming Nicole\"",
+   "category": 4,
+   "evidence": [
+    "D7:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "\"Becoming Nicole\" by Amy Ellis Nutt.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003426851612903226,
+   "retrieved_tokens": 499,
+   "retrieve_ms": 2829.2010410223156,
+   "retrieve_cost": 0.0001884851612903226
+  },
+  {
+   "idx": 105,
+   "question": "What did Caroline take away from the book \"Becoming Nicole\"?",
+   "gold": "Lessons on self-acceptance and finding support",
+   "category": 4,
+   "evidence": [
+    "D7:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "It gave her hope for her path.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035643038709677426,
+   "retrieved_tokens": 535,
+   "retrieve_ms": 3188.85929195676,
+   "retrieve_cost": 0.0001971303870967742
+  },
+  {
+   "idx": 106,
+   "question": "What are the new shoes that Melanie got used for?",
+   "gold": "Running",
+   "category": 4,
+   "evidence": [
+    "D7:19"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Running.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003336611612903226,
+   "retrieved_tokens": 447,
+   "retrieve_ms": 2974.543124961201,
+   "retrieve_cost": 0.0001917611612903226
+  },
+  {
+   "idx": 107,
+   "question": "What is Melanie's reason for getting into running?",
+   "gold": "To de-stress and clear her mind",
+   "category": 4,
+   "evidence": [
+    "D7:21"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To de-stress and clear her mind.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003491566451612903,
+   "retrieved_tokens": 543,
+   "retrieve_ms": 3546.235083020292,
+   "retrieve_cost": 0.00018895664516129033
+  },
+  {
+   "idx": 108,
+   "question": "What does Melanie say running has been great for?",
+   "gold": "Her mental health",
+   "category": 4,
+   "evidence": [
+    "D7:24"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Her headspace.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00032468516129032264,
+   "retrieved_tokens": 410,
+   "retrieve_ms": 3714.2772499937564,
+   "retrieve_cost": 0.00018743516129032263
+  },
+  {
+   "idx": 109,
+   "question": "What did Mel and her kids make during the pottery workshop?",
+   "gold": "pots",
+   "category": 4,
+   "evidence": [
+    "D8:2"
+   ],
+   "last_evidence_session": 19,
+   "answer": "They made their own pots.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003430937419354839,
+   "retrieved_tokens": 495,
+   "retrieve_ms": 3087.0274159824476,
+   "retrieve_cost": 0.0001912937419354839
+  },
+  {
+   "idx": 110,
+   "question": "What kind of pot did Mel and her kids make with clay?",
+   "gold": "a cup with a dog face on it",
+   "category": 4,
+   "evidence": [
+    "D8:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "They made their own pots.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034184187096774195,
+   "retrieved_tokens": 472,
+   "retrieve_ms": 3843.6202090233564,
+   "retrieve_cost": 0.00019319187096774197
+  },
+  {
+   "idx": 111,
+   "question": "What creative project do Mel and her kids do together besides pottery?",
+   "gold": "painting",
+   "category": 4,
+   "evidence": [
+    "D8:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Painting nature-inspired works.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00035545238709677426,
+   "retrieved_tokens": 578,
+   "retrieve_ms": 3516.9388340436853,
+   "retrieve_cost": 0.00019150238709677423
+  },
+  {
+   "idx": 112,
+   "question": "What did Mel and her kids paint in their latest project in July 2023?",
+   "gold": "a sunset with a palm tree",
+   "category": 4,
+   "evidence": [
+    "D8:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Nature-inspired painting.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003478732258064516,
+   "retrieved_tokens": 494,
+   "retrieve_ms": 3222.827084013261,
+   "retrieve_cost": 0.00019592322580645166
+  },
+  {
+   "idx": 113,
+   "question": "What did Caroline see at the council meeting for adoption?",
+   "gold": "many people wanting to create loving homes for children in need",
+   "category": 4,
+   "evidence": [
+    "D8:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Many people wanting to adopt.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037213141935483877,
+   "retrieved_tokens": 635,
+   "retrieve_ms": 3662.172250042204,
+   "retrieve_cost": 0.00019963141935483875
+  },
+  {
+   "idx": 114,
+   "question": "What do sunflowers represent according to Caroline?",
+   "gold": "warmth and happiness",
+   "category": 4,
+   "evidence": [
+    "D8:11"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Warmth and happiness.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003544376129032258,
+   "retrieved_tokens": 530,
+   "retrieve_ms": 2729.209000011906,
+   "retrieve_cost": 0.00019888761290322583
+  },
+  {
+   "idx": 115,
+   "question": "Why are flowers important to Melanie?",
+   "gold": "They remind her to appreciate the small moments and were a part of her wedding decor",
+   "category": 4,
+   "evidence": [
+    "D8:12"
+   ],
+   "last_evidence_session": 19,
+   "answer": "They remind her of her wedding.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003588714193548387,
+   "retrieved_tokens": 608,
+   "retrieve_ms": 4000.5623340257443,
+   "retrieve_cost": 0.00019102141935483874
+  },
+  {
+   "idx": 116,
+   "question": "What inspired Caroline's painting for the art show?",
+   "gold": "visiting an LGBTQ center and wanting to capture unity and strength",
+   "category": 4,
+   "evidence": [
+    "D9:16"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Her journey as a trans woman.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00041982290322580646,
+   "retrieved_tokens": 1001,
+   "retrieve_ms": 2762.764083046932,
+   "retrieve_cost": 0.00019212290322580649
+  },
+  {
+   "idx": 117,
+   "question": "How often does Melanie go to the beach with her kids?",
+   "gold": "once or twice a year",
+   "category": 4,
+   "evidence": [
+    "D10:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Once or twice a year.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035440858064516125,
+   "retrieved_tokens": 539,
+   "retrieve_ms": 3131.4540420426056,
+   "retrieve_cost": 0.0001960085806451613
+  },
+  {
+   "idx": 118,
+   "question": "What did Melanie and her family see during their camping trip last year?",
+   "gold": "Perseid meteor shower",
+   "category": 4,
+   "evidence": [
+    "D10:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Perseid meteor shower.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003860794838709677,
+   "retrieved_tokens": 738,
+   "retrieve_ms": 4112.86354198819,
+   "retrieve_cost": 0.00019782948387096774
+  },
+  {
+   "idx": 119,
+   "question": "How did Melanie feel while watching the meteor shower?",
+   "gold": "in awe of the universe",
+   "category": 4,
+   "evidence": [
+    "D10:18"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Awe and inspiration.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00035319077419354843,
+   "retrieved_tokens": 550,
+   "retrieve_ms": 4051.185708027333,
+   "retrieve_cost": 0.00019434077419354842
+  },
+  {
+   "idx": 120,
+   "question": "Whose birthday did Melanie celebrate recently?",
+   "gold": "Melanie's daughter",
+   "category": 4,
+   "evidence": [
+    "D11:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Her daughter's birthday.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003466935483870968,
+   "retrieved_tokens": 525,
+   "retrieve_ms": 1863.301000033971,
+   "retrieve_cost": 0.0001927935483870968
+  },
+  {
+   "idx": 121,
+   "question": "Who performed at the concert at Melanie's daughter's birthday?",
+   "gold": "Matt Patterson",
+   "category": 4,
+   "evidence": [
+    "D11:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Matt Patterson",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003296413548387097,
+   "retrieved_tokens": 419,
+   "retrieve_ms": 3909.7319999709725,
+   "retrieve_cost": 0.0001919413548387097
+  },
+  {
+   "idx": 122,
+   "question": "Why did Melanie choose to use colors and patterns in her pottery project?",
+   "gold": "She wanted to catch the eye and make people smile.",
+   "category": 4,
+   "evidence": [
+    "D12:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "To express her emotions.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.0003736424516129032,
+   "retrieved_tokens": 681,
+   "retrieve_ms": 4021.6196670080535,
+   "retrieve_cost": 0.00019394245161290325
+  },
+  {
+   "idx": 123,
+   "question": "What pet does Caroline have?",
+   "gold": "guinea pig",
+   "category": 4,
+   "evidence": [
+    "D13:3"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A guinea pig named Oscar.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031954509677419355,
+   "retrieved_tokens": 399,
+   "retrieve_ms": 3471.015165967401,
+   "retrieve_cost": 0.00018394509677419359
+  },
+  {
+   "idx": 124,
+   "question": "What pets does Melanie have?",
+   "gold": "Two cats and a dog",
+   "category": 4,
+   "evidence": [
+    "D13:4"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Melanie has a dog and two cats.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.0003345385161290323,
+   "retrieved_tokens": 476,
+   "retrieve_ms": 3596.8451669905335,
+   "retrieve_cost": 0.0001855885161290323
+  },
+  {
+   "idx": 125,
+   "question": "Where did Oliver hide his bone once?",
+   "gold": "In Melanie's slipper",
+   "category": 4,
+   "evidence": [
+    "D13:6"
+   ],
+   "last_evidence_session": 19,
+   "answer": "In Melanie's slipper.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033124548387096774,
+   "retrieved_tokens": 448,
+   "retrieve_ms": 3377.8314589872025,
+   "retrieve_cost": 0.00018829548387096776
+  },
+  {
+   "idx": 126,
+   "question": "What activity did Caroline used to do with her dad?",
+   "gold": "Horseback riding",
+   "category": 4,
+   "evidence": [
+    "D13:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Horseback riding.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00035598019354838716,
+   "retrieved_tokens": 577,
+   "retrieve_ms": 3139.8918330087326,
+   "retrieve_cost": 0.00019338019354838714
+  },
+  {
+   "idx": 127,
+   "question": "What did Caroline make for a local church?",
+   "gold": "a stained glass window",
+   "category": 4,
+   "evidence": [
+    "D14:17"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A mural showing time changing lives.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00033091509677419357,
+   "retrieved_tokens": 462,
+   "retrieve_ms": 3441.4614170091227,
+   "retrieve_cost": 0.00018436509677419359
+  },
+  {
+   "idx": 128,
+   "question": "What did Caroline find in her neighborhood during her walk?",
+   "gold": "a rainbow sidewalk",
+   "category": 4,
+   "evidence": [
+    "D14:23"
+   ],
+   "last_evidence_session": 19,
+   "answer": "A rainbow sidewalk.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003626647741935484,
+   "retrieved_tokens": 595,
+   "retrieve_ms": 3840.674500039313,
+   "retrieve_cost": 0.0001973647741935484
+  },
+  {
+   "idx": 129,
+   "question": "Which song motivates Caroline to be courageous?",
+   "gold": "Brave by Sara Bareilles",
+   "category": 4,
+   "evidence": [
+    "D15:23"
+   ],
+   "last_evidence_session": 19,
+   "answer": "\"Brave\" by Sara Bareilles",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00034413174193548393,
+   "retrieved_tokens": 484,
+   "retrieve_ms": 3953.657416976057,
+   "retrieve_cost": 0.00019398174193548391
+  },
+  {
+   "idx": 130,
+   "question": "Which  classical musicians does Melanie enjoy listening to?",
+   "gold": "Bach and Mozart",
+   "category": 4,
+   "evidence": [
+    "D15:28"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Bach and Mozart.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00033109974193548387,
+   "retrieved_tokens": 453,
+   "retrieve_ms": 2843.9648330095224,
+   "retrieve_cost": 0.0001867997419354839
+  },
+  {
+   "idx": 131,
+   "question": "Who is Melanie a fan of in terms of modern music?",
+   "gold": "Ed Sheeran",
+   "category": 4,
+   "evidence": [
+    "D15:28"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Ed Sheeran",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00031805012903225814,
+   "retrieved_tokens": 383,
+   "retrieve_ms": 2890.239375003148,
+   "retrieve_cost": 0.0001848501290322581
+  },
+  {
+   "idx": 132,
+   "question": "How long has Melanie been creating art?",
+   "gold": "7 years",
+   "category": 4,
+   "evidence": [
+    "D16:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Since she was 17 years old.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00034889748387096774,
+   "retrieved_tokens": 524,
+   "retrieve_ms": 3175.7985000149347,
+   "retrieve_cost": 0.00019274748387096776
+  },
+  {
+   "idx": 133,
+   "question": "What precautionary sign did Melanie see at the caf\u00e9?",
+   "gold": "A sign stating that someone is not being able to leave",
+   "category": 4,
+   "evidence": [
+    "D16:16"
+   ],
+   "last_evidence_session": 19,
+   "answer": "The sign was just a precaution.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003481292903225806,
+   "retrieved_tokens": 487,
+   "retrieve_ms": 2541.087833000347,
+   "retrieve_cost": 0.00019722929032258066
+  },
+  {
+   "idx": 134,
+   "question": "What advice does Caroline give for getting started with adoption?",
+   "gold": "Do research, find an adoption agency or lawyer, gather necessary documents, and prepare emotionally.",
+   "category": 4,
+   "evidence": [
+    "D17:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Contact adoption agencies for support.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.0003694846451612904,
+   "retrieved_tokens": 595,
+   "retrieve_ms": 2583.536666992586,
+   "retrieve_cost": 0.00020298464516129035
+  },
+  {
+   "idx": 135,
+   "question": "What setback did Melanie face in October 2023?",
+   "gold": "She got hurt and had to take a break from pottery.",
+   "category": 4,
+   "evidence": [
+    "D17:8"
+   ],
+   "last_evidence_session": 19,
+   "answer": "No specific setback mentioned.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00039921948387096774,
+   "retrieved_tokens": 763,
+   "retrieve_ms": 2958.9990410022438,
+   "retrieve_cost": 0.00020811948387096778
+  },
+  {
+   "idx": 136,
+   "question": "What does Melanie do to keep herself busy during her pottery break?",
+   "gold": "Read a book and paint.",
+   "category": 4,
+   "evidence": [
+    "D17:10"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Reading and painting.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003580647096774194,
+   "retrieved_tokens": 599,
+   "retrieve_ms": 2909.7246669698507,
+   "retrieve_cost": 0.00019156470967741937
+  },
+  {
+   "idx": 137,
+   "question": "What painting did Melanie show to Caroline on October 13, 2023?",
+   "gold": "A painting inspired by sunsets with a pink sky.",
+   "category": 4,
+   "evidence": [
+    "D17:12"
+   ],
+   "last_evidence_session": 19,
+   "answer": "An abstract painting.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.0003614442580645162,
+   "retrieved_tokens": 595,
+   "retrieve_ms": 2415.1565000065602,
+   "retrieve_cost": 0.00019464425806451616
+  },
+  {
+   "idx": 138,
+   "question": "What kind of painting did Caroline share with Melanie on October 13, 2023?",
+   "gold": "An abstract painting with blue streaks on a wall.",
+   "category": 4,
+   "evidence": [
+    "D17:14"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Abstract painting.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003661271612903226,
+   "retrieved_tokens": 618,
+   "retrieve_ms": 2392.531042045448,
+   "retrieve_cost": 0.0001958771612903226
+  },
+  {
+   "idx": 139,
+   "question": "What was the poetry reading that Caroline attended about?",
+   "gold": "It was a transgender poetry reading where transgender people shared their stories.",
+   "category": 4,
+   "evidence": [
+    "D17:18"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Transgender stories and self-expression.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00036435638709677416,
+   "retrieved_tokens": 590,
+   "retrieve_ms": 2758.9342919527553,
+   "retrieve_cost": 0.0001983063870967742
+  },
+  {
+   "idx": 140,
+   "question": "What did the posters at the poetry reading say?",
+   "gold": "\"Trans Lives Matter\"",
+   "category": 4,
+   "evidence": [
+    "D17:19"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Pride and strength.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00034154903225806457,
+   "retrieved_tokens": 472,
+   "retrieve_ms": 2492.5937919761054,
+   "retrieve_cost": 0.00019439903225806457
+  },
+  {
+   "idx": 141,
+   "question": "What does Caroline's drawing symbolize for her?",
+   "gold": "Freedom and being true to herself.",
+   "category": 4,
+   "evidence": [
+    "D17:23"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Freedom and being real.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00042056051612903225,
+   "retrieved_tokens": 992,
+   "retrieve_ms": 3312.8530000103638,
+   "retrieve_cost": 0.0001957105161290323
+  },
+  {
+   "idx": 142,
+   "question": "How do Melanie and Caroline describe their journey through life together?",
+   "gold": "An ongoing adventure of learning and growing.",
+   "category": 4,
+   "evidence": [
+    "D17:25"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Supportive and impactful journey.",
+   "memories": 18,
+   "label": "CORRECT",
+   "query_cost": 0.0004059669677419355,
+   "retrieved_tokens": 889,
+   "retrieve_ms": 3703.22829100769,
+   "retrieve_cost": 0.0001950669677419355
+  },
+  {
+   "idx": 143,
+   "question": "What happened to Melanie's son on their road trip?",
+   "gold": "He got into an accident",
+   "category": 4,
+   "evidence": [
+    "D18:1"
+   ],
+   "last_evidence_session": 19,
+   "answer": "He got into an accident.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.000362761935483871,
+   "retrieved_tokens": 616,
+   "retrieve_ms": 3544.335000042338,
+   "retrieve_cost": 0.000193111935483871
+  },
+  {
+   "idx": 144,
+   "question": "How did Melanie's son handle the accident?",
+   "gold": "He was scared but reassured by his family",
+   "category": 4,
+   "evidence": [
+    "D18:6",
+    "D18:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "He was okay after it.",
+   "memories": 10,
+   "label": "WRONG",
+   "query_cost": 0.00033734729032258064,
+   "retrieved_tokens": 478,
+   "retrieve_ms": 2801.9726250204258,
+   "retrieve_cost": 0.00018899729032258067
+  },
+  {
+   "idx": 145,
+   "question": "How did Melanie feel about her family after the accident?",
+   "gold": "They are important and mean the world to her",
+   "category": 4,
+   "evidence": [
+    "D18:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "They mean the world to her.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003419444516129032,
+   "retrieved_tokens": 494,
+   "retrieve_ms": 3376.9729590276256,
+   "retrieve_cost": 0.00018999445161290324
+  },
+  {
+   "idx": 146,
+   "question": "How did Melanie's children handle the accident?",
+   "gold": "They were scared but resilient",
+   "category": 4,
+   "evidence": [
+    "D18:7"
+   ],
+   "last_evidence_session": 19,
+   "answer": "They were scared but reassured.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00034554735483870966,
+   "retrieved_tokens": 511,
+   "retrieve_ms": 2992.1252919593826,
+   "retrieve_cost": 0.0001916473548387097
+  },
+  {
+   "idx": 147,
+   "question": "How did Melanie feel after the accident?",
+   "gold": "Grateful and thankful for her family",
+   "category": 4,
+   "evidence": [
+    "D18:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Thankful for family and life.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035555922580645164,
+   "retrieved_tokens": 591,
+   "retrieve_ms": 2592.2163749928586,
+   "retrieve_cost": 0.00018995922580645165
+  },
+  {
+   "idx": 148,
+   "question": "What was Melanie's reaction to her children enjoying the Grand Canyon?",
+   "gold": "She was happy and thankful",
+   "category": 4,
+   "evidence": [
+    "D18:5"
+   ],
+   "last_evidence_session": 19,
+   "answer": "She was thankful for them.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003719814193548388,
+   "retrieved_tokens": 665,
+   "retrieve_ms": 3260.5760829756036,
+   "retrieve_cost": 0.00019438141935483876
+  },
+  {
+   "idx": 149,
+   "question": "What do Melanie's family give her?",
+   "gold": "Strength and motivation",
+   "category": 4,
+   "evidence": [
+    "D18:9"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Love and support.",
+   "memories": 16,
+   "label": "CORRECT",
+   "query_cost": 0.00037423296774193553,
+   "retrieved_tokens": 729,
+   "retrieve_ms": 4047.4191670073196,
+   "retrieve_cost": 0.00018973296774193552
+  },
+  {
+   "idx": 150,
+   "question": "How did Melanie feel about her family supporting her?",
+   "gold": "She appreciated them a lot",
+   "category": 4,
+   "evidence": [
+    "D18:13"
+   ],
+   "last_evidence_session": 19,
+   "answer": "Melanie felt grateful and supported.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0003898664516129032,
+   "retrieved_tokens": 832,
+   "retrieve_ms": 3212.1945419930853,
+   "retrieve_cost": 0.00018751645161290325
+  },
+  {
+   "idx": 151,
+   "question": "What did Melanie do after the road trip to relax?",
+   "gold": "Went on a nature walk or hike",
+   "category": 4,
+   "evidence": [
+    "D18:17"
+   ],
+   "last_evidence_session": 19,
+   "answer": "She painted.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00037103980645161294,
+   "retrieved_tokens": 667,
+   "retrieve_ms": 2964.0900420490652,
+   "retrieve_cost": 0.00019553980645161293
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "store_from": "lean_t2",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 7163.5138545243535,
+ "retrieve_cost_per_query": 0.00019466572156196947,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

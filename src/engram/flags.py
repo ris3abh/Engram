@@ -47,11 +47,30 @@ class Flags:
     # Read-path switches for attribution (E4 k=3 ablations): history expansion and Jev reranking/query_relation.
     retrieval_history: bool = True
     retrieval_rerank: bool = True
+    # V2 Stage 4 reranker arms (V2_PLAN section 4): what scores the 30-fact shortlist when retrieval_rerank is on.
+    # jev (the system) | cross_encoder (cross-encoder/ms-marco-MiniLM-L-6-v2) | llm (gpt-4o-mini listwise).
+    retrieval_reranker: str = "jev"
     # Answer-model rendering (phase 2 step 2): full = belief/confidence, validity, relevance, source quote;
-    # compact = "[said date] text - source quote", validity only for closed facts, no belief or scores.
+    # compact = "[said date] text - source quote", validity only for closed facts, no belief or scores;
+    # lean = "[date] speaker: text", the unit as stored (lean arms).
     render: str = "full"
     relation_version: int = 1  # relation_to_candidate version: 1 (E0-E3) | 2 (adds `negates`, E5 on)
     temporal_version: int = 1  # temporal_status version: 1 | 2 (completed changes never hypothetical)
+    edge_type_version: int = 1  # edge_type version: 1 | 2 (type by what the object is, consistently; v2 Stage 2)
+    same_attribute_gate: bool = (
+        False  # ask same_attribute per candidate; p >= act lets an update pass the cardinality gate
+    )
+
+    # Lean arms (2026-09-26): conversation units instead of LLM-extracted facts (pipeline/lean.py).
+    extraction: str = "llm"  # llm (every earlier arm) | lean
+    lean_units: str = "turn"  # turn: the whole message (L0) | sentence: spaCy sentences (L1 on)
+    lean_dates: bool = False  # write relative dates, resolved against the session date, into each unit (L1 on)
+    lean_worth_gate: bool = False  # Jev worth_sentence per unit; only units above the threshold are indexed (L2 on)
+    lean_worth_threshold: float = 0.5
+    # T0R-wide (post-hoc exploratory, docs/V3_PLAN.md §12): a longer cosine shortlist, and "ranked" = keep every
+    # shortlisted unit ordered by Jev's P(relevant), no 0.5 cut, no floor, pull, history or expansion.
+    retrieval_shortlist: int = 30
+    rerank_keep: str = "threshold"  # threshold (every registered arm) | ranked
 
     def describe(self) -> dict:
         return asdict(self)

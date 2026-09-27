@@ -1,0 +1,946 @@
+{
+ "arm": "e4_frozen_sameattr",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 10,
+  "extract_prompt": "mem0",
+  "store_source_text": true,
+  "worth_filter": false,
+  "merge_policy": "same_as",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "mem0_update",
+  "relation_decider": "jev",
+  "cardinality_rule": true,
+  "close_agreement": true,
+  "candidate_source": "cosine+graph",
+  "fulfills_rule": "question",
+  "belief": true,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "not_planned_mass",
+  "update_multi_sibling": true,
+  "retrieval_history": true,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "compact",
+  "relation_version": 2,
+  "temporal_version": 2,
+  "edge_type_version": 1,
+  "same_attribute_gate": true,
+  "extraction": "llm",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5
+ },
+ "slice": {
+  "name": "adv:conv-48",
+  "sessions": [
+   1,
+   30
+  ],
+  "messages": 681,
+  "questions": 48
+ },
+ "accuracy": 0.6041666666666666,
+ "accuracy_by_category": {
+  "5": 0.6041666666666666
+ },
+ "stored": 867,
+ "active": 855,
+ "tentative": 832,
+ "disputed": 17,
+ "same_as_edges": 30,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 1118.25,
+ "retrieved_tokens_median": 1074.5,
+ "memories_mean": 15.458333333333334,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.008046612000000002,
+  "claude": 0.0,
+  "openai": 0.007885799999999998
+ },
+ "cache": {
+  "hits": 118,
+  "misses": 1514
+ },
+ "answers": [
+  {
+   "idx": 191,
+   "question": "What are the names of Deborah's snakes?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D2:20",
+    "D2:22"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah has no snakes.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.000456544064516129,
+   "retrieved_tokens": 1392,
+   "retrieve_ms": 2870.1610830030404,
+   "retrieve_cost": 0.00017094406451612903
+  },
+  {
+   "idx": 192,
+   "question": "What are Deborah's favorite books?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D4:21",
+    "D4:23"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Not specified in memories.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00047683083870967737,
+   "retrieved_tokens": 1545,
+   "retrieve_ms": 1981.3507919898257,
+   "retrieve_cost": 0.00016948083870967743
+  },
+  {
+   "idx": 193,
+   "question": "Where did Deborah get her dogs?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:23",
+    "D22:25"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah does not have dogs.",
+   "memories": 13,
+   "label": "WRONG",
+   "query_cost": 0.00036177677419354837,
+   "retrieved_tokens": 763,
+   "retrieve_ms": 1887.953291006852,
+   "retrieve_cost": 0.0001705267741935484
+  },
+  {
+   "idx": 194,
+   "question": "How old are Jolene's cats?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:27",
+    "D22:29"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Jolene has one cat, Luna, who is 5 years old.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004568669032258065,
+   "retrieved_tokens": 1346,
+   "retrieve_ms": 2055.8461250038818,
+   "retrieve_cost": 0.00017246690322580646
+  },
+  {
+   "idx": 195,
+   "question": "When did Deborah's parents give her first console?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not mention when Deborah's parents gave her a console.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003809996129032258,
+   "retrieved_tokens": 840,
+   "retrieve_ms": 2532.913875009399,
+   "retrieve_cost": 0.00017309961290322583
+  },
+  {
+   "idx": 196,
+   "question": "When did Jolene release her pet snake?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D2:24"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information on release date.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00038277,
+   "retrieved_tokens": 868,
+   "retrieve_ms": 2127.3669580114074,
+   "retrieve_cost": 0.00017577
+  },
+  {
+   "idx": 197,
+   "question": "Where did Jolene meet her new friend Anna?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D3:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information available about Anna.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00036813812903225814,
+   "retrieved_tokens": 795,
+   "retrieve_ms": 1483.5462079499848,
+   "retrieve_cost": 0.0001717881290322581
+  },
+  {
+   "idx": 198,
+   "question": "What is Deborah's favorite book which she mentioned on 4 February, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D4:21"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Not specified in memories.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.00045656167741935485,
+   "retrieved_tokens": 1329,
+   "retrieve_ms": 1754.0194159955718,
+   "retrieve_cost": 0.00017831167741935486
+  },
+  {
+   "idx": 199,
+   "question": "What cool stuff did Deborah accomplish at the retreat on 9 February, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D5:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No retreat mentioned on that date.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0004785921290322581,
+   "retrieved_tokens": 1473,
+   "retrieve_ms": 1537.5458330381662,
+   "retrieve_cost": 0.00017754212903225812
+  },
+  {
+   "idx": 200,
+   "question": "How does Deborah plan to involve local engineers in her idea of teaching STEM to underprivileged kids?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D5:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "By inviting them as guest speakers.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00048026632258064516,
+   "retrieved_tokens": 1477,
+   "retrieve_ms": 1610.4502090020105,
+   "retrieve_cost": 0.0001780163225806452
+  },
+  {
+   "idx": 201,
+   "question": "What gave Deborah anxiety in the garden she visited?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The loss of a friend.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0003915805161290323,
+   "retrieved_tokens": 915,
+   "retrieve_ms": 1635.2972500026226,
+   "retrieve_cost": 0.0001772305161290323
+  },
+  {
+   "idx": 202,
+   "question": "Why did Jolene spend time in the garden?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 30,
+   "answer": "To connect with nature and relax.",
+   "memories": 17,
+   "label": "WRONG",
+   "query_cost": 0.0004129509677419355,
+   "retrieved_tokens": 1088,
+   "retrieve_ms": 2009.0799169847742,
+   "retrieve_cost": 0.00017205096774193553
+  },
+  {
+   "idx": 203,
+   "question": "How did Jolene and her rival initially meet?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D7:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information about a rival.",
+   "memories": 11,
+   "label": "WRONG",
+   "query_cost": 0.00036376935483870964,
+   "retrieved_tokens": 762,
+   "retrieve_ms": 1724.6982919750735,
+   "retrieve_cost": 0.00017236935483870967
+  },
+  {
+   "idx": 204,
+   "question": "What activity does Jolene incorporate into her daily routine after going for a morning jog in the park?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D7:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Yoga and meditation.",
+   "memories": 19,
+   "label": "WRONG",
+   "query_cost": 0.0004661928387096774,
+   "retrieved_tokens": 1449,
+   "retrieve_ms": 2103.267416008748,
+   "retrieve_cost": 0.00016994283870967744
+  },
+  {
+   "idx": 205,
+   "question": "What method does Jolene suggest Deborah to try for organizing tasks based on importance and urgency?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D10:13"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Jolene plans to try the Eisenhower Matrix.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.00039097529032258065,
+   "retrieved_tokens": 885,
+   "retrieve_ms": 2133.786499965936,
+   "retrieve_cost": 0.00017572529032258068
+  },
+  {
+   "idx": 206,
+   "question": "How does Jolene plan to pursue her dream of climbing mountains?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D10:20"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information available on climbing mountains.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004954449677419355,
+   "retrieved_tokens": 1609,
+   "retrieve_ms": 2198.156042024493,
+   "retrieve_cost": 0.00017549496774193552
+  },
+  {
+   "idx": 207,
+   "question": "Who are the authors mentioned by Jolene that she enjoys reading during her yoga practice?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D11:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Nils Frahm and Olafur Arnalds.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0004612114838709678,
+   "retrieved_tokens": 1398,
+   "retrieve_ms": 2343.089999980293,
+   "retrieve_cost": 0.00016931148387096777
+  },
+  {
+   "idx": 208,
+   "question": "Which show did Jolene go to with a friend on 9 April, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information available.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004997930322580645,
+   "retrieved_tokens": 1622,
+   "retrieve_ms": 2246.168125013355,
+   "retrieve_cost": 0.00017789303225806456
+  },
+  {
+   "idx": 209,
+   "question": "What does Deborah find comforting about going to horror movie screenings?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D12:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information available.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.00036601819354838713,
+   "retrieved_tokens": 756,
+   "retrieve_ms": 2394.698833988514,
+   "retrieve_cost": 0.00017611819354838713
+  },
+  {
+   "idx": 210,
+   "question": "How does Deborah describe the time spent with her snakes and partner?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D12:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah enjoys playing detective games.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0003808703225806452,
+   "retrieved_tokens": 853,
+   "retrieve_ms": 2420.2046660357155,
+   "retrieve_cost": 0.0001743203225806452
+  },
+  {
+   "idx": 211,
+   "question": "For how long has Jolene had Lucifer as a pet?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D14:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No mention of Lucifer.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.0004488214838709678,
+   "retrieved_tokens": 1313,
+   "retrieve_ms": 2493.1735409772955,
+   "retrieve_cost": 0.00017477148387096776
+  },
+  {
+   "idx": 212,
+   "question": "How does Deborah feel when spending time with Seraphim?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D14:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No direct mention of Deborah's feelings.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0004178622580645161,
+   "retrieved_tokens": 1108,
+   "retrieve_ms": 2533.9924579602666,
+   "retrieve_cost": 0.00017276225806451615
+  },
+  {
+   "idx": 213,
+   "question": "What made being part of the running group easy for Jolene to stay motivated?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D15:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Supportive group environment.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00040570819354838713,
+   "retrieved_tokens": 1031,
+   "retrieve_ms": 2715.8415419980884,
+   "retrieve_cost": 0.0001727581935483871
+  },
+  {
+   "idx": 214,
+   "question": "Why did Jolene decide to get a tarantula as a pet?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D15:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "There is no mention of a tarantula.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00040846548387096776,
+   "retrieved_tokens": 1016,
+   "retrieve_ms": 2645.644916978199,
+   "retrieve_cost": 0.00017506548387096775
+  },
+  {
+   "idx": 215,
+   "question": "How did Deborah come to have her pet, Susie?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D16:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah does not have a pet named Susie.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00045461400000000005,
+   "retrieved_tokens": 1347,
+   "retrieve_ms": 2809.079999977257,
+   "retrieve_cost": 0.00017186400000000003
+  },
+  {
+   "idx": 216,
+   "question": "What did Deborah design inspired by their love for space and engines?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D17:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah did not design anything.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003825137419354839,
+   "retrieved_tokens": 860,
+   "retrieve_ms": 2719.3918749690056,
+   "retrieve_cost": 0.00017491374193548387
+  },
+  {
+   "idx": 217,
+   "question": "What journal has Deborah been using to help track tasks and stay organized?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D18:3"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah has not mentioned using a journal.",
+   "memories": 19,
+   "label": "CORRECT",
+   "query_cost": 0.000480822,
+   "retrieved_tokens": 1505,
+   "retrieve_ms": 2969.502999971155,
+   "retrieve_cost": 0.00017497200000000005
+  },
+  {
+   "idx": 218,
+   "question": "What game did Jolene recommend to Deborah for being thrilling and intense?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No specific game mentioned.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.00039990445161290324,
+   "retrieved_tokens": 1020,
+   "retrieve_ms": 3162.5745419878513,
+   "retrieve_cost": 0.00016920445161290324
+  },
+  {
+   "idx": 219,
+   "question": "What game did Deborah suggest as an awesome open-world game for the Nintendo Switch?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah did not suggest any game.",
+   "memories": 14,
+   "label": "CORRECT",
+   "query_cost": 0.0003930036774193549,
+   "retrieved_tokens": 946,
+   "retrieve_ms": 3117.0612500282004,
+   "retrieve_cost": 0.00017100367741935488
+  },
+  {
+   "idx": 220,
+   "question": "What is special about the bench at the park near Jolene's house?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:18"
+   ],
+   "last_evidence_session": 30,
+   "answer": "It holds significant memories with her mom.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.00035901348387096775,
+   "retrieved_tokens": 724,
+   "retrieve_ms": 3374.5119579834864,
+   "retrieve_cost": 0.00017061348387096778
+  },
+  {
+   "idx": 221,
+   "question": "What did Jolene and her mom chat about at their special bench in the park?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D19:19"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Dreams and life.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0004484738709677419,
+   "retrieved_tokens": 1312,
+   "retrieve_ms": 3237.0223330217414,
+   "retrieve_cost": 0.00017307387096774193
+  },
+  {
+   "idx": 222,
+   "question": "How did Deborah feel after receiving positive feedback at the virtual conference?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D21:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah did not present at a virtual conference.",
+   "memories": 14,
+   "label": "WRONG",
+   "query_cost": 0.0004210633548387097,
+   "retrieved_tokens": 1113,
+   "retrieve_ms": 3162.194875010755,
+   "retrieve_cost": 0.0001737133548387097
+  },
+  {
+   "idx": 223,
+   "question": "What kind of event did Deborah present at recently?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D21:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "A yoga event.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.0005040532258064516,
+   "retrieved_tokens": 1684,
+   "retrieve_ms": 2809.7502080490813,
+   "retrieve_cost": 0.0001755532258064516
+  },
+  {
+   "idx": 224,
+   "question": "What did Deborah's mom stress the value of, which she wants to keep in mind for her engineering projects?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Helping others.",
+   "memories": 17,
+   "label": "WRONG",
+   "query_cost": 0.0004407907741935484,
+   "retrieved_tokens": 1250,
+   "retrieve_ms": 3231.6666250117123,
+   "retrieve_cost": 0.0001743907741935484
+  },
+  {
+   "idx": 225,
+   "question": "What type of projects is Deborah interested in getting involved in the future?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:8"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Mindfulness and community cleanup projects.",
+   "memories": 18,
+   "label": "WRONG",
+   "query_cost": 0.00046278309677419356,
+   "retrieved_tokens": 1385,
+   "retrieve_ms": 3514.090084005147,
+   "retrieve_cost": 0.00017613309677419356
+  },
+  {
+   "idx": 226,
+   "question": "How did Jolene get Luna, one of her cats?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D22:25"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Jolene did not get Luna; Deborah did.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004558091612903227,
+   "retrieved_tokens": 1343,
+   "retrieve_ms": 3610.9082920011133,
+   "retrieve_cost": 0.00017365916129032262
+  },
+  {
+   "idx": 227,
+   "question": "What type of classes did Deborah and her partner check out during their trip to Rio de Janeiro on 30 August, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Deborah and her partner checked out yoga classes.",
+   "memories": 20,
+   "label": "WRONG",
+   "query_cost": 0.00047314316129032266,
+   "retrieved_tokens": 1418,
+   "retrieve_ms": 3746.203917020466,
+   "retrieve_cost": 0.0001758431612903226
+  },
+  {
+   "idx": 228,
+   "question": "Why did Deborah get the new plant on 30 August, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D23:29"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information available.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003726634838709678,
+   "retrieved_tokens": 787,
+   "retrieve_ms": 3621.705916011706,
+   "retrieve_cost": 0.0001769134838709678
+  },
+  {
+   "idx": 229,
+   "question": "How did Jolene's mom support her yoga practice when she first started?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:5"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not provide information about Jolene's mom supporting her yoga practice.",
+   "memories": 11,
+   "label": "CORRECT",
+   "query_cost": 0.00037450703225806454,
+   "retrieved_tokens": 798,
+   "retrieve_ms": 3727.592166978866,
+   "retrieve_cost": 0.00017020703225806454
+  },
+  {
+   "idx": 230,
+   "question": "What was the video game console that Deborah's parents got her at age 10?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:6"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not specify the console.",
+   "memories": 12,
+   "label": "CORRECT",
+   "query_cost": 0.0003765,
+   "retrieved_tokens": 840,
+   "retrieve_ms": 3219.860167009756,
+   "retrieve_cost": 0.00017010000000000001
+  },
+  {
+   "idx": 231,
+   "question": "What was one of Deborah's favorite games to play with her mom on the PlayStation game system?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D24:10"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not specify Deborah's favorite game to play with her mom on the PlayStation.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.0004226425161290323,
+   "retrieved_tokens": 1068,
+   "retrieve_ms": 2997.982249944471,
+   "retrieve_cost": 0.00017454251612903228
+  },
+  {
+   "idx": 232,
+   "question": "Where did Deborah and her partner travel for a few weeks in September 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D27:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No travel mentioned for September 2023.",
+   "memories": 20,
+   "label": "CORRECT",
+   "query_cost": 0.0004785758709677419,
+   "retrieved_tokens": 1474,
+   "retrieve_ms": 3114.4296250422485,
+   "retrieve_cost": 0.00017647587096774196
+  },
+  {
+   "idx": 233,
+   "question": "What did Jolene do with their mom's old friends?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D28:7"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Jolene expressed interest in their activities.",
+   "memories": 12,
+   "label": "WRONG",
+   "query_cost": 0.0003660745161290323,
+   "retrieved_tokens": 769,
+   "retrieve_ms": 3115.098542009946,
+   "retrieve_cost": 0.00017122451612903227
+  },
+  {
+   "idx": 234,
+   "question": "Where did Jolene get married?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D28:11"
+   ],
+   "last_evidence_session": 30,
+   "answer": "Jolene is not married.",
+   "memories": 8,
+   "label": "WRONG",
+   "query_cost": 0.00036587574193548385,
+   "retrieved_tokens": 758,
+   "retrieve_ms": 3530.1992499735206,
+   "retrieve_cost": 0.00017537574193548388
+  },
+  {
+   "idx": 235,
+   "question": "What new activity did Jolene and her neighbor organize for the community on 16 September, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D29:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No information available.",
+   "memories": 15,
+   "label": "CORRECT",
+   "query_cost": 0.000421145806451613,
+   "retrieved_tokens": 1081,
+   "retrieve_ms": 3471.0145829594694,
+   "retrieve_cost": 0.00017949580645161296
+  },
+  {
+   "idx": 236,
+   "question": "What food did Jolene's mom make for her on holidays?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D29:9"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not specify what food Jolene's mom made for her on holidays.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.0003837449032258064,
+   "retrieved_tokens": 863,
+   "retrieve_ms": 3336.039540998172,
+   "retrieve_cost": 0.00016969490322580648
+  },
+  {
+   "idx": 237,
+   "question": "What kind of cookies did Deborah used to bake with someone close to her?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D29:12"
+   ],
+   "last_evidence_session": 30,
+   "answer": "The memories do not specify the kind of cookies Deborah used to bake.",
+   "memories": 13,
+   "label": "CORRECT",
+   "query_cost": 0.00039083516129032264,
+   "retrieved_tokens": 912,
+   "retrieve_ms": 3170.631249959115,
+   "retrieve_cost": 0.00017063516129032263
+  },
+  {
+   "idx": 238,
+   "question": "What activity did Jolene enjoy at the music festival with their pals on September 20, 2023?",
+   "gold": "Not mentioned in the conversation",
+   "category": 5,
+   "evidence": [
+    "D30:1"
+   ],
+   "last_evidence_session": 30,
+   "answer": "No specific activity mentioned.",
+   "memories": 10,
+   "label": "CORRECT",
+   "query_cost": 0.0003760136129032258,
+   "retrieved_tokens": 786,
+   "retrieve_ms": 3531.2091669766232,
+   "retrieve_cost": 0.00017801361290322582
+  }
+ ],
+ "options": {
+  "top_k": 20,
+  "no_dates": false
+ },
+ "reused_store": "heldout_conv-48__k3",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 7688.546313002007,
+ "retrieve_cost_per_query": 0.00017377869758064516,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "same_attribute_report": {
+  "evidence_events": 0,
+  "evidence_applied": 0,
+  "evidence_unconfirmed": 0,
+  "facts_lowered": 0,
+  "facts_lowered_closed": 0,
+  "closes_via_same_attribute": []
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {},
+ "store_size_buckets": []
+}

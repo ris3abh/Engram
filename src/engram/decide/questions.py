@@ -35,6 +35,7 @@ class NoulQuestion:
     instructions: str
     true: str
     false: str
+    version: int = 1  # bumped when wording changes; not part of the payload
 
     type = "noul"
 
@@ -247,6 +248,23 @@ EDGE_TYPE = ChoiceQuestion(
     instructions="Which relation best describes how `new_fact.subject` relates to `new_fact.object`?",
     criteria=EDGE_TYPES,
 )
+# v2 (V2 Stage 2 close attempt, 2026-09-25): type consistently by what the object is, so that a later fact replacing
+# this one about the same attribute gets the same relation and can pass the cardinality gate. Same options and rubrics.
+EDGE_TYPE_V2 = ChoiceQuestion(
+    id="edge_type",
+    instructions=(
+        "Which relation best describes how `new_fact.subject` relates to `new_fact.object`? Choose by what kind of "
+        "thing the object is, and choose consistently, so that a later fact that replaces this one about the same "
+        "attribute would get the same relation. Use `related_to` only when no other relation fits."
+    ),
+    criteria=EDGE_TYPES,
+    version=2,
+)
+
+
+def edge_type_question(version: int) -> ChoiceQuestion:
+    return {1: EDGE_TYPE, 2: EDGE_TYPE_V2}[version]
+
 
 DURABILITY = ChoiceQuestion(
     id="durability",
@@ -285,6 +303,22 @@ def relation_questions(version: int) -> tuple[ChoiceQuestion, ChoiceQuestion]:
     """(relation_to_candidate, its recheck phrasing) for a question version."""
     return {1: (RELATION_TO_CANDIDATE_V1, RELATION_RECHECK_V1), 2: (RELATION_TO_CANDIDATE, RELATION_RECHECK)}[version]
 
+
+# V2 Stage 2 (2026-09-25, Flags.same_attribute_gate): asked per candidate in the relation request. At p(yes) >=
+# ACT_THRESHOLD an `update` may retire a multi-valued fact regardless of edge_type (the cardinality gate otherwise
+# compares two independently assigned edge_type labels). Contradictions are unaffected.
+SAME_ATTRIBUTE = NoulQuestion(
+    id="same_attribute",
+    instructions=(
+        "Do `new_fact` and `existing_fact` describe the same attribute of the same subject, so that one value would "
+        "replace the other?"
+    ),
+    true=(
+        "Both give a value for one and the same attribute of the same subject; the new value takes the old one's place."
+    ),
+    false="They are about different attributes or different subjects, or both values can hold at the same time.",
+    version=1,
+)
 
 # E5 (fulfills): asked only for plan/goal candidates. A plan closes as fulfilled at p >= ACT_THRESHOLD.
 PLAN_FULFILLED = NoulQuestion(
@@ -344,3 +378,17 @@ ALL_QUESTIONS: dict[str, Question] = {
 
 for _q in ALL_QUESTIONS.values():
     assert len(_q.options) <= MAX_OPTIONS, _q.id
+
+
+# Lean write path (pipeline/lean.py, L2 on): one per sentence unit. State: {"source_message": "[date] speaker: text"}
+
+WORTH_SENTENCE = NoulQuestion(
+    id="worth_sentence",
+    instructions=(
+        "Does `sentence` state something worth remembering about a person (a fact, preference, plan, event or "
+        "relationship)?"
+    ),
+    true="It states a fact, preference, plan, event or relationship about a person.",
+    false="A greeting, small talk, filler, a question, or a remark with nothing to remember about a person.",
+    version=1,
+)

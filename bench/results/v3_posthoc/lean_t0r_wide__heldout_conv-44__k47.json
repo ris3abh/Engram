@@ -1,0 +1,4971 @@
+{
+ "arm": "lean_t0r_wide",
+ "system": "engram",
+ "flags": {
+  "retrieval_floor": 0,
+  "extract_prompt": "v1",
+  "store_source_text": false,
+  "worth_filter": true,
+  "merge_policy": "keep",
+  "extract_last_k": 10,
+  "extract_recent": 0,
+  "extract_observation_date": "session",
+  "extract_current_date": "2026-09-23",
+  "escalation_prompt": "engram",
+  "relation_decider": "jev",
+  "cardinality_rule": false,
+  "close_agreement": false,
+  "candidate_source": "cosine",
+  "fulfills_rule": "off",
+  "belief": false,
+  "belief_w": 1.0,
+  "belief_evidence": "all",
+  "temporal_gate": "current",
+  "update_multi_sibling": false,
+  "retrieval_history": false,
+  "retrieval_rerank": true,
+  "retrieval_reranker": "jev",
+  "render": "lean",
+  "relation_version": 1,
+  "temporal_version": 1,
+  "edge_type_version": 1,
+  "same_attribute_gate": false,
+  "extraction": "lean",
+  "lean_units": "turn",
+  "lean_dates": false,
+  "lean_worth_gate": false,
+  "lean_worth_threshold": 0.5,
+  "retrieval_shortlist": 150,
+  "rerank_keep": "ranked"
+ },
+ "slice": {
+  "name": "heldout:conv-44",
+  "sessions": [
+   1,
+   28
+  ],
+  "messages": 675,
+  "questions": 123
+ },
+ "store_size_buckets": [
+  {
+   "checkpoint": 28,
+   "store_size": 675,
+   "questions": 123,
+   "accuracy": 0.7967479674796748,
+   "no_memory": 0,
+   "early_questions": 123,
+   "early_accuracy": 0.7967479674796748
+  }
+ ],
+ "accuracy": 0.7967479674796748,
+ "accuracy_by_category": {
+  "1": 0.8,
+  "2": 0.6666666666666666,
+  "3": 0.2857142857142857,
+  "4": 0.9032258064516129
+ },
+ "stored": 675,
+ "active": 675,
+ "tentative": 0,
+ "disputed": 0,
+ "same_as_edges": 0,
+ "pipeline_stats": {},
+ "facts_extracted": 0,
+ "facts_dropped": 0,
+ "merges": 0,
+ "closes": 0,
+ "closes_detail": [],
+ "wrong_closes": 0,
+ "escalations": 0,
+ "llm_decisions": 0,
+ "actions": {},
+ "decision_cost_per_1k": null,
+ "cost_per_1k": null,
+ "write_latency_p50_ms": null,
+ "decision_latency_p50_ms": null,
+ "no_memory_questions": 0,
+ "retrieved_tokens_mean": 2016.9918699186992,
+ "retrieved_tokens_median": 2007,
+ "memories_mean": 47.0,
+ "stale_fact_rate": null,
+ "stale": {
+  "labels_in_slice": 2,
+  "claims_stored": 0,
+  "claims_stale": 0,
+  "rate": null,
+  "stale_examples": []
+ },
+ "spend": {
+  "jev": 0.0,
+  "claude": 0.0,
+  "openai": 0.04913279999999999
+ },
+ "cache": {
+  "hits": 18671,
+  "misses": 148
+ },
+ "answers": [
+  {
+   "idx": 0,
+   "question": "Which year did Audrey adopt the first three of her dogs?",
+   "gold": "2020",
+   "category": 2,
+   "evidence": [
+    "D1:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "2020",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013270306451612906,
+   "retrieved_tokens": 2222,
+   "retrieve_ms": 6633.182457997464,
+   "retrieve_cost": 0.0009185806451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 1,
+   "question": "When did Andrew start his new job as a financial analyst?",
+   "gold": "The week before March 27, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "March 20, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001194279483870968,
+   "retrieved_tokens": 1624,
+   "retrieve_ms": 5726.810667023528,
+   "retrieve_cost": 0.0008719294838709678,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 2,
+   "question": "What kind of indoor activities has Andrew pursued with his girlfriend?",
+   "gold": "boardgames, volunteering at pet shelter, wine tasting, growing flowers",
+   "category": 1,
+   "evidence": [
+    "D13:1",
+    "D23:1",
+    "D25:1",
+    "D19:15"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Board games and cooking.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.001310141419354839,
+   "retrieved_tokens": 2234,
+   "retrieve_ms": 5817.111208976712,
+   "retrieve_cost": 0.0008980914193548389,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 3,
+   "question": "What kind of places have Andrew and his girlfriend checked out around the city?",
+   "gold": "cafes, new places to eat, open space for hikes, pet shelter, wine tasting event, park",
+   "category": 1,
+   "evidence": [
+    "D3:1",
+    "D3:11",
+    "D4:2",
+    "D6:1",
+    "D13:1",
+    "D23:3",
+    "D25:1",
+    "D27:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Cafes, farms, and parks.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012795048387096775,
+   "retrieved_tokens": 2092,
+   "retrieve_ms": 5820.517541957088,
+   "retrieve_cost": 0.0008854548387096776,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 4,
+   "question": "When did Audrey make muffins for herself?",
+   "gold": "The week of April 3rd to 9th",
+   "category": 2,
+   "evidence": [
+    "D3:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Audrey made muffins last week.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012252346451612905,
+   "retrieved_tokens": 1780,
+   "retrieve_ms": 5755.324208992533,
+   "retrieve_cost": 0.0008812846451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 5,
+   "question": "When did Audrey see a hummingbird?",
+   "gold": "first week of May 2023",
+   "category": 2,
+   "evidence": [
+    "D4:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Last week, on April 26, 2023.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.001256993806451613,
+   "retrieved_tokens": 1913,
+   "retrieve_ms": 5766.389042022638,
+   "retrieve_cost": 0.0008900938064516131,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 6,
+   "question": "When did Audrey adopt Pixie?",
+   "gold": "around April 2, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "April 2, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012559865806451615,
+   "retrieved_tokens": 1887,
+   "retrieve_ms": 5771.90045901807,
+   "retrieve_cost": 0.0008956865806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 7,
+   "question": "How many years passed between Audrey adopting Pixie and her other three dogs?",
+   "gold": "three years",
+   "category": 2,
+   "evidence": [
+    "D2:1",
+    "D1:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Three years.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013180128387096776,
+   "retrieved_tokens": 2163,
+   "retrieve_ms": 5749.475416960195,
+   "retrieve_cost": 0.0009169128387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 8,
+   "question": "Did Andrew have a pet dog during March 2023?",
+   "gold": "No",
+   "category": 2,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No, no pets right now.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012482167741935486,
+   "retrieved_tokens": 1849,
+   "retrieve_ms": 5716.408542008139,
+   "retrieve_cost": 0.0008927167741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 9,
+   "question": "What kind of classes or groups has Audrey joined to take better care of her dogs?",
+   "gold": "positive reinforcement training workshop to bond with pets, dog training course, agility training course, grooming course, dog-owners group",
+   "category": 1,
+   "evidence": [
+    "D6:2",
+    "D10:1",
+    "D14:2",
+    "D16:6",
+    "D27:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Dog training and grooming courses.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013432304516129033,
+   "retrieved_tokens": 2245,
+   "retrieve_ms": 5713.238541968167,
+   "retrieve_cost": 0.0009274304516129034,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 10,
+   "question": "When did Audrey's positive reinforcement training course for dogs take place?",
+   "gold": "June, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "June 2023",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012935686451612904,
+   "retrieved_tokens": 1978,
+   "retrieve_ms": 5708.338166994508,
+   "retrieve_cost": 0.0009202186451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 11,
+   "question": "When did Andrew go rock climbing?",
+   "gold": "June 11, 2023",
+   "category": 2,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "June 11, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012573789677419356,
+   "retrieved_tokens": 2049,
+   "retrieve_ms": 5711.666457995307,
+   "retrieve_cost": 0.0008727789677419356,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 12,
+   "question": "What outdoor activities has Andrew done other than hiking in nature?",
+   "gold": "rock climbing, fishing, camping",
+   "category": 1,
+   "evidence": [
+    "D8:1",
+    "D17:1",
+    "D14:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Rock climbing, fishing, biking, camping.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012812096129032257,
+   "retrieved_tokens": 2048,
+   "retrieve_ms": 5655.245708010625,
+   "retrieve_cost": 0.0008946596129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 13,
+   "question": "When did Audrey move to a new place?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D9:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "June 26, 2023",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012276960000000001,
+   "retrieved_tokens": 1800,
+   "retrieve_ms": 5656.856957997661,
+   "retrieve_cost": 0.0008804460000000001,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 14,
+   "question": "What is something that Andrew really misses while working in the city?",
+   "gold": "being in nature",
+   "category": 1,
+   "evidence": [
+    "D3:7",
+    "D9:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Being in nature.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013272828387096776,
+   "retrieved_tokens": 2327,
+   "retrieve_ms": 5624.099707987625,
+   "retrieve_cost": 0.0009015828387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 15,
+   "question": "What is a shared frustration regarding dog ownership for Audrey and Andrew?",
+   "gold": "Not being able to find pet friendly spots.",
+   "category": 1,
+   "evidence": [
+    "D7:8",
+    "D10:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Finding pet-friendly places to live.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013584646451612905,
+   "retrieved_tokens": 2367,
+   "retrieve_ms": 5777.929791016504,
+   "retrieve_cost": 0.0009249646451612904,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 16,
+   "question": "When is Andrew going to go hiking with Audrey?",
+   "gold": "August",
+   "category": 2,
+   "evidence": [
+    "D11:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Next month, November 2023.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012412832903225808,
+   "retrieved_tokens": 1809,
+   "retrieve_ms": 5586.542834003922,
+   "retrieve_cost": 0.0008917832903225807,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 17,
+   "question": "How many times did Audrey and Andew plan to hike together?",
+   "gold": "three times",
+   "category": 1,
+   "evidence": [
+    "D11:7",
+    "D24:13",
+    "D26:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Five times.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012385488387096776,
+   "retrieved_tokens": 1754,
+   "retrieve_ms": 5566.487500036601,
+   "retrieve_cost": 0.0008993988387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 18,
+   "question": "Where did Audrey get Pixie from?",
+   "gold": "breeder",
+   "category": 1,
+   "evidence": [
+    "D11:4",
+    "D2:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Audrey adopted Pixie.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012569268387096775,
+   "retrieved_tokens": 2012,
+   "retrieve_ms": 5526.582750026137,
+   "retrieve_cost": 0.0008787768387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 19,
+   "question": "What is an indoor activity that Andrew would enjoy doing while make his dog happy?",
+   "gold": "cook dog treats",
+   "category": 3,
+   "evidence": [
+    "D10:12",
+    "D12:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Cooking new recipes.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0013437181935483872,
+   "retrieved_tokens": 2332,
+   "retrieve_ms": 5556.227624998428,
+   "retrieve_cost": 0.0009163681935483873,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 20,
+   "question": "Which meat does Audrey prefer eating more than others?",
+   "gold": "chicken",
+   "category": 3,
+   "evidence": [
+    "D10:13",
+    "D10:23"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Chicken",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001248585870967742,
+   "retrieved_tokens": 1900,
+   "retrieve_ms": 5572.413791960571,
+   "retrieve_cost": 0.000889635870967742,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 21,
+   "question": "What are the classes that Audrey took for her dogs to?",
+   "gold": "Positive reinforcement training class for bonding, dog training course, agility class",
+   "category": 1,
+   "evidence": [
+    "D6:4",
+    "D10:1",
+    "D14:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Agility and dog training classes.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001323705870967742,
+   "retrieved_tokens": 2174,
+   "retrieve_ms": 5518.376249994617,
+   "retrieve_cost": 0.0009194558709677421,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 22,
+   "question": "Where did Andrew go during the first weekend of August 2023?",
+   "gold": "camping with girlfriend",
+   "category": 2,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew went camping.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012566849032258065,
+   "retrieved_tokens": 2045,
+   "retrieve_ms": 5435.408290999476,
+   "retrieve_cost": 0.0008729849032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 23,
+   "question": "What are some problems that Andrew faces before he adopted Toby?",
+   "gold": "Finding the right dog and pet-friendly apartments close to open spaces",
+   "category": 1,
+   "evidence": [
+    "D2:12",
+    "D5:3",
+    "D5:5",
+    "D5:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Finding pet-friendly housing.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012923405806451614,
+   "retrieved_tokens": 2156,
+   "retrieve_ms": 5396.876707964111,
+   "retrieve_cost": 0.0008919905806451615,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 24,
+   "question": "Did Audrey and Andrew grow up with a pet dog?",
+   "gold": "Yes",
+   "category": 1,
+   "evidence": [
+    "D2:16",
+    "D13:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Yes, Audrey had a childhood dog.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001329744,
+   "retrieved_tokens": 2285,
+   "retrieve_ms": 5353.002084011678,
+   "retrieve_cost": 0.0009085440000000002,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 25,
+   "question": "When did Andrew and his girlfriend go fishing?",
+   "gold": "weekend before August 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "August 19, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001264599677419355,
+   "retrieved_tokens": 2001,
+   "retrieve_ms": 5483.268540992867,
+   "retrieve_cost": 0.0008865996774193549,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 26,
+   "question": "What is the biggest stressor in Andrew's life besides not being able to hike frequently?",
+   "gold": "work",
+   "category": 1,
+   "evidence": [
+    "D12:3",
+    "D16:1",
+    "D18:1",
+    "D10:16"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Work stress.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013226926451612906,
+   "retrieved_tokens": 2307,
+   "retrieve_ms": 5298.86500001885,
+   "retrieve_cost": 0.0008990926451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 27,
+   "question": "How does Andrew feel about his current work?",
+   "gold": "Stressful",
+   "category": 1,
+   "evidence": [
+    "D12:3",
+    "D16:1",
+    "D18:1",
+    "D10:16"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Stressed and overwhelmed.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012190709032258067,
+   "retrieved_tokens": 1763,
+   "retrieve_ms": 5281.850416038651,
+   "retrieve_cost": 0.0008785709032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 28,
+   "question": "What is something that Audrey often dresses up her dogs with?",
+   "gold": "Hats",
+   "category": 1,
+   "evidence": [
+    "D4:23",
+    "D4:25",
+    "D19:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Collars and tags.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012830641935483872,
+   "retrieved_tokens": 1942,
+   "retrieve_ms": 5245.2098749927245,
+   "retrieve_cost": 0.0009148141935483872,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 29,
+   "question": "What are the names of Audrey's dogs?",
+   "gold": "Pepper, Precious, Panda, and Pixie",
+   "category": 1,
+   "evidence": [
+    "D1:7",
+    "D2:1",
+    "D19:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Pepper, Precious, Panda, Pixie.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013213012258064516,
+   "retrieved_tokens": 2199,
+   "retrieve_ms": 5229.505790979601,
+   "retrieve_cost": 0.0009124012258064517,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 30,
+   "question": "When is Andrew planning to go to the beach with his girlfriend?",
+   "gold": "November 2023",
+   "category": 2,
+   "evidence": [
+    "D20:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "November 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012045569032258065,
+   "retrieved_tokens": 1698,
+   "retrieve_ms": 5199.629832990468,
+   "retrieve_cost": 0.0008726069032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 31,
+   "question": "What has Andrew done with his dogs?",
+   "gold": "Taking walks and hiking",
+   "category": 1,
+   "evidence": [
+    "D14:27",
+    "D24:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Taken them to parks and trails.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012814434193548388,
+   "retrieved_tokens": 2069,
+   "retrieve_ms": 5165.471291984431,
+   "retrieve_cost": 0.0008941434193548387,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 32,
+   "question": "What kind of tattoo does Audrey have on her arm?",
+   "gold": "Tattoos of her four dogs.",
+   "category": 1,
+   "evidence": [
+    "D3:26",
+    "D15:1",
+    "D23:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Tattoo of her four dogs.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0011839904516129033,
+   "retrieved_tokens": 1631,
+   "retrieve_ms": 5167.970166017767,
+   "retrieve_cost": 0.0008614904516129033,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 33,
+   "question": "What can Andrew potentially do to improve his stress and accomodate his living situation with his dogs?",
+   "gold": "Change to a hybrid or remote job so he can move away from the city to the suburbs to have a larger living space and be closer to nature.",
+   "category": 3,
+   "evidence": [
+    "D12:3",
+    "D18:1",
+    "D21:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Plan hikes and explore nature.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0013333525161290324,
+   "retrieved_tokens": 2293,
+   "retrieve_ms": 5154.856125009246,
+   "retrieve_cost": 0.0009097525161290324,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 34,
+   "question": "How many months passed between Andrew adopting Toby and Buddy?",
+   "gold": "three months",
+   "category": 2,
+   "evidence": [
+    "D12:1",
+    "D24:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Five months.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012604244516129033,
+   "retrieved_tokens": 1953,
+   "retrieve_ms": 5077.941166993696,
+   "retrieve_cost": 0.0008920244516129034,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 35,
+   "question": "What are the names of Andrew's dogs?",
+   "gold": "Toby, Scout, Buddy",
+   "category": 1,
+   "evidence": [
+    "D12:1",
+    "D24:6",
+    "D28:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Toby, Scout, and Buddy.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001248583935483871,
+   "retrieved_tokens": 1914,
+   "retrieve_ms": 5053.5490839974955,
+   "retrieve_cost": 0.000883633935483871,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 36,
+   "question": "What are some foods that Audrey likes eating?",
+   "gold": "chicken pot pie, chicken roast, blueberry muffins, sushi",
+   "category": 1,
+   "evidence": [
+    "D3:18",
+    "D10:13",
+    "D10:23",
+    "D25:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Sushi, roasted chicken, chicken pot pie.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012476512258064517,
+   "retrieved_tokens": 1946,
+   "retrieve_ms": 5023.577375046443,
+   "retrieve_cost": 0.0008767012258064517,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 37,
+   "question": "When did Audrey get into an accident in the park?",
+   "gold": "between October 19 and 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Last week, on October 17, 2023.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.001296893612903226,
+   "retrieved_tokens": 2184,
+   "retrieve_ms": 4997.850458952598,
+   "retrieve_cost": 0.0008884436129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 38,
+   "question": "When did Andrew and his girlfriend go on a wine tasting trip?",
+   "gold": "the weekend before October 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D25:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "October 21, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012272835483870968,
+   "retrieved_tokens": 1772,
+   "retrieve_ms": 4993.756250012666,
+   "retrieve_cost": 0.0008824335483870969,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 39,
+   "question": "What did Audrey get wtih having so many dogs?",
+   "gold": "Companionship",
+   "category": 1,
+   "evidence": [
+    "D2:15",
+    "D23:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Joy and companionship.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001361499483870968,
+   "retrieved_tokens": 2397,
+   "retrieve_ms": 4952.180958993267,
+   "retrieve_cost": 0.0009258994838709679,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 40,
+   "question": "What is a good place for dogs to run around freely and meet new friends?",
+   "gold": "The dog park",
+   "category": 1,
+   "evidence": [
+    "D4:25",
+    "D14:2",
+    "D23:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Dog park.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001328163870967742,
+   "retrieved_tokens": 2268,
+   "retrieve_ms": 4908.388249983545,
+   "retrieve_cost": 0.0009110138709677421,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 41,
+   "question": "What are the breeds of Audrey's dogs?",
+   "gold": "Mongrel mixed with Lab for Pepper and Panda. Mongrel mixed with Chihuahua for Precious and Pixie.",
+   "category": 1,
+   "evidence": [
+    "D19:12",
+    "D26:13"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Lab and Chihuahua mixes.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013156883225806453,
+   "retrieved_tokens": 2173,
+   "retrieve_ms": 5149.956916982774,
+   "retrieve_cost": 0.0009136883225806453,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 42,
+   "question": "What technique is Audrey using to discipline her dogs?",
+   "gold": "Positive reinforcement",
+   "category": 1,
+   "evidence": [
+    "D6:4",
+    "D26:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Positive reinforcement techniques.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013154111612903227,
+   "retrieved_tokens": 2170,
+   "retrieve_ms": 5128.655124979559,
+   "retrieve_cost": 0.0009141611612903227,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 43,
+   "question": "Which US state do Audrey and Andrew potentially live in?",
+   "gold": "Minnesota",
+   "category": 3,
+   "evidence": [
+    "D11:9"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No specific state mentioned.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012643625806451615,
+   "retrieved_tokens": 2142,
+   "retrieve_ms": 4813.188083004206,
+   "retrieve_cost": 0.0008664125806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 44,
+   "question": "Which national park could Audrey and Andrew be referring to in their conversations?",
+   "gold": "Voyageurs National Park",
+   "category": 3,
+   "evidence": [
+    "D5:8",
+    "D11:9"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No specific national park mentioned.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012768009677419354,
+   "retrieved_tokens": 2007,
+   "retrieve_ms": 4800.761166960001,
+   "retrieve_cost": 0.0008976009677419355,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 45,
+   "question": "How many pets will Andrew have, as of December 2023?",
+   "gold": "three",
+   "category": 2,
+   "evidence": [
+    "D12:1",
+    "D24:2",
+    "D28:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Four pets.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012388563870967743,
+   "retrieved_tokens": 1941,
+   "retrieve_ms": 4772.759249957744,
+   "retrieve_cost": 0.0008713563870967743,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 46,
+   "question": "How many pets did Andrew have, as of September 2023?",
+   "gold": "one",
+   "category": 2,
+   "evidence": [
+    "D12:1",
+    "D24:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Two pets: Toby and Buddy.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012631461290322581,
+   "retrieved_tokens": 2026,
+   "retrieve_ms": 4902.303541020956,
+   "retrieve_cost": 0.0008804961290322582,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 47,
+   "question": "How many months passed between Andrew adopting Buddy and Scout",
+   "gold": "one month",
+   "category": 2,
+   "evidence": [
+    "D24:2",
+    "D28:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Five months.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012723869032258066,
+   "retrieved_tokens": 2012,
+   "retrieve_ms": 4899.949082988314,
+   "retrieve_cost": 0.0008952869032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 48,
+   "question": "What does Andrew view his pets as?",
+   "gold": "Family",
+   "category": 1,
+   "evidence": [
+    "D15:14",
+    "D28:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Friends and confidantes.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012506260645161291,
+   "retrieved_tokens": 1892,
+   "retrieve_ms": 4658.531374996528,
+   "retrieve_cost": 0.0008910760645161292,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 49,
+   "question": "What does Audrey view her pets as?",
+   "gold": "Family",
+   "category": 1,
+   "evidence": [
+    "D15:15",
+    "D23:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Family and companions.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013293121935483872,
+   "retrieved_tokens": 2271,
+   "retrieve_ms": 5325.474874989595,
+   "retrieve_cost": 0.0009135121935483872,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 50,
+   "question": "What is a skill that Audrey learned to take care of her dogs?",
+   "gold": "Grooming",
+   "category": 1,
+   "evidence": [
+    "D16:2",
+    "D17:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Dog grooming techniques.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013723513548387096,
+   "retrieved_tokens": 2455,
+   "retrieve_ms": 4634.247959009372,
+   "retrieve_cost": 0.0009271513548387097,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 51,
+   "question": "What items has Audrey bought or made for her dogs?",
+   "gold": "dog tags, toys, dog beds, collars",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D9:5",
+    "D18:10",
+    "D24:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Collars, tags, beds, toys.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013587094838709679,
+   "retrieved_tokens": 2357,
+   "retrieve_ms": 4617.771334014833,
+   "retrieve_cost": 0.0009261094838709679,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 52,
+   "question": "What is something that Andrew could do to make birdwatching hobby to fit in his city schedule?",
+   "gold": "Install a bird feeder outside where he can see the birds without going outdoors.",
+   "category": 3,
+   "evidence": [
+    "D20:5",
+    "D20:21",
+    "D23:1",
+    "D1:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Go birdwatching in nearby parks.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012947413548387097,
+   "retrieved_tokens": 2065,
+   "retrieve_ms": 4597.685875021853,
+   "retrieve_cost": 0.0009038413548387098,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 53,
+   "question": "What is a career that Andrew could potentially pursue with his love for animals and nature?",
+   "gold": "Park ranger or a similar position working for the National Park Services.",
+   "category": 3,
+   "evidence": [
+    "D2:18",
+    "D3:1",
+    "D5:7",
+    "D8:27"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Animal care or wildlife conservation.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013245222580645162,
+   "retrieved_tokens": 2264,
+   "retrieve_ms": 4516.781125043053,
+   "retrieve_cost": 0.0009058722580645162,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 54,
+   "question": "What activity do Audrey's dogs like to do in the dog park?",
+   "gold": "Play fetch with ball and frisbee, run around and meet other dogs",
+   "category": 1,
+   "evidence": [
+    "D4:21",
+    "D10:7",
+    "D13:8",
+    "D23:14",
+    "D27:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Running and playing fetch.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013176929032258065,
+   "retrieved_tokens": 2147,
+   "retrieve_ms": 4717.788041976746,
+   "retrieve_cost": 0.0009180929032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 55,
+   "question": "When did Andrew make his dogs a fun indoor area?",
+   "gold": "few days before November 22, 2023",
+   "category": 2,
+   "evidence": [
+    "D28:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "June 26, 2023.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012503270322580646,
+   "retrieved_tokens": 1880,
+   "retrieve_ms": 4465.938957990147,
+   "retrieve_cost": 0.0008898770322580647,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 56,
+   "question": "Has Andrew moved into a new apartment for his dogs?",
+   "gold": "No",
+   "category": 1,
+   "evidence": [
+    "D5:5",
+    "D28:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Yes, he adopted another dog.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012554028387096775,
+   "retrieved_tokens": 1935,
+   "retrieve_ms": 4509.413500025403,
+   "retrieve_cost": 0.0008873028387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 57,
+   "question": "When did Andrew adopt Scout?",
+   "gold": "few days before November 2023",
+   "category": 2,
+   "evidence": [
+    "D28:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "October 19, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012553213548387098,
+   "retrieved_tokens": 1980,
+   "retrieve_ms": 4413.117417017929,
+   "retrieve_cost": 0.0008813713548387098,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 58,
+   "question": "What did Audrey eat for dinner on October 24, 2023?",
+   "gold": "sushi",
+   "category": 2,
+   "evidence": [
+    "D25:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Sushi.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012486149032258065,
+   "retrieved_tokens": 1975,
+   "retrieve_ms": 4629.041875014082,
+   "retrieve_cost": 0.0008757149032258065,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 59,
+   "question": "How long has it been since Andrew adopted his first pet, as of November 2023?",
+   "gold": "4 months",
+   "category": 2,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Since October 19, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012787589032258065,
+   "retrieved_tokens": 2044,
+   "retrieve_ms": 4395.668083045166,
+   "retrieve_cost": 0.0008907089032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 60,
+   "question": "How many dogs does Andrew have?",
+   "gold": "3",
+   "category": 1,
+   "evidence": [
+    "D12:1",
+    "D24:2",
+    "D28:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew has four dogs.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012609245806451614,
+   "retrieved_tokens": 2033,
+   "retrieve_ms": 4370.768832974136,
+   "retrieve_cost": 0.0008805245806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 61,
+   "question": "Which specific type of bird mesmerizes Andrew?",
+   "gold": "Eagles",
+   "category": 4,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Eagles.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0011867405806451614,
+   "retrieved_tokens": 1634,
+   "retrieve_ms": 4951.93445798941,
+   "retrieve_cost": 0.0008667905806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 62,
+   "question": "What did Andrew express missing about exploring nature trails with his family's dog?",
+   "gold": "The peaceful moments",
+   "category": 4,
+   "evidence": [
+    "D2:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The peaceful moments in nature.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012935111612903227,
+   "retrieved_tokens": 2064,
+   "retrieve_ms": 4943.572000018321,
+   "retrieve_cost": 0.0009057611612903227,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 63,
+   "question": "What kind of pastries did Andrew and his girlfriend have at the cafe?",
+   "gold": "croissants, muffins, and tarts",
+   "category": 4,
+   "evidence": [
+    "D3:17"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Croissants, muffins, and tarts.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012286242580645161,
+   "retrieved_tokens": 1806,
+   "retrieve_ms": 4214.807291980833,
+   "retrieve_cost": 0.0008777742580645162,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 64,
+   "question": "What kind of flowers does Audrey have a tattoo of?",
+   "gold": "sunflowers",
+   "category": 4,
+   "evidence": [
+    "D3:26"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Peruvian Lilies.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0011984299354838711,
+   "retrieved_tokens": 1724,
+   "retrieve_ms": 4227.067667001393,
+   "retrieve_cost": 0.0008631799354838711,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 65,
+   "question": "What does Audrey do during dog playdates in the park?",
+   "gold": "chat with people while dogs make new friends",
+   "category": 4,
+   "evidence": [
+    "D4:21"
+   ],
+   "last_evidence_session": 28,
+   "answer": "She lets them run and mingle.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013163469677419356,
+   "retrieved_tokens": 2113,
+   "retrieve_ms": 4197.406833001878,
+   "retrieve_cost": 0.0009212469677419357,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 66,
+   "question": "What type of dog was Andrew looking to adopt based on his living space?",
+   "gold": "smaller dog",
+   "category": 4,
+   "evidence": [
+    "D5:3"
+   ],
+   "last_evidence_session": 28,
+   "answer": "A smaller dog.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012661900645161291,
+   "retrieved_tokens": 1960,
+   "retrieve_ms": 5637.405832996592,
+   "retrieve_cost": 0.0008949400645161292,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 67,
+   "question": "Where does Andrew want to live to give their dog a large, open space to run around?",
+   "gold": "near a park or woods",
+   "category": 4,
+   "evidence": [
+    "D5:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Near a park or woods.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012775087741935486,
+   "retrieved_tokens": 2027,
+   "retrieve_ms": 4326.649375027046,
+   "retrieve_cost": 0.0008938087741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 68,
+   "question": "Why did Audrey sign up for a workshop about bonding with pets?",
+   "gold": "Strengthen the bond with her pets",
+   "category": 4,
+   "evidence": [
+    "D6:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "To strengthen her bond with her pets.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013526936129032259,
+   "retrieved_tokens": 2323,
+   "retrieve_ms": 4030.2338339970447,
+   "retrieve_cost": 0.0009251936129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 69,
+   "question": "How did Audrey hear about the workshop on bonding with pets?",
+   "gold": "Saw a workshop flyer at the local pet store",
+   "category": 4,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "At her local pet store.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013438370322580648,
+   "retrieved_tokens": 2277,
+   "retrieve_ms": 5089.808834018186,
+   "retrieve_cost": 0.0009247370322580646,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 70,
+   "question": "What type of training was the workshop Audrey signed up for in May 2023?",
+   "gold": "Positive reinforcement training",
+   "category": 4,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Bonding with pets.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012633667741935484,
+   "retrieved_tokens": 1976,
+   "retrieve_ms": 5024.406790966168,
+   "retrieve_cost": 0.0008885167741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 71,
+   "question": "How did Audrey describe she dog he met at the pet store?",
+   "gold": "Friendly and playful",
+   "category": 4,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Friendly and playful.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.00128832,
+   "retrieved_tokens": 1936,
+   "retrieve_ms": 3974.4668750208803,
+   "retrieve_cost": 0.0009212700000000001,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 72,
+   "question": "Why did Audrey think positive reinforcement training is important for pets?",
+   "gold": "To have pets learn how to behave in a positive way",
+   "category": 4,
+   "evidence": [
+    "D6:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "It builds trust and strengthens bonds.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013258914193548389,
+   "retrieved_tokens": 2177,
+   "retrieve_ms": 3931.4592499868013,
+   "retrieve_cost": 0.0009211914193548389,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 73,
+   "question": "What challenge is Andrew facing in their search for a pet?",
+   "gold": "Finding a pet-friendly spot in the city",
+   "category": 4,
+   "evidence": [
+    "D7:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Finding a pet-friendly place.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001244719741935484,
+   "retrieved_tokens": 1885,
+   "retrieve_ms": 3921.989540976938,
+   "retrieve_cost": 0.000884419741935484,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 74,
+   "question": "How does Andrew feel about their search for a pet-friendly place?",
+   "gold": "Discouraged but determined",
+   "category": 4,
+   "evidence": [
+    "D7:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Discouraged but determined.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012132983225806452,
+   "retrieved_tokens": 1659,
+   "retrieve_ms": 4762.208000000101,
+   "retrieve_cost": 0.0008865983225806453,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 75,
+   "question": "What outdoor activities does Andrew plan on trying after the rock climbing class?",
+   "gold": "kayaking and bungee jumping",
+   "category": 4,
+   "evidence": [
+    "D8:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Kayaking and bungee jumping.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012379488387096777,
+   "retrieved_tokens": 1865,
+   "retrieve_ms": 3870.1038750004955,
+   "retrieve_cost": 0.0008794488387096776,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 76,
+   "question": "How long does Audrey typically walk her dogs for?",
+   "gold": "about an hour",
+   "category": 4,
+   "evidence": [
+    "D8:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "About an hour.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013517996129032259,
+   "retrieved_tokens": 2334,
+   "retrieve_ms": 4232.096042018384,
+   "retrieve_cost": 0.000925949612903226,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 77,
+   "question": "What did Audrey set up in the backyard for their dogs on June 26, 2023?",
+   "gold": "a doggy play area with agility stuff and toys",
+   "category": 4,
+   "evidence": [
+    "D9:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "A doggy play area with agility stuff.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013191147096774194,
+   "retrieved_tokens": 2086,
+   "retrieve_ms": 4087.743624986615,
+   "retrieve_cost": 0.0009244647096774195,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 78,
+   "question": "What did Audrey and her friends stumble across during a hike a few years back, as mentioned on June 26, 2023?",
+   "gold": "a stunning lake in the mountains",
+   "category": 4,
+   "evidence": [
+    "D9:23"
+   ],
+   "last_evidence_session": 28,
+   "answer": "A stunning lake.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001319277677419355,
+   "retrieved_tokens": 2126,
+   "retrieve_ms": 3890.3746670112014,
+   "retrieve_cost": 0.000919527677419355,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 79,
+   "question": "What is Audrey's favorite recipe that she shares with Andrew on 3 July, 2023?",
+   "gold": "Chicken Pot Pie",
+   "category": 4,
+   "evidence": [
+    "D10:13"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Chicken Pot Pie",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012359669032258067,
+   "retrieved_tokens": 1774,
+   "retrieve_ms": 3740.762999979779,
+   "retrieve_cost": 0.0008917169032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 80,
+   "question": "What dish is one of Audrey's favorite dishes that includes garlic and is shared with Andrew on 3 July, 2023?",
+   "gold": "Roasted Chicken",
+   "category": 4,
+   "evidence": [
+    "D10:23"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Roasted Chicken",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012404101935483871,
+   "retrieved_tokens": 1774,
+   "retrieve_ms": 3867.193625017535,
+   "retrieve_cost": 0.0008943601935483871,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 81,
+   "question": "What did Andrew and his GF do on the Monday before July 24, 2023?",
+   "gold": "volunteered at a pet shelter",
+   "category": 4,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Volunteered at a pet shelter.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012410214193548388,
+   "retrieved_tokens": 1953,
+   "retrieve_ms": 3737.9851670120843,
+   "retrieve_cost": 0.0008672214193548388,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 82,
+   "question": "What is the name of Audrey's childhood dog?",
+   "gold": "Max",
+   "category": 4,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Max",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012679695483870969,
+   "retrieved_tokens": 1907,
+   "retrieve_ms": 3635.8897499740124,
+   "retrieve_cost": 0.0009079695483870969,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 83,
+   "question": "What special memories does Audrey have with her childhood dog, Max?",
+   "gold": "Long walks in the neighborhood, exploring new paths, sharing worries and hopes",
+   "category": 4,
+   "evidence": [
+    "D13:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Long walks and sharing worries.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013266247741935485,
+   "retrieved_tokens": 2199,
+   "retrieve_ms": 4996.430125029292,
+   "retrieve_cost": 0.0009189247741935486,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 84,
+   "question": "What are some of the personalities of Audrey's four fur babies?",
+   "gold": "oldest is relaxed, second is playful, third can be naughty but loves cuddles, youngest is full of life",
+   "category": 4,
+   "evidence": [
+    "D13:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Relaxed, playful, naughty, adventurous.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013166229677419356,
+   "retrieved_tokens": 2160,
+   "retrieve_ms": 3760.339832981117,
+   "retrieve_cost": 0.0009129729677419356,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 85,
+   "question": "What type of classes did Audrey start with her pups recently on 4 August, 2023?",
+   "gold": "Agility classes",
+   "category": 4,
+   "evidence": [
+    "D14:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Agility classes.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013084285161290322,
+   "retrieved_tokens": 2048,
+   "retrieve_ms": 3776.54591598548,
+   "retrieve_cost": 0.0009224785161290323,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 86,
+   "question": "How often does Audrey take her pups to the park for practice?",
+   "gold": "Twice a week",
+   "category": 4,
+   "evidence": [
+    "D14:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Twice a week.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013392992903225808,
+   "retrieved_tokens": 2287,
+   "retrieve_ms": 3557.1807909873314,
+   "retrieve_cost": 0.0009189992903225807,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 87,
+   "question": "How long did the trail hike that Audrey went on with her pups take?",
+   "gold": "Two hours",
+   "category": 4,
+   "evidence": [
+    "D14:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Two hours.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012857969032258067,
+   "retrieved_tokens": 1930,
+   "retrieve_ms": 3525.3570420318283,
+   "retrieve_cost": 0.0009196469032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 88,
+   "question": "What advice did Audrey give to Andrew regarding grooming Toby?",
+   "gold": "Grooming slowly and gently, paying attention to sensitive areas like ears and paws. And remember to stay patient and positive throughout the grooming process.",
+   "category": 4,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Stay patient and positive.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012629347741935485,
+   "retrieved_tokens": 1935,
+   "retrieve_ms": 3493.288666999433,
+   "retrieve_cost": 0.0008960347741935486,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 89,
+   "question": "What is essential to keep the dogs looking good according to Audrey?",
+   "gold": "Daily brushing, regular baths, nail trims, and lots of love",
+   "category": 4,
+   "evidence": [
+    "D17:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Regular grooming is essential.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013166041935483873,
+   "retrieved_tokens": 2144,
+   "retrieve_ms": 3467.32133399928,
+   "retrieve_cost": 0.0009177541935483872,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 90,
+   "question": "What did Audrey organize with the neighbors' dogs?",
+   "gold": "a doggy playdate",
+   "category": 4,
+   "evidence": [
+    "D18:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "A doggy playdate.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013151326451612904,
+   "retrieved_tokens": 2115,
+   "retrieve_ms": 5798.030124977231,
+   "retrieve_cost": 0.0009209326451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 91,
+   "question": "What did Audrey do to give her dogs extra comfort as the weather cooled down?",
+   "gold": "Got new beds for them",
+   "category": 4,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "She got new beds for them.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013320865161290324,
+   "retrieved_tokens": 2188,
+   "retrieve_ms": 3437.8300409880467,
+   "retrieve_cost": 0.0009245365161290324,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 92,
+   "question": "How does Audrey describe the new beds for her dogs?",
+   "gold": "Super cozy and comfy",
+   "category": 4,
+   "evidence": [
+    "D18:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Super cozy and comfy.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012457221290322583,
+   "retrieved_tokens": 1727,
+   "retrieve_ms": 3426.462458970491,
+   "retrieve_cost": 0.0009100221290322582,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 93,
+   "question": "How did Audrey calm down her dog after the leash incident?",
+   "gold": "Petted, hugged, spoke calmly and slowly walked the dog",
+   "category": 4,
+   "evidence": [
+    "D19:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Spoke calmly and hugged her.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013276567741935484,
+   "retrieved_tokens": 2163,
+   "retrieve_ms": 4061.7162909475155,
+   "retrieve_cost": 0.0009250567741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 94,
+   "question": "How often does Audrey take her dogs for walks?",
+   "gold": "Multiple times a day",
+   "category": 4,
+   "evidence": [
+    "D19:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Multiple times a day.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013612974193548386,
+   "retrieved_tokens": 2399,
+   "retrieve_ms": 3360.8210829552263,
+   "retrieve_cost": 0.0009250974193548388,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 95,
+   "question": "What kind of flowers does Audrey take care of?",
+   "gold": "Peruvian Lilies",
+   "category": 4,
+   "evidence": [
+    "D19:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Peruvian Lilies.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012065370967741936,
+   "retrieved_tokens": 1667,
+   "retrieve_ms": 3314.293000032194,
+   "retrieve_cost": 0.0008801370967741936,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 96,
+   "question": "What did Andrew learn from reading books about ecological systems?",
+   "gold": "about animals, plants, and ecosystems and how they work together",
+   "category": 4,
+   "evidence": [
+    "D20:25"
+   ],
+   "last_evidence_session": 28,
+   "answer": "He learned about animals, plants, and ecosystems.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012418761290322582,
+   "retrieved_tokens": 1783,
+   "retrieve_ms": 3273.060332983732,
+   "retrieve_cost": 0.0008947761290322582,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 97,
+   "question": "What did Andrew suggest as a way to reduce carbon footprint?",
+   "gold": "biking or using public transport",
+   "category": 4,
+   "evidence": [
+    "D20:33"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Biking or using public transport.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001222859612903226,
+   "retrieved_tokens": 1863,
+   "retrieve_ms": 3423.7951249815524,
+   "retrieve_cost": 0.000865259612903226,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 98,
+   "question": "How does Andrew suggest helping the planet while also training the body?",
+   "gold": "by biking",
+   "category": 4,
+   "evidence": [
+    "D20:35"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Biking or using public transport.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012502362580645162,
+   "retrieved_tokens": 1922,
+   "retrieve_ms": 3199.1848339675926,
+   "retrieve_cost": 0.0008834862580645162,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 99,
+   "question": "What did Audrey do with her pups over the weekend before 4th October, 2023?",
+   "gold": "Took them to the beach",
+   "category": 4,
+   "evidence": [
+    "D21:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Took them to the beach.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013574576129032258,
+   "retrieved_tokens": 2354,
+   "retrieve_ms": 3294.610125012696,
+   "retrieve_cost": 0.0009238076129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 100,
+   "question": "What was the reason Audrey couldn't walk her dogs for a period of time?",
+   "gold": "Knee injury",
+   "category": 4,
+   "evidence": [
+    "D22:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Knee injury.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013539520645161293,
+   "retrieved_tokens": 2311,
+   "retrieve_ms": 3154.214500042144,
+   "retrieve_cost": 0.0009300520645161292,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 101,
+   "question": "What type of jewelry does Audrey make?",
+   "gold": "Jewelry made from recycled objects",
+   "category": 4,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Recycled jewelry.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012018334838709678,
+   "retrieved_tokens": 1716,
+   "retrieve_ms": 3125.8057090453804,
+   "retrieve_cost": 0.0008692834838709679,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 102,
+   "question": "Why does Audrey make jewelry out of recycled objects?",
+   "gold": "To show love for creativity and sustainability",
+   "category": 4,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "To show creativity and sustainability.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012370002580645162,
+   "retrieved_tokens": 1811,
+   "retrieve_ms": 3133.8907500030473,
+   "retrieve_cost": 0.0008884002580645163,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 103,
+   "question": "What organization does Audrey donate a portion of his profits to?",
+   "gold": "Animal shelter",
+   "category": 4,
+   "evidence": [
+    "D22:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Not specified in memories.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012457666451612904,
+   "retrieved_tokens": 1932,
+   "retrieve_ms": 5480.250125052407,
+   "retrieve_cost": 0.0008790166451612904,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 104,
+   "question": "How does Audrey help out the animal shelter?",
+   "gold": "By donating a portion of his profits frmo selling jwelery",
+   "category": 4,
+   "evidence": [
+    "D22:9"
+   ],
+   "last_evidence_session": 28,
+   "answer": "She donates to the shelter.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012772447741935485,
+   "retrieved_tokens": 1934,
+   "retrieve_ms": 3379.0724169812165,
+   "retrieve_cost": 0.0009098947741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 105,
+   "question": "What type of games do Audrey's dogs like to play at the park?",
+   "gold": "Fetch and Frisbee",
+   "category": 4,
+   "evidence": [
+    "D23:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Fetch and frisbee.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013182694838709678,
+   "retrieved_tokens": 2171,
+   "retrieve_ms": 3460.3528340230696,
+   "retrieve_cost": 0.0009147694838709678,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 106,
+   "question": "What did Audrey make to thank her neighbors?",
+   "gold": "Goodies",
+   "category": 4,
+   "evidence": [
+    "D23:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Goodies.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001232675612903226,
+   "retrieved_tokens": 1874,
+   "retrieve_ms": 4063.5175420320593,
+   "retrieve_cost": 0.0008767256129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 107,
+   "question": "How do Audrey's dogs react to snow?",
+   "gold": "Confused",
+   "category": 4,
+   "evidence": [
+    "D23:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "They hate it and get confused.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012600480000000002,
+   "retrieved_tokens": 1825,
+   "retrieve_ms": 3387.185416999273,
+   "retrieve_cost": 0.0009090480000000001,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 108,
+   "question": "How does Audrey describe her dogs' response to snow?",
+   "gold": "They definitely prefer nice, sunny days in the grass.",
+   "category": 4,
+   "evidence": [
+    "D23:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "They were confused.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012532470967741936,
+   "retrieved_tokens": 1783,
+   "retrieve_ms": 2956.3512500026263,
+   "retrieve_cost": 0.0009097470967741936,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 109,
+   "question": "What kind of experiences are Audrey's dogs the best companions for?",
+   "gold": "Exploring the great outdoors",
+   "category": 4,
+   "evidence": [
+    "D23:24"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Exploring nature and hiking.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013220475483870968,
+   "retrieved_tokens": 2113,
+   "retrieve_ms": 2942.1776669914834,
+   "retrieve_cost": 0.0009272475483870969,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 110,
+   "question": "What activity do Andrew and Buddy enjoy doing together?",
+   "gold": "Walking",
+   "category": 4,
+   "evidence": [
+    "D24:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Hiking together.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012389992258064516,
+   "retrieved_tokens": 1821,
+   "retrieve_ms": 2878.70274996385,
+   "retrieve_cost": 0.0008900992258064517,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 111,
+   "question": "What do Andrew and Buddy like doing on walks?",
+   "gold": "Checking out new hiking trails",
+   "category": 4,
+   "evidence": [
+    "D24:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Exploring new trails together.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001277213806451613,
+   "retrieved_tokens": 1995,
+   "retrieve_ms": 2890.6837920076214,
+   "retrieve_cost": 0.000901013806451613,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 112,
+   "question": "What cuisine did Andrew recently try at a new spot in town?",
+   "gold": "sushi",
+   "category": 4,
+   "evidence": [
+    "D25:3"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Sushi",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012340834838709678,
+   "retrieved_tokens": 1894,
+   "retrieve_ms": 3309.5403750194237,
+   "retrieve_cost": 0.0008745334838709679,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 113,
+   "question": "Which type of sushi did Audrey suggest trying first to someone new to sushi?",
+   "gold": "California or salmon roll",
+   "category": 4,
+   "evidence": [
+    "D25:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "California or salmon roll.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012233765806451613,
+   "retrieved_tokens": 1737,
+   "retrieve_ms": 3124.49637503596,
+   "retrieve_cost": 0.0008849765806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 114,
+   "question": "What type of date is Andrew going on Sunday?",
+   "gold": "picnic date",
+   "category": 4,
+   "evidence": [
+    "D26:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Picnic date with his girlfriend.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0011818343225806452,
+   "retrieved_tokens": 1687,
+   "retrieve_ms": 3185.2792919962667,
+   "retrieve_cost": 0.0008512343225806452,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 115,
+   "question": "What did Andrew and Audrey plan to do on the Saturday after October 28, 2023?",
+   "gold": "Go hiking",
+   "category": 4,
+   "evidence": [
+    "D26:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "They planned a nature day.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001194437806451613,
+   "retrieved_tokens": 1585,
+   "retrieve_ms": 3137.632708007004,
+   "retrieve_cost": 0.0008767378064516131,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 116,
+   "question": "What aspect of autumn does Andrew find beautiful?",
+   "gold": "The autumn colors",
+   "category": 4,
+   "evidence": [
+    "D26:36"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The autumn colors.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012288369677419355,
+   "retrieved_tokens": 1864,
+   "retrieve_ms": 2831.304707971867,
+   "retrieve_cost": 0.0008737869677419356,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 117,
+   "question": "What did Audrey do in November 2023 to better take care of her dogs?",
+   "gold": "Joined a dog owners group",
+   "category": 4,
+   "evidence": [
+    "D27:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Took them to the pet salon.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.001375783741935484,
+   "retrieved_tokens": 2435,
+   "retrieve_ms": 2816.4874160429463,
+   "retrieve_cost": 0.0009302837419354839,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 118,
+   "question": "How often does Audrey meet up with other dog owners for tips and playdates?",
+   "gold": "Once a week",
+   "category": 4,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Once a week.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013310852903225807,
+   "retrieved_tokens": 2214,
+   "retrieve_ms": 2803.6452920059673,
+   "retrieve_cost": 0.0009214352903225807,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 119,
+   "question": "What did Audrey share to show ways to keep dogs active in the city?",
+   "gold": "photography of a basket full of stuffed animals",
+   "category": 4,
+   "evidence": [
+    "D27:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Socializing, exercising, and mental stimulation.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0013406932258064517,
+   "retrieved_tokens": 2173,
+   "retrieve_ms": 2780.210624972824,
+   "retrieve_cost": 0.0009344932258064517,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 120,
+   "question": "What type of activities does Audrey suggest for mental stimulation of the dogs?",
+   "gold": "puzzles, training, hide-and-seek",
+   "category": 4,
+   "evidence": [
+    "D27:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Puzzles, training, hide-and-seek.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013339517419354839,
+   "retrieved_tokens": 2181,
+   "retrieve_ms": 2727.4997910135426,
+   "retrieve_cost": 0.000926251741935484,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 121,
+   "question": "What is Andrew planning to do with Scout, Toby, and Buddy?",
+   "gold": "Take them to a nearby park",
+   "category": 4,
+   "evidence": [
+    "D28:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Take them to a nearby park.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012202184516129032,
+   "retrieved_tokens": 1794,
+   "retrieve_ms": 2814.5390420104377,
+   "retrieve_cost": 0.0008723684516129033,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 122,
+   "question": "What did Andrew get for Scout to create a safe and fun space for them?",
+   "gold": "essentials like a bed, toys, and puppy pads",
+   "category": 4,
+   "evidence": [
+    "D28:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Bed, toys, and puppy pads.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012336555483870968,
+   "retrieved_tokens": 1825,
+   "retrieve_ms": 2728.5001249983907,
+   "retrieve_cost": 0.0008799555483870969,
+   "checkpoint": 28,
+   "store_size": 675
+  }
+ ],
+ "asked": [
+  {
+   "idx": 0,
+   "question": "Which year did Audrey adopt the first three of her dogs?",
+   "gold": "2020",
+   "category": 2,
+   "evidence": [
+    "D1:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "2020",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013270306451612906,
+   "retrieved_tokens": 2222,
+   "retrieve_ms": 6633.182457997464,
+   "retrieve_cost": 0.0009185806451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 1,
+   "question": "When did Andrew start his new job as a financial analyst?",
+   "gold": "The week before March 27, 2023",
+   "category": 2,
+   "evidence": [
+    "D1:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "March 20, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001194279483870968,
+   "retrieved_tokens": 1624,
+   "retrieve_ms": 5726.810667023528,
+   "retrieve_cost": 0.0008719294838709678,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 2,
+   "question": "What kind of indoor activities has Andrew pursued with his girlfriend?",
+   "gold": "boardgames, volunteering at pet shelter, wine tasting, growing flowers",
+   "category": 1,
+   "evidence": [
+    "D13:1",
+    "D23:1",
+    "D25:1",
+    "D19:15"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Board games and cooking.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.001310141419354839,
+   "retrieved_tokens": 2234,
+   "retrieve_ms": 5817.111208976712,
+   "retrieve_cost": 0.0008980914193548389,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 3,
+   "question": "What kind of places have Andrew and his girlfriend checked out around the city?",
+   "gold": "cafes, new places to eat, open space for hikes, pet shelter, wine tasting event, park",
+   "category": 1,
+   "evidence": [
+    "D3:1",
+    "D3:11",
+    "D4:2",
+    "D6:1",
+    "D13:1",
+    "D23:3",
+    "D25:1",
+    "D27:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Cafes, farms, and parks.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012795048387096775,
+   "retrieved_tokens": 2092,
+   "retrieve_ms": 5820.517541957088,
+   "retrieve_cost": 0.0008854548387096776,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 4,
+   "question": "When did Audrey make muffins for herself?",
+   "gold": "The week of April 3rd to 9th",
+   "category": 2,
+   "evidence": [
+    "D3:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Audrey made muffins last week.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012252346451612905,
+   "retrieved_tokens": 1780,
+   "retrieve_ms": 5755.324208992533,
+   "retrieve_cost": 0.0008812846451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 5,
+   "question": "When did Audrey see a hummingbird?",
+   "gold": "first week of May 2023",
+   "category": 2,
+   "evidence": [
+    "D4:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Last week, on April 26, 2023.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.001256993806451613,
+   "retrieved_tokens": 1913,
+   "retrieve_ms": 5766.389042022638,
+   "retrieve_cost": 0.0008900938064516131,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 6,
+   "question": "When did Audrey adopt Pixie?",
+   "gold": "around April 2, 2023",
+   "category": 2,
+   "evidence": [
+    "D2:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "April 2, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012559865806451615,
+   "retrieved_tokens": 1887,
+   "retrieve_ms": 5771.90045901807,
+   "retrieve_cost": 0.0008956865806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 7,
+   "question": "How many years passed between Audrey adopting Pixie and her other three dogs?",
+   "gold": "three years",
+   "category": 2,
+   "evidence": [
+    "D2:1",
+    "D1:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Three years.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013180128387096776,
+   "retrieved_tokens": 2163,
+   "retrieve_ms": 5749.475416960195,
+   "retrieve_cost": 0.0009169128387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 8,
+   "question": "Did Andrew have a pet dog during March 2023?",
+   "gold": "No",
+   "category": 2,
+   "evidence": [
+    "D2:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No, no pets right now.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012482167741935486,
+   "retrieved_tokens": 1849,
+   "retrieve_ms": 5716.408542008139,
+   "retrieve_cost": 0.0008927167741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 9,
+   "question": "What kind of classes or groups has Audrey joined to take better care of her dogs?",
+   "gold": "positive reinforcement training workshop to bond with pets, dog training course, agility training course, grooming course, dog-owners group",
+   "category": 1,
+   "evidence": [
+    "D6:2",
+    "D10:1",
+    "D14:2",
+    "D16:6",
+    "D27:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Dog training and grooming courses.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013432304516129033,
+   "retrieved_tokens": 2245,
+   "retrieve_ms": 5713.238541968167,
+   "retrieve_cost": 0.0009274304516129034,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 10,
+   "question": "When did Audrey's positive reinforcement training course for dogs take place?",
+   "gold": "June, 2023",
+   "category": 2,
+   "evidence": [
+    "D6:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "June 2023",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012935686451612904,
+   "retrieved_tokens": 1978,
+   "retrieve_ms": 5708.338166994508,
+   "retrieve_cost": 0.0009202186451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 11,
+   "question": "When did Andrew go rock climbing?",
+   "gold": "June 11, 2023",
+   "category": 2,
+   "evidence": [
+    "D8:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "June 11, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012573789677419356,
+   "retrieved_tokens": 2049,
+   "retrieve_ms": 5711.666457995307,
+   "retrieve_cost": 0.0008727789677419356,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 12,
+   "question": "What outdoor activities has Andrew done other than hiking in nature?",
+   "gold": "rock climbing, fishing, camping",
+   "category": 1,
+   "evidence": [
+    "D8:1",
+    "D17:1",
+    "D14:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Rock climbing, fishing, biking, camping.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012812096129032257,
+   "retrieved_tokens": 2048,
+   "retrieve_ms": 5655.245708010625,
+   "retrieve_cost": 0.0008946596129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 13,
+   "question": "When did Audrey move to a new place?",
+   "gold": "June 2023",
+   "category": 2,
+   "evidence": [
+    "D9:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "June 26, 2023",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012276960000000001,
+   "retrieved_tokens": 1800,
+   "retrieve_ms": 5656.856957997661,
+   "retrieve_cost": 0.0008804460000000001,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 14,
+   "question": "What is something that Andrew really misses while working in the city?",
+   "gold": "being in nature",
+   "category": 1,
+   "evidence": [
+    "D3:7",
+    "D9:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Being in nature.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013272828387096776,
+   "retrieved_tokens": 2327,
+   "retrieve_ms": 5624.099707987625,
+   "retrieve_cost": 0.0009015828387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 15,
+   "question": "What is a shared frustration regarding dog ownership for Audrey and Andrew?",
+   "gold": "Not being able to find pet friendly spots.",
+   "category": 1,
+   "evidence": [
+    "D7:8",
+    "D10:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Finding pet-friendly places to live.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013584646451612905,
+   "retrieved_tokens": 2367,
+   "retrieve_ms": 5777.929791016504,
+   "retrieve_cost": 0.0009249646451612904,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 16,
+   "question": "When is Andrew going to go hiking with Audrey?",
+   "gold": "August",
+   "category": 2,
+   "evidence": [
+    "D11:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Next month, November 2023.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012412832903225808,
+   "retrieved_tokens": 1809,
+   "retrieve_ms": 5586.542834003922,
+   "retrieve_cost": 0.0008917832903225807,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 17,
+   "question": "How many times did Audrey and Andew plan to hike together?",
+   "gold": "three times",
+   "category": 1,
+   "evidence": [
+    "D11:7",
+    "D24:13",
+    "D26:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Five times.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012385488387096776,
+   "retrieved_tokens": 1754,
+   "retrieve_ms": 5566.487500036601,
+   "retrieve_cost": 0.0008993988387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 18,
+   "question": "Where did Audrey get Pixie from?",
+   "gold": "breeder",
+   "category": 1,
+   "evidence": [
+    "D11:4",
+    "D2:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Audrey adopted Pixie.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012569268387096775,
+   "retrieved_tokens": 2012,
+   "retrieve_ms": 5526.582750026137,
+   "retrieve_cost": 0.0008787768387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 19,
+   "question": "What is an indoor activity that Andrew would enjoy doing while make his dog happy?",
+   "gold": "cook dog treats",
+   "category": 3,
+   "evidence": [
+    "D10:12",
+    "D12:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Cooking new recipes.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0013437181935483872,
+   "retrieved_tokens": 2332,
+   "retrieve_ms": 5556.227624998428,
+   "retrieve_cost": 0.0009163681935483873,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 20,
+   "question": "Which meat does Audrey prefer eating more than others?",
+   "gold": "chicken",
+   "category": 3,
+   "evidence": [
+    "D10:13",
+    "D10:23"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Chicken",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001248585870967742,
+   "retrieved_tokens": 1900,
+   "retrieve_ms": 5572.413791960571,
+   "retrieve_cost": 0.000889635870967742,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 21,
+   "question": "What are the classes that Audrey took for her dogs to?",
+   "gold": "Positive reinforcement training class for bonding, dog training course, agility class",
+   "category": 1,
+   "evidence": [
+    "D6:4",
+    "D10:1",
+    "D14:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Agility and dog training classes.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001323705870967742,
+   "retrieved_tokens": 2174,
+   "retrieve_ms": 5518.376249994617,
+   "retrieve_cost": 0.0009194558709677421,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 22,
+   "question": "Where did Andrew go during the first weekend of August 2023?",
+   "gold": "camping with girlfriend",
+   "category": 2,
+   "evidence": [
+    "D14:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew went camping.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012566849032258065,
+   "retrieved_tokens": 2045,
+   "retrieve_ms": 5435.408290999476,
+   "retrieve_cost": 0.0008729849032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 23,
+   "question": "What are some problems that Andrew faces before he adopted Toby?",
+   "gold": "Finding the right dog and pet-friendly apartments close to open spaces",
+   "category": 1,
+   "evidence": [
+    "D2:12",
+    "D5:3",
+    "D5:5",
+    "D5:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Finding pet-friendly housing.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012923405806451614,
+   "retrieved_tokens": 2156,
+   "retrieve_ms": 5396.876707964111,
+   "retrieve_cost": 0.0008919905806451615,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 24,
+   "question": "Did Audrey and Andrew grow up with a pet dog?",
+   "gold": "Yes",
+   "category": 1,
+   "evidence": [
+    "D2:16",
+    "D13:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Yes, Audrey had a childhood dog.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001329744,
+   "retrieved_tokens": 2285,
+   "retrieve_ms": 5353.002084011678,
+   "retrieve_cost": 0.0009085440000000002,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 25,
+   "question": "When did Andrew and his girlfriend go fishing?",
+   "gold": "weekend before August 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D17:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "August 19, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001264599677419355,
+   "retrieved_tokens": 2001,
+   "retrieve_ms": 5483.268540992867,
+   "retrieve_cost": 0.0008865996774193549,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 26,
+   "question": "What is the biggest stressor in Andrew's life besides not being able to hike frequently?",
+   "gold": "work",
+   "category": 1,
+   "evidence": [
+    "D12:3",
+    "D16:1",
+    "D18:1",
+    "D10:16"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Work stress.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013226926451612906,
+   "retrieved_tokens": 2307,
+   "retrieve_ms": 5298.86500001885,
+   "retrieve_cost": 0.0008990926451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 27,
+   "question": "How does Andrew feel about his current work?",
+   "gold": "Stressful",
+   "category": 1,
+   "evidence": [
+    "D12:3",
+    "D16:1",
+    "D18:1",
+    "D10:16"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Stressed and overwhelmed.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012190709032258067,
+   "retrieved_tokens": 1763,
+   "retrieve_ms": 5281.850416038651,
+   "retrieve_cost": 0.0008785709032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 28,
+   "question": "What is something that Audrey often dresses up her dogs with?",
+   "gold": "Hats",
+   "category": 1,
+   "evidence": [
+    "D4:23",
+    "D4:25",
+    "D19:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Collars and tags.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012830641935483872,
+   "retrieved_tokens": 1942,
+   "retrieve_ms": 5245.2098749927245,
+   "retrieve_cost": 0.0009148141935483872,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 29,
+   "question": "What are the names of Audrey's dogs?",
+   "gold": "Pepper, Precious, Panda, and Pixie",
+   "category": 1,
+   "evidence": [
+    "D1:7",
+    "D2:1",
+    "D19:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Pepper, Precious, Panda, Pixie.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013213012258064516,
+   "retrieved_tokens": 2199,
+   "retrieve_ms": 5229.505790979601,
+   "retrieve_cost": 0.0009124012258064517,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 30,
+   "question": "When is Andrew planning to go to the beach with his girlfriend?",
+   "gold": "November 2023",
+   "category": 2,
+   "evidence": [
+    "D20:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "November 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012045569032258065,
+   "retrieved_tokens": 1698,
+   "retrieve_ms": 5199.629832990468,
+   "retrieve_cost": 0.0008726069032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 31,
+   "question": "What has Andrew done with his dogs?",
+   "gold": "Taking walks and hiking",
+   "category": 1,
+   "evidence": [
+    "D14:27",
+    "D24:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Taken them to parks and trails.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012814434193548388,
+   "retrieved_tokens": 2069,
+   "retrieve_ms": 5165.471291984431,
+   "retrieve_cost": 0.0008941434193548387,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 32,
+   "question": "What kind of tattoo does Audrey have on her arm?",
+   "gold": "Tattoos of her four dogs.",
+   "category": 1,
+   "evidence": [
+    "D3:26",
+    "D15:1",
+    "D23:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Tattoo of her four dogs.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0011839904516129033,
+   "retrieved_tokens": 1631,
+   "retrieve_ms": 5167.970166017767,
+   "retrieve_cost": 0.0008614904516129033,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 33,
+   "question": "What can Andrew potentially do to improve his stress and accomodate his living situation with his dogs?",
+   "gold": "Change to a hybrid or remote job so he can move away from the city to the suburbs to have a larger living space and be closer to nature.",
+   "category": 3,
+   "evidence": [
+    "D12:3",
+    "D18:1",
+    "D21:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Plan hikes and explore nature.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0013333525161290324,
+   "retrieved_tokens": 2293,
+   "retrieve_ms": 5154.856125009246,
+   "retrieve_cost": 0.0009097525161290324,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 34,
+   "question": "How many months passed between Andrew adopting Toby and Buddy?",
+   "gold": "three months",
+   "category": 2,
+   "evidence": [
+    "D12:1",
+    "D24:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Five months.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012604244516129033,
+   "retrieved_tokens": 1953,
+   "retrieve_ms": 5077.941166993696,
+   "retrieve_cost": 0.0008920244516129034,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 35,
+   "question": "What are the names of Andrew's dogs?",
+   "gold": "Toby, Scout, Buddy",
+   "category": 1,
+   "evidence": [
+    "D12:1",
+    "D24:6",
+    "D28:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Toby, Scout, and Buddy.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001248583935483871,
+   "retrieved_tokens": 1914,
+   "retrieve_ms": 5053.5490839974955,
+   "retrieve_cost": 0.000883633935483871,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 36,
+   "question": "What are some foods that Audrey likes eating?",
+   "gold": "chicken pot pie, chicken roast, blueberry muffins, sushi",
+   "category": 1,
+   "evidence": [
+    "D3:18",
+    "D10:13",
+    "D10:23",
+    "D25:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Sushi, roasted chicken, chicken pot pie.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012476512258064517,
+   "retrieved_tokens": 1946,
+   "retrieve_ms": 5023.577375046443,
+   "retrieve_cost": 0.0008767012258064517,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 37,
+   "question": "When did Audrey get into an accident in the park?",
+   "gold": "between October 19 and 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D25:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Last week, on October 17, 2023.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.001296893612903226,
+   "retrieved_tokens": 2184,
+   "retrieve_ms": 4997.850458952598,
+   "retrieve_cost": 0.0008884436129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 38,
+   "question": "When did Andrew and his girlfriend go on a wine tasting trip?",
+   "gold": "the weekend before October 24, 2023",
+   "category": 2,
+   "evidence": [
+    "D25:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "October 21, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012272835483870968,
+   "retrieved_tokens": 1772,
+   "retrieve_ms": 4993.756250012666,
+   "retrieve_cost": 0.0008824335483870969,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 39,
+   "question": "What did Audrey get wtih having so many dogs?",
+   "gold": "Companionship",
+   "category": 1,
+   "evidence": [
+    "D2:15",
+    "D23:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Joy and companionship.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001361499483870968,
+   "retrieved_tokens": 2397,
+   "retrieve_ms": 4952.180958993267,
+   "retrieve_cost": 0.0009258994838709679,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 40,
+   "question": "What is a good place for dogs to run around freely and meet new friends?",
+   "gold": "The dog park",
+   "category": 1,
+   "evidence": [
+    "D4:25",
+    "D14:2",
+    "D23:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Dog park.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001328163870967742,
+   "retrieved_tokens": 2268,
+   "retrieve_ms": 4908.388249983545,
+   "retrieve_cost": 0.0009110138709677421,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 41,
+   "question": "What are the breeds of Audrey's dogs?",
+   "gold": "Mongrel mixed with Lab for Pepper and Panda. Mongrel mixed with Chihuahua for Precious and Pixie.",
+   "category": 1,
+   "evidence": [
+    "D19:12",
+    "D26:13"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Lab and Chihuahua mixes.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013156883225806453,
+   "retrieved_tokens": 2173,
+   "retrieve_ms": 5149.956916982774,
+   "retrieve_cost": 0.0009136883225806453,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 42,
+   "question": "What technique is Audrey using to discipline her dogs?",
+   "gold": "Positive reinforcement",
+   "category": 1,
+   "evidence": [
+    "D6:4",
+    "D26:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Positive reinforcement techniques.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013154111612903227,
+   "retrieved_tokens": 2170,
+   "retrieve_ms": 5128.655124979559,
+   "retrieve_cost": 0.0009141611612903227,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 43,
+   "question": "Which US state do Audrey and Andrew potentially live in?",
+   "gold": "Minnesota",
+   "category": 3,
+   "evidence": [
+    "D11:9"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No specific state mentioned.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012643625806451615,
+   "retrieved_tokens": 2142,
+   "retrieve_ms": 4813.188083004206,
+   "retrieve_cost": 0.0008664125806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 44,
+   "question": "Which national park could Audrey and Andrew be referring to in their conversations?",
+   "gold": "Voyageurs National Park",
+   "category": 3,
+   "evidence": [
+    "D5:8",
+    "D11:9"
+   ],
+   "last_evidence_session": 28,
+   "answer": "No specific national park mentioned.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012768009677419354,
+   "retrieved_tokens": 2007,
+   "retrieve_ms": 4800.761166960001,
+   "retrieve_cost": 0.0008976009677419355,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 45,
+   "question": "How many pets will Andrew have, as of December 2023?",
+   "gold": "three",
+   "category": 2,
+   "evidence": [
+    "D12:1",
+    "D24:2",
+    "D28:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Four pets.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012388563870967743,
+   "retrieved_tokens": 1941,
+   "retrieve_ms": 4772.759249957744,
+   "retrieve_cost": 0.0008713563870967743,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 46,
+   "question": "How many pets did Andrew have, as of September 2023?",
+   "gold": "one",
+   "category": 2,
+   "evidence": [
+    "D12:1",
+    "D24:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Two pets: Toby and Buddy.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012631461290322581,
+   "retrieved_tokens": 2026,
+   "retrieve_ms": 4902.303541020956,
+   "retrieve_cost": 0.0008804961290322582,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 47,
+   "question": "How many months passed between Andrew adopting Buddy and Scout",
+   "gold": "one month",
+   "category": 2,
+   "evidence": [
+    "D24:2",
+    "D28:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Five months.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012723869032258066,
+   "retrieved_tokens": 2012,
+   "retrieve_ms": 4899.949082988314,
+   "retrieve_cost": 0.0008952869032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 48,
+   "question": "What does Andrew view his pets as?",
+   "gold": "Family",
+   "category": 1,
+   "evidence": [
+    "D15:14",
+    "D28:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Friends and confidantes.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012506260645161291,
+   "retrieved_tokens": 1892,
+   "retrieve_ms": 4658.531374996528,
+   "retrieve_cost": 0.0008910760645161292,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 49,
+   "question": "What does Audrey view her pets as?",
+   "gold": "Family",
+   "category": 1,
+   "evidence": [
+    "D15:15",
+    "D23:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Family and companions.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013293121935483872,
+   "retrieved_tokens": 2271,
+   "retrieve_ms": 5325.474874989595,
+   "retrieve_cost": 0.0009135121935483872,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 50,
+   "question": "What is a skill that Audrey learned to take care of her dogs?",
+   "gold": "Grooming",
+   "category": 1,
+   "evidence": [
+    "D16:2",
+    "D17:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Dog grooming techniques.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013723513548387096,
+   "retrieved_tokens": 2455,
+   "retrieve_ms": 4634.247959009372,
+   "retrieve_cost": 0.0009271513548387097,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 51,
+   "question": "What items has Audrey bought or made for her dogs?",
+   "gold": "dog tags, toys, dog beds, collars",
+   "category": 1,
+   "evidence": [
+    "D1:2",
+    "D9:5",
+    "D18:10",
+    "D24:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Collars, tags, beds, toys.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013587094838709679,
+   "retrieved_tokens": 2357,
+   "retrieve_ms": 4617.771334014833,
+   "retrieve_cost": 0.0009261094838709679,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 52,
+   "question": "What is something that Andrew could do to make birdwatching hobby to fit in his city schedule?",
+   "gold": "Install a bird feeder outside where he can see the birds without going outdoors.",
+   "category": 3,
+   "evidence": [
+    "D20:5",
+    "D20:21",
+    "D23:1",
+    "D1:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Go birdwatching in nearby parks.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012947413548387097,
+   "retrieved_tokens": 2065,
+   "retrieve_ms": 4597.685875021853,
+   "retrieve_cost": 0.0009038413548387098,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 53,
+   "question": "What is a career that Andrew could potentially pursue with his love for animals and nature?",
+   "gold": "Park ranger or a similar position working for the National Park Services.",
+   "category": 3,
+   "evidence": [
+    "D2:18",
+    "D3:1",
+    "D5:7",
+    "D8:27"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Animal care or wildlife conservation.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013245222580645162,
+   "retrieved_tokens": 2264,
+   "retrieve_ms": 4516.781125043053,
+   "retrieve_cost": 0.0009058722580645162,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 54,
+   "question": "What activity do Audrey's dogs like to do in the dog park?",
+   "gold": "Play fetch with ball and frisbee, run around and meet other dogs",
+   "category": 1,
+   "evidence": [
+    "D4:21",
+    "D10:7",
+    "D13:8",
+    "D23:14",
+    "D27:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Running and playing fetch.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013176929032258065,
+   "retrieved_tokens": 2147,
+   "retrieve_ms": 4717.788041976746,
+   "retrieve_cost": 0.0009180929032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 55,
+   "question": "When did Andrew make his dogs a fun indoor area?",
+   "gold": "few days before November 22, 2023",
+   "category": 2,
+   "evidence": [
+    "D28:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "June 26, 2023.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012503270322580646,
+   "retrieved_tokens": 1880,
+   "retrieve_ms": 4465.938957990147,
+   "retrieve_cost": 0.0008898770322580647,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 56,
+   "question": "Has Andrew moved into a new apartment for his dogs?",
+   "gold": "No",
+   "category": 1,
+   "evidence": [
+    "D5:5",
+    "D28:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Yes, he adopted another dog.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012554028387096775,
+   "retrieved_tokens": 1935,
+   "retrieve_ms": 4509.413500025403,
+   "retrieve_cost": 0.0008873028387096775,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 57,
+   "question": "When did Andrew adopt Scout?",
+   "gold": "few days before November 2023",
+   "category": 2,
+   "evidence": [
+    "D28:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "October 19, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012553213548387098,
+   "retrieved_tokens": 1980,
+   "retrieve_ms": 4413.117417017929,
+   "retrieve_cost": 0.0008813713548387098,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 58,
+   "question": "What did Audrey eat for dinner on October 24, 2023?",
+   "gold": "sushi",
+   "category": 2,
+   "evidence": [
+    "D25:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Sushi.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012486149032258065,
+   "retrieved_tokens": 1975,
+   "retrieve_ms": 4629.041875014082,
+   "retrieve_cost": 0.0008757149032258065,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 59,
+   "question": "How long has it been since Andrew adopted his first pet, as of November 2023?",
+   "gold": "4 months",
+   "category": 2,
+   "evidence": [
+    "D12:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Since October 19, 2023.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012787589032258065,
+   "retrieved_tokens": 2044,
+   "retrieve_ms": 4395.668083045166,
+   "retrieve_cost": 0.0008907089032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 60,
+   "question": "How many dogs does Andrew have?",
+   "gold": "3",
+   "category": 1,
+   "evidence": [
+    "D12:1",
+    "D24:2",
+    "D28:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Andrew has four dogs.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012609245806451614,
+   "retrieved_tokens": 2033,
+   "retrieve_ms": 4370.768832974136,
+   "retrieve_cost": 0.0008805245806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 61,
+   "question": "Which specific type of bird mesmerizes Andrew?",
+   "gold": "Eagles",
+   "category": 4,
+   "evidence": [
+    "D1:16"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Eagles.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0011867405806451614,
+   "retrieved_tokens": 1634,
+   "retrieve_ms": 4951.93445798941,
+   "retrieve_cost": 0.0008667905806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 62,
+   "question": "What did Andrew express missing about exploring nature trails with his family's dog?",
+   "gold": "The peaceful moments",
+   "category": 4,
+   "evidence": [
+    "D2:18"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The peaceful moments in nature.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012935111612903227,
+   "retrieved_tokens": 2064,
+   "retrieve_ms": 4943.572000018321,
+   "retrieve_cost": 0.0009057611612903227,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 63,
+   "question": "What kind of pastries did Andrew and his girlfriend have at the cafe?",
+   "gold": "croissants, muffins, and tarts",
+   "category": 4,
+   "evidence": [
+    "D3:17"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Croissants, muffins, and tarts.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012286242580645161,
+   "retrieved_tokens": 1806,
+   "retrieve_ms": 4214.807291980833,
+   "retrieve_cost": 0.0008777742580645162,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 64,
+   "question": "What kind of flowers does Audrey have a tattoo of?",
+   "gold": "sunflowers",
+   "category": 4,
+   "evidence": [
+    "D3:26"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Peruvian Lilies.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0011984299354838711,
+   "retrieved_tokens": 1724,
+   "retrieve_ms": 4227.067667001393,
+   "retrieve_cost": 0.0008631799354838711,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 65,
+   "question": "What does Audrey do during dog playdates in the park?",
+   "gold": "chat with people while dogs make new friends",
+   "category": 4,
+   "evidence": [
+    "D4:21"
+   ],
+   "last_evidence_session": 28,
+   "answer": "She lets them run and mingle.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013163469677419356,
+   "retrieved_tokens": 2113,
+   "retrieve_ms": 4197.406833001878,
+   "retrieve_cost": 0.0009212469677419357,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 66,
+   "question": "What type of dog was Andrew looking to adopt based on his living space?",
+   "gold": "smaller dog",
+   "category": 4,
+   "evidence": [
+    "D5:3"
+   ],
+   "last_evidence_session": 28,
+   "answer": "A smaller dog.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012661900645161291,
+   "retrieved_tokens": 1960,
+   "retrieve_ms": 5637.405832996592,
+   "retrieve_cost": 0.0008949400645161292,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 67,
+   "question": "Where does Andrew want to live to give their dog a large, open space to run around?",
+   "gold": "near a park or woods",
+   "category": 4,
+   "evidence": [
+    "D5:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Near a park or woods.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012775087741935486,
+   "retrieved_tokens": 2027,
+   "retrieve_ms": 4326.649375027046,
+   "retrieve_cost": 0.0008938087741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 68,
+   "question": "Why did Audrey sign up for a workshop about bonding with pets?",
+   "gold": "Strengthen the bond with her pets",
+   "category": 4,
+   "evidence": [
+    "D6:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "To strengthen her bond with her pets.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013526936129032259,
+   "retrieved_tokens": 2323,
+   "retrieve_ms": 4030.2338339970447,
+   "retrieve_cost": 0.0009251936129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 69,
+   "question": "How did Audrey hear about the workshop on bonding with pets?",
+   "gold": "Saw a workshop flyer at the local pet store",
+   "category": 4,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "At her local pet store.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013438370322580648,
+   "retrieved_tokens": 2277,
+   "retrieve_ms": 5089.808834018186,
+   "retrieve_cost": 0.0009247370322580646,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 70,
+   "question": "What type of training was the workshop Audrey signed up for in May 2023?",
+   "gold": "Positive reinforcement training",
+   "category": 4,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Bonding with pets.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012633667741935484,
+   "retrieved_tokens": 1976,
+   "retrieve_ms": 5024.406790966168,
+   "retrieve_cost": 0.0008885167741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 71,
+   "question": "How did Audrey describe she dog he met at the pet store?",
+   "gold": "Friendly and playful",
+   "category": 4,
+   "evidence": [
+    "D6:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Friendly and playful.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.00128832,
+   "retrieved_tokens": 1936,
+   "retrieve_ms": 3974.4668750208803,
+   "retrieve_cost": 0.0009212700000000001,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 72,
+   "question": "Why did Audrey think positive reinforcement training is important for pets?",
+   "gold": "To have pets learn how to behave in a positive way",
+   "category": 4,
+   "evidence": [
+    "D6:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "It builds trust and strengthens bonds.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013258914193548389,
+   "retrieved_tokens": 2177,
+   "retrieve_ms": 3931.4592499868013,
+   "retrieve_cost": 0.0009211914193548389,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 73,
+   "question": "What challenge is Andrew facing in their search for a pet?",
+   "gold": "Finding a pet-friendly spot in the city",
+   "category": 4,
+   "evidence": [
+    "D7:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Finding a pet-friendly place.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001244719741935484,
+   "retrieved_tokens": 1885,
+   "retrieve_ms": 3921.989540976938,
+   "retrieve_cost": 0.000884419741935484,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 74,
+   "question": "How does Andrew feel about their search for a pet-friendly place?",
+   "gold": "Discouraged but determined",
+   "category": 4,
+   "evidence": [
+    "D7:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Discouraged but determined.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012132983225806452,
+   "retrieved_tokens": 1659,
+   "retrieve_ms": 4762.208000000101,
+   "retrieve_cost": 0.0008865983225806453,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 75,
+   "question": "What outdoor activities does Andrew plan on trying after the rock climbing class?",
+   "gold": "kayaking and bungee jumping",
+   "category": 4,
+   "evidence": [
+    "D8:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Kayaking and bungee jumping.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012379488387096777,
+   "retrieved_tokens": 1865,
+   "retrieve_ms": 3870.1038750004955,
+   "retrieve_cost": 0.0008794488387096776,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 76,
+   "question": "How long does Audrey typically walk her dogs for?",
+   "gold": "about an hour",
+   "category": 4,
+   "evidence": [
+    "D8:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "About an hour.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013517996129032259,
+   "retrieved_tokens": 2334,
+   "retrieve_ms": 4232.096042018384,
+   "retrieve_cost": 0.000925949612903226,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 77,
+   "question": "What did Audrey set up in the backyard for their dogs on June 26, 2023?",
+   "gold": "a doggy play area with agility stuff and toys",
+   "category": 4,
+   "evidence": [
+    "D9:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "A doggy play area with agility stuff.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013191147096774194,
+   "retrieved_tokens": 2086,
+   "retrieve_ms": 4087.743624986615,
+   "retrieve_cost": 0.0009244647096774195,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 78,
+   "question": "What did Audrey and her friends stumble across during a hike a few years back, as mentioned on June 26, 2023?",
+   "gold": "a stunning lake in the mountains",
+   "category": 4,
+   "evidence": [
+    "D9:23"
+   ],
+   "last_evidence_session": 28,
+   "answer": "A stunning lake.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001319277677419355,
+   "retrieved_tokens": 2126,
+   "retrieve_ms": 3890.3746670112014,
+   "retrieve_cost": 0.000919527677419355,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 79,
+   "question": "What is Audrey's favorite recipe that she shares with Andrew on 3 July, 2023?",
+   "gold": "Chicken Pot Pie",
+   "category": 4,
+   "evidence": [
+    "D10:13"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Chicken Pot Pie",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012359669032258067,
+   "retrieved_tokens": 1774,
+   "retrieve_ms": 3740.762999979779,
+   "retrieve_cost": 0.0008917169032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 80,
+   "question": "What dish is one of Audrey's favorite dishes that includes garlic and is shared with Andrew on 3 July, 2023?",
+   "gold": "Roasted Chicken",
+   "category": 4,
+   "evidence": [
+    "D10:23"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Roasted Chicken",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012404101935483871,
+   "retrieved_tokens": 1774,
+   "retrieve_ms": 3867.193625017535,
+   "retrieve_cost": 0.0008943601935483871,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 81,
+   "question": "What did Andrew and his GF do on the Monday before July 24, 2023?",
+   "gold": "volunteered at a pet shelter",
+   "category": 4,
+   "evidence": [
+    "D13:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Volunteered at a pet shelter.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012410214193548388,
+   "retrieved_tokens": 1953,
+   "retrieve_ms": 3737.9851670120843,
+   "retrieve_cost": 0.0008672214193548388,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 82,
+   "question": "What is the name of Audrey's childhood dog?",
+   "gold": "Max",
+   "category": 4,
+   "evidence": [
+    "D13:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Max",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012679695483870969,
+   "retrieved_tokens": 1907,
+   "retrieve_ms": 3635.8897499740124,
+   "retrieve_cost": 0.0009079695483870969,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 83,
+   "question": "What special memories does Audrey have with her childhood dog, Max?",
+   "gold": "Long walks in the neighborhood, exploring new paths, sharing worries and hopes",
+   "category": 4,
+   "evidence": [
+    "D13:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Long walks and sharing worries.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013266247741935485,
+   "retrieved_tokens": 2199,
+   "retrieve_ms": 4996.430125029292,
+   "retrieve_cost": 0.0009189247741935486,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 84,
+   "question": "What are some of the personalities of Audrey's four fur babies?",
+   "gold": "oldest is relaxed, second is playful, third can be naughty but loves cuddles, youngest is full of life",
+   "category": 4,
+   "evidence": [
+    "D13:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Relaxed, playful, naughty, adventurous.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013166229677419356,
+   "retrieved_tokens": 2160,
+   "retrieve_ms": 3760.339832981117,
+   "retrieve_cost": 0.0009129729677419356,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 85,
+   "question": "What type of classes did Audrey start with her pups recently on 4 August, 2023?",
+   "gold": "Agility classes",
+   "category": 4,
+   "evidence": [
+    "D14:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Agility classes.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013084285161290322,
+   "retrieved_tokens": 2048,
+   "retrieve_ms": 3776.54591598548,
+   "retrieve_cost": 0.0009224785161290323,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 86,
+   "question": "How often does Audrey take her pups to the park for practice?",
+   "gold": "Twice a week",
+   "category": 4,
+   "evidence": [
+    "D14:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Twice a week.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013392992903225808,
+   "retrieved_tokens": 2287,
+   "retrieve_ms": 3557.1807909873314,
+   "retrieve_cost": 0.0009189992903225807,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 87,
+   "question": "How long did the trail hike that Audrey went on with her pups take?",
+   "gold": "Two hours",
+   "category": 4,
+   "evidence": [
+    "D14:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Two hours.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012857969032258067,
+   "retrieved_tokens": 1930,
+   "retrieve_ms": 3525.3570420318283,
+   "retrieve_cost": 0.0009196469032258066,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 88,
+   "question": "What advice did Audrey give to Andrew regarding grooming Toby?",
+   "gold": "Grooming slowly and gently, paying attention to sensitive areas like ears and paws. And remember to stay patient and positive throughout the grooming process.",
+   "category": 4,
+   "evidence": [
+    "D16:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Stay patient and positive.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012629347741935485,
+   "retrieved_tokens": 1935,
+   "retrieve_ms": 3493.288666999433,
+   "retrieve_cost": 0.0008960347741935486,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 89,
+   "question": "What is essential to keep the dogs looking good according to Audrey?",
+   "gold": "Daily brushing, regular baths, nail trims, and lots of love",
+   "category": 4,
+   "evidence": [
+    "D17:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Regular grooming is essential.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013166041935483873,
+   "retrieved_tokens": 2144,
+   "retrieve_ms": 3467.32133399928,
+   "retrieve_cost": 0.0009177541935483872,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 90,
+   "question": "What did Audrey organize with the neighbors' dogs?",
+   "gold": "a doggy playdate",
+   "category": 4,
+   "evidence": [
+    "D18:6"
+   ],
+   "last_evidence_session": 28,
+   "answer": "A doggy playdate.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013151326451612904,
+   "retrieved_tokens": 2115,
+   "retrieve_ms": 5798.030124977231,
+   "retrieve_cost": 0.0009209326451612905,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 91,
+   "question": "What did Audrey do to give her dogs extra comfort as the weather cooled down?",
+   "gold": "Got new beds for them",
+   "category": 4,
+   "evidence": [
+    "D18:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "She got new beds for them.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013320865161290324,
+   "retrieved_tokens": 2188,
+   "retrieve_ms": 3437.8300409880467,
+   "retrieve_cost": 0.0009245365161290324,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 92,
+   "question": "How does Audrey describe the new beds for her dogs?",
+   "gold": "Super cozy and comfy",
+   "category": 4,
+   "evidence": [
+    "D18:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Super cozy and comfy.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012457221290322583,
+   "retrieved_tokens": 1727,
+   "retrieve_ms": 3426.462458970491,
+   "retrieve_cost": 0.0009100221290322582,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 93,
+   "question": "How did Audrey calm down her dog after the leash incident?",
+   "gold": "Petted, hugged, spoke calmly and slowly walked the dog",
+   "category": 4,
+   "evidence": [
+    "D19:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Spoke calmly and hugged her.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013276567741935484,
+   "retrieved_tokens": 2163,
+   "retrieve_ms": 4061.7162909475155,
+   "retrieve_cost": 0.0009250567741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 94,
+   "question": "How often does Audrey take her dogs for walks?",
+   "gold": "Multiple times a day",
+   "category": 4,
+   "evidence": [
+    "D19:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Multiple times a day.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013612974193548386,
+   "retrieved_tokens": 2399,
+   "retrieve_ms": 3360.8210829552263,
+   "retrieve_cost": 0.0009250974193548388,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 95,
+   "question": "What kind of flowers does Audrey take care of?",
+   "gold": "Peruvian Lilies",
+   "category": 4,
+   "evidence": [
+    "D19:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Peruvian Lilies.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012065370967741936,
+   "retrieved_tokens": 1667,
+   "retrieve_ms": 3314.293000032194,
+   "retrieve_cost": 0.0008801370967741936,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 96,
+   "question": "What did Andrew learn from reading books about ecological systems?",
+   "gold": "about animals, plants, and ecosystems and how they work together",
+   "category": 4,
+   "evidence": [
+    "D20:25"
+   ],
+   "last_evidence_session": 28,
+   "answer": "He learned about animals, plants, and ecosystems.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012418761290322582,
+   "retrieved_tokens": 1783,
+   "retrieve_ms": 3273.060332983732,
+   "retrieve_cost": 0.0008947761290322582,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 97,
+   "question": "What did Andrew suggest as a way to reduce carbon footprint?",
+   "gold": "biking or using public transport",
+   "category": 4,
+   "evidence": [
+    "D20:33"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Biking or using public transport.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001222859612903226,
+   "retrieved_tokens": 1863,
+   "retrieve_ms": 3423.7951249815524,
+   "retrieve_cost": 0.000865259612903226,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 98,
+   "question": "How does Andrew suggest helping the planet while also training the body?",
+   "gold": "by biking",
+   "category": 4,
+   "evidence": [
+    "D20:35"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Biking or using public transport.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012502362580645162,
+   "retrieved_tokens": 1922,
+   "retrieve_ms": 3199.1848339675926,
+   "retrieve_cost": 0.0008834862580645162,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 99,
+   "question": "What did Audrey do with her pups over the weekend before 4th October, 2023?",
+   "gold": "Took them to the beach",
+   "category": 4,
+   "evidence": [
+    "D21:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Took them to the beach.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013574576129032258,
+   "retrieved_tokens": 2354,
+   "retrieve_ms": 3294.610125012696,
+   "retrieve_cost": 0.0009238076129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 100,
+   "question": "What was the reason Audrey couldn't walk her dogs for a period of time?",
+   "gold": "Knee injury",
+   "category": 4,
+   "evidence": [
+    "D22:1"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Knee injury.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013539520645161293,
+   "retrieved_tokens": 2311,
+   "retrieve_ms": 3154.214500042144,
+   "retrieve_cost": 0.0009300520645161292,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 101,
+   "question": "What type of jewelry does Audrey make?",
+   "gold": "Jewelry made from recycled objects",
+   "category": 4,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Recycled jewelry.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012018334838709678,
+   "retrieved_tokens": 1716,
+   "retrieve_ms": 3125.8057090453804,
+   "retrieve_cost": 0.0008692834838709679,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 102,
+   "question": "Why does Audrey make jewelry out of recycled objects?",
+   "gold": "To show love for creativity and sustainability",
+   "category": 4,
+   "evidence": [
+    "D22:5"
+   ],
+   "last_evidence_session": 28,
+   "answer": "To show creativity and sustainability.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012370002580645162,
+   "retrieved_tokens": 1811,
+   "retrieve_ms": 3133.8907500030473,
+   "retrieve_cost": 0.0008884002580645163,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 103,
+   "question": "What organization does Audrey donate a portion of his profits to?",
+   "gold": "Animal shelter",
+   "category": 4,
+   "evidence": [
+    "D22:7"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Not specified in memories.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012457666451612904,
+   "retrieved_tokens": 1932,
+   "retrieve_ms": 5480.250125052407,
+   "retrieve_cost": 0.0008790166451612904,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 104,
+   "question": "How does Audrey help out the animal shelter?",
+   "gold": "By donating a portion of his profits frmo selling jwelery",
+   "category": 4,
+   "evidence": [
+    "D22:9"
+   ],
+   "last_evidence_session": 28,
+   "answer": "She donates to the shelter.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012772447741935485,
+   "retrieved_tokens": 1934,
+   "retrieve_ms": 3379.0724169812165,
+   "retrieve_cost": 0.0009098947741935485,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 105,
+   "question": "What type of games do Audrey's dogs like to play at the park?",
+   "gold": "Fetch and Frisbee",
+   "category": 4,
+   "evidence": [
+    "D23:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Fetch and frisbee.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013182694838709678,
+   "retrieved_tokens": 2171,
+   "retrieve_ms": 3460.3528340230696,
+   "retrieve_cost": 0.0009147694838709678,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 106,
+   "question": "What did Audrey make to thank her neighbors?",
+   "gold": "Goodies",
+   "category": 4,
+   "evidence": [
+    "D23:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Goodies.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001232675612903226,
+   "retrieved_tokens": 1874,
+   "retrieve_ms": 4063.5175420320593,
+   "retrieve_cost": 0.0008767256129032259,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 107,
+   "question": "How do Audrey's dogs react to snow?",
+   "gold": "Confused",
+   "category": 4,
+   "evidence": [
+    "D23:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "They hate it and get confused.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012600480000000002,
+   "retrieved_tokens": 1825,
+   "retrieve_ms": 3387.185416999273,
+   "retrieve_cost": 0.0009090480000000001,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 108,
+   "question": "How does Audrey describe her dogs' response to snow?",
+   "gold": "They definitely prefer nice, sunny days in the grass.",
+   "category": 4,
+   "evidence": [
+    "D23:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "They were confused.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0012532470967741936,
+   "retrieved_tokens": 1783,
+   "retrieve_ms": 2956.3512500026263,
+   "retrieve_cost": 0.0009097470967741936,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 109,
+   "question": "What kind of experiences are Audrey's dogs the best companions for?",
+   "gold": "Exploring the great outdoors",
+   "category": 4,
+   "evidence": [
+    "D23:24"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Exploring nature and hiking.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013220475483870968,
+   "retrieved_tokens": 2113,
+   "retrieve_ms": 2942.1776669914834,
+   "retrieve_cost": 0.0009272475483870969,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 110,
+   "question": "What activity do Andrew and Buddy enjoy doing together?",
+   "gold": "Walking",
+   "category": 4,
+   "evidence": [
+    "D24:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Hiking together.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012389992258064516,
+   "retrieved_tokens": 1821,
+   "retrieve_ms": 2878.70274996385,
+   "retrieve_cost": 0.0008900992258064517,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 111,
+   "question": "What do Andrew and Buddy like doing on walks?",
+   "gold": "Checking out new hiking trails",
+   "category": 4,
+   "evidence": [
+    "D24:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Exploring new trails together.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001277213806451613,
+   "retrieved_tokens": 1995,
+   "retrieve_ms": 2890.6837920076214,
+   "retrieve_cost": 0.000901013806451613,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 112,
+   "question": "What cuisine did Andrew recently try at a new spot in town?",
+   "gold": "sushi",
+   "category": 4,
+   "evidence": [
+    "D25:3"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Sushi",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012340834838709678,
+   "retrieved_tokens": 1894,
+   "retrieve_ms": 3309.5403750194237,
+   "retrieve_cost": 0.0008745334838709679,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 113,
+   "question": "Which type of sushi did Audrey suggest trying first to someone new to sushi?",
+   "gold": "California or salmon roll",
+   "category": 4,
+   "evidence": [
+    "D25:8"
+   ],
+   "last_evidence_session": 28,
+   "answer": "California or salmon roll.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012233765806451613,
+   "retrieved_tokens": 1737,
+   "retrieve_ms": 3124.49637503596,
+   "retrieve_cost": 0.0008849765806451614,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 114,
+   "question": "What type of date is Andrew going on Sunday?",
+   "gold": "picnic date",
+   "category": 4,
+   "evidence": [
+    "D26:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Picnic date with his girlfriend.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0011818343225806452,
+   "retrieved_tokens": 1687,
+   "retrieve_ms": 3185.2792919962667,
+   "retrieve_cost": 0.0008512343225806452,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 115,
+   "question": "What did Andrew and Audrey plan to do on the Saturday after October 28, 2023?",
+   "gold": "Go hiking",
+   "category": 4,
+   "evidence": [
+    "D26:20"
+   ],
+   "last_evidence_session": 28,
+   "answer": "They planned a nature day.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.001194437806451613,
+   "retrieved_tokens": 1585,
+   "retrieve_ms": 3137.632708007004,
+   "retrieve_cost": 0.0008767378064516131,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 116,
+   "question": "What aspect of autumn does Andrew find beautiful?",
+   "gold": "The autumn colors",
+   "category": 4,
+   "evidence": [
+    "D26:36"
+   ],
+   "last_evidence_session": 28,
+   "answer": "The autumn colors.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012288369677419355,
+   "retrieved_tokens": 1864,
+   "retrieve_ms": 2831.304707971867,
+   "retrieve_cost": 0.0008737869677419356,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 117,
+   "question": "What did Audrey do in November 2023 to better take care of her dogs?",
+   "gold": "Joined a dog owners group",
+   "category": 4,
+   "evidence": [
+    "D27:2"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Took them to the pet salon.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.001375783741935484,
+   "retrieved_tokens": 2435,
+   "retrieve_ms": 2816.4874160429463,
+   "retrieve_cost": 0.0009302837419354839,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 118,
+   "question": "How often does Audrey meet up with other dog owners for tips and playdates?",
+   "gold": "Once a week",
+   "category": 4,
+   "evidence": [
+    "D27:4"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Once a week.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013310852903225807,
+   "retrieved_tokens": 2214,
+   "retrieve_ms": 2803.6452920059673,
+   "retrieve_cost": 0.0009214352903225807,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 119,
+   "question": "What did Audrey share to show ways to keep dogs active in the city?",
+   "gold": "photography of a basket full of stuffed animals",
+   "category": 4,
+   "evidence": [
+    "D27:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Socializing, exercising, and mental stimulation.",
+   "memories": 47,
+   "label": "WRONG",
+   "query_cost": 0.0013406932258064517,
+   "retrieved_tokens": 2173,
+   "retrieve_ms": 2780.210624972824,
+   "retrieve_cost": 0.0009344932258064517,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 120,
+   "question": "What type of activities does Audrey suggest for mental stimulation of the dogs?",
+   "gold": "puzzles, training, hide-and-seek",
+   "category": 4,
+   "evidence": [
+    "D27:14"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Puzzles, training, hide-and-seek.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0013339517419354839,
+   "retrieved_tokens": 2181,
+   "retrieve_ms": 2727.4997910135426,
+   "retrieve_cost": 0.000926251741935484,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 121,
+   "question": "What is Andrew planning to do with Scout, Toby, and Buddy?",
+   "gold": "Take them to a nearby park",
+   "category": 4,
+   "evidence": [
+    "D28:10"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Take them to a nearby park.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012202184516129032,
+   "retrieved_tokens": 1794,
+   "retrieve_ms": 2814.5390420104377,
+   "retrieve_cost": 0.0008723684516129033,
+   "checkpoint": 28,
+   "store_size": 675
+  },
+  {
+   "idx": 122,
+   "question": "What did Andrew get for Scout to create a safe and fun space for them?",
+   "gold": "essentials like a bed, toys, and puppy pads",
+   "category": 4,
+   "evidence": [
+    "D28:12"
+   ],
+   "last_evidence_session": 28,
+   "answer": "Bed, toys, and puppy pads.",
+   "memories": 47,
+   "label": "CORRECT",
+   "query_cost": 0.0012336555483870968,
+   "retrieved_tokens": 1825,
+   "retrieve_ms": 2728.5001249983907,
+   "retrieve_cost": 0.0008799555483870969,
+   "checkpoint": 28,
+   "store_size": 675
+  }
+ ],
+ "options": {
+  "top_k": 47,
+  "no_dates": false,
+  "no_answer": false
+ },
+ "store_from": "lean_l0",
+ "reused_store": "__k3__noanswer",
+ "write_outcomes": [],
+ "retrieve_ms_p50": 4629.041875014082,
+ "retrieve_cost_per_query": 0.0008986903792289536,
+ "backend": {
+  "name": "jev",
+  "model": "jev-1.13.0"
+ },
+ "stack": {
+  "name": "openai",
+  "extract": "gpt-4o-mini",
+  "answer": "gpt-4o-mini",
+  "judge": "gpt-4o-mini",
+  "decide": "gpt-4o-mini",
+  "embed": "text-embedding-3-small",
+  "tokenizer": "o200k_base",
+  "observation_date": "session"
+ },
+ "write_cost_per_1k_parts": {}
+}
