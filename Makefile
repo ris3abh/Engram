@@ -26,4 +26,4 @@ paper:
 
 # Rebuilds hf_dataset/data/*.parquet from the committed bench files and results.
 dataset:
-	uv run --with pyarrow python -m bench.make_hf_dataset
+	uv run --extra bench --with pyarrow python -m bench.make_hf_dataset
