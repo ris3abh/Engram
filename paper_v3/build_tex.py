@@ -617,7 +617,8 @@ AUTHOR = r"""\author{Rishabh Sharma\thanks{Preprint,
   Independent Researcher \\
   \texttt{rishabh.sharma1103@gmail.com} \And
   Rishika Lall \\
-  Independent Researcher}"""
+  Independent Researcher \\
+  \texttt{lallrishika@gmail.com}}"""
 
 
 def main() -> None:
