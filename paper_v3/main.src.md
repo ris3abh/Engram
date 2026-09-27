@@ -39,9 +39,12 @@ matched budget? And how does the rerank's value change as the budget grows? Non-
 raw turns are at most {{plan.margin}} points worse, rather than whether the two systems differ at all.
 
 The selector is Jev, TypeSafe's typed decision model [@typesafe2026jev]. It answers a fixed-option question with a
-probability in one short request. The extraction system is engram v2, which extracts facts with gpt-4o-mini and
-types, relates and updates them with Jev. It was the most accurate system on our development conversation, and we
-chose it as the comparator because the test could fail against it. engram v2's read path is Turns + Jev's read path over
+probability in one short request. The extraction system is engram v2. engram is a memory system we built and
+described in an earlier preprint [@sharma2026typed]: an LLM extracts facts, and a typed decision model makes every
+later decision about them. engram v2 is the version used here; it extracts facts with gpt-4o-mini and types, relates
+and updates them with Jev. It was the most accurate system on our development conversation, and we chose it as the
+comparator because the test could fail against it. Choosing our own extraction system as the comparator gave us
+every reason to make it strong. engram v2's read path is Turns + Jev's read path over
 extracted facts instead of raw turns. H1 therefore holds the selector fixed and varies only what is stored: a
 controlled comparison of extraction and raw turns, in the spirit of Fidelity Before Structure's.
 
@@ -65,7 +68,7 @@ Our contributions:
    leniency interacts with answer length, so judge–human agreement differs by system (§5.4, §5.6, §6).
 
 What is not new: raw turns plus a reranker is a known pattern [@derehag2026smartsearch; @nanomemory2026], and engram
-v2 is the system of our earlier preprint [@sharma2026typed]. The contribution is the test, the within-study budget
+v2 is a version of our earlier system [@sharma2026typed]. The contribution is the test, the within-study budget
 result and the typed selector, not a new architecture.
 
 ## 2. Related Work
@@ -112,6 +115,90 @@ agreement depended on the system's answer style (§5.4, §6).
 
 ## 3. Systems
 
+### 3.1 Setup and notation
+
+A conversation is a sequence of turns $x_1, \ldots, x_T$, each with its session date. A memory system has a write
+function $W$ that builds a store, a read function that selects part of it for a question $q$, and an answer model $L$:
+
+```math
+& M = W(x_1, \ldots, x_T), \qquad S(q) \subseteq M, \nonumber\\
+& a = L\bigl(q, \operatorname{render}(S(q))\bigr) \label{eq:memory}
+```
+
+For Turns + Jev and Turns + cosine, $M$ is the turns themselves, each stored with its date. For engram v2, $M$ is a
+set of facts that an LLM extracted, each with a source quote and a validity window. For Jev-Mem, $M$ is a graph whose
+nodes are turns and whose edges Jev types.
+
+A typed question $Q$ has a fixed option set $O_Q$. Given a state $s$, Jev returns a probability for every option in
+one request, and a decision is the most probable option with that probability as its confidence:
+
+```math
+& p(o \mid s, Q), \quad o \in O_Q, \nonumber\\
+& d(s, Q) = \arg\max_{o \in O_Q} p(o \mid s, Q), \nonumber\\
+& \pi(s, Q) = \max_{o \in O_Q} p(o \mid s, Q) \label{eq:jev}
+```
+
+Jev does not generate text. It scores a closed set of options, so its output needs no parsing, and its confidence is
+a probability that can be thresholded.
+
+Reading starts from a cosine shortlist of the $n$ stored items closest to the question, with $n$ = {{plan.shortlist}}
+and $e(\cdot)$ the embedding:
+
+```math
+& C(q) = \operatorname*{Top}_{n}\ \cos\bigl(e(q), e(m)\bigr), \quad m \in M \label{eq:shortlist}
+```
+
+Turns + Jev asks Jev one relevance question $Q_{\text{rel}}$ about every shortlisted turn, in one request. It keeps
+the turns whose relevance $\rho$ exceeds $\tau$ = {{plan.threshold}}, in decreasing $\rho$. The top $f$ = {{plan.floor}}
+turns of the shortlist by cosine follow them (the cosine floor), and the answer model reads the first $k$:
+
+```math
+& \rho(m, q) = p(\text{yes} \mid m, q, Q_{\text{rel}}), \nonumber\\
+& R(q) = \{m \in C(q) : \rho(m, q) > \tau\}, \nonumber\\
+& S_k(q) = \operatorname{first}_k\bigl(R(q) \text{ by } \rho, \nonumber\\
+& \qquad\quad \text{then } \operatorname{Top}_f C(q) \setminus R(q) \text{ by cosine}\bigr) \label{eq:select}
+```
+
+Turns + cosine reads the first $k$ turns in cosine order. Below, the subscripts $J$, $\cos$ and $E$ denote
+Turns + Jev, Turns + cosine and engram v2. Systems are compared at matched context. With $T_A(k)$ the mean rendered
+tokens per question of system $A$ at $k$, and $k_B$ the comparator's own $k$ (three), Turns + Jev runs
+at the $k$ whose tokens are closest, ties going to the larger $k$:
+
+```math
+& k^{*} = \arg\min_{k}\ \bigl|T_{J}(k) - T_B(k_B)\bigr| \label{eq:match}
+```
+
+The rerank's gain over similarity search at the same $k$ is
+
+```math
+& \Delta(k) = \operatorname{Acc}_{J}(k) - \operatorname{Acc}_{\cos}(k) \label{eq:delta}
+```
+
+The primary test H1 compares Turns + Jev with engram v2 question by question. Let $c_i^A$ be one if system $A$'s answer to
+question $i$ is judged correct and zero otherwise, $d_i$ the difference Turns + Jev minus engram v2, $\bar d$ its mean
+and $s$ its standard deviation over the $N$ = {{data.fresh.questions}} questions. Turns + Jev is non-inferior if the
+one-sided 95% lower bound clears the margin $\delta$ = {{plan.margin}} points, with $z_{0.95}$ = 1.645:
+
+```math
+& d_i = c_i^{J} - c_i^{E}, \nonumber\\
+& \bar d - z_{0.95}\, \frac{s}{\sqrt{N}} > -\delta \label{eq:primary}
+```
+
+The share of the gap between similarity search and extraction that the rerank closes, at the H1 budget, is
+
+```math
+& G = \frac{\operatorname{Acc}_{J} - \operatorname{Acc}_{\cos}}{\operatorname{Acc}_{E} - \operatorname{Acc}_{\cos}} \label{eq:gap}
+```
+
+with each system at its matched $k$. The total cost per question adds the write cost of $r_w$ turns, the turns
+written per question asked ({{fig5.turns_per_question}} on the benchmark), to the read and answer costs:
+
+```math
+& C = r_w\, c_{\text{write}} + c_{\text{read}} + c_{\text{answer}} \label{eq:cost}
+```
+
+### 3.2 The systems
+
 All systems use gpt-4o-mini to answer, text-embedding-3-small to embed and jev-1.13.0 for every Jev decision.
 Figure 1 contrasts the write and read paths of Turns + Jev, engram v2 and Jev-Mem. We give the raw-turn systems
 descriptive names: Turns + Jev, Turns + cosine and Turns + LLM, registered as T0R, L0 and T0R-LLM in the plan. The
@@ -120,9 +207,8 @@ post-hoc variant T0R-wide is Turns + Jev (wide).
 ![Figure 1: Write path (per turn, top) and read path (per question, bottom) of Turns + Jev, Turns + cosine, engram v2 and Jev-Mem. Border colour says what does the work: code (blue), an LLM call (amber), a Jev typed decision (purple), a store (green), the answer model (red) and the judge (teal). The grid gives LLM calls and Jev requests per turn and Jev requests per question, from each system's code (Jev-Mem: its default profile); Turns + Jev and Turns + cosine share a write path and differ only per question, where Turns + Jev makes one Jev request and Turns + cosine none. A design diagram; no measured data.](figures/arch.svg)
 
 **Turns + Jev.** The write path embeds each turn and stores it as "[date] speaker: text", with no extraction and no LLM
-call. The read path takes a {{plan.shortlist}}-turn cosine shortlist. It asks Jev, in one request, whether each turn
-helps answer the question. Turns scored above {{plan.threshold}} are kept in order of Jev's probability. A cosine
-floor of {{plan.floor}} turns follows them. The answer model sees the first k lines.
+call. The read path is [[eq:shortlist,eq:select]]; Jev's relevance question asks whether each turn helps answer the
+question.
 
 **Turns + cosine.** The same store, read in cosine order with no Jev call.
 
@@ -130,9 +216,13 @@ floor of {{plan.floor}} turns follows them. The answer model sees the first k li
 
 **Full context.** Every turn of the conversation, rendered as Turns + Jev renders a line, in the answer prompt.
 
-**engram v2.** An LLM extracts facts from each message with mem0's extraction prompt; Jev then answers typing
-questions and relation questions against up to ten candidate facts, and a belief policy closes superseded facts. The
-read path is Turns + Jev's over facts instead of turns. We use the frozen v2 system (tag `v2-frozen`).
+**engram v2.** engram [@sharma2026typed], our earlier system. An LLM extracts facts from each message with mem0's
+extraction prompt. Jev then answers typing questions and relation questions against up to ten candidate facts, and a
+belief policy closes superseded facts. The read path is Turns + Jev's over facts instead of turns. v2 changes two
+things from the preprint's version, both fixed on the development conversation before the `v2-frozen` tag.
+Extraction receives each message's session date, so relative dates resolve to the conversation's time. A
+same-attribute gate, one more Jev question per candidate, lets an update close a stored fact whose relation type
+differs. The v2 plan's Deviations section (`docs/V2_PLAN.md §12`) records both.
 
 **mem0 2.1.0.** The default `add()` path: one LLM extraction call per message, with the session date as the
 observation date; reads are vector search.
@@ -182,13 +272,11 @@ questions with user and assistant turns: {{data.lme.scored}} scored and {{data.l
 judge returns CORRECT or WRONG. Tokens are counted with o200k_base over the memory block the answer model sees.
 
 **Token matching.** Every comparison between systems holds context fixed. The comparator runs at k=3, its natural
-setting, and Turns + Jev is matched to it: from a retrieval-only sweep of Turns + Jev over k from one to thirty, the k whose pooled
-mean tokens per question is closest to the comparator's, ties going to the larger k. The sweep and the chosen k were
-saved before Turns + Jev answered at that k.
+setting, and Turns + Jev runs at the matched k of [[eq:match]]. A retrieval-only sweep over k from one to thirty gave
+the token counts. The sweep and the chosen k were saved before Turns + Jev answered at that k.
 
-**Tests.** The primary test H1 asks whether Turns + Jev is non-inferior to engram v2: with d the per-question difference in
-correctness (Turns + Jev minus engram v2), non-inferiority holds if d̄ − 1.645·SE exceeds −{{plan.margin}} points. The margin
-is half the rerank's measured effect on the development conversation. The seven secondary tests, under Holm
+**Tests.** The primary test H1 is [[eq:primary]], with the judge's labels. The margin is half the rerank's measured
+effect on the development conversation. The seven secondary tests, under Holm
 correction at family-wise 0.05, are exact two-sided McNemar tests except S4, a non-inferiority test with the same
 margin: S1 Turns + Jev against Turns + cosine, S2 against Jev-Mem, S3 against mem0 and S4 against Turns + LLM on LoCoMo; S5 against mem0 and
 S6 against Turns + cosine on the LongMemEval sample; S7 against Turns + cosine on the full LongMemEval set. The plan's power analysis put the
@@ -241,9 +329,9 @@ the differences are not tested.
 
 ![Figure 3: H1 (registered) as a forest plot: Turns + Jev at k={{h1.k}} minus engram v2 at k=3, in points, on the {{data.fresh.questions}} questions of the five held-out conversations. Bars are two-sided 95% intervals; the red tick is the one-sided 95% lower bound, tested against the −{{plan.margin}}-point margin (dashed). The judge row is the registered test; the human rows replace the judge's labels on the {{audit.graded}} graded discordant questions (§5.4); the Llama 3.3 70B row re-answers from the same contexts (the answer-model check of §4).](figures/h1.svg)
 
-G is the share of the gap between similarity search and extraction that the rerank closes. It uses Turns + cosine at
-its own matched k ({{g.l0_k}}), where it scores {{g.l0}}. At the same token budget, one rerank call closes
-G = {{g.value}} of the accuracy gap between Turns + cosine ({{g.l0}}) and engram v2 ({{h1.engram}}). The write-cost
+G [[eq:gap]] uses Turns + cosine at its own matched k ({{g.l0_k}}), where it scores {{g.l0}}. At the same token
+budget, one rerank call closes G = {{g.value}} of the accuracy gap between Turns + cosine and engram v2
+({{h1.engram}}). The write-cost
 ratio uses held-out measurements at list prices. engram v2 costs {{cost.write.engram}} per 1,000 turns, and
 Turns + Jev {{cost.write.t0r}} (embeddings only).
 
@@ -279,8 +367,8 @@ Figure 4 shows the paired differences with their intervals.
 
 ### 5.3 The budget dependence of reranking
 
-The rerank's value depends on how many candidates the budget keeps (Figure 5). On LoCoMo its gain over
-similarity search is {{rerank.locomo.k3}} points at k=3 and {{rerank.locomo.k20}} at k=20. On the full LongMemEval
+The rerank's gain over similarity search, $\Delta(k)$ of [[eq:delta]], depends on how many candidates the budget
+keeps (Figure 5). On LoCoMo it is {{rerank.locomo.k3}} points at k=3 and {{rerank.locomo.k20}} at k=20. On the full LongMemEval
 set it is {{rerank.lme.k3}} points at k=3 (S7) and {{rerank.lme.k20}} at k=20. With three of {{plan.shortlist}}
 candidates kept, ordering decides which evidence reaches the answer model; with twenty kept, cosine order already
 includes most of it. The k=3 gains are registered tests (S1, S7); the k=20 differences are descriptive. The k=20
@@ -443,8 +531,7 @@ per query. Mem0's read cost is a query embedding only.
 
 ![Figure 8: Accuracy against total cost per question (log scale) at k=3, on the {{data.fresh.questions}} questions of the five held-out conversations (exploratory as registered): write cost amortised at the benchmark's {{fig5.turns_per_question}} turns written per question, plus read cost and answer cost (judge excluded), at list prices; full context has no write or read cost. In a read-heavy use with one turn written per question, engram v2's total falls to {{fig5.engram.k3.read_heavy}}, mem0's to {{fig5.mem0.k3.read_heavy}} and Jev-Mem's to {{fig5.jevmem.k3.read_heavy}}; the other systems' totals do not change at this precision.](figures/cost.svg)
 
-Figure 8 amortises write cost at the benchmark's own ratio ({{fig5.turns_per_question}} turns written per scored
-question). At that ratio, Turns + Jev's total cost per question is {{fig5.t0r.k3.bench}} and engram v2's is
+Figure 8 plots the cost per question of [[eq:cost]] at the benchmark's own ratio, $r_w$ = {{fig5.turns_per_question}}. At that ratio, Turns + Jev's total cost per question is {{fig5.t0r.k3.bench}} and engram v2's is
 {{fig5.engram.k3.bench}}. Full context costs {{fig5.fc.bench}}. In a read-heavy use, with one turn written per
 question, the write cost weighs less: engram v2's total falls to {{fig5.engram.k3.read_heavy}}.
 

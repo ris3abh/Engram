@@ -23,6 +23,9 @@ ALLOWED = [
     r"Figures? \d+ and \d+",  # before the general reference pattern
     r"categories 1–[345]",  # a cited paper's protocol scope
     r"≈0†",  # a read path with no model call (Tables 3 and 5)
+    r"\\label\{eq:[\w-]+\}",  # equation labels
+    r"\bx_1\b",  # the first turn, x_1
+    r"z_\{0\.95\}",  # the one-sided 95% normal quantile
     r"their Appendix [A-Z](\.\d+)?",  # a cited paper's appendix
     r"bge-reranker-v2-m3",
     r"^\s*\d+\. ",  # numbered-list markers
