@@ -38,7 +38,7 @@ development. Are raw turns with a single reranking call non-inferior to a strong
 matched budget? And how does the rerank's value change as the budget grows? Non-inferiority means we test whether
 raw turns are at most {{plan.margin}} points worse, rather than whether the two systems differ at all.
 
-The selector is Jev, TypeSafe's typed decision model [@typesafe2026jev]. It answers a fixed-option question with a
+The selector is Jev, TypeSafe's typed decision model [@typesafe2026launch; @typesafe2026jev]. It answers a fixed-option question with a
 probability in one short request. The extraction system is engram v2. engram is a memory system we built and
 described in an earlier preprint [@sharma2026typed]: an LLM extracts facts, and a typed decision model makes every
 later decision about them. engram v2 is the version used here; it extracts facts with gpt-4o-mini and types, relates
@@ -87,14 +87,36 @@ answers from raw turns with retrieval and generation alone; EMem [@zhou2025emem]
 near-verbatim discourse units; @zeng2024structural sweep chunks, triples, facts and summaries and find chunk-based
 and mixed stores strongest on LoCoMo; the LongMemEval design study [@wu2025longmemeval] finds round-level storage best
 and fact-augmented index keys helpful; and Letta reports {{ext.letta.locomo}}% on LoCoMo for a gpt-4o-mini agent that
-stores conversation history in files, with no judge stated [@letta2025filesystem]. Our result agrees with this lineage at tight budgets and is smaller and more cautious than
+stores conversation history in files, with no judge stated [@letta2025filesystem]. Zero-Mem [@xiao2026zeromem]
+removes LLM calls from every memory operation: it keeps raw traces and retrieves with BM25, dense embeddings and an
+entity graph built by a non-generative NER model. It is fully deterministic, whereas our selector is a typed decision
+model, and we test selection against extraction under pre-registration; it reports F1, so its numbers are not
+comparable with ours. LazyMem [@yu2026lazymem] defers memory construction to query time: a trained model retains and
+compresses only the query-relevant content of a broad retrieved pool. It rewrites text at read time, while our
+selector only chooses among raw turns. Our result agrees with this lineage at tight budgets and is smaller and more cautious than
 Fidelity's gap, as expected for an extraction system that keeps source quotes. We extend it with a registered
 non-inferiority margin, held-out conversations, a budget analysis and per-category recall.
+
+**Budgets and compression.** @kang2026retain study a complementary budget-dependent decision: given identified
+evidence, whether to retain raw records or replace them with generated consolidations under a fixed answer-time
+budget. Consolidation helps when the budget is too small for the relevant raw evidence (up to {{ext.kang.gain}}
+points on LongMemEval at {{ext.kang.budget}} tokens), and retention is preferable once it fits. We study end-to-end
+selection instead: whether query-time ranking of raw turns can substitute for write-time extraction when only a
+fraction of the retrieved candidates reaches the answer model. The two sets of results are consistent. Our tight
+budgets ({{sys.mem0.k3.tok}}–{{sys.t0r.k6.tok}} tokens) already fit several raw turns, the regime where Kang et al.
+also find retention competitive. Their intervention acts after evidence has been identified, while ours tests whether
+selection itself removes the need for extraction. The extraction advantage we observe at generous budgets is partly
+our selector's read-path ceiling (§5.3), and does not contradict their finding. EMBER [@li2026ember] learns which
+verbatim evidence to retain under a fixed pre-query token budget, and a controlled comparison of memory substrates
+finds that none dominates across operating regimes [@huang2026harness].
 
 **Extraction systems.** mem0 [@chhikara2025mem0] extracts facts per message; we test mem0 OSS 2.1.0, and newer mem0
 releases report higher, self-reported numbers [@mem02026state]. Graphiti/Zep [@rasmussen2025zep], A-MEM
 [@xu2025amem], MemGPT/Letta [@packer2023memgpt], EverMemOS [@evermemos2026] and Memora [@memora2026] structure memory
-with LLM calls at write time.
+with LLM calls at write time. Several recent systems make extraction cheaper: SimpleMem [@liu2026simplemem] compresses
+interactions into compact indexed memory units, LightMem [@fang2025lightmem] filters and groups content in stages
+and consolidates offline, and LeanMem [@liao2026leanmem] stores each kind of content as profile, event or
+source-grounded record memory.
 
 **Typed decisions in memory.** Jev-Mem [@jiang2026jevmem] was the first memory system built on Jev; it uses typed
 questions for typing, relations, routing, traversal and stopping over a multi-graph store. The AtMem–Jev article
@@ -104,7 +126,11 @@ against an LLM reranker and against Jev-Mem at matched context.
 **Reranking in conversational memory.** SmartSearch finds ranking to be the bottleneck; Fidelity finds reranking
 marginal. Training-Free Lexical–Dense Fusion [@lexdense2026] reports an off-the-shelf cross-encoder lowering Hit@1
 on conversational queries, and ConvMemory v2 [@convmemory2026] reports gains from a cross-encoder fine-tuned for
-conversation. Our budget analysis offers one way these findings fit together (§6).
+conversation. MemReranker [@li2026memreranker], a small reasoning-aware reranker for agent memory, matches gpt-4o-mini
+on key retrieval metrics, consistent with our finding that a typed decision model selects as accurately as an LLM
+reranker (S4). EARM [@feng2026earm] treats LLM reranking as a per-query cost and amortizes it by reusing past relevance
+scores; the same cost argument motivates a selector that answers in one short request. Our budget analysis offers
+one way these findings fit together (§6).
 
 **Evaluation validity.** Held-out conversation splits of LoCoMo already exist [@yan2025split; @useraware2026]; our
 design adds pre-registration and a non-inferiority margin. Same Ranking, Different Winner [@samerank2026] shows that
@@ -285,7 +311,8 @@ probability of passing H1 at {{plan.power.conv26}} if the development difference
 **Checks.** H1 and S1 were re-answered by Llama 3.3 70B Instruct via OpenRouter from the same contexts and judged
 by the same judge; a result is called model-robust only if it holds under both answer models. The author graded
 every question on which the judge found exactly one of H1's two answers correct, blind to system and judge label
-(§5.4, Appendix C). Shortlist recall measures where the LoCoMo evidence turns fall (§5.6, Appendix D).
+(§5.4, Appendix C). The prespecified judge decides the test, and the human audit is a sensitivity analysis, as in
+LazyMem [@yu2026lazymem]. Shortlist recall measures where the LoCoMo evidence turns fall (§5.6, Appendix D).
 
 **Deviations.** Every change after registration is dated in the plan and listed in Appendix B. Apart from the
 amendment above, none changed a test, the margin or the planned interpretation; the mem0 serving deviation adds a
@@ -569,7 +596,10 @@ reranks a top-{{ext.fidelity.pool}} pool to {{ext.fidelity.kept}} with bge-reran
 {{ext.fidelity.cap}}-token cap. Its gains are {{ext.fidelity.rr_locomo}} points on LoCoMo and {{ext.fidelity.rr_lme}}
 on LongMemEval-S. Our k=20 likewise keeps twenty of {{plan.shortlist}}, and both show small gains. This is an
 interpretation across pipelines that differ in retrievers, rerankers, answer models and judges. Inside our study it
-is supported by the k=3 to k=20 comparison on two benchmarks; it is not a tested claim across papers.
+is supported by the k=3 to k=20 comparison on two benchmarks; it is not a tested claim across papers. Read together
+with @kang2026retain, the two studies suggest that compression is favoured when the budget cannot fit
+the relevant raw evidence, a regime our budgets did not reach, and that raw evidence with good selection is
+competitive once it can, as at our tight budgets.
 
 **When extraction is worth it.** At the tight budget of H1, extraction adds little and costs thousands of times more
 to write. At generous budgets it is more accurate and more compact: engram v2 at k=20 was the most accurate system
@@ -588,7 +618,11 @@ study found no such dependence on answer length, but its LoCoMo judge is instruc
 "partial answers or answers with significant missing information should be marked INCORRECT", their Appendix J.4),
 while mem0's asks the judge to "be generous with your grading - as long as it touches on the same topic as the gold
 answer". A strict instruction leaves less room for style to matter, which may explain why their audit found no
-short-answer bias and ours did. Memory benchmarks that compare
+short-answer bias and ours did. Other audits point the same way. On multimodal memory questions, MemLens
+[@ren2026memlens] finds that its LLM judge's leniency inflates closed-form accuracy by about {{ext.memlens.inflation}}
+points, without reordering its leaderboard. An audit of LoCoMo by Penfield Labs [@penfield2026locomo] reports
+{{ext.penfield.errors}} answer-key errors in {{ext.penfield.questions}} questions ({{ext.penfield.errors_pct}}%) and a
+gpt-4o-mini judge that accepted {{ext.penfield.accepted}}% of deliberately wrong but topically adjacent answers. Memory benchmarks that compare
 systems with different answer styles should report judge–human agreement by system.
 
 **Not state of the art.** SmartSearch reports {{ext.smartsearch.locomo}}% on LoCoMo under its own protocol.
@@ -606,6 +640,9 @@ the post-hoc Turns + Jev (wide), is below that figure.
 - **Human grading.** The grader is the system's author; the mapping of partial grades was not pre-specified (two are
   reported); one question was ungraded; and only judge-discordant questions were re-graded, so judge errors on
   questions where the judge agreed across systems remain.
+- **Adversarial content.** Turns + Jev passes raw, user-written turns to Jev's relevance question, so text injected
+  into a conversation could shift which turns are selected; prompt injection shifts Jev's decision probabilities
+  [@wu2026hijacking]. We did not test adversarial content.
 - **A closed decision model.** Jev is a closed, versioned model; results hold for jev-1.13.0.
 - **mem0 serving.** mem0's extraction calls were served through OpenRouter, about half by Azure, not the OpenAI API
   as registered; only S3 involves mem0.

@@ -76,6 +76,7 @@ ALLOWED = [
     r"per 1,000 (turns|messages)|\$/1k",
     r"\bp[59]0\b",
     r"Hit@1",
+    r"\bBM25\b|\bF1\b",  # metric names
     r"ris3abh",
 ]
 

@@ -830,6 +830,13 @@ def main() -> None:
         ("ext.fidelity.mem0_4o", 54.7, "d1", "an2026fidelity"),
         ("ext.fidelity.chunks_4o", 69.9, "d1", "an2026fidelity"),
         ("ext.fidelity.anchor_4o_q", 1540, "int", "an2026fidelity"),
+        ("ext.kang.gain", 48, "int", "kang2026retain"),  # abstract and Table: 48 points at 32 tokens (LongMemEval)
+        ("ext.kang.budget", 32, "int", "kang2026retain"),
+        ("ext.memlens.inflation", 5, "int", "ren2026memlens"),  # Appendix E.2: "approximately 5% in absolute terms"
+        ("ext.penfield.errors", 99, "int", "penfield2026locomo"),
+        ("ext.penfield.questions", 1540, "int", "penfield2026locomo"),
+        ("ext.penfield.errors_pct", 6.4, "d1", "penfield2026locomo"),
+        ("ext.penfield.accepted", 62.81, "raw", "penfield2026locomo"),
     ):
         N(key, v, f"cite:{cite} (checked against the paper's text; paper_v3/bib_verification.md)", fmt)
 
