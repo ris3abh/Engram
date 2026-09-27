@@ -10,7 +10,7 @@ else
 TEX :=
 endif
 
-.PHONY: paper numbers figures md tex pdf check clean
+.PHONY: paper numbers figures md tex pdf check clean arxiv
 
 paper: numbers figures md tex pdf check
 
@@ -36,6 +36,19 @@ pdf:
 
 check:
 	$(UV) python paper_v3/check.py
+
+# The arXiv bundle: main.tex with its bibliography already compiled (main.bbl), the style files and the figures the
+# paper includes; then the zip is compiled on its own in a clean directory, as arXiv will.
+FIGS = $(shell grep -o 'figures/[a-z0-9_]*\.pdf' main.tex | sort -u)
+ARXIV_ZIP := when-does-selection-replace-extraction-arxiv.zip
+arxiv: paper
+	rm -rf arxiv && mkdir -p arxiv/figures
+	cp main.tex references.bib main.bbl acl.sty acl_natbib.bst arxiv/ && cp $(FIGS) arxiv/figures/
+	cd arxiv && zip -qrX $(ARXIV_ZIP) main.tex references.bib main.bbl acl.sty acl_natbib.bst figures
+	docker run --rm -v $(CURDIR)/arxiv:/src:ro $(LATEX_IMAGE) sh -c 'd=$$(mktemp -d) && cd $$d \
+	  && unzip -q /src/$(ARXIV_ZIP) && for i in 1 2; do pdflatex -interaction=nonstopmode -halt-on-error main.tex > /dev/null || exit 1; done \
+	  && (grep -E "undefined|\?\?" main.log || echo "arxiv zip: compiles clean, references and citations resolved") \
+	  && grep -E "Output written" main.log'
 
 clean:
 	rm -f main.aux main.bbl main.blg main.log main.out main.toc

@@ -674,6 +674,13 @@ multi-call Jev graph traversal at matched context. The diagnostics locate where 
 LLM judge's leniency, documented elsewhere, interacts with answer length. Memory benchmarks that compare systems with different answer
 styles should therefore report judge–human agreement by system.
 
+## Author Contributions
+
+Rishabh Sharma designed the study and its pre-registered plan, built the systems, ran and orchestrated the
+experiments, and did the blind human audit; the human grader is therefore the author of the systems evaluated.
+Rishika Lall contributed to the analysis and interpretation of the results. Both authors drafted, reviewed and edited
+the paper.
+
 ## AI Assistance
 
 The code, run orchestration and drafting of this paper were done with Claude Code (Anthropic) under the first author's
@@ -686,7 +693,7 @@ Code, plans, per-question answers and judge labels, and the human-audit grades w
 github.com/ris3abh/Engram: tags `v3-frozen`, `v3-amended` and the paper tag; results in `bench/results/v3/`
 (per-question files, reports, ledgers, `human_audit/`) and `bench/results/v3_posthoc/`. The plan and its amendment
 are deposited at 10.5281/zenodo.22970745 and 10.5281/zenodo.22977848; this paper is 10.5281/zenodo.22985242 (release tag
-`paper-v3-preprint-r2`); the earlier engram preprint is
+`paper-v3-preprint-r3`); the earlier engram preprint is
 10.5281/zenodo.22941757 [@sharma2026typed].
 
 ## References

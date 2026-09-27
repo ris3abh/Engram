@@ -94,7 +94,7 @@ amendment [doi:10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848)
 
 - Data: [ris3abh-11/engram-eval](https://huggingface.co/datasets/ris3abh-11/engram-eval), with per-question results
   for both papers.
-- Code: [github.com/ris3abh/Engram](https://github.com/ris3abh/Engram), release tag `paper-v3-preprint-r2`.
+- Code: [github.com/ris3abh/Engram](https://github.com/ris3abh/Engram), release tag `paper-v3-preprint-r3`.
 - `make reproduce-v3` rebuilds every number, table and figure and the PDF from the committed results, with no model
   or API calls.
 
