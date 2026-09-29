@@ -33,6 +33,8 @@ PAGE = """
 
 *Does conversational memory need LLM-extracted facts, or is selecting the right raw turns enough?*
 
+Paper: Rishabh Sharma and Rishika Lall, [arXiv:2609.34227](https://arxiv.org/abs/2609.34227) (2026).
+
 **Within our study, the context budget decides.** When the answer model reads only a few retrieved items, selecting
 raw turns with one request to Jev, a typed decision model, is non-inferior to an LLM-extraction memory, at a fraction
 of the cost to write. When it reads many, extraction is more accurate. The study was pre-registered and run on
@@ -66,7 +68,8 @@ studies disagree is our interpretation, not a tested claim.
 ## Papers
 
 - **Current:** *When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision
-  Model* (Rishabh Sharma and Rishika Lall, 2026). [doi:10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242).
+  Model* (Rishabh Sharma and Rishika Lall, 2026). [arXiv:2609.34227](https://arxiv.org/abs/2609.34227),
+  [doi:10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242).
 - **Earlier:** *Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs* (Rishabh
   Sharma, 2026). [doi:10.5281/zenodo.22948964](https://doi.org/10.5281/zenodo.22948964) (all versions:
   [doi:10.5281/zenodo.22941757](https://doi.org/10.5281/zenodo.22941757)). [Read the v1 article](v1-article.html),
@@ -102,11 +105,13 @@ amendment [doi:10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848)
 
 ```
 @misc{sharma2026selection,
-  author    = {Sharma, Rishabh and Lall, Rishika},
-  title     = {When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision Model},
-  year      = {2026},
-  publisher = {Zenodo},
-  doi       = {10.5281/zenodo.22985242}
+  author        = {Sharma, Rishabh and Lall, Rishika},
+  title         = {When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision Model},
+  year          = {2026},
+  eprint        = {2609.34227},
+  archivePrefix = {arXiv},
+  doi           = {10.5281/zenodo.22985242},
+  url           = {https://arxiv.org/abs/2609.34227}
 }
 ```
 """

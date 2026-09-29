@@ -12,6 +12,7 @@ tags:
 - long-term-memory
 - pre-registered
 - llm-evaluation
+- arxiv:2609.34227
 size_categories:
 - 10K<n<100K
 configs:
@@ -42,7 +43,7 @@ Evaluation data behind two papers from the engram project (code: [github.com/ris
 
 | paper | configs |
 |---|---|
-| **v3 (current):** *When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision Model* (Rishabh Sharma and Rishika Lall, 2026), [doi:10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242). Pre-registered plan [doi:10.5281/zenodo.22970745](https://doi.org/10.5281/zenodo.22970745), amendment [doi:10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848). | `per_question_v3`, `shortlist_recall_v3`, `turns_jev_wide_posthoc` |
+| **v3 (current):** *When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision Model* (Rishabh Sharma and Rishika Lall, 2026), [arXiv:2609.34227](https://arxiv.org/abs/2609.34227), [doi:10.5281/zenodo.22985242](https://doi.org/10.5281/zenodo.22985242). Pre-registered plan [doi:10.5281/zenodo.22970745](https://doi.org/10.5281/zenodo.22970745), amendment [doi:10.5281/zenodo.22977848](https://doi.org/10.5281/zenodo.22977848). | `per_question_v3`, `shortlist_recall_v3`, `turns_jev_wide_posthoc` |
 | **v1:** *Typed Decisions in Agent Memory: Where They Help, Where They Don't, and What It Costs* (Rishabh Sharma, 2026), [doi:10.5281/zenodo.22948964](https://doi.org/10.5281/zenodo.22948964) (version 1: [doi:10.5281/zenodo.22941758](https://doi.org/10.5281/zenodo.22941758)). | `update_set_1`, `update_set_2_messages`, `update_set_2_questions`, `contradiction_pairs`, `escalation_labels`, `per_question` |
 
 No config contains benchmark text: no LoCoMo or LongMemEval conversation turns, no question text and no gold
@@ -122,12 +123,13 @@ The v3 paper (configs `per_question_v3`, `shortlist_recall_v3`, `turns_jev_wide_
 
 ```bibtex
 @misc{sharma2026selection,
-  author    = {Sharma, Rishabh and Lall, Rishika},
-  title     = {When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision Model},
-  year      = {2026},
-  publisher = {Zenodo},
-  doi       = {10.5281/zenodo.22985242},
-  url       = {https://doi.org/10.5281/zenodo.22985242}
+  author        = {Sharma, Rishabh and Lall, Rishika},
+  title         = {When Does Selection Replace Extraction? A Pre-Registered Test of Agent Memory with a Typed Decision Model},
+  year          = {2026},
+  eprint        = {2609.34227},
+  archivePrefix = {arXiv},
+  doi           = {10.5281/zenodo.22985242},
+  url           = {https://arxiv.org/abs/2609.34227}
 }
 ```
 
